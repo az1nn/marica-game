@@ -4,35 +4,42 @@ Status: ADVANCE
 Repository: az1nn/marica-game
 Active spec: SPEC-001 Animal Core
 Completed: T005, T006
-Next task: T007
+Active task: T007
 
-## Verified delivery
+## Verified base
 
-- PR #2 merged T005 / ADR-0001.
-- PR #3 merged T006 / ADR-0002.
-- T006 delivery SHA: `4aac27ce07c8e48d57dddffcb994ee6aabe6f4f0`.
-- T005 and T006 session claims are CLOSED.
-- No open PR remained after PR #3 merge.
+- T006 merged through PR #3 at `4aac27ce07c8e48d57dddffcb994ee6aabe6f4f0`.
+- T007 branch: `feat/t007-roblox-toolchain`.
+- T007 base: `master@f4c6d2e27196c96143a76a65f88cdbadaeb13224`.
+- Post-claim barrier: CLEAR.
+- No open PR existed at the T007 barrier.
 
-## Ratified architecture
+## T007 toolchain
 
-- Production runtime: Roblox + Luau.
-- Source/sync baseline: Git/GitHub + Rojo.
-- Test baseline: TestEZ.
-- Durable persistence: DataStoreService.
-- Concurrent/current-state writes: UpdateAsync.
-- Time authority: server-side injected Clock using Workspace:GetServerTimeNow().
-- Logical time cannot move backwards.
-- Critical operations and succession must be idempotent.
-- MemoryStore is ephemeral coordination only.
+Pinned:
 
-## Exact-head gates
+- Rokit 1.2.0
+- Rojo 7.7.0
+- Wally 0.3.2
+- StyLua 2.5.2
+- Selene 0.31.0
+- Jest Roblox 3.20.0
 
-PR #3 exact head `0f6cb8010e537bad3b3ec4f2019d96519804af31`:
+TestEZ was removed from the baseline before domain implementation because its official repository is archived.
 
-- Validate repository-local skills: PASS
-- Validate ARTIST scaffolder dependencies: PASS
+Repository now contains production/test Rojo projects, a minimal src layout, a Jest smoke suite and a GitHub Actions toolchain gate.
+
+## Gate
+
+Run T007 PR CI, capture generated `wally.lock`, commit the lockfile, then require exact-head:
+
+- Wally dependency install with unchanged lockfile
+- StyLua check
+- Selene
+- production Rojo build
+- test Rojo build
+- existing skill/ARTIST validation
 
 ## Next
 
-Execute **T007 — Bootstrap do toolchain Roblox/Rojo/TestEZ e CI reproduzível**.
+After T007 merges, execute **T010 — entidade Pet e IDs imutáveis**.
