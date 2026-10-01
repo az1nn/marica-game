@@ -10,7 +10,8 @@
 - [x] **T003** Registrar SPEC-001 Animal Core.
 - [x] **T004** Criar plano técnico inicial.
 - [x] **T005** Fechar ADR de engine/runtime.
-- [ ] **T006** Fechar ADR de persistência e autoridade de tempo.
+- [x] **T006** Fechar ADR de persistência e autoridade de tempo.
+- [ ] **T007** Bootstrap do toolchain Roblox/Rojo/TestEZ e CI reproduzível.
 
 ## Phase B — Domain P0
 

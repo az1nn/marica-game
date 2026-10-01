@@ -3,29 +3,41 @@
 Status: ADVANCE
 Repository: az1nn/marica-game
 Active spec: SPEC-001 Animal Core
-Completed task: T005
-Next task: T006
+Completed: T005
+Active delivery: T006
+Next task: T007
 
-## Verified delivery
+## Verified base
 
 - T005 merged through PR #2.
-- Delivery SHA: `db746c22443175d9ba0d2e610e7090aa735c045c`.
-- ADR-0001 is ACCEPTED and ratifies Roblox as the V1 production runtime.
-- Domain remains engine-neutral and server-authoritative.
-- Git/GitHub + Rojo + TestEZ are the ratified initial engineering workflow.
-- T005 session claim is closed.
-- No open PR remains after the merge.
-- Parallel branch `feat/002-project-skills-standard` was not modified.
+- Current T006 base: `master@b62f3f0319e7fe03663f9601d065ec3801e5dfc8`.
+- ADR-0001 ratifies Roblox runtime.
+- T005 claim is CLOSED.
+- No open PR existed at T006 claim barrier.
 
-## Gates
+## T006 decision
 
-PR #2 exact-head gate passed on `f88e323514c60a60db7fe7525de805049b8a85dd`:
+ADR-0002 selects:
 
-- Validate repository-local skills: PASS
-- Validate ARTIST scaffolder dependencies: PASS
+- DataStoreService for durable player state;
+- UpdateAsync for concurrent/current-state writes;
+- one/few deterministic player keys;
+- server-only authoritative time through an injected Clock port;
+- Workspace:GetServerTimeNow() for the Roblox clock adapter;
+- logical time clamp to prevent rollback;
+- leases for mutable profile sessions;
+- idempotent critical operations and exactly-two successor replay safety;
+- MemoryStore only for ephemeral coordination;
+- separate dev/staging/prod namespaces.
 
-Post-merge maintenance changes are limited to SIGA claim/handoff state and must remain green on master CI.
+## Backlog repair
+
+Added T007 because ADR-0001 ratified the Roblox/Rojo/TestEZ workflow but the executable backlog had no task to create that reproducible toolchain before domain implementation.
+
+## Gate
+
+Open PR for T006, validate exact head, merge when green, close claim.
 
 ## Next
 
-Execute **T006 — ADR de persistência e autoridade de tempo**.
+Execute **T007 — Bootstrap do toolchain Roblox/Rojo/TestEZ e CI reproduzível**.
