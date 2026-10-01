@@ -54,6 +54,14 @@ LENTE does not directly implement broad fixes. Route:
 
 ## Versioned run
 
+Start and record runs through the repository script when available:
+
+~~~bash
+python tools/lente/lente.py start --head <sha> --scope <scene-or-all>
+python tools/lente/lente.py record --run <run> --kind scenes --file <capture> --target <scene>
+python tools/lente/lente.py finding --run <run> --id <id> --severity P1 --owner CENA --observation <text> --next <text>
+~~~
+
 Every new capture/review creates:
 
 ~~~text
