@@ -84,6 +84,14 @@ Verify repository/head and load:
 - overlapping CENA/ROBLOX visual work.
 
 ### 2. Open a versioned run
+Use the repository script; do not hand-roll the run when the script is available:
+
+~~~bash
+python tools/artist/artist.py validate
+python tools/artist/artist.py start --scene <scene>
+python tools/artist/artist.py start --scene <scene> --object <object>
+~~~
+
 Create a new append-only folder:
 
 ~~~text
@@ -127,6 +135,13 @@ Record model/tool, prompt, references, seed/parameters when available. If unavai
 Concept art must be labeled CONCEPT, never IMPLEMENTED.
 
 ### 5. Human review
+Persist evidence/review through the script when available:
+
+~~~bash
+python tools/artist/artist.py record --run <run> --kind concept --file <image>
+python tools/artist/artist.py review --run <run> --stage concept --decision ACCEPT --reviewer <name> --notes <notes>
+~~~
+
 Every concept decision is one of:
 
 - ACCEPT;
