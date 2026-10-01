@@ -35,6 +35,11 @@ jobs:
       - name: Install Wally dependencies
         run: wally install
 
+      - name: Lockfile reproducibility gate
+        run: |
+          git diff --exit-code -- wally.lock
+          test -z "$(git status --porcelain --untracked-files=all -- wally.lock)"
+
       - name: Format gate
         run: stylua --check src tests
 
