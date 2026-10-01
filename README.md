@@ -51,3 +51,27 @@ Implementar a primeira vertical slice jogável do ciclo:
 **receber pet → cuidar → evoluir → encerrar ciclo de vida → gerar sucessores → manter pedigree**
 
 O marketplace entra após o ciclo animal básico estar funcional e testável.
+
+
+## Agent Operating System
+
+O projeto usa skills locais versionadas, derivadas do padrão consolidado no `growing-rio`:
+
+- **SIGA** — orquestra continuação, concorrência, gates e merge.
+- **LORE** — cânone narrativo.
+- **ARTIST** — direção visual e aprovação.
+- **CENA** — materialização de cenas/assets.
+- **ROBLOX** — runtime de produção.
+- **QA** — gates automatizados.
+- **LENTE** — evidência visual versionada.
+- **RELATORIO** — status CAVEMAN.
+- **GODOT / 3JS** — lanes de referência/portabilidade.
+
+Catálogo: `.agents/skills/README.md`.
+
+Validação mínima:
+
+~~~bash
+python tools/skills/validate.py
+python tools/artist/artist.py validate
+~~~
