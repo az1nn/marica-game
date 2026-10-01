@@ -1,0 +1,7 @@
+Packages/
+ServerPackages/
+DevPackages/
+build/
+*.rbxlx
+sourcemap.json
+.DS_Store
