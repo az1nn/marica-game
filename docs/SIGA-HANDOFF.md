@@ -3,40 +3,35 @@
 Status: ADVANCE
 Repository: az1nn/marica-game
 Active spec: SPEC-001 Animal Core
-Completed: T005
-Active delivery: T006
+Completed: T005, T006
 Next task: T007
 
-## Verified base
+## Verified delivery
 
-- T005 merged through PR #2.
-- Current T006 base: `master@b62f3f0319e7fe03663f9601d065ec3801e5dfc8`.
-- ADR-0001 ratifies Roblox runtime.
-- T005 claim is CLOSED.
-- No open PR existed at T006 claim barrier.
+- PR #2 merged T005 / ADR-0001.
+- PR #3 merged T006 / ADR-0002.
+- T006 delivery SHA: `4aac27ce07c8e48d57dddffcb994ee6aabe6f4f0`.
+- T005 and T006 session claims are CLOSED.
+- No open PR remained after PR #3 merge.
 
-## T006 decision
+## Ratified architecture
 
-ADR-0002 selects:
+- Production runtime: Roblox + Luau.
+- Source/sync baseline: Git/GitHub + Rojo.
+- Test baseline: TestEZ.
+- Durable persistence: DataStoreService.
+- Concurrent/current-state writes: UpdateAsync.
+- Time authority: server-side injected Clock using Workspace:GetServerTimeNow().
+- Logical time cannot move backwards.
+- Critical operations and succession must be idempotent.
+- MemoryStore is ephemeral coordination only.
 
-- DataStoreService for durable player state;
-- UpdateAsync for concurrent/current-state writes;
-- one/few deterministic player keys;
-- server-only authoritative time through an injected Clock port;
-- Workspace:GetServerTimeNow() for the Roblox clock adapter;
-- logical time clamp to prevent rollback;
-- leases for mutable profile sessions;
-- idempotent critical operations and exactly-two successor replay safety;
-- MemoryStore only for ephemeral coordination;
-- separate dev/staging/prod namespaces.
+## Exact-head gates
 
-## Backlog repair
+PR #3 exact head `0f6cb8010e537bad3b3ec4f2019d96519804af31`:
 
-Added T007 because ADR-0001 ratified the Roblox/Rojo/TestEZ workflow but the executable backlog had no task to create that reproducible toolchain before domain implementation.
-
-## Gate
-
-Open PR for T006, validate exact head, merge when green, close claim.
+- Validate repository-local skills: PASS
+- Validate ARTIST scaffolder dependencies: PASS
 
 ## Next
 
