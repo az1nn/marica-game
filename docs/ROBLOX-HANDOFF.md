@@ -2,17 +2,18 @@
 
 Status: ADVANCE
 
-Runtime baseline is ratified by ADR-0001: Roblox + Luau, Rojo, Wally and Jest Roblox.
+Runtime baseline remains Roblox + Luau under ADR-0001, with engine-neutral domain rules.
 
 ## Delivered
 
 - T010 merged via PR #5.
-- Delivery SHA: `51667c9be61f558de1e03a53189b77dcb3a6050d`.
-- Domain now exposes `PetId` as an opaque validated string contract.
-- ID creation accepts an injected generator, keeping the domain independent from Roblox services.
-- `Pet` is frozen and exposes no identity mutation path.
-- Authoritative ID generation remains a server/application adapter responsibility.
+- T011 merged via PR #6.
+- T011 delivery SHA: `fec260381caff36ce15ef2202e52d9c690ba1178`.
+- `LineageId` is an opaque validated value with injected generation.
+- `Pedigree` is immutable and stores lineage id, generation, founder pet and direct parent references.
+- `Pet` now requires pedigree at construction.
+- Roblox services remain outside the domain modules.
 
 ## Next
 
-Execute **T011 — lineage/pedigree** without moving Roblox-specific concerns into the domain.
+Execute **T012 — lifecycle state machine** with deterministic, clock-independent transitions in the domain.
