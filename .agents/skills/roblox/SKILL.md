@@ -172,7 +172,7 @@ ADR-0001 selects:
 - Roblox Studio + Luau for runtime/presentation;
 - Git/GitHub as code/documentation source of truth;
 - Rojo as filesystem ↔ Studio sync/build workflow;
-- TestEZ as the baseline Roblox/Luau test harness.
+- Jest Roblox as the baseline Roblox/Luau test harness.
 
 Do not introduce alternate source-sync or test stacks casually. Toolchain changes require a PR with rationale and exact-head gates.
 

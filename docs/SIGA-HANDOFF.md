@@ -4,35 +4,49 @@ Status: ADVANCE
 Repository: az1nn/marica-game
 Active spec: SPEC-001 Animal Core
 Completed: T005, T006
-Next task: T007
+Active delivery: T007 complete on branch
+Next task: T010
 
-## Verified delivery
+## T007 delivery
 
-- PR #2 merged T005 / ADR-0001.
-- PR #3 merged T006 / ADR-0002.
-- T006 delivery SHA: `4aac27ce07c8e48d57dddffcb994ee6aabe6f4f0`.
-- T005 and T006 session claims are CLOSED.
-- No open PR remained after PR #3 merge.
+Branch: `feat/t007-roblox-toolchain`
 
-## Ratified architecture
+Pinned toolchain:
 
-- Production runtime: Roblox + Luau.
-- Source/sync baseline: Git/GitHub + Rojo.
-- Test baseline: TestEZ.
-- Durable persistence: DataStoreService.
-- Concurrent/current-state writes: UpdateAsync.
-- Time authority: server-side injected Clock using Workspace:GetServerTimeNow().
-- Logical time cannot move backwards.
-- Critical operations and succession must be idempotent.
-- MemoryStore is ephemeral coordination only.
+- Rokit 1.2.0
+- Rojo 7.7.0
+- Wally 0.3.2
+- StyLua 2.5.2
+- Selene 0.31.0
+- Jest Roblox 3.20.0
 
-## Exact-head gates
+Implemented:
 
-PR #3 exact head `0f6cb8010e537bad3b3ec4f2019d96519804af31`:
+- `rokit.toml`
+- `wally.toml` + generated `wally.lock`
+- production and test Rojo projects
+- client/server/shared Luau bootstrap
+- Jest smoke suite
+- StyLua/Selene config
+- generated-artifact ignore rules
+- `Roblox CI` workflow
+- lockfile reproducibility gate
+- ADR-0001/ROBLOX baseline corrected from archived TestEZ to Jest Roblox
 
-- Validate repository-local skills: PASS
-- Validate ARTIST scaffolder dependencies: PASS
+## First runtime gate
+
+PR #4 first head proved:
+
+- Rokit setup: PASS
+- Wally dependency resolution: PASS
+- StyLua: PASS
+- Selene: PASS
+- production Rojo build: PASS
+- test Rojo build: PASS
+- existing skills/ARTIST gate: PASS
+
+The generated lockfile from that runner is now tracked. Final exact-head CI must prove that re-installing dependencies does not change it.
 
 ## Next
 
-Execute **T007 — Bootstrap do toolchain Roblox/Rojo/TestEZ e CI reproduzível**.
+After PR #4 merges, execute **T010 — Implementar entidade Pet e IDs imutáveis**.

@@ -11,7 +11,7 @@
 - [x] **T004** Criar plano técnico inicial.
 - [x] **T005** Fechar ADR de engine/runtime.
 - [x] **T006** Fechar ADR de persistência e autoridade de tempo.
-- [ ] **T007** Bootstrap do toolchain Roblox/Rojo/TestEZ e CI reproduzível.
+- [x] **T007** Bootstrap do toolchain Roblox/Rojo/Jest e CI reproduzível.
 
 ## Phase B — Domain P0
 

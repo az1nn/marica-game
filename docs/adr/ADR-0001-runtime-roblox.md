@@ -76,7 +76,7 @@ O cliente envia intenção e renderiza estado. Ele não calcula resultados econ�
 ### Testes
 
 - Regras determinísticas de domínio devem ser exercitáveis com estado, tempo e seed explícitos.
-- **TestEZ** é o baseline para testes Luau/Roblox da primeira implementação.
+- **Jest Roblox** é o baseline para testes Luau/Roblox da primeira implementação.
 - Testes de domínio devem evitar dependência de serviços Roblox quando possível.
 - Integrações específicas do runtime recebem testes/smokes separados.
 - Green de um SHA anterior não valida um novo HEAD.
@@ -125,6 +125,20 @@ Rejeitado porque enfraquece diff, revisão, automação, testes reproduzíveis e
 5. Código versionado no filesystem/Git é a fonte de verdade técnica.
 6. Rojo é o workflow padrão de sync/build da V1.
 7. Testes determinísticos pertencem ao contrato de implementação, não a validação manual opcional.
+
+## Correção de toolchain — T007
+
+Durante o bootstrap reproduzível foi verificado que o repositório oficial **Roblox/testez** está arquivado desde 2024. O baseline de testes foi portanto corrigido para **Jest Roblox**, que permanece documentado e usado pelo ecossistema Roblox.
+
+Pacotes Wally pinados para a V1:
+
+```toml
+[dev-dependencies]
+Jest = "roblox/jest@=3.20.0"
+JestGlobals = "roblox/jest-globals@=3.20.0"
+```
+
+Essa correção não altera o contrato de produto nem a arquitetura engine-neutral; apenas substitui uma dependência de testes arquivada antes do início da implementação de domínio.
 
 ## Próxima decisão
 
