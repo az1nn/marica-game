@@ -9,4 +9,7 @@ Scope:
 - specs/001-animal-core/tasks.md
 - docs/SIGA-HANDOFF.md
 Opened: 2026-09-30T21:50:00-03:00
-Status: ACTIVE
+Status: CLOSED
+PR: #3
+Merged: master@4aac27ce07c8e48d57dddffcb994ee6aabe6f4f0
+Result: T006 complete; ADR-0002 accepted; T007 added.
