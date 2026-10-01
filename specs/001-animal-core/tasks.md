@@ -16,7 +16,7 @@
 ## Phase B — Domain P0
 
 - [x] **T010** Implementar entidade Pet e IDs imutáveis.
-- [ ] **T011** Implementar lineage/pedigree.
+- [x] **T011** Implementar lineage/pedigree.
 - [ ] **T012** Implementar lifecycle state machine.
 - [ ] **T013** Implementar relógio/simulação injetável.
 - [ ] **T014** Implementar genetic potential vs expressed traits.
