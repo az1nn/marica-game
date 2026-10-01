@@ -3,50 +3,47 @@
 Status: ADVANCE
 Repository: az1nn/marica-game
 Active spec: SPEC-001 Animal Core
-Completed: T005, T006
-Active delivery: T007 complete on branch
+Completed: T005, T006, T007
 Next task: T010
 
-## T007 delivery
+## Verified delivery
 
-Branch: `feat/t007-roblox-toolchain`
+- PR #2: T005 / ADR-0001 — merged.
+- PR #3: T006 / ADR-0002 — merged.
+- PR #4: T007 Roblox toolchain — merged.
+- T007 delivery SHA: `0968cd09acae03ea921ca9a1f3ce989d8911e98d`.
+- T005/T006/T007 claims are CLOSED.
+- No open PR remains after PR #4 merge.
 
-Pinned toolchain:
+## Production baseline
 
-- Rokit 1.2.0
-- Rojo 7.7.0
-- Wally 0.3.2
-- StyLua 2.5.2
-- Selene 0.31.0
-- Jest Roblox 3.20.0
+- Runtime: Roblox + Luau.
+- Toolchain manager: Rokit 1.2.0.
+- Sync/build: Rojo 7.7.0.
+- Package manager: Wally 0.3.2 with tracked lockfile.
+- Tests: Jest Roblox 3.20.0.
+- Format: StyLua 2.5.2.
+- Static analysis: Selene 0.31.0.
+- Persistence: DataStoreService + UpdateAsync.
+- Time: server-authoritative injected Clock.
+- Domain: engine-neutral and server-authoritative.
 
-Implemented:
+## Exact-head gates — PR #4
 
-- `rokit.toml`
-- `wally.toml` + generated `wally.lock`
-- production and test Rojo projects
-- client/server/shared Luau bootstrap
-- Jest smoke suite
-- StyLua/Selene config
-- generated-artifact ignore rules
-- `Roblox CI` workflow
-- lockfile reproducibility gate
-- ADR-0001/ROBLOX baseline corrected from archived TestEZ to Jest Roblox
-
-## First runtime gate
-
-PR #4 first head proved:
+Head: `5c79c95dff5e115f66bc55b68a239b721f4cddd7`
 
 - Rokit setup: PASS
-- Wally dependency resolution: PASS
+- Wally install: PASS
+- Wally lockfile unchanged: PASS
 - StyLua: PASS
 - Selene: PASS
 - production Rojo build: PASS
 - test Rojo build: PASS
-- existing skills/ARTIST gate: PASS
-
-The generated lockfile from that runner is now tracked. Final exact-head CI must prove that re-installing dependencies does not change it.
+- repository-local skills: PASS
+- ARTIST scaffolder validation: PASS
+- review threads: none
+- base drift: none
 
 ## Next
 
-After PR #4 merges, execute **T010 — Implementar entidade Pet e IDs imutáveis**.
+Execute **T010 — Implementar entidade Pet e IDs imutáveis**.
