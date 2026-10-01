@@ -3,27 +3,29 @@
 Status: ADVANCE
 Repository: az1nn/marica-game
 Active spec: SPEC-001 Animal Core
-Active task: T005 complete
+Completed task: T005
+Next task: T006
 
-## Verified state
+## Verified delivery
 
-- Base reconciled at `master@de7c832b1dac69ea593678b07f789c050b2872fd`.
-- Constitution v1.0.0 remains active.
-- ADR-0001 ratifies Roblox as the V1 production runtime.
+- T005 merged through PR #2.
+- Delivery SHA: `db746c22443175d9ba0d2e610e7090aa735c045c`.
+- ADR-0001 is ACCEPTED and ratifies Roblox as the V1 production runtime.
 - Domain remains engine-neutral and server-authoritative.
 - Git/GitHub + Rojo + TestEZ are the ratified initial engineering workflow.
-- Parallel branch `feat/002-project-skills-standard` was classified PARALLEL_SAFE for T005; it was not modified.
+- T005 session claim is closed.
+- No open PR remains after the merge.
+- Parallel branch `feat/002-project-skills-standard` was not modified.
 
-## Work produced
+## Gates
 
-- Added `docs/adr/ADR-0001-runtime-roblox.md`.
-- Marked SPEC-001 T005 complete.
-- Activated ROBLOX as the production runtime specialist under ADR-0001.
+PR #2 exact-head gate passed on `f88e323514c60a60db7fe7525de805049b8a85dd`:
 
-## Gate
+- Validate repository-local skills: PASS
+- Validate ARTIST scaffolder dependencies: PASS
 
-Exact-head repository validation and PR CI are required before merge.
+Post-merge maintenance changes are limited to SIGA claim/handoff state and must remain green on master CI.
 
 ## Next
 
-Execute **T006 — ADR de persistência e autoridade de tempo** after T005 is merged.
+Execute **T006 — ADR de persistência e autoridade de tempo**.
