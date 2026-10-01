@@ -10,4 +10,7 @@ Scope:
 - .agents/skills/roblox/SKILL.md
 - docs/SIGA-HANDOFF.md
 Opened: 2026-09-30T21:44:00-03:00
-Status: ACTIVE
+Status: CLOSED
+PR: #2
+Merged: master@db746c22443175d9ba0d2e610e7090aa735c045c
+Result: T005 complete; ADR-0001 accepted.
