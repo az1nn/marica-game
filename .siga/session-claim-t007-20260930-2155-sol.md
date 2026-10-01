@@ -9,6 +9,7 @@ Scope:
 - specs/001-animal-core/tasks.md
 - rokit.toml
 - wally.toml
+- wally.lock
 - default.project.json
 - test.project.json
 - src/
@@ -20,4 +21,7 @@ Scope:
 - .agents/skills/roblox/SKILL.md
 - docs/SIGA-HANDOFF.md
 Opened: 2026-09-30T21:55:00-03:00
-Status: ACTIVE
+Status: CLOSED
+PR: #4
+Merged: master@0968cd09acae03ea921ca9a1f3ce989d8911e98d
+Result: T007 complete; pinned Roblox/Rojo/Jest toolchain and exact-head CI accepted.
