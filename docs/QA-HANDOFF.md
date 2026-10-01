@@ -1,12 +1,23 @@
 # QA HANDOFF
 
-Status: BOOTSTRAPPED
+Status: T010_VERIFIED
 
-Primary future gate set comes from SPEC-001 invariants and release gates G001-G006.
+## T010 evidence
 
-Highest-value early coverage after runtime/toolchain setup:
-1. deterministic lifecycle;
-2. soulbound domain invariant;
-3. exactly-two successor idempotency;
-4. pedigree preservation;
-5. accelerated 2-4 week simulation.
+Delivery SHA: `51667c9be61f558de1e03a53189b77dcb3a6050d`.
+
+- Jest spec added for PetId creation, invalid IDs and frozen Pet identity.
+- Validate skills: PASS.
+- Roblox CI: PASS.
+- StyLua: PASS.
+- Selene: PASS.
+- production Rojo build: PASS.
+- test Rojo build: PASS.
+- PR review threads: none.
+- Post-merge push gates: PASS on the delivery SHA.
+
+Current CI builds the Jest test place but does **not yet execute Jest headlessly**. Do not report the Jest assertions as runtime-executed evidence until a runner is wired into CI.
+
+## Next
+
+For T011, add deterministic pedigree/lineage tests alongside the domain change and preserve the current exact-head static/build gates.
