@@ -4,19 +4,14 @@ Status: ADVANCE
 Repository: az1nn/marica-game
 Active spec: SPEC-001 Animal Core
 Completed: T005, T006
-Active task: T007
+Active delivery: T007 complete on branch
+Next task: T010
 
-## Verified base
+## T007 delivery
 
-- T006 merged through PR #3 at `4aac27ce07c8e48d57dddffcb994ee6aabe6f4f0`.
-- T007 branch: `feat/t007-roblox-toolchain`.
-- T007 base: `master@f4c6d2e27196c96143a76a65f88cdbadaeb13224`.
-- Post-claim barrier: CLEAR.
-- No open PR existed at the T007 barrier.
+Branch: `feat/t007-roblox-toolchain`
 
-## T007 toolchain
-
-Pinned:
+Pinned toolchain:
 
 - Rokit 1.2.0
 - Rojo 7.7.0
@@ -25,21 +20,33 @@ Pinned:
 - Selene 0.31.0
 - Jest Roblox 3.20.0
 
-TestEZ was removed from the baseline before domain implementation because its official repository is archived.
+Implemented:
 
-Repository now contains production/test Rojo projects, a minimal src layout, a Jest smoke suite and a GitHub Actions toolchain gate.
+- `rokit.toml`
+- `wally.toml` + generated `wally.lock`
+- production and test Rojo projects
+- client/server/shared Luau bootstrap
+- Jest smoke suite
+- StyLua/Selene config
+- generated-artifact ignore rules
+- `Roblox CI` workflow
+- lockfile reproducibility gate
+- ADR-0001/ROBLOX baseline corrected from archived TestEZ to Jest Roblox
 
-## Gate
+## First runtime gate
 
-Run T007 PR CI, capture generated `wally.lock`, commit the lockfile, then require exact-head:
+PR #4 first head proved:
 
-- Wally dependency install with unchanged lockfile
-- StyLua check
-- Selene
-- production Rojo build
-- test Rojo build
-- existing skill/ARTIST validation
+- Rokit setup: PASS
+- Wally dependency resolution: PASS
+- StyLua: PASS
+- Selene: PASS
+- production Rojo build: PASS
+- test Rojo build: PASS
+- existing skills/ARTIST gate: PASS
+
+The generated lockfile from that runner is now tracked. Final exact-head CI must prove that re-installing dependencies does not change it.
 
 ## Next
 
-After T007 merges, execute **T010 — entidade Pet e IDs imutáveis**.
+After PR #4 merges, execute **T010 — Implementar entidade Pet e IDs imutáveis**.
