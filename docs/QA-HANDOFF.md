@@ -1,23 +1,31 @@
 # QA HANDOFF
 
-Status: T010_VERIFIED
+Status: T011_VERIFIED
 
-## T010 evidence
+## Delivery evidence
 
-Delivery SHA: `51667c9be61f558de1e03a53189b77dcb3a6050d`.
+T010 delivery: `51667c9be61f558de1e03a53189b77dcb3a6050d`.
+T011 delivery: `fec260381caff36ce15ef2202e52d9c690ba1178`.
 
-- Jest spec added for PetId creation, invalid IDs and frozen Pet identity.
+T011 adds Jest test source for:
+- founder generation zero;
+- descendant parent references;
+- pedigree immutability;
+- invalid generation/parent shapes;
+- duplicate direct-parent rejection.
+
+Exact delivery gates:
 - Validate skills: PASS.
 - Roblox CI: PASS.
+- Wally reproducibility: PASS.
 - StyLua: PASS.
 - Selene: PASS.
-- production Rojo build: PASS.
-- test Rojo build: PASS.
-- PR review threads: none.
-- Post-merge push gates: PASS on the delivery SHA.
+- production/test Rojo builds: PASS.
+- review threads: none.
+- post-merge push gates: PASS.
 
-Current CI builds the Jest test place but does **not yet execute Jest headlessly**. Do not report the Jest assertions as runtime-executed evidence until a runner is wired into CI.
+Current CI still builds but does not headlessly execute Jest assertions. Treat those tests as authored coverage, not runtime-executed evidence.
 
 ## Next
 
-For T011, add deterministic pedigree/lineage tests alongside the domain change and preserve the current exact-head static/build gates.
+For T012, model lifecycle transitions as deterministic domain state and add test source for legal/illegal transitions.
