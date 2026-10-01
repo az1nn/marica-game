@@ -9,7 +9,7 @@
 - [x] **T002** Criar constituição Spec Kit.
 - [x] **T003** Registrar SPEC-001 Animal Core.
 - [x] **T004** Criar plano técnico inicial.
-- [ ] **T005** Fechar ADR de engine/runtime.
+- [x] **T005** Fechar ADR de engine/runtime.
 - [ ] **T006** Fechar ADR de persistência e autoridade de tempo.
 
 ## Phase B — Domain P0

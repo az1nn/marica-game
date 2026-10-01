@@ -15,13 +15,14 @@ az1nn/marica-game
 
 ## Activation gate
 
-SPEC-001 plan records Roblox-first as the frozen delivery direction, but tasks.md still requires T005 to close the formal engine/runtime ADR.
+ADR-0001 ratifies **Roblox as the V1 production runtime**.
 
 Therefore:
 
-- architecture/spike work that supports T005 is allowed;
-- irreversible production structure must follow the ratified ADR;
-- once T005 is complete, ROBLOX becomes the default production runtime specialist unless a newer ADR supersedes it.
+- ROBLOX is the default production runtime specialist;
+- irreversible runtime structure must remain compatible with ADR-0001;
+- domain rules must stay engine-neutral and server-authoritative;
+- GODOT and 3JS remain portability/reference lanes unless a newer ADR explicitly supersedes ADR-0001.
 
 ## Core architecture law
 
@@ -88,7 +89,7 @@ ROBLOX does not own product rules, visual direction or canon.
 ## Start protocol
 
 1. Verify repository identity.
-2. Read constitution, active spec/plan/tasks and runtime ADR.
+2. Read constitution, active spec/plan/tasks and ADR-0001.
 3. Read docs/ROBLOX-HANDOFF.md.
 4. Inspect only relevant open PRs/branches/runtime files.
 5. Classify ROBLOX-RESUME, ROBLOX-ADVANCE, ROBLOX-WATCH or ROBLOX-BLOCKED.
@@ -164,11 +165,16 @@ Track where applicable:
 
 Do not optimize away correctness before profiling.
 
-## Toolchain
+## Ratified toolchain
 
-T005/related ADR must explicitly select the source-control/sync/test workflow. Do not assume Rojo, a particular package manager or test framework until repository evidence ratifies it.
+ADR-0001 selects:
 
-Once ratified, this skill must follow the checked-in commands rather than invent alternate local flows.
+- Roblox Studio + Luau for runtime/presentation;
+- Git/GitHub as code/documentation source of truth;
+- Rojo as filesystem ↔ Studio sync/build workflow;
+- TestEZ as the baseline Roblox/Luau test harness.
+
+Do not introduce alternate source-sync or test stacks casually. Toolchain changes require a PR with rationale and exact-head gates.
 
 ## Definition of runtime completion
 
