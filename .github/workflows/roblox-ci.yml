@@ -1,0 +1,57 @@
+name: Roblox CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  toolchain:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Setup Rokit toolchain
+        uses: paradoxum-games/setup-rokit@v3
+        with:
+          version: 1.2.0
+          cache: true
+
+      - name: Show pinned tool versions
+        run: |
+          rojo --version
+          wally --version
+          stylua --version
+          selene --version
+
+      - name: Install Wally dependencies
+        run: wally install
+
+      - name: Format gate
+        run: stylua --check src tests
+
+      - name: Static analysis gate
+        run: selene src tests
+
+      - name: Build production and test places
+        run: |
+          mkdir -p build
+          rojo build default.project.json --output build/marica-game.rbxlx
+          rojo build test.project.json --output build/marica-game-tests.rbxlx
+
+      - name: Upload reproducibility artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: roblox-toolchain-${{ github.sha }}
+          path: |
+            build/*.rbxlx
+            wally.lock
+          if-no-files-found: error
