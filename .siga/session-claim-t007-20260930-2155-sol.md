@@ -16,6 +16,8 @@ Scope:
 - .stylua.toml
 - selene.toml
 - .github/workflows/roblox-ci.yml
+- .gitignore
+- .agents/skills/roblox/SKILL.md
 - docs/SIGA-HANDOFF.md
 Opened: 2026-09-30T21:55:00-03:00
 Status: ACTIVE
