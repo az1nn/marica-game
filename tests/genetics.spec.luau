@@ -201,4 +201,3 @@ describe("Genetic potential and expressed traits", function()
 		expect(fractionalSeedOk).toBe(false)
 	end)
 end)
-
