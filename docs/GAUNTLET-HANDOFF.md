@@ -1,39 +1,36 @@
 # GAUNTLET HANDOFF
 
-Status: AQ010_CANDIDATE
+Status: AQ010_DELIVERED
 
-## Foundation
+## AQ010 delivery
 
-SPEC-003 Agentic Quality Loop is active under SIGA. Missing behavioral execution is never promoted to PASS.
+- PR: #27
+- delivery HEAD: 8879703021142c5c2f3408ec2e50987755d2ab38
+- merged master: c681e2d2a35cb562fe8b7fcd3d5bdcc55b6beea5
+- Validate skills: PASS
+- Roblox CI: PASS
+- Roblox Behavioral: SKIPPED because `ROBLOX_TEST_UNIVERSE_ID` / `ROBLOX_TEST_PLACE_ID` are not configured.
 
-## AQ010 candidate
+AQ010 now provides:
 
-Branch: feat/aq010-open-cloud-behavioral-execution
-
-Implemented:
-
-- GitHub Actions workflow `Roblox Behavioral`;
-- exact-head checkout and Rojo build of `test.project.json`;
-- publication of the built RBXLX to a dedicated Roblox test place through Open Cloud;
+- exact-head test-place build;
+- publish to an isolated Roblox test place through Open Cloud;
 - Luau Execution against the exact published place version;
-- explicit Jest invocation because Luau Execution does not auto-run place Scripts;
-- log/error propagation back to CI;
-- syntax/format guards in the existing Roblox CI.
+- explicit Jest invocation;
+- CI log/error propagation.
 
-Configuration contract:
+Required repository configuration:
 
-- secret: `ROBLOX_API_KEY`;
-- repository variables: `ROBLOX_TEST_UNIVERSE_ID`, `ROBLOX_TEST_PLACE_ID`;
-- API key permissions must include place publish/write and Luau execution for the isolated test place.
+- secret `ROBLOX_API_KEY`;
+- vars `ROBLOX_TEST_UNIVERSE_ID`, `ROBLOX_TEST_PLACE_ID`;
+- key access for place publishing and Luau execution on the test place.
 
-The behavioral workflow intentionally skips when the test universe/place variables are absent. A skipped workflow is missing evidence, not PASS.
+A skipped behavioral job is missing evidence, not PASS.
 
 ## Product thread
 
-T020 remains the active SPEC-001 P0 candidate in PR #26.
-
-Its authored deterministic genetics tests cannot satisfy the new GAUNTLET mutation requirement until Roblox Behavioral actually executes against the candidate SHA.
+T020 is open as PR #26. Its product contract remains unaccepted until behavioral Jest execution and the GAUNTLET mutation cycle can run on the exact candidate.
 
 ## Next quality action
 
-Verify AQ010 candidate gates and merge the wiring. Then AQ011 makes behavioral Jest execution an exact-head acceptance gate once repository Open Cloud configuration is present.
+AQ011 — configure/use the behavioral result as an exact-head gate, then AQ012 executes the first GOOD -> BAD MUTANT -> RESTORE proof.
