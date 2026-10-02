@@ -2,23 +2,31 @@
 
 Status: ADVANCE
 
-Runtime baseline remains Roblox + Luau under ADR-0001, with engine-neutral domain rules.
+## T013 delivered
 
-## Delivered
+PR #8 merged into master at `3dce4caa2fc9dd6ff8aa5003112857b526f936d7`.
+Delivery HEAD: `be8a997988ec650fd3284d8790034c62503ecb4b`.
 
-- T012 merged via PR #7.
-- T012 delivery SHA: `4669c0b4a0672fa9bad8ed5ba08830edabc100b3`.
-- `Lifecycle` is a pure domain state machine with no Roblox service dependency.
-- Life-stage progression is deterministic and explicit.
-- Natural end requires senior stage; health-driven early end is supported.
-- Terminal lifecycle state is irreversible.
-- `Pet.withLifecycle` replaces immutable pet state without changing ID or pedigree.
-- Exact-head and post-merge Roblox CI / skill validation are green.
+Runtime/domain boundary now includes:
+- engine-neutral `SimulationTime.observe(clock, lastObservedAt)`;
+- monotonic logical time and non-negative elapsed under clock rollback;
+- engine-neutral `LifecycleSimulation.advance(..., bornAt, now, schedule)` for deterministic offline catch-up;
+- Roblox-only `RobloxClock.now()` backed by `Workspace:GetServerTimeNow()`;
+- no client timestamp authority;
+- no frame timer as source of truth.
+
+Exact delivery gates:
+- Validate skills: PASS.
+- Roblox CI: PASS.
+- review threads: none.
+- base drift: none.
+
+Known QA gap remains: Jest sources are built into the test place but assertions are not yet run headlessly in CI.
 
 ## Boundary
 
-T012 deliberately does not read wall-clock or Roblox time. Time-derived progression belongs to T013 and must inject time into deterministic domain functions.
+T014 is a domain task. Keep Roblox presentation/runtime out of genetic rules; any runtime integration must consume engine-neutral contracts.
 
 ## Next
 
-Execute **T013 — injectable clock/simulation** and derive lifecycle progression from persisted time without introducing frame/client authority.
+Execute **T014 — genetic potential vs expressed traits**.

@@ -1,33 +1,31 @@
 # QA HANDOFF
 
-Status: T012_VERIFIED
+Status: T013_VERIFIED
 
 ## Delivery evidence
 
-T012 delivery: `4669c0b4a0672fa9bad8ed5ba08830edabc100b3`.
-Merged master: `b44d46b78fc8ae1a15b9970d3ca41ef9e0884940`.
+T013 delivery HEAD: `be8a997988ec650fd3284d8790034c62503ecb4b`.
+Merged master: `3dce4caa2fc9dd6ff8aa5003112857b526f936d7`.
+PR: #8.
 
 Authored Jest coverage:
-- initial active juvenile state;
-- deterministic juvenile -> adult -> senior transitions;
-- skipped/backwards transition rejection;
-- health-driven early end;
-- natural end only from senior;
-- terminal irreversibility;
-- immutable Pet lifecycle replacement preserving identity/pedigree.
+- injected clock produces deterministic elapsed time;
+- offline elapsed is derived from persisted observation time;
+- raw clock rollback is clamped to monotonic logical time;
+- elapsed never becomes negative;
+- one offline gap can cross juvenile -> adult -> senior;
+- one offline gap can cross natural end of life;
+- already-ended lifecycle remains terminal;
+- future/corrupt bornAt cannot create negative age.
 
-Exact-head gates:
+Exact delivery gates:
 - Validate skills: PASS.
-- Roblox CI: PASS.
+- Roblox CI: PASS, including StyLua, Selene, production build and test-place build.
 - review threads: none.
 - base drift: none.
 
-Post-merge gates on master:
-- Validate skills: PASS.
-- Roblox CI: PASS.
-
-Current CI still builds but does not headlessly execute Jest assertions. Treat lifecycle tests as authored coverage until headless execution is wired.
+Known QA gap: the CI builds Jest specs but does not execute Jest assertions headlessly. Treat the authored behavioral specs as coverage source until that harness is wired.
 
 ## Next
 
-T013 should add deterministic time/simulation tests for offline multi-stage advancement and clock rollback behavior.
+For T014, require deterministic tests that separate genetic potential from expressed traits and prevent care/environment from mutating genotype.

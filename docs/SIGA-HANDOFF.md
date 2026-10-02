@@ -1,45 +1,66 @@
-# SIGA HANDOFF
+CAVEMAN HANDOFF v1
 
-Status: ADVANCE
-Repository: az1nn/marica-game
-Active spec: SPEC-001 Animal Core
-Completed: T005, T006, T007, T010, T011, T012
-Next task: T013
+APP:
+Maricá Game
 
-## Verified delivery
+WORKSTREAM:
+SPEC-001 Animal Core / Domain P0
 
-- PR #7: T012 lifecycle state machine — merged.
-- T012 delivery SHA: `4669c0b4a0672fa9bad8ed5ba08830edabc100b3`.
-- Merge SHA: `b44d46b78fc8ae1a15b9970d3ca41ef9e0884940`.
-- T012 claim: CLOSED.
-- No competing open PR, active overlapping claim or unresolved review thread existed at merge time.
+STATE:
+T013 merged and complete. T014 is the next executable task.
 
-## Domain baseline
+MODE:
+ADVANCE
 
-- `PetId`: opaque validated identity with injected generation.
-- `LineageId`: opaque validated lineage identity.
-- `Pedigree`: immutable lineage id + generation + founder pet + direct parent refs.
-- `Lifecycle`: engine-neutral state machine.
-- Active stages progress `juvenile -> adult -> senior` one step at a time.
-- Natural end is legal only from `senior`; health-driven early end is supported.
-- Ended lifecycle is terminal.
-- `Pet` owns immutable pedigree and lifecycle state.
+CANONICAL SOURCE:
+az1nn/marica-game master + specs/001-animal-core/tasks.md; SIGA procedure remains canonical in az1nn/cpxlabs-admin/.agents/skills/siga/SKILL.md.
 
-## Exact-head delivery gates — T012
+CURRENT VERSION / HEAD:
+T013 delivery merge master@3dce4caa2fc9dd6ff8aa5003112857b526f936d7
 
-Head: `4669c0b4a0672fa9bad8ed5ba08830edabc100b3`
+BASE:
+master
 
-- Validate skills: PASS.
-- Roblox CI: PASS.
-- review threads: none.
-- base drift: none.
+BRANCH / ENV:
+master / Roblox-first
 
-Post-merge master `b44d46b78fc8ae1a15b9970d3ca41ef9e0884940`:
-- Validate skills: PASS.
-- Roblox CI: PASS.
+PR / MR / TASK:
+PR #8 merged / T013 complete / T014 next
 
-Known QA gap: Jest specs are built into the test place but are not yet executed headlessly by CI.
+SPEC / ADR:
+SPEC-001 Animal Core; ADR-0001 runtime; ADR-0002 persistence/time
 
-## Next
+DONE:
+- injectable Clock contract via SimulationTime.observe(clock, lastObservedAt);
+- monotonic logical time: logicalNow = max(rawNow, lastObservedAt);
+- elapsed never becomes negative under clock rollback;
+- deterministic lifecycle catch-up across juvenile -> adult -> senior -> natural end;
+- explicit configurable lifecycle schedule;
+- Roblox server adapter uses Workspace:GetServerTimeNow();
+- T013 marked complete in executable backlog.
 
-Execute **T013 — Implementar relógio/simulação injetável**.
+VERIFY:
+- T013 delivery HEAD be8a997988ec650fd3284d8790034c62503ecb4b;
+- Validate skills PASS on exact delivery HEAD;
+- Roblox CI PASS on exact delivery HEAD;
+- PR #8 had no unresolved review threads;
+- master had no base drift at merge.
+
+GATES:
+Exact-head merge gates PASS. Known QA gap remains: Jest specs are built into the test place but are not yet executed headlessly by CI.
+
+BLOCKERS:
+None.
+
+INVARIANTS:
+- client time is never authoritative;
+- temporal domain rules accept explicit time;
+- logical profile time never moves backward;
+- terminal lifecycle remains terminal;
+- domain remains engine-neutral; Roblox-specific time access stays in adapter layer.
+
+NEXT:
+Execute T014 — genetic potential vs expressed traits.
+
+VERIFY-FIRST:
+Re-read master HEAD, open PRs, active .siga claims and exact-head workflows. Confirm this handoff-maintenance commit is green, then classify ADVANCE and claim T014 before mutation.

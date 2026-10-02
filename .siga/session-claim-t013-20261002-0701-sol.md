@@ -14,4 +14,8 @@ Scope:
 - docs/ROBLOX-HANDOFF.md
 - docs/QA-HANDOFF.md
 Opened: 2026-10-02T07:01:00-03:00
-Status: ACTIVE
+Status: CLOSED
+PR: #8
+Delivery: be8a997988ec650fd3284d8790034c62503ecb4b
+Merged: master@3dce4caa2fc9dd6ff8aa5003112857b526f936d7
+Result: T013 complete; injectable monotonic time and deterministic offline lifecycle catch-up merged with exact-head gates green.
