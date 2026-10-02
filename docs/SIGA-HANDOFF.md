@@ -7,38 +7,49 @@ WORKSTREAM:
 SPEC-001 Animal Core continuation
 
 STATE:
-T017 soulbound domain invariant is implemented on a dedicated candidate branch and awaits exact-head delivery gates.
+T017 soulbound domain invariant is merged and complete. Live task order advances to T018 persistent affection.
 
 MODE:
-RESUME
+ADVANCE
 
 CANONICAL SOURCE:
 az1nn/marica-game master + .agents/skills/siga/SKILL.md + .specify/memory/constitution.md + live specs/tasks/PRs/claims/CI.
 
+DELIVERY:
+PR #16 merged.
+Delivery HEAD: 46dd15acde656b42c9ce92930e9edb5720f2458d.
+Merge commit: bca1b81410aa79af06c47b052e14478b2e578c03.
+
 BASE / ENV:
-master@837e29fbae0acdd5b1e51ee093dcb3e96cdc3671 / Roblox-first
+master / Roblox-first
 
 ACTIVE PR / CLAIM:
-Branch: feat/t017-soulbound-domain-invariant.
-Claim: .siga/session-claim-t017-20261002-1307-sol.md (ACTIVE).
-PR: pending creation.
+No product PR after #16 merge.
+T017 claim is CLOSED by this handoff closure.
+RELATORIO visual-contract claim is also CLOSED and was PARALLEL_SAFE.
 
 SPEC / ADR:
 SPEC-001 Animal Core; ADR-0001 runtime; ADR-0002 persistence/time.
 
 DONE:
 - Pet persists an explicit immutable soulbound flag;
-- soulbound input is validated as boolean;
-- domain transfer eligibility and rejection guards are available independently of UI/runtime;
-- all existing Pet state transitions preserve soulbound;
+- invalid soulbound values are rejected;
+- transfer eligibility/rejection is enforced in the domain rather than UI/runtime;
+- lifecycle, care and health transitions preserve soulbound;
 - descendants do not inherit soulbound automatically;
-- behavioral Jest coverage is authored;
-- T017 is checked complete on the candidate branch.
+- behavioral Jest coverage documents the invariant;
+- T017 is checked complete in the executable SPEC-001 backlog.
 
 VERIFY:
-Required exact-head gates are pending for the final PR head:
-- Validate skills;
-- Roblox CI.
+PR #16 exact-head gates PASS at 46dd15acde656b42c9ce92930e9edb5720f2458d:
+- Validate skills: PASS;
+- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
+
+CONCURRENCY:
+- master drift from RELATORIO visual-contract work was reviewed before merge;
+- drift touched only RELATORIO skill/report files;
+- classification: PARALLEL_SAFE;
+- no T017 files or semantic contracts overlapped.
 
 BLOCKERS:
 None.
@@ -50,7 +61,7 @@ INVARIANTS:
 - only az1nn/marica-game is authoritative for this project.
 
 NEXT:
-Open the T017 PR, verify exact-head gates, merge if green, then close the claim and persist T018 as the single next action.
+Execute T018 — persistent affection — from fresh master state, keeping affection distinct from transient care and preserving it for future ownership transfers.
 
 VERIFY-FIRST:
-Before merge, re-read master, PR head, open claims, overlap and exact-head workflows.
+Re-read master HEAD, open PRs, active .siga claims, T018 task contract and exact-head workflows before mutation.

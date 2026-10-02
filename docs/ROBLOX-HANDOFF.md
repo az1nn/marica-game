@@ -1,28 +1,33 @@
 # ROBLOX HANDOFF
 
-Status: T017_CANDIDATE
+Status: ADVANCE
 
-## T017 candidate
+## T017 delivered
 
-Base master: `837e29fbae0acdd5b1e51ee093dcb3e96cdc3671`.
-Implementation branch: `feat/t017-soulbound-domain-invariant`.
+PR #16 merged into master at `bca1b81410aa79af06c47b052e14478b2e578c03`.
+Delivery HEAD: `46dd15acde656b42c9ce92930e9edb5720f2458d`.
 
 Domain boundary now includes:
-- explicit immutable `Pet.soulbound` state;
-- validated boolean persistence boundary for soulbound;
-- `Pet.isTransferable(...)` as a domain eligibility query;
-- `Pet.assertTransferable(...)` as the mandatory domain guard for future ownership/marketplace transfer paths;
-- soulbound persistence across lifecycle, care and health state transitions;
-- descendants default to non-soulbound unless explicitly marked.
+- immutable persisted `Pet.soulbound` state;
+- validated boolean boundary for soulbound persistence;
+- `Pet.isTransferable(...)` eligibility query;
+- `Pet.assertTransferable(...)` domain rejection guard for future ownership/marketplace paths;
+- soulbound preservation across lifecycle, care and health transitions;
+- descendants defaulting to non-soulbound unless explicitly marked.
 
-Required gates are pending for the final PR head.
+Exact delivery gates:
+- Validate skills: PASS;
+- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
+
+Concurrency:
+- concurrent RELATORIO visual-contract changes were PARALLEL_SAFE and had no semantic/file overlap with T017.
 
 Known QA gap remains: Jest sources are built into the test place but assertions are not yet run headlessly in CI.
 
 ## Boundary
 
-T017 establishes the invariant only. T040-T042 will implement ownership history and transfer use cases and must route every transfer-capable path through the domain guard rather than duplicating the rule in UI/runtime code.
+T018 should model affection persistently and independently from momentary care. Future ownership transfer must preserve affection; T040-T042 will consume that invariant rather than redefining it.
 
 ## Next
 
-After exact-head gates and merge, advance to **T018 — persistent affection**.
+Execute **T018 — persistent affection**.
