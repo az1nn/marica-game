@@ -10,3 +10,9 @@ Concurrency intent:
 - product roadmap remains SPEC-001; this branch adds repository-local quality protocol/tooling.
 - no product/domain runtime files are modified.
 - T018 is used only as a historical/shadow fixture after merge.
+
+Reconciled drift:
+- master advanced through T018 closure and RELATORIO terminal-stage work.
+- RELATORIO/SIGA overlap was reconciled before GAUNTLET edits.
+- later claim-closure-only drift is PARALLEL_SAFE and does not change the quality contracts.
+- current product next action remains T020.
