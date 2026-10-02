@@ -1,32 +1,28 @@
 # QA HANDOFF
 
-Status: T014_VERIFIED
+Status: T015_VERIFIED
 
 ## Delivery evidence
 
-T014 delivery HEAD: `ed48ca025a138ca6796d6e6de34571dbcb8afaa8`.
-Merged master: `d16423c51b5ebbe0282fd95c5b0a990a1f069136`.
-PR: #9.
+T015 delivery HEAD: `e391441d62034721f849f08fb420dc96faf762a5`.
+Merged master: `195d628ede8dc090753765b9f5a967cc5590b547`.
+PR: #12.
 
 Authored Jest coverage:
-- genetic potential is copied and frozen;
-- normalized trait values are bounded to [0, 1];
-- expression is deterministic for explicit factors;
-- omitted factors preserve full potential for that trait;
-- invalid factors and unknown trait factors are rejected;
-- expression does not mutate genetic potential;
-- Pet keeps genetic potential stable while expressed traits change;
-- pedigree and lifecycle survive expression changes;
-- lifecycle changes preserve genetic potential and expressed traits.
+- default care is fully satisfied and immutable;
+- hunger, hygiene, affection and energy are normalized to [0, 1];
+- invalid care values are rejected;
+- weakest essential need deterministically defines care quality;
+- care quality maps to deterministic expression factors;
+- updating care preserves pet identity, pedigree, lifecycle and genetic potential;
+- neglect lowers expressed traits without mutating genetic potential.
 
 Exact delivery gates:
 - Validate skills: PASS;
-- Roblox CI: PASS, including StyLua, Selene, production build and test-place build;
-- review threads: none unresolved;
-- base drift: none.
+- Roblox CI: PASS, including StyLua, Selene, production build and test-place build.
 
 Known QA gap: the CI builds Jest specs but does not execute Jest assertions headlessly. Treat the authored behavioral specs as coverage source until that harness is wired.
 
 ## Next
 
-For T015, model measurable care state and derive expression factors from care without mutating genetic potential or pedigree.
+For T016, cover deterministic health states, neglect-driven disease, treatment transitions/cost hooks and terminal-risk boundaries without conflating health with care.

@@ -2,31 +2,29 @@
 
 Status: ADVANCE
 
-## T014 delivered
+## T015 delivered
 
-PR #9 merged into master at `d16423c51b5ebbe0282fd95c5b0a990a1f069136`.
-Delivery HEAD: `ed48ca025a138ca6796d6e6de34571dbcb8afaa8`.
+PR #12 merged into master at `195d628ede8dc090753765b9f5a967cc5590b547`.
+Delivery HEAD: `e391441d62034721f849f08fb420dc96faf762a5`.
 
 Domain boundary now includes:
-- `Genetics.newPotential(...)` for immutable normalized genetic-potential maps;
-- `Genetics.express(potential, factors)` for deterministic current trait expression;
-- expression factors bounded to [0, 1] and unable to create unknown genetic traits;
-- separate `Pet.geneticPotential` and `Pet.expressedTraits`;
-- `Pet.withExpressionFactors(...)` updates expression without changing identity, pedigree, lifecycle or genetic potential;
-- no Roblox service or Instance dependency in genetic rules.
+- `Care.new(...)` for immutable normalized hunger, hygiene, affection and energy state;
+- `Care.quality(...)` as deterministic weakest-essential-need quality;
+- `Care.toExpressionFactors(...)` to translate care into bounded genetic-expression factors;
+- `Pet.careState` as persistent domain state;
+- `Pet.withCareState(...)` to update care and expressed traits without mutating identity, pedigree, lifecycle or genetic potential;
+- no Roblox service or Instance dependency in care rules.
 
 Exact delivery gates:
 - Validate skills: PASS;
-- Roblox CI: PASS;
-- review threads: none;
-- base drift: none.
+- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
 
 Known QA gap remains: Jest sources are built into the test place but assertions are not yet run headlessly in CI.
 
 ## Boundary
 
-T015 should model care in the engine-neutral domain/application layers and translate care into explicit expression factors. Genetic potential must remain immutable and independent of presentation/runtime code.
+T016 should model health/disease/treatment as a separate domain concern. Care/neglect may drive health transitions, but health must not rewrite genetic potential or collapse the care contract.
 
 ## Next
 
-Execute **T015 — care state**.
+Execute **T016 — health/disease/treatment**.
