@@ -6,6 +6,7 @@ local expect = JestGlobals.expect
 local it = JestGlobals.it
 
 local Genetics = require(ReplicatedStorage.Shared.domain.Genetics)
+local Lifecycle = require(ReplicatedStorage.Shared.domain.Lifecycle)
 local Pedigree = require(ReplicatedStorage.Shared.domain.Pedigree)
 local Pet = require(ReplicatedStorage.Shared.domain.Pet)
 
@@ -108,7 +109,7 @@ describe("Genetic potential and expressed traits", function()
 				size = 0.5,
 			})
 		)
-		local advanced = Pet.withLifecycle(pet, require(ReplicatedStorage.Shared.domain.Lifecycle).advance(pet.lifecycle, "adult"))
+		local advanced = Pet.withLifecycle(pet, Lifecycle.advance(pet.lifecycle, "adult"))
 
 		expect(advanced.geneticPotential).toBe(pet.geneticPotential)
 		expect(advanced.expressedTraits).toBe(pet.expressedTraits)
