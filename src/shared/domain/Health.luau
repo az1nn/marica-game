@@ -99,7 +99,11 @@ function Health.new(values: HealthInput?): HealthState
 	return freezeState(neglectHours, untreatedHours)
 end
 
-function Health.advance(state: HealthState, careState: Care.CareState, elapsedHours: number): HealthState
+function Health.advance(
+	state: HealthState,
+	careState: Care.CareState,
+	elapsedHours: number
+): HealthState
 	local current = Health.new(state)
 	local elapsed = assertFiniteNonNegative(elapsedHours, "elapsedHours")
 	local careQuality = Care.quality(careState)
