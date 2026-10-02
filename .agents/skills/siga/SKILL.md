@@ -109,6 +109,7 @@ SIGA selects the task and retains orchestration authority. Route implementation 
 - **CENA** — production visual materialization, scene composition, assets, lighting, integration and provenance.
 - **ROBLOX** — production runtime/platform engineering, server authority, adapters, remotes and runtime performance.
 - **QA** — automated gates, deterministic domain tests, integration/E2E, persistence, performance and regression.
+- **GAUNTLET** — bounded adversarial quality loop for applicable high-risk/P0 changes; baseline, fresh criticism, mutation proof and regression hunting under SIGA authority.
 - **LENTE** — exact-head screenshot/video/object evidence and visual critique.
 - **RELATORIO** — mandatory terminal read-only reporter for every SIGA invocation; it re-reconciles live state and renders the canonical visual dashboard.
 - **GODOT** — portability/reference lane unless a ratified repository-local ADR/spec assigns production scope.
@@ -230,6 +231,20 @@ validated_sha != current_head -> GATE_STALE
 ~~~
 
 Green evidence from a previous SHA is not merge evidence.
+
+### GAUNTLET adversarial gate
+
+When the active spec requires adversarial verification, or when a new/materially changed measurable P0 invariant is being accepted, load:
+
+~~~text
+.agents/skills/gauntlet/SKILL.md
+~~~
+
+GAUNTLET is subordinate to SIGA. It does not select roadmap work or merge.
+
+The quality loop should establish baseline, objective gates, fresh criticism, mutation proof when measurable, and a separate regression hunt.
+
+If required behavioral execution is unavailable, GAUNTLET/QA must return BLOCKED rather than treating authored-but-unexecuted assertions as PASS. SIGA may advance collision-safe infrastructure needed to unblock that evidence, but may not fabricate the missing gate.
 
 ### Protocol self-check
 

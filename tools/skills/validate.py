@@ -16,6 +16,7 @@ REQUIRED_SKILLS = (
     "cena",
     "roblox",
     "qa",
+    "gauntlet",
     "lente",
     "relatorio",
     "godot",
@@ -35,6 +36,14 @@ REQUIRED_DOCS = (
     "docs/SIGA-CONCURRENCY.md",
 )
 
+GAUNTLET_REQUIRED_FILES = (
+    "tools/gauntlet/gauntlet.py",
+    "docs/gauntlet/T018-SHADOW-PILOT.json",
+    "specs/003-agentic-quality-loop/spec.md",
+    "specs/003-agentic-quality-loop/plan.md",
+    "specs/003-agentic-quality-loop/tasks.md",
+)
+
 CANONICAL_REPO = "az1nn/marica-game"
 SIGA_PATH = Path(".agents/skills/siga/SKILL.md")
 
@@ -52,6 +61,7 @@ SIGA_REQUIRED_MARKERS = (
     "## CONTINUE",
     ".agents/skills/siga-concurrency/SKILL.md",
     "python tools/skills/validate.py",
+    ".agents/skills/gauntlet/SKILL.md",
 )
 
 REPO_REFERENCE_RE = re.compile(r"\baz1nn/([A-Za-z0-9_.-]+)\b")
@@ -110,6 +120,10 @@ def main() -> int:
         if not (root / rel).is_file():
             errors.append(f"missing support doc: {rel}")
 
+    for rel in GAUNTLET_REQUIRED_FILES:
+        if not (root / rel).is_file():
+            errors.append(f"missing GAUNTLET file: {rel}")
+
     for path in repository_operating_files(root):
         if not path.is_file():
             continue
@@ -145,6 +159,7 @@ def main() -> int:
     print(f"- repository lock: {CANONICAL_REPO}")
     print(f"- skills: {len(REQUIRED_SKILLS)}")
     print(f"- support docs: {len(REQUIRED_DOCS)}")
+    print(f"- GAUNTLET files: {len(GAUNTLET_REQUIRED_FILES)}")
     print("- SIGA flow markers: PASS")
     print("- cross-repository authority scan: PASS")
     print("- hard-coded SIGA task IDs: none")

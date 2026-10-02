@@ -4,62 +4,47 @@ APP:
 Maricá Game
 
 WORKSTREAM:
-SPEC-001 Animal Core continuation
+SPEC-001 T020 + SPEC-003 behavioral verification unblock
 
 STATE:
-T018 persistent affection is merged and complete. Live task order advances to T020 guaranteed genetic advancement algorithm.
+T020 deterministic guaranteed genetic advancement is implemented as PR #26 but is not accepted yet. GAUNTLET landed during the run and now requires behavioral/mutation evidence for this new P0 invariant. AQ010 Open Cloud behavioral execution wiring is the collision-safe unblock candidate.
 
 MODE:
-ADVANCE
+WATCH
 
 CANONICAL SOURCE:
-az1nn/marica-game master + .agents/skills/siga/SKILL.md + .specify/memory/constitution.md + live specs/tasks/PRs/claims/CI.
+az1nn/marica-game master + repository-local SIGA/GAUNTLET/QA skills + live specs/tasks/PRs/claims/CI.
 
-DELIVERY:
-PR #20 merged.
-Delivery HEAD: 4a2a74f30b2465bb9a7e9d3e8186930857c2f1bd.
-Merge commit: 11295a68468eb5ac7eb447c1a08b5195db5fd524.
+BASE:
+master@fe29ff352baa8b783fbb01cff176833600e50f30
 
-BASE / ENV:
-master / Roblox-first
+ACTIVE PRODUCT:
+T020 / PR #26 / feat/t020-genetic-advancement-algorithm.
+Candidate head before reconciliation: 216df7d1217f0eb82a13d92b80feafd30ee16ab1.
 
-ACTIVE PR / CLAIM:
-No product PR after #20 merge.
-T018 claim is CLOSED by this handoff closure.
+T020 CONTRACT:
+- normalized potential remains bounded in [0, 1];
+- nominal advancement step is 0.05;
+- seed selects a deterministic trait over sorted names;
+- saturated traits fall forward cyclically;
+- no trait regresses;
+- strict advancement occurs whenever capacity remains;
+- equality is allowed only at full saturation;
+- T021 owns successor seed derivation.
 
-SPEC / ADR:
-SPEC-001 Animal Core; ADR-0001 runtime; ADR-0002 persistence/time.
+QUALITY UNBLOCK:
+AQ010 / feat/aq010-open-cloud-behavioral-execution.
+- exact test place build and isolated publish;
+- stable Roblox Open Cloud Luau Execution against an exact place version;
+- explicit Jest runner;
+- logs and task failure propagate to CI;
+- missing repository Open Cloud configuration stays missing evidence, never PASS.
 
-DONE:
-- Pet persists affection independently from transient care affection;
-- invalid affection values are rejected;
-- affection gain is deterministic and capped;
-- lifecycle, care, expression and health transitions preserve affection;
-- behavioral Jest coverage documents the invariant;
-- T018 is checked complete in the executable SPEC-001 backlog.
-
-VERIFY:
-PR #20 exact-head gates PASS at 4a2a74f30b2465bb9a7e9d3e8186930857c2f1bd:
-- Validate skills: PASS;
-- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
+BLOCKER / WAIT:
+T020 cannot merge under the live GAUNTLET contract until executable behavioral evidence exists for its exact candidate and the required mutation cycle can be performed.
 
 CONCURRENCY:
-- no competing open PR or ACTIVE claim overlapped T018;
-- master remained at the expected base through merge;
-- classification: CLEAR.
-
-BLOCKERS:
-None.
-
-INVARIANTS:
-- persistent affection is distinct from momentary care affection;
-- future ownership transfer must preserve persistent affection;
-- T018 does not implement ownership transfer;
-- guaranteed genetic advancement must be deterministic and bounded before successor generation;
-- only az1nn/marica-game is authoritative for this project.
+T020 product files and AQ010 quality infrastructure are parallel-safe. No sibling product implementation is open.
 
 NEXT:
-Execute T020 — define the deterministic guaranteed genetic-advancement algorithm and its test contract before T021.
-
-VERIFY-FIRST:
-Re-read master HEAD, open PRs, active .siga claims, T020 task contract and exact-head workflows before mutation.
+Verify and merge AQ010 wiring, then make behavioral Jest execution an exact-head gate (AQ011) and use it to certify T020.

@@ -27,5 +27,10 @@ jobs:
       - name: Validate repository-local skills
         run: python tools/skills/validate.py
 
+      - name: Validate GAUNTLET protocol controls
+        run: |
+          python tools/gauntlet/gauntlet.py self-check
+          python tools/gauntlet/gauntlet.py validate docs/gauntlet/T018-SHADOW-PILOT.json
+
       - name: Validate ARTIST scaffolder dependencies
         run: python tools/artist/artist.py validate

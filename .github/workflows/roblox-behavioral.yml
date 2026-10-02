@@ -1,0 +1,46 @@
+name: Roblox Behavioral
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: roblox-behavioral-${{ vars.ROBLOX_TEST_UNIVERSE_ID || 'unconfigured' }}
+  cancel-in-progress: false
+
+jobs:
+  open-cloud-tests:
+    if: ${{ vars.ROBLOX_TEST_UNIVERSE_ID != '' && vars.ROBLOX_TEST_PLACE_ID != '' }}
+    runs-on: ubuntu-latest
+    env:
+      ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+      ROBLOX_TEST_UNIVERSE_ID: ${{ vars.ROBLOX_TEST_UNIVERSE_ID }}
+      ROBLOX_TEST_PLACE_ID: ${{ vars.ROBLOX_TEST_PLACE_ID }}
+    steps:
+      - name: Checkout exact commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Setup Rokit toolchain
+        uses: paradoxum-games/setup-rokit@v3
+        with:
+          version: 1.2.0
+          cache: true
+
+      - name: Install Wally dependencies
+        run: wally install
+
+      - name: Build exact test place
+        run: |
+          mkdir -p build
+          rojo build test.project.json --output build/marica-game-tests.rbxlx
+
+      - name: Run behavioral tests through Roblox Open Cloud
+        run: |
+          python tools/roblox/open_cloud_test.py \
+            --place-file build/marica-game-tests.rbxlx \
+            --script-file tools/roblox/run-tests.luau
