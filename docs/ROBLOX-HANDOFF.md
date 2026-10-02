@@ -1,11 +1,11 @@
 # ROBLOX HANDOFF
 
-Status: T018_CANDIDATE
+Status: ADVANCE
 
-## T018 candidate
+## T018 delivered
 
-Base master: `69e798df2c6f9578bf01b7eec65615b934721625`.
-Implementation branch: `feat/t018-persistent-affection`.
+PR #20 merged into master at `11295a68468eb5ac7eb447c1a08b5195db5fd524`.
+Delivery HEAD: `4a2a74f30b2465bb9a7e9d3e8186930857c2f1bd`.
 
 Domain boundary now includes:
 - explicit persisted `Pet.affection` state independent from `careState.affection`;
@@ -14,14 +14,16 @@ Domain boundary now includes:
 - immutable `Pet.withAffection(...)` / `Pet.gainAffection(...)` transitions;
 - affection preservation across lifecycle, care, expression and health transitions.
 
-Required gates are pending for the final PR head.
+Exact delivery gates:
+- Validate skills: PASS;
+- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
 
 Known QA gap remains: Jest sources are built into the test place but assertions are not yet run headlessly in CI.
 
 ## Boundary
 
-T018 establishes persistent bond only. Ownership history and transfer paths remain T040-T042 and must preserve `Pet.affection` rather than resetting it.
+T020 must define the guaranteed genetic-advancement algorithm as a deterministic, capped contract before T021 implements successor generation. Ownership transfer remains T040-T042 and must preserve `Pet.affection`.
 
 ## Next
 
-Verify exact-head gates for **T018 — persistent affection**, merge when green, then advance to **T020 — guaranteed genetic advancement algorithm**.
+Execute **T020 — guaranteed genetic advancement algorithm**.
