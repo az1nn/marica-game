@@ -4,10 +4,10 @@ APP:
 Maricá Game
 
 WORKSTREAM:
-SPEC-001 T020 + SPEC-003 behavioral verification unblock
+SPEC-001 T020 verification
 
 STATE:
-T020 deterministic guaranteed genetic advancement is implemented as PR #26 but is not accepted yet. GAUNTLET landed during the run and now requires behavioral/mutation evidence for this new P0 invariant. AQ010 Open Cloud behavioral execution wiring is the collision-safe unblock candidate.
+AQ010 Open Cloud behavioral execution wiring is merged. T020 guaranteed genetic advancement remains active in PR #26 and must satisfy the live GAUNTLET P0 acceptance contract.
 
 MODE:
 WATCH
@@ -15,36 +15,27 @@ WATCH
 CANONICAL SOURCE:
 az1nn/marica-game master + repository-local SIGA/GAUNTLET/QA skills + live specs/tasks/PRs/claims/CI.
 
-BASE:
-master@fe29ff352baa8b783fbb01cff176833600e50f30
+DELIVERED THIS RUN:
+- T020 deterministic advancement contract implemented in PR #26;
+- ADR-0003 freezes deterministic bounded advancement semantics;
+- AQ010 implemented and merged by PR #27;
+- Roblox Behavioral workflow exists but is SKIPPED while the isolated test-place configuration is absent.
 
-ACTIVE PRODUCT:
-T020 / PR #26 / feat/t020-genetic-advancement-algorithm.
-Candidate head before reconciliation: 216df7d1217f0eb82a13d92b80feafd30ee16ab1.
+T020:
+PR #26 / feat/t020-genetic-advancement-algorithm.
+Current candidate is reconciled with GAUNTLET/AQ010-era master and is undergoing exact-head static/build verification.
 
-T020 CONTRACT:
-- normalized potential remains bounded in [0, 1];
-- nominal advancement step is 0.05;
-- seed selects a deterministic trait over sorted names;
-- saturated traits fall forward cyclically;
-- no trait regresses;
-- strict advancement occurs whenever capacity remains;
-- equality is allowed only at full saturation;
-- T021 owns successor seed derivation.
-
-QUALITY UNBLOCK:
-AQ010 / feat/aq010-open-cloud-behavioral-execution.
-- exact test place build and isolated publish;
-- stable Roblox Open Cloud Luau Execution against an exact place version;
-- explicit Jest runner;
-- logs and task failure propagate to CI;
-- missing repository Open Cloud configuration stays missing evidence, never PASS.
+QUALITY:
+AQ010 merged at master@c681e2d2a35cb562fe8b7fcd3d5bdcc55b6beea5.
+Behavioral configuration still required:
+- secret ROBLOX_API_KEY;
+- vars ROBLOX_TEST_UNIVERSE_ID and ROBLOX_TEST_PLACE_ID.
 
 BLOCKER / WAIT:
-T020 cannot merge under the live GAUNTLET contract until executable behavioral evidence exists for its exact candidate and the required mutation cycle can be performed.
+Without the Open Cloud test-place configuration, Roblox Behavioral is SKIPPED. Therefore T020 cannot yet provide executed Jest evidence or required mutation proof and must not merge.
 
 CONCURRENCY:
-T020 product files and AQ010 quality infrastructure are parallel-safe. No sibling product implementation is open.
+T020 has no competing sibling product implementation. AQ010 is delivered and its claim is closed by the follow-up closure.
 
 NEXT:
-Verify and merge AQ010 wiring, then make behavioral Jest execution an exact-head gate (AQ011) and use it to certify T020.
+AQ011 — activate behavioral Jest as exact-head evidence using the isolated Roblox test place, then certify T020 with GAUNTLET mutation proof.
