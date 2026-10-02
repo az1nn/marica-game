@@ -40,15 +40,8 @@ describe("Soulbound invariant", function()
 	end)
 
 	it("blocks transfer for an explicitly soulbound founder", function()
-		local pet = Pet.new(
-			"pet-founder-soulbound-001",
-			founderPedigree(),
-			nil,
-			nil,
-			nil,
-			nil,
-			true
-		)
+		local pet =
+			Pet.new("pet-founder-soulbound-001", founderPedigree(), nil, nil, nil, nil, true)
 
 		expect(Pet.isSoulbound(pet)).toBe(true)
 		expect(Pet.isTransferable(pet)).toBe(false)
@@ -74,19 +67,15 @@ describe("Soulbound invariant", function()
 	end)
 
 	it("preserves soulbound across domain state transitions", function()
-		local pet = Pet.new(
-			"pet-founder-soulbound-001",
-			founderPedigree(),
-			nil,
-			nil,
-			nil,
-			nil,
-			true
-		)
+		local pet =
+			Pet.new("pet-founder-soulbound-001", founderPedigree(), nil, nil, nil, nil, true)
 		local adult = Pet.withLifecycle(pet, Lifecycle.advance(pet.lifecycle, "adult"))
-		local cared = Pet.withCareState(adult, Care.new({
-			affection = 0.9,
-		}))
+		local cared = Pet.withCareState(
+			adult,
+			Care.new({
+				affection = 0.9,
+			})
+		)
 		local healthy = Pet.withHealthState(cared, Health.new())
 
 		expect(Pet.isSoulbound(adult)).toBe(true)
