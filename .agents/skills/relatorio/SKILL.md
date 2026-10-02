@@ -13,7 +13,7 @@ Canonical repository:
 az1nn/marica-game
 ~~~
 
-Its job is to reconstruct current repository truth and render it in a stable, recognizable report format. The report may be textual or visual, but the factual topics, ordering and classification rules remain the same.
+Its job is to reconstruct current repository truth and render it in a stable, recognizable report format. **Visual Mode is the default output**; Text Mode is used only when the user explicitly requests text/no image. The factual topics, ordering and classification rules remain the same.
 
 RELATORIO never selects new roadmap work, mutates repository state, merges, creates tasks or changes labels. SIGA acts; RELATORIO reports.
 
@@ -42,9 +42,9 @@ Treat these as RELATORIO requests:
 - `relatório visual`
 - requests from SIGA to render the final repository state
 
-When the user asks for an image, dashboard, visual report or says to use the default Maricá report style, use **Visual Mode**.
+Use **Visual Mode by default**, including for standalone `relatorio` / `relatório` and for every invocation coming from SIGA.
 
-When no visual artifact is requested, use **Text Mode**.
+Use **Text Mode only when the user explicitly requests textual output, no image, or equivalent wording**.
 
 ## Mandatory live reconciliation
 
@@ -354,7 +354,26 @@ If a required fact cannot be verified, label it **MISSING** or omit the optional
 
 ## Relationship with SIGA
 
-RELATORIO is read-only and may be called after SIGA completes a bounded unit.
+RELATORIO is read-only and is the **mandatory terminal stage of every SIGA invocation**.
+
+The integrated contract is:
+
+~~~text
+SIGA
+-> RECONCILE
+-> CLASSIFY
+-> ROUTE
+-> EXECUTE
+-> VERIFY
+-> MERGE / WATCH
+-> PERSIST
+-> CONTINUE
+-> RELATORIO
+~~~
+
+When called by SIGA, RELATORIO must re-read the resulting live repository state after SIGA's mutations/merge/persistence and render **Visual Mode by default**. A SIGA text recap never satisfies this requirement by itself.
+
+RELATORIO can also be invoked directly as a standalone read-only command.
 
 SIGA remains responsible for:
 
