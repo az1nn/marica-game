@@ -60,18 +60,24 @@ describe("Genetic potential and expressed traits", function()
 			})
 		end)
 		local invalidFactorOk = pcall(function()
-			Genetics.express(Genetics.newPotential({
-				size = 1,
-			}), {
-				size = -0.1,
-			})
+			Genetics.express(
+				Genetics.newPotential({
+					size = 1,
+				}),
+				{
+					size = -0.1,
+				}
+			)
 		end)
 		local unknownTraitOk = pcall(function()
-			Genetics.express(Genetics.newPotential({
-				size = 1,
-			}), {
-				speed = 0.5,
-			})
+			Genetics.express(
+				Genetics.newPotential({
+					size = 1,
+				}),
+				{
+					speed = 0.5,
+				}
+			)
 		end)
 
 		expect(invalidPotentialOk).toBe(false)
