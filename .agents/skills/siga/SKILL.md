@@ -1,6 +1,6 @@
 ---
 name: siga
-description: Master continuation protocol for Maricá Game. Reconcile live repository state, select and route the next bounded task, enforce concurrency safety, verify exact-head evidence, merge safely and persist one authoritative next action.
+description: Master continuation protocol for Maricá Game. Reconcile live repository state, execute and verify the next bounded task safely, persist one authoritative next action, then always finish by invoking the canonical RELATORIO visual report.
 ---
 
 # SIGA — Maricá Game repository orchestrator
@@ -57,6 +57,7 @@ IDENTITY
 -> MERGE / WATCH
 -> PERSIST
 -> CONTINUE
+-> RELATORIO
 ~~~
 
 A phase may be short, but it may not be skipped when applicable.
@@ -109,7 +110,7 @@ SIGA selects the task and retains orchestration authority. Route implementation 
 - **ROBLOX** — production runtime/platform engineering, server authority, adapters, remotes and runtime performance.
 - **QA** — automated gates, deterministic domain tests, integration/E2E, persistence, performance and regression.
 - **LENTE** — exact-head screenshot/video/object evidence and visual critique.
-- **RELATORIO** — compact read-only repository status.
+- **RELATORIO** — mandatory terminal read-only reporter for every SIGA invocation; it re-reconciles live state and renders the canonical visual dashboard.
 - **GODOT** — portability/reference lane unless a ratified repository-local ADR/spec assigns production scope.
 - **3JS** — reference/prototype lane unless a ratified repository-local ADR/spec assigns production scope.
 - **siga-concurrency** — mandatory mutation/merge safety helper.
@@ -283,13 +284,39 @@ At the end of the bounded unit:
 1. reconcile the resulting default/live state;
 2. determine whether another safe unit should start immediately;
 3. persist exactly one next action;
-4. return a compact report.
+4. hand the resulting live state to RELATORIO.
 
 Do not recursively invent unbounded work. The repository roadmap remains the scope boundary.
 
-## Compact final report
+## RELATORIO — mandatory terminal stage
 
-End every invocation with:
+Every SIGA invocation, including ADVANCE, RESUME, WATCH and BLOCKED, must finish by loading:
+
+~~~text
+.agents/skills/relatorio/SKILL.md
+~~~
+
+and executing RELATORIO against the **fresh resulting live repository state**.
+
+This is not optional presentation polish. RELATORIO is part of the SIGA lifecycle.
+
+Required terminal behavior:
+
+1. finish all applicable execution, verification, merge/watch and persistence work;
+2. re-read the live default branch, open PRs, claims, executable tasks, relevant handoff and exact-head gates;
+3. invoke RELATORIO using those fresh facts;
+4. render the canonical **Visual Mode** dashboard by default;
+5. only use text-only RELATORIO when the user explicitly requests text/no image;
+6. never let an earlier SIGA recap substitute for RELATORIO;
+7. never render the report from pre-merge/pre-persist state when newer repository state exists.
+
+A SIGA invocation is not complete until the RELATORIO stage has been attempted.
+
+If visual rendering capability is unavailable, RELATORIO must still reconstruct live state and explicitly report that the visual artifact could not be rendered; it must not silently downgrade to an ordinary SIGA text recap.
+
+### Terminal text recap
+
+A compact textual recap may accompany the image when useful:
 
 ~~~text
 SIGA <RESUME|WATCH|ADVANCE|BLOCKED> — <task/milestone>
@@ -301,4 +328,4 @@ Blocker: <actionable blocker or none>
 Next: <single next action>
 ~~~
 
-Prefer one screen. Live repository state remains authoritative.
+The canonical RELATORIO artifact remains the terminal output of SIGA. Live repository state remains authoritative.
