@@ -7,22 +7,25 @@ WORKSTREAM:
 SPEC-001 Animal Core / Domain P0
 
 STATE:
-T014 implementation is on PR #9. Final exact-head gates are pending.
+T014 merged and complete. T015 is the next executable task.
 
 MODE:
-WATCH
+ADVANCE
 
 CANONICAL SOURCE:
 az1nn/marica-game master + specs/001-animal-core/tasks.md; SIGA procedure remains canonical in az1nn/cpxlabs-admin/.agents/skills/siga/SKILL.md.
 
+CURRENT VERSION / HEAD:
+T014 delivery merge master@d16423c51b5ebbe0282fd95c5b0a990a1f069136
+
 BASE:
-master@cad484b687d9ed795e4cd7d37bd1223b13b7428a
+master
 
 BRANCH / ENV:
-feat/t014-genetic-trait-expression / Roblox-first
+master / Roblox-first
 
 PR / MR / TASK:
-PR #9 open / T014 candidate / T015 blocked until T014 merge
+PR #9 merged / T014 complete / T015 next
 
 SPEC / ADR:
 SPEC-001 Animal Core; ADR-0001 runtime; ADR-0002 persistence/time
@@ -35,18 +38,20 @@ DONE:
 - Pet stores geneticPotential and expressedTraits separately;
 - Pet.withExpressionFactors recalculates expression while preserving identity, pedigree, lifecycle and genetic potential;
 - Pet.withLifecycle preserves both genetic layers;
-- T014 marked complete in the executable backlog inside the candidate branch.
+- T014 is marked complete in the executable backlog.
 
 VERIFY:
-- authored Jest coverage checks immutability, bounded values, deterministic expression, unknown-trait rejection and Pet integration;
-- final Validate skills and Roblox CI must pass on the exact final PR head;
-- review threads and base drift must be rechecked immediately before merge.
+- T014 delivery HEAD ed48ca025a138ca6796d6e6de34571dbcb8afaa8;
+- Validate skills PASS on the exact delivery HEAD;
+- Roblox CI PASS on the exact delivery HEAD, including StyLua, Selene, production build and test-place build;
+- PR #9 had no unresolved review threads;
+- master had no base drift at merge.
 
 GATES:
-Pending exact-head PR #9 validation. Known QA gap remains: Jest specs are built into the test place but are not yet executed headlessly by CI.
+Exact-head merge gates PASS. Known QA gap remains: Jest specs are built into the test place but are not yet executed headlessly by CI.
 
 BLOCKERS:
-No product blocker. Merge remains gated on exact-head CI.
+None.
 
 INVARIANTS:
 - genetic potential is distinct from current expressed traits;
@@ -56,7 +61,7 @@ INVARIANTS:
 - domain remains engine-neutral.
 
 NEXT:
-If PR #9 is green and drift-free, merge T014, close the claim, then execute T015 — care state.
+Execute T015 — care state.
 
 VERIFY-FIRST:
-Before merge, verify PR #9 exact head workflows, review threads and base SHA against master.
+Re-read master HEAD, open PRs, active .siga claims and exact-head workflows. Confirm this handoff-maintenance commit is green, then classify ADVANCE and claim T015 before mutation.

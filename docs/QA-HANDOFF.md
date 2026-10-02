@@ -1,9 +1,11 @@
 # QA HANDOFF
 
-Status: T014_CANDIDATE
+Status: T014_VERIFIED
 
-## Candidate coverage
+## Delivery evidence
 
+T014 delivery HEAD: `ed48ca025a138ca6796d6e6de34571dbcb8afaa8`.
+Merged master: `d16423c51b5ebbe0282fd95c5b0a990a1f069136`.
 PR: #9.
 
 Authored Jest coverage:
@@ -17,9 +19,7 @@ Authored Jest coverage:
 - pedigree and lifecycle survive expression changes;
 - lifecycle changes preserve genetic potential and expressed traits.
 
-## Candidate gates
-
-Required on the exact final PR head:
+Exact delivery gates:
 - Validate skills: PASS;
 - Roblox CI: PASS, including StyLua, Selene, production build and test-place build;
 - review threads: none unresolved;
@@ -29,4 +29,4 @@ Known QA gap: the CI builds Jest specs but does not execute Jest assertions head
 
 ## Next
 
-After T014 is merged, T015 must model care state and feed care-derived factors into the existing expression contract without mutating genetic potential or pedigree.
+For T015, model measurable care state and derive expression factors from care without mutating genetic potential or pedigree.
