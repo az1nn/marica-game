@@ -1,31 +1,32 @@
 # ROBLOX HANDOFF
 
-Status: T016_CANDIDATE
+Status: ADVANCE
 
-## T016 candidate
+## T016 delivered
 
-Base master: `db458e4b1fcfbff642ad1e28dcd76adeb6fad024`.
-Implementation branch: `feat/t016-health-disease-treatment`.
-Domain implementation through: `2c0a976a6107df541f4ab05f66b64294326095e9`.
+PR #14 merged into master at `43ee6e2d9191bf9a7e271bc0cede35f4b8fb72de`.
+Delivery HEAD: `0117998903c7331b8dd6d7a79b8f88340ef4e3b3`.
 
 Domain boundary now includes:
-- immutable `HealthState` with deterministic `healthy -> neglected -> sick -> critical` progression;
-- explicit elapsed-hour input rather than frame/session time;
-- normal short absence remains below the neglect boundary;
-- sickness requires treatment rather than recovering from care alone;
-- treatment returns an explicit resource-cost hook without coupling the domain to the economy adapter;
-- untreated critical disease exposes a deterministic terminal-risk boundary;
-- `Pet.healthState` persists independently of `careState`;
-- terminal health risk ends lifecycle with reason `health` while preserving identity, pedigree, care and genetic potential.
+- immutable persistent `HealthState`;
+- deterministic `healthy -> neglected -> sick -> critical` progression from explicit elapsed hours;
+- short normal absence remaining below disease thresholds;
+- established disease requiring treatment rather than care-only recovery;
+- treatment returning an explicit resource-cost hook without coupling to an economy adapter;
+- untreated critical disease exposing a deterministic terminal-risk boundary;
+- `Pet.healthState` independent from `careState`;
+- health terminal risk ending lifecycle with reason `health` while preserving identity, pedigree, care and genetic potential.
 
-Required gates are pending for the final PR head.
+Exact delivery gates:
+- Validate skills: PASS;
+- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
 
 Known QA gap remains: Jest sources are built into the test place but assertions are not yet run headlessly in CI.
 
 ## Boundary
 
-Health remains a separate domain concern. Care is an input to health progression; health does not rewrite genetic potential or care state.
+T017 should implement soulbound as an engine-neutral domain invariant. Runtime/UI paths may expose actions, but no transfer-capable path may override the domain restriction.
 
 ## Next
 
-After exact-head gates and merge, advance to **T017 — soulbound domain invariant**.
+Execute **T017 — soulbound domain invariant**.
