@@ -17,7 +17,7 @@
 
 - [x] **T010** Implementar entidade Pet e IDs imutáveis.
 - [x] **T011** Implementar lineage/pedigree.
-- [ ] **T012** Implementar lifecycle state machine.
+- [x] **T012** Implementar lifecycle state machine.
 - [ ] **T013** Implementar relógio/simulação injetável.
 - [ ] **T014** Implementar genetic potential vs expressed traits.
 - [ ] **T015** Implementar care state.
