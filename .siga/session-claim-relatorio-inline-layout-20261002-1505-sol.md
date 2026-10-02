@@ -8,4 +8,9 @@ Scope:
 - .agents/skills/relatorio/SKILL.md
 - .agents/skills/siga/SKILL.md
 Opened: 2026-10-02T15:05:00-03:00
-Status: ACTIVE
+Status: CLOSED
+
+PR: #30
+Delivery Head: c536c1d6f30643c1e433e57051a12a0c868dc685
+Merged: master@684b340dd7356a598606cd21a1f2d609769b00b9
+Gates: Validate skills PASS; Roblox CI PASS; Roblox Behavioral SKIPPED (not an applicable acceptance gate for this protocol-only repair).
