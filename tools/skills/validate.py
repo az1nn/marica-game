@@ -46,6 +46,7 @@ GAUNTLET_REQUIRED_FILES = (
 
 CANONICAL_REPO = "az1nn/marica-game"
 SIGA_PATH = Path(".agents/skills/siga/SKILL.md")
+RELATORIO_PATH = Path(".agents/skills/relatorio/SKILL.md")
 
 SIGA_REQUIRED_MARKERS = (
     "## Repository identity lock",
@@ -62,6 +63,19 @@ SIGA_REQUIRED_MARKERS = (
     ".agents/skills/siga-concurrency/SKILL.md",
     "python tools/skills/validate.py",
     ".agents/skills/gauntlet/SKILL.md",
+    "native inline image surface",
+    "VISUAL_BLOCKED",
+)
+
+RELATORIO_REQUIRED_MARKERS = (
+    "## Inline delivery contract",
+    "## Native inline rendering path",
+    "native inline image surface",
+    "VISUAL_BLOCKED",
+    "download-only",
+    "### Composition QA gate",
+    "### Render manifest",
+    "### Density limits",
 )
 
 REPO_REFERENCE_RE = re.compile(r"\baz1nn/([A-Za-z0-9_.-]+)\b")
@@ -149,6 +163,13 @@ def main() -> int:
                 + ", ".join(task_ids)
             )
 
+    relatorio_file = root / RELATORIO_PATH
+    if relatorio_file.is_file():
+        relatorio_text = relatorio_file.read_text(encoding="utf-8")
+        for marker in RELATORIO_REQUIRED_MARKERS:
+            if marker not in relatorio_text:
+                errors.append(f"RELATORIO delivery marker missing: {marker}")
+
     if errors:
         print("SKILLS VALIDATION: FAIL")
         for error in errors:
@@ -161,6 +182,7 @@ def main() -> int:
     print(f"- support docs: {len(REQUIRED_DOCS)}")
     print(f"- GAUNTLET files: {len(GAUNTLET_REQUIRED_FILES)}")
     print("- SIGA flow markers: PASS")
+    print("- RELATORIO native-inline markers: PASS")
     print("- cross-repository authority scan: PASS")
     print("- hard-coded SIGA task IDs: none")
     return 0
