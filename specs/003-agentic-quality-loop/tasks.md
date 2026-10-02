@@ -16,7 +16,7 @@
 
 ## Phase B — Behavioral execution
 
-- [ ] **AQ010** Wire headless Roblox execution of the built/published test place in CI.
+- [x] **AQ010** Wire headless Roblox execution of the built/published test place in CI.
 - [ ] **AQ011** Make behavioral Jest result an exact-head gate.
 - [ ] **AQ012** Execute first GOOD -> BAD MUTANT -> RESTORE proof.
 - [ ] **AQ013** Persist mutation evidence in a Gauntlet manifest.
