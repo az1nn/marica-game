@@ -7,56 +7,50 @@ WORKSTREAM:
 SPEC-001 Animal Core continuation
 
 STATE:
-T016 health/disease/treatment is merged and complete. Live task order advances to T017 soulbound domain invariant.
+T017 soulbound domain invariant is implemented on a dedicated candidate branch and awaits exact-head delivery gates.
 
 MODE:
-ADVANCE
+RESUME
 
 CANONICAL SOURCE:
 az1nn/marica-game master + .agents/skills/siga/SKILL.md + .specify/memory/constitution.md + live specs/tasks/PRs/claims/CI.
 
-DELIVERY:
-PR #14 merged.
-Delivery HEAD: 0117998903c7331b8dd6d7a79b8f88340ef4e3b3.
-Merge commit: 43ee6e2d9191bf9a7e271bc0cede35f4b8fb72de.
-
 BASE / ENV:
-master / Roblox-first
+master@837e29fbae0acdd5b1e51ee093dcb3e96cdc3671 / Roblox-first
 
 ACTIVE PR / CLAIM:
-No product PR after #14 merge. T016 claim is CLOSED by this handoff closure.
+Branch: feat/t017-soulbound-domain-invariant.
+Claim: .siga/session-claim-t017-20261002-1307-sol.md (ACTIVE).
+PR: pending creation.
 
 SPEC / ADR:
 SPEC-001 Animal Core; ADR-0001 runtime; ADR-0002 persistence/time.
 
 DONE:
-- persistent health remains separate from care;
-- explicit elapsed time drives deterministic neglect and disease progression;
-- normal short absence remains below the disease boundary;
-- established disease requires treatment;
-- treatment exposes an explicit resource-cost hook;
-- untreated critical disease can end lifecycle with reason health;
-- Pet preserves identity, pedigree, care and genetic potential across health transitions;
-- behavioral Jest coverage documents health validation, progression, treatment and Pet integration;
-- T016 is checked complete in the executable SPEC-001 backlog.
+- Pet persists an explicit immutable soulbound flag;
+- soulbound input is validated as boolean;
+- domain transfer eligibility and rejection guards are available independently of UI/runtime;
+- all existing Pet state transitions preserve soulbound;
+- descendants do not inherit soulbound automatically;
+- behavioral Jest coverage is authored;
+- T017 is checked complete on the candidate branch.
 
 VERIFY:
-PR #14 exact-head gates PASS at 0117998903c7331b8dd6d7a79b8f88340ef4e3b3:
-- Validate skills: PASS;
-- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
+Required exact-head gates are pending for the final PR head:
+- Validate skills;
+- Roblox CI.
 
 BLOCKERS:
 None.
 
 INVARIANTS:
-- health and care remain distinct persisted concerns;
-- health transitions do not mutate genetic potential, pedigree or identity;
-- health terminal transition uses Lifecycle.endLife(..., "health");
-- soulbound remains T017 scope;
+- soulbound is a domain restriction, not a presentation rule;
+- future transfer-capable paths must call the domain guard;
+- descendants remain transferable by default unless explicitly soulbound;
 - only az1nn/marica-game is authoritative for this project.
 
 NEXT:
-Execute T017 — soulbound domain invariant — from fresh master state, enforcing the restriction in the domain rather than presentation/UI.
+Open the T017 PR, verify exact-head gates, merge if green, then close the claim and persist T018 as the single next action.
 
 VERIFY-FIRST:
-Re-read master HEAD, open PRs, active .siga claims, T017 task contract and exact-head workflows before mutation.
+Before merge, re-read master, PR head, open claims, overlap and exact-head workflows.
