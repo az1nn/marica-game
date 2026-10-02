@@ -20,7 +20,7 @@
 - [x] **T012** Implementar lifecycle state machine.
 - [x] **T013** Implementar relógio/simulação injetável.
 - [x] **T014** Implementar genetic potential vs expressed traits.
-- [ ] **T015** Implementar care state.
+- [x] **T015** Implementar care state.
 - [ ] **T016** Implementar health/disease/treatment.
 - [ ] **T017** Implementar soulbound como invariant de domínio.
 - [ ] **T018** Implementar affection persistente.
