@@ -321,12 +321,14 @@ Required terminal behavior:
 2. re-read the live default branch, open PRs, claims, executable tasks, relevant handoff and exact-head gates;
 3. invoke RELATORIO using those fresh facts;
 4. render exactly one canonical **Visual Mode** dashboard by default;
-5. deliver that dashboard **inline in the conversation**; a download-only link does not satisfy RELATORIO;
-6. run RELATORIO composition QA before emitting the image and discard any rejected/intermediate render;
-7. only use text-only RELATORIO when the user explicitly requests text/no image;
-8. never let an earlier SIGA recap substitute for RELATORIO;
-9. never render the report from pre-merge/pre-persist state when newer repository state exists;
-10. never emit another repository's image, even transiently, during the Maricá Game SIGA terminal stage.
+5. deliver that dashboard through a **native inline image surface** that appears directly in the conversation;
+6. never substitute a sandbox/file path, Markdown download link, or download-only attachment for the inline visual;
+7. run RELATORIO composition QA before emitting the image and discard any rejected/intermediate render;
+8. if the native inline image surface is unavailable, mark the terminal visual stage VISUAL_BLOCKED instead of claiming success;
+9. only use text-only RELATORIO when the user explicitly requests text/no image;
+10. never let an earlier SIGA recap substitute for RELATORIO;
+11. never render the report from pre-merge/pre-persist state when newer repository state exists;
+12. never emit another repository's image, even transiently, during the Maricá Game SIGA terminal stage.
 
 A SIGA invocation is not complete until the RELATORIO stage has been attempted.
 
