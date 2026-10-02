@@ -2,7 +2,11 @@ export type GeneticPotential = { [string]: number }
 export type ExpressionFactors = { [string]: number }
 export type ExpressedTraits = { [string]: number }
 
-local Genetics = {}
+local ADVANCEMENT_STEP = 0.05
+
+local Genetics = {
+	ADVANCEMENT_STEP = ADVANCEMENT_STEP,
+}
 
 local function assertTraitName(value: any, label: string): string
 	if type(value) ~= "string" or string.match(value, "^%s*$") ~= nil then
@@ -19,6 +23,18 @@ local function assertUnitValue(value: any, label: string): number
 
 	if value < 0 or value > 1 then
 		error(("%s must be between 0 and 1"):format(label), 3)
+	end
+
+	return value
+end
+
+local function assertSeed(value: any): number
+	if type(value) ~= "number" or value ~= value or value == math.huge or value == -math.huge then
+		error("Genetic advancement seed must be a finite number", 3)
+	end
+
+	if value < 0 or math.floor(value) ~= value then
+		error("Genetic advancement seed must be a non-negative integer", 3)
 	end
 
 	return value
@@ -65,6 +81,43 @@ function Genetics.express(potential: GeneticPotential, factors: ExpressionFactor
 	end
 
 	return table.freeze(expressed) :: ExpressedTraits
+end
+
+function Genetics.advancePotential(potential: GeneticPotential, seed: number): GeneticPotential
+	local validatedPotential = copyTraitMap(potential, "Genetic potential")
+	local validatedSeed = assertSeed(seed)
+	local traitNames = {}
+
+	for traitName in pairs(validatedPotential) do
+		table.insert(traitNames, traitName)
+	end
+
+	if #traitNames == 0 then
+		error("Genetic potential must contain at least one trait for guaranteed advancement", 2)
+	end
+
+	table.sort(traitNames)
+
+	local advanced = {}
+
+	for traitName, value in pairs(validatedPotential) do
+		advanced[traitName] = value
+	end
+
+	local startIndex = (validatedSeed % #traitNames) + 1
+
+	for offset = 0, #traitNames - 1 do
+		local index = ((startIndex - 1 + offset) % #traitNames) + 1
+		local traitName = traitNames[index]
+		local currentValue = validatedPotential[traitName]
+
+		if currentValue < 1 then
+			advanced[traitName] = math.min(1, currentValue + ADVANCEMENT_STEP)
+			break
+		end
+	end
+
+	return table.freeze(advanced) :: GeneticPotential
 end
 
 return table.freeze(Genetics)
