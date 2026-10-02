@@ -7,61 +7,55 @@ WORKSTREAM:
 SPEC-001 Animal Core continuation
 
 STATE:
-T017 soulbound domain invariant is merged and complete. Live task order advances to T018 persistent affection.
+T018 persistent affection is implemented on a dedicated candidate branch and awaits exact-head delivery gates.
 
 MODE:
-ADVANCE
+RESUME
 
 CANONICAL SOURCE:
 az1nn/marica-game master + .agents/skills/siga/SKILL.md + .specify/memory/constitution.md + live specs/tasks/PRs/claims/CI.
 
-DELIVERY:
-PR #16 merged.
-Delivery HEAD: 46dd15acde656b42c9ce92930e9edb5720f2458d.
-Merge commit: bca1b81410aa79af06c47b052e14478b2e578c03.
-
 BASE / ENV:
-master / Roblox-first
+master@69e798df2c6f9578bf01b7eec65615b934721625 / Roblox-first
 
 ACTIVE PR / CLAIM:
-No product PR after #16 merge.
-T017 claim is CLOSED by this handoff closure.
-RELATORIO visual-contract claim is also CLOSED and was PARALLEL_SAFE.
+Branch: feat/t018-persistent-affection.
+Claim: .siga/session-claim-t018-20261002-1327-sol.md (ACTIVE).
+PR: pending creation.
 
 SPEC / ADR:
 SPEC-001 Animal Core; ADR-0001 runtime; ADR-0002 persistence/time.
 
 DONE:
-- Pet persists an explicit immutable soulbound flag;
-- invalid soulbound values are rejected;
-- transfer eligibility/rejection is enforced in the domain rather than UI/runtime;
-- lifecycle, care and health transitions preserve soulbound;
-- descendants do not inherit soulbound automatically;
+- affection is persisted on Pet independently from transient care affection;
+- invalid affection values are rejected;
+- affection gain is deterministic and capped;
+- Pet state transitions preserve affection;
 - behavioral Jest coverage documents the invariant;
-- T017 is checked complete in the executable SPEC-001 backlog.
+- T018 is checked complete on the candidate branch.
 
 VERIFY:
-PR #16 exact-head gates PASS at 46dd15acde656b42c9ce92930e9edb5720f2458d:
-- Validate skills: PASS;
-- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
+Required exact-head gates are pending for the final PR head:
+- Validate skills;
+- Roblox CI.
 
 CONCURRENCY:
-- master drift from RELATORIO visual-contract work was reviewed before merge;
-- drift touched only RELATORIO skill/report files;
-- classification: PARALLEL_SAFE;
-- no T017 files or semantic contracts overlapped.
+- pre-mutation snapshot found no open PRs;
+- all prior repository claims were CLOSED;
+- post-claim barrier found master unchanged at 69e798df2c6f9578bf01b7eec65615b934721625;
+- classification: CLEAR.
 
 BLOCKERS:
 None.
 
 INVARIANTS:
-- soulbound is a domain restriction, not a presentation rule;
-- future transfer-capable paths must call the domain guard;
-- descendants remain transferable by default unless explicitly soulbound;
+- persistent affection is not the same state as momentary care affection;
+- future ownership transfer must preserve persistent affection;
+- T018 does not implement ownership transfer;
 - only az1nn/marica-game is authoritative for this project.
 
 NEXT:
-Execute T018 — persistent affection — from fresh master state, keeping affection distinct from transient care and preserving it for future ownership transfers.
+Open the T018 PR, verify exact-head gates, merge if green, then close the claim and persist T020 as the single next action.
 
 VERIFY-FIRST:
-Re-read master HEAD, open PRs, active .siga claims, T018 task contract and exact-head workflows before mutation.
+Before merge, re-read master, PR head, open claims, overlap and exact-head workflows.

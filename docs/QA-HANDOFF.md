@@ -1,30 +1,28 @@
 # QA HANDOFF
 
-Status: T017_VERIFIED
+Status: T018_CANDIDATE
 
-## Delivery evidence
+## Candidate evidence
 
-T017 delivery HEAD: `46dd15acde656b42c9ce92930e9edb5720f2458d`.
-Merged master: `bca1b81410aa79af06c47b052e14478b2e578c03`.
-PR: #16.
+Base master: `69e798df2c6f9578bf01b7eec65615b934721625`.
+Implementation branch: `feat/t018-persistent-affection`.
+Behavioral test source: `tests/affection.spec.luau`.
 
 Authored Jest coverage:
-- regular pets default to transferable;
-- an explicitly soulbound founder is rejected by the domain transfer guard;
-- invalid persisted soulbound values are rejected;
-- soulbound survives lifecycle, care and health state transitions;
-- descendants do not inherit soulbound automatically and remain eligible for future transfer rules.
+- affection defaults independently from momentary care;
+- persisted affection rejects invalid normalized values;
+- deterministic affection gain accumulates and caps at 1;
+- care-state updates do not overwrite persistent bond;
+- lifecycle and health transitions preserve persistent affection.
 
-Exact delivery gates at `46dd15acde656b42c9ce92930e9edb5720f2458d`:
-- Validate skills: PASS;
-- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
+Required exact-head gates:
+- Validate skills;
+- Roblox CI, including lockfile reproducibility, StyLua, Selene and production/test builds.
 
-Merge concurrency:
-- master advanced with RELATORIO-only changes;
-- classified PARALLEL_SAFE because no T017 files/contracts overlapped.
+Status: pending on final PR head.
 
 Known QA gap: CI builds Jest specs but does not execute Jest assertions headlessly. Treat authored behavioral specs as coverage evidence until that harness is wired.
 
 ## Next
 
-For T018, cover persistent affection as a separate domain state that survives future ownership transfer without being conflated with care.
+Verify the final T018 PR head, then merge only if all required gates are green.
