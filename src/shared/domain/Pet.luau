@@ -1,3 +1,4 @@
+local Care = require(script.Parent.Care)
 local Genetics = require(script.Parent.Genetics)
 local Lifecycle = require(script.Parent.Lifecycle)
 local Pedigree = require(script.Parent.Pedigree)
@@ -9,6 +10,7 @@ export type Pet = {
 	lifecycle: Lifecycle.Lifecycle,
 	geneticPotential: Genetics.GeneticPotential,
 	expressedTraits: Genetics.ExpressedTraits,
+	careState: Care.CareState,
 }
 
 local Pet = {}
@@ -17,12 +19,14 @@ function Pet.new(
 	id: string,
 	pedigree: Pedigree.Pedigree,
 	lifecycle: Lifecycle.Lifecycle?,
-	geneticPotential: Genetics.GeneticPotential?
+	geneticPotential: Genetics.GeneticPotential?,
+	careState: Care.CareState?
 ): Pet
 	local validatedId = PetId.fromString(id)
 	local resolvedLifecycle = lifecycle or Lifecycle.new()
 	local resolvedPotential = Genetics.newPotential(geneticPotential or {})
-	local expressedTraits = Genetics.express(resolvedPotential)
+	local resolvedCare = Care.new(careState)
+	local expressedTraits = Genetics.express(resolvedPotential, Care.toExpressionFactors(resolvedCare, resolvedPotential))
 
 	return table.freeze({
 		id = validatedId,
@@ -30,6 +34,7 @@ function Pet.new(
 		lifecycle = resolvedLifecycle,
 		geneticPotential = resolvedPotential,
 		expressedTraits = expressedTraits,
+		careState = resolvedCare,
 	}) :: Pet
 end
 
@@ -44,6 +49,7 @@ function Pet.withLifecycle(pet: Pet, lifecycle: Lifecycle.Lifecycle): Pet
 		lifecycle = lifecycle,
 		geneticPotential = pet.geneticPotential,
 		expressedTraits = pet.expressedTraits,
+		careState = pet.careState,
 	}) :: Pet
 end
 
@@ -54,6 +60,23 @@ function Pet.withExpressionFactors(pet: Pet, factors: Genetics.ExpressionFactors
 		lifecycle = pet.lifecycle,
 		geneticPotential = pet.geneticPotential,
 		expressedTraits = Genetics.express(pet.geneticPotential, factors),
+		careState = pet.careState,
+	}) :: Pet
+end
+
+function Pet.withCareState(pet: Pet, careState: Care.CareState): Pet
+	local resolvedCare = Care.new(careState)
+
+	return table.freeze({
+		id = pet.id,
+		pedigree = pet.pedigree,
+		lifecycle = pet.lifecycle,
+		geneticPotential = pet.geneticPotential,
+		expressedTraits = Genetics.express(
+			pet.geneticPotential,
+			Care.toExpressionFactors(resolvedCare, pet.geneticPotential)
+		),
+		careState = resolvedCare,
 	}) :: Pet
 end
 
