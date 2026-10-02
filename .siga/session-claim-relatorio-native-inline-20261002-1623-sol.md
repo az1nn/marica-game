@@ -9,4 +9,8 @@ Scope:
 - .agents/skills/siga/SKILL.md
 - tools/skills/validate.py
 Opened: 2026-10-02T16:23:00-03:00
-Status: ACTIVE
+Status: CLOSED
+PR: #32
+Delivery Head: 27c660d47858851f52761242414c453d1b44ef15
+Merged: master@7b38bdc8a525d2f95a350b24f0af05cef0b373b0
+Gates: Validate skills PASS; Roblox CI PASS. Roblox Behavioral SKIPPED as non-applicable to protocol-only repair.
