@@ -6,30 +6,39 @@ Active spec: SPEC-001 Animal Core
 Completed: T005, T006, T007, T010, T011, T012
 Next task: T013
 
-## Verified baseline before T012
+## Verified delivery
 
-- master: `9e92adbfe559a2c054087339cd71b00b5b828344`.
-- PR #5 / T010 merged.
-- PR #6 / T011 merged.
-- No competing open PR or active overlapping claim existed when T012 started.
+- PR #7: T012 lifecycle state machine — merged.
+- T012 delivery SHA: `4669c0b4a0672fa9bad8ed5ba08830edabc100b3`.
+- Merge SHA: `b44d46b78fc8ae1a15b9970d3ca41ef9e0884940`.
+- T012 claim: CLOSED.
+- No competing open PR, active overlapping claim or unresolved review thread existed at merge time.
 
-## T012 delivery
+## Domain baseline
 
-- Added engine-neutral `Lifecycle` state machine.
-- Active life stages progress `juvenile -> adult -> senior` exactly one step at a time.
-- Natural end is only legal from `senior`; health-driven early end is allowed from an active stage.
-- Ended lifecycle is terminal and cannot advance or end again.
-- `Pet` now owns lifecycle state and remains immutable through replacement with `Pet.withLifecycle`.
-- Jest source covers legal/illegal transitions, terminal irreversibility, natural vs health end, and immutable Pet replacement.
+- `PetId`: opaque validated identity with injected generation.
+- `LineageId`: opaque validated lineage identity.
+- `Pedigree`: immutable lineage id + generation + founder pet + direct parent refs.
+- `Lifecycle`: engine-neutral state machine.
+- Active stages progress `juvenile -> adult -> senior` one step at a time.
+- Natural end is legal only from `senior`; health-driven early end is supported.
+- Ended lifecycle is terminal.
+- `Pet` owns immutable pedigree and lifecycle state.
 
-## Gate expectation
+## Exact-head delivery gates — T012
 
-Required exact-head gates:
-- Validate skills.
-- Roblox CI: Wally reproducibility, StyLua, Selene, production/test Rojo builds.
-- no unresolved review thread or semantic overlap.
+Head: `4669c0b4a0672fa9bad8ed5ba08830edabc100b3`
 
-Known QA gap remains: Jest specs are built into the test place but are not yet executed headlessly by CI.
+- Validate skills: PASS.
+- Roblox CI: PASS.
+- review threads: none.
+- base drift: none.
+
+Post-merge master `b44d46b78fc8ae1a15b9970d3ca41ef9e0884940`:
+- Validate skills: PASS.
+- Roblox CI: PASS.
+
+Known QA gap: Jest specs are built into the test place but are not yet executed headlessly by CI.
 
 ## Next
 

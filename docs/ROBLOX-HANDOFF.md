@@ -6,12 +6,14 @@ Runtime baseline remains Roblox + Luau under ADR-0001, with engine-neutral domai
 
 ## Delivered
 
-- T010 Pet identity and T011 lineage/pedigree are merged.
-- T012 adds `Lifecycle` as a pure domain state machine with no Roblox service dependency.
+- T012 merged via PR #7.
+- T012 delivery SHA: `4669c0b4a0672fa9bad8ed5ba08830edabc100b3`.
+- `Lifecycle` is a pure domain state machine with no Roblox service dependency.
 - Life-stage progression is deterministic and explicit.
 - Natural end requires senior stage; health-driven early end is supported.
 - Terminal lifecycle state is irreversible.
 - `Pet.withLifecycle` replaces immutable pet state without changing ID or pedigree.
+- Exact-head and post-merge Roblox CI / skill validation are green.
 
 ## Boundary
 
