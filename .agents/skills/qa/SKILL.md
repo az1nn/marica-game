@@ -28,6 +28,7 @@ Required first-class coverage for:
 - lifecycle phase derivation;
 - care decay and health transitions;
 - soulbound invariant;
+- persistent affection preservation;
 - genetic potential vs expression;
 - Mendelian inheritance when introduced;
 - exactly-two successors;
@@ -118,6 +119,40 @@ A flaky test is debt, not green.
 - make test state explicit;
 - quarantine only with a tracked repair task and never when it hides a release invariant.
 
+## Mutation proof doctrine
+
+For new or materially changed measurable P0 invariants, QA should define at least one known-bad mutant representing a real product failure.
+
+Desired evidence:
+
+~~~text
+GOOD       -> PASS
+BAD MUTANT -> FAIL
+RESTORE    -> PASS
+~~~
+
+A mutant is never merged. It exists only to prove the instrument can detect the defect.
+
+If behavioral assertions are authored but the current CI/runtime does not execute them, classify mutation proof as BLOCKED. Building a test place is not equivalent to running its tests.
+
+Do not convert unavailable measurement into PASS.
+
+## Regression Hunter
+
+Target validation and regression hunting are separate questions.
+
+After the candidate satisfies its target, inspect adjacent accepted contracts and report either:
+
+~~~text
+REGRESSIONS: NONE
+~~~
+
+or a bounded list of concrete regressions with evidence.
+
+For coupled Animal Core changes, consider lifecycle, care, health, affection, genetics, pedigree, identity, soulbound and persistence boundaries as applicable.
+
+When SIGA routes an applicable task through GAUNTLET, QA supplies measurable gate and mutation evidence but does not make the final merge decision.
+
 ## SPEC-001 release gates
 
 QA should map tests directly to G001-G006 and the invariant list in SPEC-001.
@@ -131,8 +166,9 @@ A release gate is not complete because a unit suite passes if the gate also requ
 3. Read docs/QA-HANDOFF.md.
 4. Identify the highest-risk unproven acceptance criterion for the active task.
 5. Add/repair the smallest test layer that proves it.
-6. Run targeted tests, then required wider gates.
-7. Persist exact commands/results/head.
+6. For applicable P0 invariants, define mutation and regression evidence.
+7. Run targeted tests, then required wider gates.
+8. Persist exact commands/results/head.
 
 ## Completion report
 

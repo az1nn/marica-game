@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "repository": "az1nn/marica-game",
+  "target": {
+    "task": "T018 persistent affection shadow calibration",
+    "baseline_sha": "69e798df2c6f9578bf01b7eec65615b934721625",
+    "candidate_sha": "4a2a74f30b2465bb9a7e9d3e8186930857c2f1bd"
+  },
+  "gates": {
+    "validated_sha": "4a2a74f30b2465bb9a7e9d3e8186930857c2f1bd",
+    "results": [
+      {
+        "name": "Validate skills",
+        "status": "PASS"
+      },
+      {
+        "name": "Roblox CI format/static/build",
+        "status": "PASS"
+      }
+    ]
+  },
+  "critic": {
+    "context_isolated": false,
+    "findings": [
+      "Historical shadow review had access to candidate delivery context, so it is not a clean fresh-eyes certification.",
+      "Authored Jest specs cover affection preservation but current CI does not execute their assertions."
+    ]
+  },
+  "mutation": {
+    "required": true,
+    "status": "BLOCKED",
+    "good_pass": false,
+    "mutant_fail": false,
+    "restore_pass": false,
+    "blocker": "The test place is built in CI but behavioral Jest assertions are not launched headlessly, so GOOD -> BAD MUTANT -> RESTORE cannot yet be proved."
+  },
+  "regressions": {
+    "status": "PARTIAL",
+    "items": [
+      "Static/build gates passed and authored specs check lifecycle, care, health, identity, pedigree and soulbound preservation, but those assertions are not yet runtime CI evidence."
+    ]
+  },
+  "rounds": 1,
+  "decision": "BLOCKED",
+  "next": "Wire headless Roblox behavioral execution, then use the first required mutation proof on a new P0 invariant."
+}
