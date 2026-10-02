@@ -7,53 +7,53 @@ WORKSTREAM:
 SPEC-001 Animal Core continuation
 
 STATE:
-T015 care state is merged and complete. Live task order advances to T016 health/disease/treatment.
+T016 health/disease/treatment is implemented on a dedicated candidate branch and awaits exact-head delivery gates.
 
 MODE:
-ADVANCE
+RESUME
 
 CANONICAL SOURCE:
 az1nn/marica-game master + .agents/skills/siga/SKILL.md + .specify/memory/constitution.md + live specs/tasks/PRs/claims/CI.
 
-DELIVERY:
-PR #12 merged.
-Delivery HEAD: e391441d62034721f849f08fb420dc96faf762a5.
-Merge commit: 195d628ede8dc090753765b9f5a967cc5590b547.
-
 BASE / ENV:
-master / Roblox-first
+master@db458e4b1fcfbff642ad1e28dcd76adeb6fad024 / Roblox-first
 
 ACTIVE PR / CLAIM:
-No product PR after #12 merge. T015 claim is closing with this handoff.
+Branch: feat/t016-health-disease-treatment.
+Claim: .siga/session-claim-t016-20261002-1110-sol.md (ACTIVE).
+PR: pending creation.
 
 SPEC / ADR:
 SPEC-001 Animal Core; ADR-0001 runtime; ADR-0002 persistence/time.
 
 DONE:
-- immutable measurable care state covers hunger, hygiene, affection and energy;
-- default care is fully satisfied and normalized to [0, 1];
-- care quality is deterministic and bounded by the weakest essential need;
-- care maps deterministically to genetic-expression factors;
-- Pet persists care state and recalculates expressed traits without changing genetic potential, identity, pedigree or lifecycle;
-- behavioral Jest coverage documents care validation, immutability, quality and Pet integration;
-- T015 is checked complete in the executable SPEC-001 backlog.
+- deterministic persistent health state is separated from care;
+- severe neglect accumulates using explicit elapsed hours;
+- short normal absence does not immediately create disease;
+- progression covers healthy, neglected, sick and critical;
+- established disease requires treatment;
+- treatment returns explicit resource cost;
+- untreated critical disease can deterministically end lifecycle for health;
+- Pet preserves identity, pedigree, care and genetic potential through health transitions;
+- behavioral Jest coverage is authored;
+- T016 is checked complete on the candidate branch.
 
 VERIFY:
-PR #12 exact-head gates PASS at e391441d62034721f849f08fb420dc96faf762a5:
-- Validate skills: PASS;
-- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
+Required exact-head gates are pending for the final PR head:
+- Validate skills;
+- Roblox CI.
 
 BLOCKERS:
 None.
 
 INVARIANTS:
-- genetic potential remains immutable;
-- care affects expression, not pedigree or identity;
-- health/disease/treatment remains T016 scope;
+- health and care remain distinct persisted concerns;
+- health transitions do not mutate genetic potential, pedigree or identity;
+- health terminal transition uses Lifecycle.endLife(..., "health");
 - only az1nn/marica-game is authoritative for this project.
 
 NEXT:
-Execute T016 — health/disease/treatment — from fresh master state, using care/neglect as an input without collapsing health into care.
+Open the T016 PR, verify exact-head gates, merge if green, then close the claim and persist T017 as the single next action.
 
 VERIFY-FIRST:
-Re-read master HEAD, open PRs, active .siga claims, T016 task contract and exact-head workflows before mutation.
+Before merge, re-read master, PR head, open claims, overlap and exact-head workflows.
