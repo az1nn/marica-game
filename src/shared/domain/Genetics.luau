@@ -98,11 +98,7 @@ function Genetics.advancePotential(potential: GeneticPotential, seed: number): G
 
 	table.sort(traitNames)
 
-	local advanced = {}
-
-	for traitName, value in pairs(validatedPotential) do
-		advanced[traitName] = value
-	end
+	local advanced = table.clone(validatedPotential)
 
 	local startIndex = (validatedSeed % #traitNames) + 1
 
