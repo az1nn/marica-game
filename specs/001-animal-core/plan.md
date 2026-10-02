@@ -154,6 +154,19 @@ Requisitos:
 - determinismo com seed fixa;
 - testes impedindo regressão abaixo da garantia.
 
+### T020 — avanço genético garantido
+
+ADR-0003 congela a regra V1 sobre o `GeneticPotential` normalizado:
+
+- passo nominal: **0.05**;
+- ordenar nomes de traits antes de qualquer seleção;
+- `seed mod N` escolhe o primeiro trait candidato;
+- exatamente um trait com capacidade restante recebe `min(0.05, 1 - valor)`;
+- traits saturados são pulados ciclicamente;
+- nenhum trait pode regredir;
+- igualdade só é permitida quando todo o potencial já está saturado em `1`;
+- T021 deve derivar seeds de sucessoras sem redefinir esta regra.
+
 Afeição/vínculo é parte central do valor do pet.
 
 Separar:
@@ -434,7 +447,6 @@ Ainda precisam de decisão formal ou spec própria:
 
 - detalhes da stack/tooling Roblox (Studio sync/Rojo/etc.);
 - formato exato de persistência e autoridade de relógio;
-- algoritmo numérico final de avanço genético;
 - schema final Mendeliano;
 - fee/limites finais de marketplace;
 - empréstimo player-to-player;
