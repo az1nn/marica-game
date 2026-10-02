@@ -1,30 +1,31 @@
 # ROBLOX HANDOFF
 
-Status: ADVANCE
+Status: T016_CANDIDATE
 
-## T015 delivered
+## T016 candidate
 
-PR #12 merged into master at `195d628ede8dc090753765b9f5a967cc5590b547`.
-Delivery HEAD: `e391441d62034721f849f08fb420dc96faf762a5`.
+Base master: `db458e4b1fcfbff642ad1e28dcd76adeb6fad024`.
+Implementation branch: `feat/t016-health-disease-treatment`.
+Domain implementation through: `2c0a976a6107df541f4ab05f66b64294326095e9`.
 
 Domain boundary now includes:
-- `Care.new(...)` for immutable normalized hunger, hygiene, affection and energy state;
-- `Care.quality(...)` as deterministic weakest-essential-need quality;
-- `Care.toExpressionFactors(...)` to translate care into bounded genetic-expression factors;
-- `Pet.careState` as persistent domain state;
-- `Pet.withCareState(...)` to update care and expressed traits without mutating identity, pedigree, lifecycle or genetic potential;
-- no Roblox service or Instance dependency in care rules.
+- immutable `HealthState` with deterministic `healthy -> neglected -> sick -> critical` progression;
+- explicit elapsed-hour input rather than frame/session time;
+- normal short absence remains below the neglect boundary;
+- sickness requires treatment rather than recovering from care alone;
+- treatment returns an explicit resource-cost hook without coupling the domain to the economy adapter;
+- untreated critical disease exposes a deterministic terminal-risk boundary;
+- `Pet.healthState` persists independently of `careState`;
+- terminal health risk ends lifecycle with reason `health` while preserving identity, pedigree, care and genetic potential.
 
-Exact delivery gates:
-- Validate skills: PASS;
-- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
+Required gates are pending for the final PR head.
 
 Known QA gap remains: Jest sources are built into the test place but assertions are not yet run headlessly in CI.
 
 ## Boundary
 
-T016 should model health/disease/treatment as a separate domain concern. Care/neglect may drive health transitions, but health must not rewrite genetic potential or collapse the care contract.
+Health remains a separate domain concern. Care is an input to health progression; health does not rewrite genetic potential or care state.
 
 ## Next
 
-Execute **T016 — health/disease/treatment**.
+After exact-head gates and merge, advance to **T017 — soulbound domain invariant**.
