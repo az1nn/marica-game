@@ -4,6 +4,7 @@ local Health = require(script.Parent.Health)
 local Lifecycle = require(script.Parent.Lifecycle)
 local Pedigree = require(script.Parent.Pedigree)
 local PetId = require(script.Parent.PetId)
+local Soulbound = require(script.Parent.Soulbound)
 
 export type Pet = {
 	id: string,
@@ -13,6 +14,7 @@ export type Pet = {
 	expressedTraits: Genetics.ExpressedTraits,
 	careState: Care.CareState,
 	healthState: Health.HealthState,
+	soulbound: Soulbound.State,
 }
 
 local Pet = {}
@@ -23,13 +25,15 @@ function Pet.new(
 	lifecycle: Lifecycle.Lifecycle?,
 	geneticPotential: Genetics.GeneticPotential?,
 	careState: Care.CareState?,
-	healthState: Health.HealthState?
+	healthState: Health.HealthState?,
+	soulbound: boolean?
 ): Pet
 	local validatedId = PetId.fromString(id)
 	local resolvedLifecycle = lifecycle or Lifecycle.new()
 	local resolvedPotential = Genetics.newPotential(geneticPotential or {})
 	local resolvedCare = Care.new(careState)
 	local resolvedHealth = Health.new(healthState)
+	local resolvedSoulbound = Soulbound.new(soulbound)
 	local expressedTraits = Genetics.express(
 		resolvedPotential,
 		Care.toExpressionFactors(resolvedCare, resolvedPotential)
@@ -43,11 +47,24 @@ function Pet.new(
 		expressedTraits = expressedTraits,
 		careState = resolvedCare,
 		healthState = resolvedHealth,
+		soulbound = resolvedSoulbound,
 	}) :: Pet
 end
 
 function Pet.getId(pet: Pet): string
 	return pet.id
+end
+
+function Pet.isSoulbound(pet: Pet): boolean
+	return pet.soulbound
+end
+
+function Pet.isTransferable(pet: Pet): boolean
+	return Soulbound.isTransferable(pet.soulbound)
+end
+
+function Pet.assertTransferable(pet: Pet)
+	Soulbound.assertTransferable(pet.soulbound)
 end
 
 function Pet.withLifecycle(pet: Pet, lifecycle: Lifecycle.Lifecycle): Pet
@@ -59,6 +76,7 @@ function Pet.withLifecycle(pet: Pet, lifecycle: Lifecycle.Lifecycle): Pet
 		expressedTraits = pet.expressedTraits,
 		careState = pet.careState,
 		healthState = pet.healthState,
+		soulbound = pet.soulbound,
 	}) :: Pet
 end
 
@@ -71,6 +89,7 @@ function Pet.withExpressionFactors(pet: Pet, factors: Genetics.ExpressionFactors
 		expressedTraits = Genetics.express(pet.geneticPotential, factors),
 		careState = pet.careState,
 		healthState = pet.healthState,
+		soulbound = pet.soulbound,
 	}) :: Pet
 end
 
@@ -88,6 +107,7 @@ function Pet.withCareState(pet: Pet, careState: Care.CareState): Pet
 		),
 		careState = resolvedCare,
 		healthState = pet.healthState,
+		soulbound = pet.soulbound,
 	}) :: Pet
 end
 
@@ -102,6 +122,7 @@ function Pet.withHealthState(pet: Pet, healthState: Health.HealthState): Pet
 		expressedTraits = pet.expressedTraits,
 		careState = pet.careState,
 		healthState = resolvedHealth,
+		soulbound = pet.soulbound,
 	}) :: Pet
 end
 
@@ -125,6 +146,7 @@ function Pet.advanceHealth(pet: Pet, elapsedHours: number): Pet
 		expressedTraits = pet.expressedTraits,
 		careState = pet.careState,
 		healthState = nextHealth,
+		soulbound = pet.soulbound,
 	}) :: Pet
 end
 

@@ -1,31 +1,28 @@
 # QA HANDOFF
 
-Status: T016_VERIFIED
+Status: T017_CANDIDATE
 
-## Delivery evidence
+## Candidate evidence
 
-T016 delivery HEAD: `0117998903c7331b8dd6d7a79b8f88340ef4e3b3`.
-Merged master: `43ee6e2d9191bf9a7e271bc0cede35f4b8fb72de`.
-PR: #14.
+Base master: `837e29fbae0acdd5b1e51ee093dcb3e96cdc3671`.
+Implementation branch: `feat/t017-soulbound-domain-invariant`.
+Behavioral test source: `tests/soulbound.spec.luau`.
 
 Authored Jest coverage:
-- health defaults healthy and immutable;
-- invalid persisted durations are rejected;
-- 12 hours of severe neglect remains below the disease boundary;
-- deterministic progression reaches neglected, sick and critical states from explicit elapsed time;
-- good care can recover pre-disease neglect but cannot cure established disease;
-- treatment produces deterministic recovery plus an explicit resource-cost hook;
-- terminal risk requires untreated critical disease;
-- Pet health progression preserves identity, pedigree, care and genetic potential;
-- untreated terminal risk ends lifecycle with reason `health`;
-- treatment preserves lifecycle and non-health domain state.
+- regular pets default to transferable;
+- an explicitly soulbound founder is rejected by the domain transfer guard;
+- invalid persisted soulbound values are rejected;
+- soulbound survives lifecycle, care and health state transitions;
+- descendants do not inherit soulbound automatically and remain eligible for future transfer rules.
 
-Exact delivery gates at `0117998903c7331b8dd6d7a79b8f88340ef4e3b3`:
-- Validate skills: PASS;
-- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
+Required exact-head gates:
+- Validate skills;
+- Roblox CI, including lockfile reproducibility, StyLua, Selene and production/test builds.
+
+Status: pending on final PR head.
 
 Known QA gap: CI builds Jest specs but does not execute Jest assertions headlessly. Treat authored behavioral specs as coverage evidence until that harness is wired.
 
 ## Next
 
-For T017, cover soulbound as a domain invariant so no transfer path can bypass it.
+Verify the final T017 PR head, then merge only if all required gates are green.
