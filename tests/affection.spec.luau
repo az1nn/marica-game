@@ -52,16 +52,7 @@ describe("Persistent affection", function()
 		local care = Care.new({
 			affection = 0.2,
 		})
-		local pet = Pet.new(
-			"pet-affection-001",
-			founderPedigree(),
-			nil,
-			nil,
-			care,
-			nil,
-			nil,
-			0.7
-		)
+		local pet = Pet.new("pet-affection-001", founderPedigree(), nil, nil, care, nil, nil, 0.7)
 
 		expect(pet.careState.affection).toBe(0.2)
 		expect(Pet.getAffection(pet)).toBe(0.7)
@@ -91,16 +82,7 @@ describe("Persistent affection", function()
 	end)
 
 	it("preserves persistent affection across lifecycle and health transitions", function()
-		local pet = Pet.new(
-			"pet-affection-001",
-			founderPedigree(),
-			nil,
-			nil,
-			nil,
-			nil,
-			nil,
-			0.8
-		)
+		local pet = Pet.new("pet-affection-001", founderPedigree(), nil, nil, nil, nil, nil, 0.8)
 		local adult = Pet.withLifecycle(pet, Lifecycle.advance(pet.lifecycle, "adult"))
 		local healthy = Pet.withHealthState(adult, Health.new())
 
