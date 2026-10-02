@@ -1,12 +1,12 @@
 # QA HANDOFF
 
-Status: T018_CANDIDATE
+Status: T018_VERIFIED
 
-## Candidate evidence
+## Delivery evidence
 
-Base master: `69e798df2c6f9578bf01b7eec65615b934721625`.
-Implementation branch: `feat/t018-persistent-affection`.
-Behavioral test source: `tests/affection.spec.luau`.
+T018 delivery HEAD: `4a2a74f30b2465bb9a7e9d3e8186930857c2f1bd`.
+Merged master: `11295a68468eb5ac7eb447c1a08b5195db5fd524`.
+PR: #20.
 
 Authored Jest coverage:
 - affection defaults independently from momentary care;
@@ -15,14 +15,16 @@ Authored Jest coverage:
 - care-state updates do not overwrite persistent bond;
 - lifecycle and health transitions preserve persistent affection.
 
-Required exact-head gates:
-- Validate skills;
-- Roblox CI, including lockfile reproducibility, StyLua, Selene and production/test builds.
+Exact delivery gates at `4a2a74f30b2465bb9a7e9d3e8186930857c2f1bd`:
+- Validate skills: PASS;
+- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
 
-Status: pending on final PR head.
+Merge concurrency:
+- master remained at the expected base until PR #20 merged;
+- no competing open PR or ACTIVE claim overlapped T018.
 
 Known QA gap: CI builds Jest specs but does not execute Jest assertions headlessly. Treat authored behavioral specs as coverage evidence until that harness is wired.
 
 ## Next
 
-Verify the final T018 PR head, then merge only if all required gates are green.
+For T020, define and test the deterministic guaranteed genetic-advancement contract before implementing successor generation.

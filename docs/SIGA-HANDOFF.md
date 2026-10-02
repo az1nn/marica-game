@@ -7,55 +7,59 @@ WORKSTREAM:
 SPEC-001 Animal Core continuation
 
 STATE:
-T018 persistent affection is implemented on a dedicated candidate branch and awaits exact-head delivery gates.
+T018 persistent affection is merged and complete. Live task order advances to T020 guaranteed genetic advancement algorithm.
 
 MODE:
-RESUME
+ADVANCE
 
 CANONICAL SOURCE:
 az1nn/marica-game master + .agents/skills/siga/SKILL.md + .specify/memory/constitution.md + live specs/tasks/PRs/claims/CI.
 
+DELIVERY:
+PR #20 merged.
+Delivery HEAD: 4a2a74f30b2465bb9a7e9d3e8186930857c2f1bd.
+Merge commit: 11295a68468eb5ac7eb447c1a08b5195db5fd524.
+
 BASE / ENV:
-master@69e798df2c6f9578bf01b7eec65615b934721625 / Roblox-first
+master / Roblox-first
 
 ACTIVE PR / CLAIM:
-Branch: feat/t018-persistent-affection.
-Claim: .siga/session-claim-t018-20261002-1327-sol.md (ACTIVE).
-PR: pending creation.
+No product PR after #20 merge.
+T018 claim is CLOSED by this handoff closure.
 
 SPEC / ADR:
 SPEC-001 Animal Core; ADR-0001 runtime; ADR-0002 persistence/time.
 
 DONE:
-- affection is persisted on Pet independently from transient care affection;
+- Pet persists affection independently from transient care affection;
 - invalid affection values are rejected;
 - affection gain is deterministic and capped;
-- Pet state transitions preserve affection;
+- lifecycle, care, expression and health transitions preserve affection;
 - behavioral Jest coverage documents the invariant;
-- T018 is checked complete on the candidate branch.
+- T018 is checked complete in the executable SPEC-001 backlog.
 
 VERIFY:
-Required exact-head gates are pending for the final PR head:
-- Validate skills;
-- Roblox CI.
+PR #20 exact-head gates PASS at 4a2a74f30b2465bb9a7e9d3e8186930857c2f1bd:
+- Validate skills: PASS;
+- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
 
 CONCURRENCY:
-- pre-mutation snapshot found no open PRs;
-- all prior repository claims were CLOSED;
-- post-claim barrier found master unchanged at 69e798df2c6f9578bf01b7eec65615b934721625;
+- no competing open PR or ACTIVE claim overlapped T018;
+- master remained at the expected base through merge;
 - classification: CLEAR.
 
 BLOCKERS:
 None.
 
 INVARIANTS:
-- persistent affection is not the same state as momentary care affection;
+- persistent affection is distinct from momentary care affection;
 - future ownership transfer must preserve persistent affection;
 - T018 does not implement ownership transfer;
+- guaranteed genetic advancement must be deterministic and bounded before successor generation;
 - only az1nn/marica-game is authoritative for this project.
 
 NEXT:
-Open the T018 PR, verify exact-head gates, merge if green, then close the claim and persist T020 as the single next action.
+Execute T020 — define the deterministic guaranteed genetic-advancement algorithm and its test contract before T021.
 
 VERIFY-FIRST:
-Before merge, re-read master, PR head, open claims, overlap and exact-head workflows.
+Re-read master HEAD, open PRs, active .siga claims, T020 task contract and exact-head workflows before mutation.
