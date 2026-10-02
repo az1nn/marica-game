@@ -46,6 +46,20 @@ Use **Visual Mode by default**, including for standalone `relatorio` / `relatór
 
 Use **Text Mode only when the user explicitly requests textual output, no image, or equivalent wording**.
 
+
+## Inline delivery contract
+
+Visual Mode must be delivered as an **inline-rendered image in the conversation**, not merely as a download link or file path.
+
+Required behavior:
+
+- render exactly one final RELATORIO image per invocation;
+- present that image inline in the assistant response;
+- a download link may exist only as a secondary convenience, never as the primary or sole visual delivery;
+- do not emit draft/intermediate report images to the user;
+- if a generated image is rejected during QA, discard it and render a replacement before responding;
+- never expose a stale or cross-project image while producing the Maricá Game report.
+
 ## Mandatory live reconciliation
 
 Read the smallest sufficient live set, in this order:
@@ -316,6 +330,27 @@ Do not replace this skeleton with a generic analytics dashboard.
 - no cross-project imagery or terminology;
 - no excessive gradients, glow or visual noise;
 - decorative Maricá scene must stay subordinate to the factual dashboard.
+
+
+### Composition QA gate
+
+Before the final visual is emitted, validate the rendered bitmap itself.
+
+Minimum checks:
+
+- all canonical panels remain inside canvas bounds;
+- no card overlaps another card;
+- text bounding boxes remain inside their owning panel;
+- no footer/header clipping;
+- no text smaller than the renderer's mobile-readable minimum;
+- no unexpected line wrap pushes content outside a panel;
+- no duplicate report image is emitted;
+- repository name, task key, PRs, SHA and gate labels visible in the bitmap match the reconciled facts;
+- the final bitmap is the newest render from this invocation.
+
+Prefer deterministic layout engines with measured text boxes for factual dashboards. Generative imagery may be used only for the small decorative scene panel; it must not render factual labels, metrics or repository state.
+
+If any composition check fails, render again with corrected dimensions/content density. A visually broken dashboard is a failed RELATORIO attempt and must not be emitted as final output.
 
 ## Text Mode — same topics, compact form
 
