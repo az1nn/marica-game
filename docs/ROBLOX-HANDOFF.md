@@ -1,32 +1,28 @@
 # ROBLOX HANDOFF
 
-Status: ADVANCE
+Status: T017_CANDIDATE
 
-## T016 delivered
+## T017 candidate
 
-PR #14 merged into master at `43ee6e2d9191bf9a7e271bc0cede35f4b8fb72de`.
-Delivery HEAD: `0117998903c7331b8dd6d7a79b8f88340ef4e3b3`.
+Base master: `837e29fbae0acdd5b1e51ee093dcb3e96cdc3671`.
+Implementation branch: `feat/t017-soulbound-domain-invariant`.
 
 Domain boundary now includes:
-- immutable persistent `HealthState`;
-- deterministic `healthy -> neglected -> sick -> critical` progression from explicit elapsed hours;
-- short normal absence remaining below disease thresholds;
-- established disease requiring treatment rather than care-only recovery;
-- treatment returning an explicit resource-cost hook without coupling to an economy adapter;
-- untreated critical disease exposing a deterministic terminal-risk boundary;
-- `Pet.healthState` independent from `careState`;
-- health terminal risk ending lifecycle with reason `health` while preserving identity, pedigree, care and genetic potential.
+- explicit immutable `Pet.soulbound` state;
+- validated boolean persistence boundary for soulbound;
+- `Pet.isTransferable(...)` as a domain eligibility query;
+- `Pet.assertTransferable(...)` as the mandatory domain guard for future ownership/marketplace transfer paths;
+- soulbound persistence across lifecycle, care and health state transitions;
+- descendants default to non-soulbound unless explicitly marked.
 
-Exact delivery gates:
-- Validate skills: PASS;
-- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
+Required gates are pending for the final PR head.
 
 Known QA gap remains: Jest sources are built into the test place but assertions are not yet run headlessly in CI.
 
 ## Boundary
 
-T017 should implement soulbound as an engine-neutral domain invariant. Runtime/UI paths may expose actions, but no transfer-capable path may override the domain restriction.
+T017 establishes the invariant only. T040-T042 will implement ownership history and transfer use cases and must route every transfer-capable path through the domain guard rather than duplicating the rule in UI/runtime code.
 
 ## Next
 
-Execute **T017 — soulbound domain invariant**.
+After exact-head gates and merge, advance to **T018 — persistent affection**.
