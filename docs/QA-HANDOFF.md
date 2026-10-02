@@ -1,31 +1,31 @@
 # QA HANDOFF
 
-Status: T011_VERIFIED
+Status: T012_IMPLEMENTED_AWAITING_EXACT_HEAD_CI
 
-## Delivery evidence
+## T012 authored coverage
 
-T010 delivery: `51667c9be61f558de1e03a53189b77dcb3a6050d`.
-T011 delivery: `fec260381caff36ce15ef2202e52d9c690ba1178`.
+Jest test source now covers:
+- initial active juvenile state;
+- deterministic juvenile -> adult -> senior transitions;
+- skipped/backwards transition rejection;
+- health-driven early end;
+- natural end only from senior;
+- terminal irreversibility;
+- immutable Pet lifecycle replacement preserving identity/pedigree.
 
-T011 adds Jest test source for:
-- founder generation zero;
-- descendant parent references;
-- pedigree immutability;
-- invalid generation/parent shapes;
-- duplicate direct-parent rejection.
+## Required delivery gates
 
-Exact delivery gates:
+For the final T012 PR head:
 - Validate skills: PASS.
 - Roblox CI: PASS.
 - Wally reproducibility: PASS.
 - StyLua: PASS.
 - Selene: PASS.
 - production/test Rojo builds: PASS.
-- review threads: none.
-- post-merge push gates: PASS.
+- no unresolved review thread/base drift.
 
-Current CI still builds but does not headlessly execute Jest assertions. Treat those tests as authored coverage, not runtime-executed evidence.
+Current CI still builds but does not headlessly execute Jest assertions. Treat lifecycle tests as authored coverage until headless execution is wired.
 
 ## Next
 
-For T012, model lifecycle transitions as deterministic domain state and add test source for legal/illegal transitions.
+After T012 exact-head merge, T013 should add deterministic time/simulation tests for offline multi-stage advancement and clock rollback behavior.
