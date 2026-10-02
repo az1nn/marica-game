@@ -23,7 +23,7 @@
 - [x] **T015** Implementar care state.
 - [x] **T016** Implementar health/disease/treatment.
 - [x] **T017** Implementar soulbound como invariant de domínio.
-- [ ] **T018** Implementar affection persistente.
+- [x] **T018** Implementar affection persistente.
 
 ## Phase C — Succession P0
 

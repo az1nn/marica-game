@@ -1,33 +1,27 @@
 # ROBLOX HANDOFF
 
-Status: ADVANCE
+Status: T018_CANDIDATE
 
-## T017 delivered
+## T018 candidate
 
-PR #16 merged into master at `bca1b81410aa79af06c47b052e14478b2e578c03`.
-Delivery HEAD: `46dd15acde656b42c9ce92930e9edb5720f2458d`.
+Base master: `69e798df2c6f9578bf01b7eec65615b934721625`.
+Implementation branch: `feat/t018-persistent-affection`.
 
 Domain boundary now includes:
-- immutable persisted `Pet.soulbound` state;
-- validated boolean boundary for soulbound persistence;
-- `Pet.isTransferable(...)` eligibility query;
-- `Pet.assertTransferable(...)` domain rejection guard for future ownership/marketplace paths;
-- soulbound preservation across lifecycle, care and health transitions;
-- descendants defaulting to non-soulbound unless explicitly marked.
+- explicit persisted `Pet.affection` state independent from `careState.affection`;
+- normalized affection validation at the domain boundary;
+- deterministic capped bond growth through `Affection.increase(...)`;
+- immutable `Pet.withAffection(...)` / `Pet.gainAffection(...)` transitions;
+- affection preservation across lifecycle, care, expression and health transitions.
 
-Exact delivery gates:
-- Validate skills: PASS;
-- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
-
-Concurrency:
-- concurrent RELATORIO visual-contract changes were PARALLEL_SAFE and had no semantic/file overlap with T017.
+Required gates are pending for the final PR head.
 
 Known QA gap remains: Jest sources are built into the test place but assertions are not yet run headlessly in CI.
 
 ## Boundary
 
-T018 should model affection persistently and independently from momentary care. Future ownership transfer must preserve affection; T040-T042 will consume that invariant rather than redefining it.
+T018 establishes persistent bond only. Ownership history and transfer paths remain T040-T042 and must preserve `Pet.affection` rather than resetting it.
 
 ## Next
 
-Execute **T018 — persistent affection**.
+Verify exact-head gates for **T018 — persistent affection**, merge when green, then advance to **T020 — guaranteed genetic advancement algorithm**.

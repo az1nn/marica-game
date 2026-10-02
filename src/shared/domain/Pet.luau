@@ -1,3 +1,4 @@
+local Affection = require(script.Parent.Affection)
 local Care = require(script.Parent.Care)
 local Genetics = require(script.Parent.Genetics)
 local Health = require(script.Parent.Health)
@@ -15,6 +16,7 @@ export type Pet = {
 	careState: Care.CareState,
 	healthState: Health.HealthState,
 	soulbound: Soulbound.State,
+	affection: Affection.State,
 }
 
 local Pet = {}
@@ -26,7 +28,8 @@ function Pet.new(
 	geneticPotential: Genetics.GeneticPotential?,
 	careState: Care.CareState?,
 	healthState: Health.HealthState?,
-	soulbound: boolean?
+	soulbound: boolean?,
+	affection: number?
 ): Pet
 	local validatedId = PetId.fromString(id)
 	local resolvedLifecycle = lifecycle or Lifecycle.new()
@@ -34,6 +37,7 @@ function Pet.new(
 	local resolvedCare = Care.new(careState)
 	local resolvedHealth = Health.new(healthState)
 	local resolvedSoulbound = Soulbound.new(soulbound)
+	local resolvedAffection = Affection.new(affection)
 	local expressedTraits = Genetics.express(
 		resolvedPotential,
 		Care.toExpressionFactors(resolvedCare, resolvedPotential)
@@ -48,11 +52,16 @@ function Pet.new(
 		careState = resolvedCare,
 		healthState = resolvedHealth,
 		soulbound = resolvedSoulbound,
+		affection = resolvedAffection,
 	}) :: Pet
 end
 
 function Pet.getId(pet: Pet): string
 	return pet.id
+end
+
+function Pet.getAffection(pet: Pet): Affection.State
+	return pet.affection
 end
 
 function Pet.isSoulbound(pet: Pet): boolean
@@ -77,6 +86,7 @@ function Pet.withLifecycle(pet: Pet, lifecycle: Lifecycle.Lifecycle): Pet
 		careState = pet.careState,
 		healthState = pet.healthState,
 		soulbound = pet.soulbound,
+		affection = pet.affection,
 	}) :: Pet
 end
 
@@ -90,6 +100,7 @@ function Pet.withExpressionFactors(pet: Pet, factors: Genetics.ExpressionFactors
 		careState = pet.careState,
 		healthState = pet.healthState,
 		soulbound = pet.soulbound,
+		affection = pet.affection,
 	}) :: Pet
 end
 
@@ -108,6 +119,7 @@ function Pet.withCareState(pet: Pet, careState: Care.CareState): Pet
 		careState = resolvedCare,
 		healthState = pet.healthState,
 		soulbound = pet.soulbound,
+		affection = pet.affection,
 	}) :: Pet
 end
 
@@ -123,7 +135,28 @@ function Pet.withHealthState(pet: Pet, healthState: Health.HealthState): Pet
 		careState = pet.careState,
 		healthState = resolvedHealth,
 		soulbound = pet.soulbound,
+		affection = pet.affection,
 	}) :: Pet
+end
+
+function Pet.withAffection(pet: Pet, affection: Affection.State): Pet
+	local resolvedAffection = Affection.new(affection)
+
+	return table.freeze({
+		id = pet.id,
+		pedigree = pet.pedigree,
+		lifecycle = pet.lifecycle,
+		geneticPotential = pet.geneticPotential,
+		expressedTraits = pet.expressedTraits,
+		careState = pet.careState,
+		healthState = pet.healthState,
+		soulbound = pet.soulbound,
+		affection = resolvedAffection,
+	}) :: Pet
+end
+
+function Pet.gainAffection(pet: Pet, gain: number): Pet
+	return Pet.withAffection(pet, Affection.increase(pet.affection, gain))
 end
 
 function Pet.advanceHealth(pet: Pet, elapsedHours: number): Pet
@@ -147,6 +180,7 @@ function Pet.advanceHealth(pet: Pet, elapsedHours: number): Pet
 		careState = pet.careState,
 		healthState = nextHealth,
 		soulbound = pet.soulbound,
+		affection = pet.affection,
 	}) :: Pet
 end
 
