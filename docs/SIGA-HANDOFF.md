@@ -4,64 +4,61 @@ APP:
 Maricá Game
 
 WORKSTREAM:
-SPEC-001 Animal Core / Domain P0
+SIGA orchestration hardening / SPEC-001 Animal Core continuation
 
 STATE:
-T014 merged and complete. T015 is the next executable task.
+T014 is merged and complete. T015 remains the next product task. A bounded SIGA protocol-maintenance branch is active to hard-lock orchestration to this repository and remove stale cross-repository authority.
 
 MODE:
-ADVANCE
+RESUME
 
 CANONICAL SOURCE:
-az1nn/marica-game master + specs/001-animal-core/tasks.md; SIGA procedure remains canonical in az1nn/cpxlabs-admin/.agents/skills/siga/SKILL.md.
+az1nn/marica-game master + .agents/skills/siga/SKILL.md + .specify/memory/constitution.md + live specs/tasks/PRs/claims/CI.
 
 CURRENT VERSION / HEAD:
-T014 delivery merge master@d16423c51b5ebbe0282fd95c5b0a990a1f069136
+Base master@c49bdd4756e16a079a2d0c69cc8441bcf51d5d9d.
+Protocol branch chore/siga-marica-orchestrator-lock.
 
 BASE:
 master
 
 BRANCH / ENV:
-master / Roblox-first
+chore/siga-marica-orchestrator-lock / Roblox-first
 
 PR / MR / TASK:
-PR #9 merged / T014 complete / T015 next
+Protocol maintenance claim OPS-SIGA-ORCHESTRATOR-LOCK active. No product PR is active. T015 remains next after protocol maintenance is delivered.
 
 SPEC / ADR:
-SPEC-001 Animal Core; ADR-0001 runtime; ADR-0002 persistence/time
+SPEC-001 Animal Core; ADR-0001 runtime; ADR-0002 persistence/time.
 
 DONE:
-- engine-neutral Genetics module separates immutable genetic potential from current expression;
-- genetic potential uses bounded normalized trait scores in [0, 1];
-- expressed traits are derived deterministically from potential plus explicit expression factors;
-- expression factors cannot invent traits or mutate genetic potential;
-- Pet stores geneticPotential and expressedTraits separately;
-- Pet.withExpressionFactors recalculates expression while preserving identity, pedigree, lifecycle and genetic potential;
-- Pet.withLifecycle preserves both genetic layers;
-- T014 is marked complete in the executable backlog.
+- T014 genetic trait expression is merged;
+- SIGA repository identity is locked to az1nn/marica-game;
+- orchestration flow is being hardened around live-state reconciliation, specialist routing, concurrency barrier, exact-head validation and guarded merge;
+- static/current task IDs are being removed from the SIGA protocol so next work is always derived from live repository state;
+- skill-system validation is being extended to reject cross-repository authority regressions.
 
 VERIFY:
-- T014 delivery HEAD ed48ca025a138ca6796d6e6de34571dbcb8afaa8;
-- Validate skills PASS on the exact delivery HEAD;
-- Roblox CI PASS on the exact delivery HEAD, including StyLua, Selene, production build and test-place build;
-- PR #9 had no unresolved review threads;
-- master had no base drift at merge.
+Protocol branch must pass python tools/skills/validate.py and repository CI on its exact delivery HEAD before merge.
 
 GATES:
-Exact-head merge gates PASS. Known QA gap remains: Jest specs are built into the test place but are not yet executed headlessly by CI.
+Exact-head skills validation required.
+Applicable repository CI required.
+No semantic overlap with active product work.
 
 BLOCKERS:
 None.
 
 INVARIANTS:
-- genetic potential is distinct from current expressed traits;
-- expression may reduce/shape realized traits but never rewrites genetic potential;
-- expression factors are explicit inputs and cannot create non-genetic traits;
-- pedigree remains untouched by expression changes;
-- domain remains engine-neutral.
+- az1nn/marica-game is the only canonical repository for this project's orchestration state;
+- live repository evidence outranks handoff/chat memory;
+- SIGA selects tasks; specialists execute bounded concerns and return control;
+- no mutation without the concurrency barrier;
+- no merge using stale validation;
+- SIGA must not hard-code a current/next task ID.
 
 NEXT:
-Execute T015 — care state.
+Finish validator + protocol self-check, open/verify/merge the maintenance PR, close the maintenance claim, then reconcile live SPEC-001 tasks and advance the next executable product task.
 
 VERIFY-FIRST:
-Re-read master HEAD, open PRs, active .siga claims and exact-head workflows. Confirm this handoff-maintenance commit is green, then classify ADVANCE and claim T015 before mutation.
+Re-read master HEAD, protocol branch HEAD, open PRs, active .siga claims and exact-head workflows before each write/merge.
