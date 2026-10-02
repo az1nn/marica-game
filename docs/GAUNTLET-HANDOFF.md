@@ -1,36 +1,32 @@
 # GAUNTLET HANDOFF
 
-Status: AQ010_DELIVERED
+Status: AQ011_CANDIDATE
 
-## AQ010 delivery
+## AQ011 candidate
 
-- PR: #27
-- delivery HEAD: 8879703021142c5c2f3408ec2e50987755d2ab38
-- merged master: c681e2d2a35cb562fe8b7fcd3d5bdcc55b6beea5
-- Validate skills: PASS
-- Roblox CI: PASS
-- Roblox Behavioral: SKIPPED because `ROBLOX_TEST_UNIVERSE_ID` / `ROBLOX_TEST_PLACE_ID` are not configured.
+Branch: feat/aq011-behavioral-exact-head-gate
 
-AQ010 now provides:
+The Roblox Behavioral workflow now behaves as a real acceptance gate instead of silently skipping:
 
-- exact-head test-place build;
-- publish to an isolated Roblox test place through Open Cloud;
-- Luau Execution against the exact published place version;
-- explicit Jest invocation;
-- CI log/error propagation.
+- the job always starts for pull requests;
+- missing `ROBLOX_API_KEY`, `ROBLOX_TEST_UNIVERSE_ID`, or `ROBLOX_TEST_PLACE_ID` fails the job explicitly;
+- checkout is pinned to the pull-request head SHA;
+- a dedicated step verifies the checked-out commit equals that exact SHA;
+- only then does the workflow build/publish the test place and execute Jest through Open Cloud.
 
-Required repository configuration:
-
-- secret `ROBLOX_API_KEY`;
-- vars `ROBLOX_TEST_UNIVERSE_ID`, `ROBLOX_TEST_PLACE_ID`;
-- key access for place publishing and Luau execution on the test place.
-
-A skipped behavioral job is missing evidence, not PASS.
+A configuration failure is missing infrastructure/evidence, not a product-test failure and not PASS.
 
 ## Product thread
 
-T020 is open as PR #26. Its product contract remains unaccepted until behavioral Jest execution and the GAUNTLET mutation cycle can run on the exact candidate.
+T020 remains open as PR #26. Its deterministic genetic-advancement candidate must not merge until Roblox Behavioral executes successfully on the exact T020 head and GAUNTLET can run the required mutation cycle.
+
+## External configuration still required
+
+- secret `ROBLOX_API_KEY`;
+- variable `ROBLOX_TEST_UNIVERSE_ID`;
+- variable `ROBLOX_TEST_PLACE_ID`;
+- API key permission for place publishing and Luau execution on the isolated test place.
 
 ## Next quality action
 
-AQ011 — configure/use the behavioral result as an exact-head gate, then AQ012 executes the first GOOD -> BAD MUTANT -> RESTORE proof.
+Make the repository configuration available, obtain a PASS from Roblox Behavioral on the exact candidate head, then execute AQ012 GOOD -> BAD MUTANT -> RESTORE proof for T020.
