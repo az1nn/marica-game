@@ -24,6 +24,7 @@ No other repository is an authority for Maricá Game task state, handoffs, claim
 
 - ROBLOX — production runtime/platform specialist under the currently ratified repository-local architecture.
 - QA — automated quality gates.
+- GAUNTLET — bounded adversarial quality loop: baseline, fresh critic, mutation proof and regression hunter under SIGA.
 - GODOT — portability/reference lane unless explicitly activated by a newer local ADR/spec.
 - 3JS — reference/prototype renderer lane unless explicitly activated by a newer local ADR/spec.
 
@@ -43,8 +44,10 @@ Siga
  -> concurrency barrier before mutation
  -> execute bounded work
  -> exact-head QA / rendered evidence
+ -> GAUNTLET for applicable high-risk/P0 acceptance
  -> guarded merge or WATCH
  -> persist handoff + one next action
+ -> mandatory RELATORIO from fresh resulting state
 ~~~
 
 Task IDs and "next task" state do not belong in this README or in the SIGA skill. They are derived from live specs/tasks, PRs, claims and handoffs on each invocation.
