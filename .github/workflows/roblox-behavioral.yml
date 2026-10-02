@@ -13,17 +13,41 @@ concurrency:
 
 jobs:
   open-cloud-tests:
-    if: ${{ vars.ROBLOX_TEST_UNIVERSE_ID != '' && vars.ROBLOX_TEST_PLACE_ID != '' }}
     runs-on: ubuntu-latest
     env:
       ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
       ROBLOX_TEST_UNIVERSE_ID: ${{ vars.ROBLOX_TEST_UNIVERSE_ID }}
       ROBLOX_TEST_PLACE_ID: ${{ vars.ROBLOX_TEST_PLACE_ID }}
+      EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
+      - name: Require isolated test-place configuration
+        shell: bash
+        run: |
+          missing=()
+          [[ -n "$ROBLOX_API_KEY" ]] || missing+=("ROBLOX_API_KEY secret")
+          [[ -n "$ROBLOX_TEST_UNIVERSE_ID" ]] || missing+=("ROBLOX_TEST_UNIVERSE_ID variable")
+          [[ -n "$ROBLOX_TEST_PLACE_ID" ]] || missing+=("ROBLOX_TEST_PLACE_ID variable")
+
+          if (( ${#missing[@]} > 0 )); then
+            printf 'Roblox Behavioral exact-head gate is blocked by missing repository configuration:\n'
+            printf ' - %s\n' "${missing[@]}"
+            exit 1
+          fi
+
       - name: Checkout exact commit
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ env.EXPECTED_SHA }}
+
+      - name: Verify exact-head checkout
+        shell: bash
+        run: |
+          actual_sha="$(git rev-parse HEAD)"
+          if [[ "$actual_sha" != "$EXPECTED_SHA" ]]; then
+            echo "Expected exact head $EXPECTED_SHA but checked out $actual_sha"
+            exit 1
+          fi
+          echo "Verified exact behavioral head: $actual_sha"
 
       - name: Setup Rokit toolchain
         uses: paradoxum-games/setup-rokit@v3
