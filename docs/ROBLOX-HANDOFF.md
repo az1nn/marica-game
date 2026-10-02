@@ -1,32 +1,28 @@
 # ROBLOX HANDOFF
 
-Status: ADVANCE
+Status: WATCH
 
-## T013 delivered
+## T014 candidate
 
-PR #8 merged into master at `3dce4caa2fc9dd6ff8aa5003112857b526f936d7`.
-Delivery HEAD: `be8a997988ec650fd3284d8790034c62503ecb4b`.
+PR #9 implements the genetics/expression boundary entirely in the shared engine-neutral domain.
 
-Runtime/domain boundary now includes:
-- engine-neutral `SimulationTime.observe(clock, lastObservedAt)`;
-- monotonic logical time and non-negative elapsed under clock rollback;
-- engine-neutral `LifecycleSimulation.advance(..., bornAt, now, schedule)` for deterministic offline catch-up;
-- Roblox-only `RobloxClock.now()` backed by `Workspace:GetServerTimeNow()`;
-- no client timestamp authority;
-- no frame timer as source of truth.
+Candidate boundary:
+- `Genetics.newPotential(...)` creates an immutable normalized trait-potential map;
+- `Genetics.express(potential, factors)` derives current expressed traits deterministically;
+- factors are bounded to [0, 1] and cannot introduce traits absent from genetic potential;
+- `Pet` persists genetic potential and expressed traits as separate fields;
+- `Pet.withExpressionFactors(...)` updates expression without changing identity, pedigree, lifecycle or genetic potential;
+- no Roblox service or Instance dependency enters the genetics domain.
 
-Exact delivery gates:
-- Validate skills: PASS.
-- Roblox CI: PASS.
-- review threads: none.
-- base drift: none.
+## Gates
 
+PR #9 must pass the exact final-head Roblox CI and Validate skills workflows before merge.
 Known QA gap remains: Jest sources are built into the test place but assertions are not yet run headlessly in CI.
 
 ## Boundary
 
-T014 is a domain task. Keep Roblox presentation/runtime out of genetic rules; any runtime integration must consume engine-neutral contracts.
+T015 should compute care state in the domain/application layers and translate it into explicit expression factors. Do not put care mutation inside genetic potential and do not move this logic into presentation/runtime code.
 
 ## Next
 
-Execute **T014 — genetic potential vs expressed traits**.
+After PR #9 is green and merged, execute **T015 — care state**.

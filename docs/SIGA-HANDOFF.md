@@ -7,60 +7,56 @@ WORKSTREAM:
 SPEC-001 Animal Core / Domain P0
 
 STATE:
-T013 merged and complete. T014 is the next executable task.
+T014 implementation is on PR #9. Final exact-head gates are pending.
 
 MODE:
-ADVANCE
+WATCH
 
 CANONICAL SOURCE:
 az1nn/marica-game master + specs/001-animal-core/tasks.md; SIGA procedure remains canonical in az1nn/cpxlabs-admin/.agents/skills/siga/SKILL.md.
 
-CURRENT VERSION / HEAD:
-T013 delivery merge master@3dce4caa2fc9dd6ff8aa5003112857b526f936d7
-
 BASE:
-master
+master@cad484b687d9ed795e4cd7d37bd1223b13b7428a
 
 BRANCH / ENV:
-master / Roblox-first
+feat/t014-genetic-trait-expression / Roblox-first
 
 PR / MR / TASK:
-PR #8 merged / T013 complete / T014 next
+PR #9 open / T014 candidate / T015 blocked until T014 merge
 
 SPEC / ADR:
 SPEC-001 Animal Core; ADR-0001 runtime; ADR-0002 persistence/time
 
 DONE:
-- injectable Clock contract via SimulationTime.observe(clock, lastObservedAt);
-- monotonic logical time: logicalNow = max(rawNow, lastObservedAt);
-- elapsed never becomes negative under clock rollback;
-- deterministic lifecycle catch-up across juvenile -> adult -> senior -> natural end;
-- explicit configurable lifecycle schedule;
-- Roblox server adapter uses Workspace:GetServerTimeNow();
-- T013 marked complete in executable backlog.
+- engine-neutral Genetics module separates immutable genetic potential from current expression;
+- genetic potential uses bounded normalized trait scores in [0, 1];
+- expressed traits are derived deterministically from potential plus explicit expression factors;
+- expression factors cannot invent traits or mutate genetic potential;
+- Pet stores geneticPotential and expressedTraits separately;
+- Pet.withExpressionFactors recalculates expression while preserving identity, pedigree, lifecycle and genetic potential;
+- Pet.withLifecycle preserves both genetic layers;
+- T014 marked complete in the executable backlog inside the candidate branch.
 
 VERIFY:
-- T013 delivery HEAD be8a997988ec650fd3284d8790034c62503ecb4b;
-- Validate skills PASS on exact delivery HEAD;
-- Roblox CI PASS on exact delivery HEAD;
-- PR #8 had no unresolved review threads;
-- master had no base drift at merge.
+- authored Jest coverage checks immutability, bounded values, deterministic expression, unknown-trait rejection and Pet integration;
+- final Validate skills and Roblox CI must pass on the exact final PR head;
+- review threads and base drift must be rechecked immediately before merge.
 
 GATES:
-Exact-head merge gates PASS. Known QA gap remains: Jest specs are built into the test place but are not yet executed headlessly by CI.
+Pending exact-head PR #9 validation. Known QA gap remains: Jest specs are built into the test place but are not yet executed headlessly by CI.
 
 BLOCKERS:
-None.
+No product blocker. Merge remains gated on exact-head CI.
 
 INVARIANTS:
-- client time is never authoritative;
-- temporal domain rules accept explicit time;
-- logical profile time never moves backward;
-- terminal lifecycle remains terminal;
-- domain remains engine-neutral; Roblox-specific time access stays in adapter layer.
+- genetic potential is distinct from current expressed traits;
+- expression may reduce/shape realized traits but never rewrites genetic potential;
+- expression factors are explicit inputs and cannot create non-genetic traits;
+- pedigree remains untouched by expression changes;
+- domain remains engine-neutral.
 
 NEXT:
-Execute T014 — genetic potential vs expressed traits.
+If PR #9 is green and drift-free, merge T014, close the claim, then execute T015 — care state.
 
 VERIFY-FIRST:
-Re-read master HEAD, open PRs, active .siga claims and exact-head workflows. Confirm this handoff-maintenance commit is green, then classify ADVANCE and claim T014 before mutation.
+Before merge, verify PR #9 exact head workflows, review threads and base SHA against master.
