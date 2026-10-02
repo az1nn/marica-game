@@ -23,7 +23,7 @@ describe("Lifecycle", function()
 
 		expect(pet.lifecycle.stage).toBe("juvenile")
 		expect(pet.lifecycle.status).toBe("active")
-		expect(pet.lifecycle.endReason).toBeNil()
+		expect(pet.lifecycle.endReason).toBe(nil)
 		expect(Pet.isActive(pet)).toBe(true)
 	end)
 
