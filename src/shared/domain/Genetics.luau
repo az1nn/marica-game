@@ -43,10 +43,7 @@ function Genetics.newPotential(values: GeneticPotential): GeneticPotential
 	return copyTraitMap(values, "Genetic potential") :: GeneticPotential
 end
 
-function Genetics.express(
-	potential: GeneticPotential,
-	factors: ExpressionFactors?
-): ExpressedTraits
+function Genetics.express(potential: GeneticPotential, factors: ExpressionFactors?): ExpressedTraits
 	local validatedPotential = copyTraitMap(potential, "Genetic potential")
 	local validatedFactors = copyTraitMap(factors or {}, "Expression factors")
 	local expressed = {}
