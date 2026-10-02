@@ -60,6 +60,50 @@ Required behavior:
 - if a generated image is rejected during QA, discard it and render a replacement before responding;
 - never expose a stale or cross-project image while producing the Maricá Game report.
 
+## Native inline rendering path
+
+Visual Mode has a strict delivery path.
+
+Preferred order:
+
+1. build a compact factual render manifest from reconciled repository state;
+2. render the final dashboard through a **native inline image surface** that appears directly in the conversation;
+3. only treat the report as delivered after that inline visual is emitted.
+
+A generic generated file, sandbox path, Markdown download link, or attachment that requires the user to open/download it is **not** a valid RELATORIO visual delivery.
+
+Do not use a file-generation surface as the terminal RELATORIO renderer unless the client surface is known to render the produced bitmap inline automatically.
+
+If no native inline image surface is available, classify the visual stage as **VISUAL_BLOCKED** and say so explicitly. Do not claim RELATORIO complete and do not substitute a download-only artifact.
+
+### Render manifest
+
+Before rendering, construct a compact manifest containing only:
+
+- repository + default branch + exact live HEAD;
+- classification;
+- relevant open PR(s) + exact candidate SHA;
+- current unit/task;
+- exact-head gate states;
+- phase task states;
+- one blocker/wait;
+- one next action;
+- footer source.
+
+The manifest is the source of truth for the bitmap. Decorative art is separate and may not add factual labels.
+
+### Density limits
+
+To keep the layout stable:
+
+- one screen only;
+- no prose paragraph longer than two rendered lines;
+- no card with more than six factual rows;
+- no section that requires scrolling inside the image;
+- prefer short labels over explanatory prose;
+- omit optional metadata before shrinking typography below the mobile-readable minimum;
+- never add extra roadmap phases, metrics or timings that are not required by the canonical topics.
+
 ## Mandatory live reconciliation
 
 Read the smallest sufficient live set, in this order:
