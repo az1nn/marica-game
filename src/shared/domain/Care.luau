@@ -52,7 +52,10 @@ function Care.quality(state: CareState): number
 	return math.min(fed, validated.hygiene, validated.affection, validated.energy)
 end
 
-function Care.toExpressionFactors(state: CareState, potential: { [string]: number }): { [string]: number }
+function Care.toExpressionFactors(
+	state: CareState,
+	potential: { [string]: number }
+): { [string]: number }
 	local quality = Care.quality(state)
 	local factors = {}
 
