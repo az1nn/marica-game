@@ -26,7 +26,10 @@ function Pet.new(
 	local resolvedLifecycle = lifecycle or Lifecycle.new()
 	local resolvedPotential = Genetics.newPotential(geneticPotential or {})
 	local resolvedCare = Care.new(careState)
-	local expressedTraits = Genetics.express(resolvedPotential, Care.toExpressionFactors(resolvedCare, resolvedPotential))
+	local expressedTraits = Genetics.express(
+		resolvedPotential,
+		Care.toExpressionFactors(resolvedCare, resolvedPotential)
+	)
 
 	return table.freeze({
 		id = validatedId,
