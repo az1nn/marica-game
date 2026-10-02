@@ -1,28 +1,33 @@
 # QA HANDOFF
 
-Status: T015_VERIFIED
+Status: T016_CANDIDATE
 
-## Delivery evidence
+## Candidate evidence
 
-T015 delivery HEAD: `e391441d62034721f849f08fb420dc96faf762a5`.
-Merged master: `195d628ede8dc090753765b9f5a967cc5590b547`.
-PR: #12.
+Base master: `db458e4b1fcfbff642ad1e28dcd76adeb6fad024`.
+Implementation branch: `feat/t016-health-disease-treatment`.
+Behavioral test source: `tests/health.spec.luau`.
 
 Authored Jest coverage:
-- default care is fully satisfied and immutable;
-- hunger, hygiene, affection and energy are normalized to [0, 1];
-- invalid care values are rejected;
-- weakest essential need deterministically defines care quality;
-- care quality maps to deterministic expression factors;
-- updating care preserves pet identity, pedigree, lifecycle and genetic potential;
-- neglect lowers expressed traits without mutating genetic potential.
+- health defaults healthy and immutable;
+- invalid persisted durations are rejected;
+- 12 hours of severe neglect does not immediately become disease;
+- deterministic progression reaches neglected, sick and critical states at explicit thresholds;
+- good care can recover pre-disease neglect but cannot cure established disease;
+- treatment produces deterministic recovery plus an explicit cost value;
+- terminal risk requires untreated critical disease;
+- Pet health progression preserves identity, pedigree, care and genetic potential;
+- untreated terminal risk ends lifecycle with reason `health`;
+- treatment preserves lifecycle and non-health domain state.
 
-Exact delivery gates:
-- Validate skills: PASS;
-- Roblox CI: PASS, including StyLua, Selene, production build and test-place build.
+Required exact-head gates:
+- Validate skills;
+- Roblox CI, including lockfile reproducibility, StyLua, Selene and production/test builds.
 
-Known QA gap: the CI builds Jest specs but does not execute Jest assertions headlessly. Treat the authored behavioral specs as coverage source until that harness is wired.
+Status: pending on final PR head.
+
+Known QA gap: CI builds Jest specs but does not execute Jest assertions headlessly. Treat authored behavioral specs as coverage evidence until that harness is wired.
 
 ## Next
 
-For T016, cover deterministic health states, neglect-driven disease, treatment transitions/cost hooks and terminal-risk boundaries without conflating health with care.
+Verify the final T016 PR head, then merge only if all required gates are green.
