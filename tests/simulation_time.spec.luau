@@ -64,7 +64,7 @@ describe("Simulation time", function()
 	it("catches up across multiple lifecycle stages after an offline gap", function()
 		local clock = fakeClock(1_035)
 		local observation = SimulationTime.observe(clock, 1_000)
-		local lifecycle = LifecycleSimulation.advance(Lifecycle.new(), 1_000, observation.logicalNow, schedule)
+		local lifecycle =\n\t\t\tLifecycleSimulation.advance(Lifecycle.new(), 1_000, observation.logicalNow, schedule)
 
 		expect(observation.elapsed).toBe(35)
 		expect(lifecycle.stage).toBe("senior")
