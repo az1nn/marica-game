@@ -41,10 +41,13 @@ jobs:
           test -z "$(git status --porcelain --untracked-files=all -- wally.lock)"
 
       - name: Format gate
-        run: stylua --check src tests
+        run: stylua --check src tests tools/roblox/run-tests.luau
 
       - name: Static analysis gate
         run: selene src tests
+
+      - name: Open Cloud runner syntax gate
+        run: python -m py_compile tools/roblox/open_cloud_test.py
 
       - name: Build production and test places
         run: |
