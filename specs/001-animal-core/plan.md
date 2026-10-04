@@ -167,6 +167,25 @@ ADR-0003 congela a regra V1 sobre o `GeneticPotential` normalizado:
 - igualdade só é permitida quando todo o potencial já está saturado em `1`;
 - T021 deve derivar seeds de sucessoras sem redefinir esta regra.
 
+### T021 — geração determinística de sucessoras
+
+A composição V1 usa um primitive de uma sucessora por chamada:
+
+```text
+Succession.createSuccessor(parent, successorId, successionSeed, successorOrdinal)
+```
+
+Contrato:
+
+- o parent precisa estar com lifecycle encerrado;
+- o ID da sucessora é explícito e validado pelo domínio de Pet;
+- `deriveGeneticSeed(seed, ordinal) = seed + ordinal - 1`, mantendo repetibilidade e direções distintas por ordinal;
+- o potencial genético usa exclusivamente `Genetics.advancePotential` de T020;
+- a sucessora nasce em lifecycle juvenil/ativo, cuidado e saúde default, afeição 0 e não herda `soulbound` do fundador;
+- a linhagem avança uma geração e registra o parent encerrado como pai direto;
+- T022 é responsável por orquestrar **exatamente duas** sucessoras;
+- T023 é responsável por idempotência do encerramento/sucessão.
+
 Afeição/vínculo é parte central do valor do pet.
 
 Separar:
