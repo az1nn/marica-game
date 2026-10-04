@@ -28,7 +28,7 @@
 ## Phase C — Succession P0
 
 - [x] **T020** Definir algoritmo de avanço genético garantido.
-- [ ] **T021** Implementar geração determinística de sucessoras.
+- [x] **T021** Implementar geração determinística de sucessoras.
 - [ ] **T022** Garantir exatamente duas sucessoras por encerramento.
 - [ ] **T023** Tornar encerramento/sucessão idempotente.
 - [ ] **T024** Preservar pedigree na nova geração.
