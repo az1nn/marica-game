@@ -4,47 +4,45 @@ APP:
 Maricá Game
 
 WORKSTREAM:
-SPEC-001 T020 + SPEC-003 behavioral verification unblock
+SPEC-001 Succession P0 — T020 verification + T021 stacked implementation
 
 STATE:
-T020 deterministic guaranteed genetic advancement is implemented as PR #26 but is not accepted yet. GAUNTLET landed during the run and now requires behavioral/mutation evidence for this new P0 invariant. AQ010 Open Cloud behavioral execution wiring is the collision-safe unblock candidate.
+T020 remains open in PR #26 and cannot be accepted until the Roblox Behavioral exact-head gate can execute and GAUNTLET mutation proof is available. AQ011 remains open in PR #29 and currently fails closed because repository Open Cloud configuration is absent. While that external gate is waiting, T021 has been implemented on a stacked branch based exactly on the T020 candidate.
 
 MODE:
 WATCH
 
 CANONICAL SOURCE:
-az1nn/marica-game master + repository-local SIGA/GAUNTLET/QA skills + live specs/tasks/PRs/claims/CI.
+az1nn/marica-game live repository + repository-local SIGA/GAUNTLET/QA skills + SPEC-001/SPEC-003.
 
-BASE:
-master@fe29ff352baa8b783fbb01cff176833600e50f30
+LIVE BASES:
+- master@16a0bd8016dfd33c4c2245248f00799a4e6db9be
+- T020 / PR #26 @ b12daa4ef419b6e2980c8c71a206128a4db53384
+- AQ011 / PR #29 @ 0d6155791e703e1c1bb92ee7d239a3e3c16307c6
 
-ACTIVE PRODUCT:
-T020 / PR #26 / feat/t020-genetic-advancement-algorithm.
-Candidate head before reconciliation: 216df7d1217f0eb82a13d92b80feafd30ee16ab1.
+T021 CANDIDATE:
+Branch: feat/t021-deterministic-successors
+Stacked base: feat/t020-genetic-advancement-algorithm / PR #26
+Delivered behavior:
+- pure deterministic single-successor factory;
+- successor-specific seed derivation from succession seed + ordinal;
+- generation only after parent lifecycle has ended;
+- T020 guaranteed genetic advancement reused without redefinition;
+- successor starts juvenile/active and non-soulbound;
+- lineage advances one generation with ended parent as direct parent;
+- tests cover repeatability, ordinal-driven genetic direction, lineage shape and active-parent rejection.
 
-T020 CONTRACT:
-- normalized potential remains bounded in [0, 1];
-- nominal advancement step is 0.05;
-- seed selects a deterministic trait over sorted names;
-- saturated traits fall forward cyclically;
-- no trait regresses;
-- strict advancement occurs whenever capacity remains;
-- equality is allowed only at full saturation;
-- T021 owns successor seed derivation.
-
-QUALITY UNBLOCK:
-AQ010 / feat/aq010-open-cloud-behavioral-execution.
-- exact test place build and isolated publish;
-- stable Roblox Open Cloud Luau Execution against an exact place version;
-- explicit Jest runner;
-- logs and task failure propagate to CI;
-- missing repository Open Cloud configuration stays missing evidence, never PASS.
+BOUNDARY:
+T022 still owns the exactly-two-successors invariant. T023 still owns idempotency. T021 must not merge ahead of T020.
 
 BLOCKER / WAIT:
-T020 cannot merge under the live GAUNTLET contract until executable behavioral evidence exists for its exact candidate and the required mutation cycle can be performed.
+External repository configuration is still required for behavioral execution:
+- secret ROBLOX_API_KEY;
+- vars ROBLOX_TEST_UNIVERSE_ID and ROBLOX_TEST_PLACE_ID;
+- API key permissions for place publish + Luau execution.
 
 CONCURRENCY:
-T020 product files and AQ010 quality infrastructure are parallel-safe. No sibling product implementation is open.
+T021 is intentionally stacked on T020 and does not mutate AQ011 workflow files. Merge order is T020 before T021.
 
 NEXT:
-Verify and merge AQ010 wiring, then make behavioral Jest execution an exact-head gate (AQ011) and use it to certify T020.
+Open and verify the stacked T021 PR against the exact T020 base; keep merge blocked until T020 passes the behavioral/GAUNTLET acceptance chain.
