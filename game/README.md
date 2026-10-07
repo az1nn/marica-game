@@ -19,3 +19,18 @@ G412 may select a compatible test runner, but it must not silently change this e
 ## Project boundary
 
 `game/project.godot` is the canonical Godot project entrypoint. Domain code under `game/src/domain` must remain independent from Node, SceneTree, UI, HTTP and concrete storage.
+
+
+## Test runner contract
+
+The canonical Godot test runner is **GUT v9.7.1** from `bitwes/Gut`.
+
+The machine-readable source of truth is:
+
+```text
+game/test-runner.lock.json
+```
+
+The pin records both the release tag and its exact upstream commit (`aeb5d4f3f7f0a6c9b5e178876d6c99b791fda605`). GUT v9.7.1 is the upstream line explicitly designated for Godot 4.7.x, matching this project's Godot 4.7.2-stable runtime.
+
+G413 owns installation/bootstrap in CI and the first headless execution. G412 only selects and pins the runner; it does not add a second test framework or change the engine version.

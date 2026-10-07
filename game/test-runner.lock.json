@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "runner": "GUT",
+  "upstream": "bitwes/Gut",
+  "version": "v9.7.1",
+  "commit": "aeb5d4f3f7f0a6c9b5e178876d6c99b791fda605",
+  "compatible_godot": "4.7.x",
+  "project_godot": "4.7.2-stable",
+  "install_path": "addons/gut",
+  "selected_at": "2026-10-07",
+  "rationale": "Explicit upstream compatibility with Godot 4.7.x; GDScript-native runner with CLI and JUnit support for upcoming headless CI."
+}
