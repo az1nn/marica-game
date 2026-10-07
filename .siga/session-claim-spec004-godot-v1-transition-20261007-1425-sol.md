@@ -11,4 +11,8 @@ Scope:
 - docs/{SIGA,GODOT,ROBLOX}-HANDOFF.md
 - repository-local runtime/skill routing only where constitution/ADR makes existing wording stale
 Opened: 2026-10-07T14:25:00-03:00
-Status: ACTIVE
+Closed: 2026-10-07T14:45:00-03:00
+Status: CLOSED
+PR: #35
+Merged: master@82a5c7c5a41f87a0768a4e94088b383b9e39a9c9
+Gates: Validate skills PASS; Roblox CI PASS; Roblox Behavioral SKIPPED/non-required after ADR-0004.
