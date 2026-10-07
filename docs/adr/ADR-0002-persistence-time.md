@@ -1,9 +1,12 @@
 # ADR-0002 — Persistência e autoridade de tempo
 
-**Status:** ACCEPTED  
+**Status:** PARTIALLY SUPERSEDED FOR V1  
 **Date:** 2026-09-30  
 **Task:** SPEC-001 / T006  
-**Depends on:** ADR-0001
+**Depends on:** ADR-0001 (historical)  
+**Platform override:** ADR-0004
+
+> Amendment 2026-10-07: semânticas de tempo persistido, rollback detection e idempotência continuam úteis. DataStoreService, MemoryStore, server-job authority e protocolos Roblox/cross-player não governam mais a V1. SPEC-004/ADR-0004 definem save local versionado e online limitado ao leaderboard.
 
 ## Contexto
 

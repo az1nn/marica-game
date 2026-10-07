@@ -22,10 +22,10 @@ No other repository is an authority for Maricá Game task state, handoffs, claim
 
 ## Engineering
 
-- ROBLOX — production runtime/platform specialist under the currently ratified repository-local architecture.
+- ROBLOX — migration-source/future-port specialist; not V1 production under ADR-0004.
 - QA — automated quality gates.
 - GAUNTLET — bounded adversarial quality loop: baseline, fresh critic, mutation proof and regression hunter under SIGA.
-- GODOT — portability/reference lane unless explicitly activated by a newer local ADR/spec.
+- GODOT — canonical V1 production runtime specialist under Constitution v2.0.0 / SPEC-004 / ADR-0004.
 - 3JS — reference/prototype renderer lane unless explicitly activated by a newer local ADR/spec.
 
 ## Observability

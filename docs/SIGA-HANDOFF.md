@@ -4,38 +4,42 @@ APP:
 Maricá Game
 
 WORKSTREAM:
-SPEC-001 T020 verification
+SPEC-004 — Godot V1 Transition / governance
 
 STATE:
-AQ010 Open Cloud behavioral execution wiring is merged. T020 guaranteed genetic advancement remains active in PR #26 and must satisfy the live GAUNTLET P0 acceptance contract.
+Constitution v2.0.0, SPEC-004 and ADR-0004 establish Godot as canonical V1 runtime. SPEC-001 executable Roblox backlog is redirected to SPEC-004. ADR-0001 is superseded for V1; ADR-0002 keeps only portable time/idempotency semantics.
 
 MODE:
-WATCH
+ADVANCE
 
-CANONICAL SOURCE:
-az1nn/marica-game master + repository-local SIGA/GAUNTLET/QA skills + live specs/tasks/PRs/claims/CI.
+BASE:
+master@16a0bd8016dfd33c4c2245248f00799a4e6db9be
 
-DELIVERED THIS RUN:
-- T020 deterministic advancement contract implemented in PR #26;
-- ADR-0003 freezes deterministic bounded advancement semantics;
-- AQ010 implemented and merged by PR #27;
-- Roblox Behavioral workflow exists but is SKIPPED while the isolated test-place configuration is absent.
-
-T020:
-PR #26 / feat/t020-genetic-advancement-algorithm.
-Current candidate is reconciled with GAUNTLET/AQ010-era master and is undergoing exact-head static/build verification.
-
-QUALITY:
-AQ010 merged at master@c681e2d2a35cb562fe8b7fcd3d5bdcc55b6beea5.
-Behavioral configuration still required:
-- secret ROBLOX_API_KEY;
-- vars ROBLOX_TEST_UNIVERSE_ID and ROBLOX_TEST_PLACE_ID.
-
-BLOCKER / WAIT:
-Without the Open Cloud test-place configuration, Roblox Behavioral is SKIPPED. Therefore T020 cannot yet provide executed Jest evidence or required mutation proof and must not merge.
+WORKING BRANCH:
+spec/004-godot-v1-transition
 
 CONCURRENCY:
-T020 has no competing sibling product implementation. AQ010 is delivered and its claim is closed by the follow-up closure.
+PARALLEL_SAFE for governance/docs. PR #26 and #34 are migration sources and must not merge into V1 Luau. PR #29 is superseded by the platform decision.
+
+DELIVERED THIS UNIT:
+- Constitution v2.0.0: Godot-first, single-player, offline-first;
+- SPEC-004 spec/plan/complete executable migration roadmap;
+- ADR-0004 superseding ADR-0001;
+- SPEC-001 future executable tasks redirected to SPEC-004;
+- SIGA/GODOT/ROBLOX routing updated;
+- README and specialist handoffs aligned;
+- ADR-0002 marked partially superseded.
+
+VERIFY REQUIRED:
+- Validate skills on exact PR head;
+- applicable repository CI on exact PR head;
+- review changed-file diff for accidental Roblox/Godot authority conflicts.
+
+WAIT:
+none before PR checks.
+
+BLOCKER:
+none.
 
 NEXT:
-AQ011 — activate behavioral Jest as exact-head evidence using the isolated Roblox test place, then certify T020 with GAUNTLET mutation proof.
+G404 — after governance PR is accepted on master, close/reclassify PR #29 as SUPERSEDED and PRs #26/#34 as MIGRATION_SOURCE, preserving their branches/contracts for G405.

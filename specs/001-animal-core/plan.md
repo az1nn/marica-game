@@ -1,7 +1,9 @@
 # SPEC-001 — Implementation Plan
 
-**Status:** READY  
-**Strategy:** vertical slice, domain-first, deterministic simulation, Roblox-first with engine-neutral domain
+**Status:** SUPERSEDED FOR DELIVERY BY SPEC-004  
+**Strategy:** historical plan retained for product/domain context; active delivery is Godot-first/offline-first
+
+> Technical delivery sections in this document that reference Roblox, server authority, marketplace V1 or multiplayer release gates are historical. SPEC-004/ADR-0004 own the executable migration and runtime plan.
 
 ## 1. Product Decisions Frozen by Grilling Session
 

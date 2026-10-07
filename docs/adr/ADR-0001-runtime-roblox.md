@@ -1,9 +1,10 @@
 # ADR-0001 — Roblox como runtime inicial de produção
 
-**Status:** ACCEPTED  
+**Status:** SUPERSEDED FOR V1  
 **Date:** 2026-09-30  
 **Task:** SPEC-001 / T005  
-**Supersedes:** nenhuma
+**Supersedes:** nenhuma  
+**Superseded by:** ADR-0004 — Godot como runtime canônico da V1
 
 ## Contexto
 
@@ -15,7 +16,7 @@ Também existe uma exigência de portabilidade: regras de ciclo de vida, genéti
 
 A primeira implementação de produção do Maricá Game será feita em **Roblox**, usando **Luau** e **Roblox Studio** para runtime/apresentação.
 
-Roblox passa a ser o runtime oficial da V1 até que uma ADR posterior o substitua explicitamente.
+Esta decisão foi válida até 2026-10-07. ADR-0004 substitui Roblox por Godot como runtime canônico da V1; o restante deste documento fica como registro histórico e fonte de contratos de migração.
 
 ### Fronteira obrigatória
 
