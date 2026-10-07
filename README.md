@@ -1,8 +1,8 @@
 # Maricá Game
 
-Jogo de criação, cuidado e evolução de animais virtuais com linhagens persistentes, genética, ciclo de vida curto e economia entre jogadores.
+Jogo single-player de criação, cuidado e evolução de animais virtuais com linhagens persistentes, genética, cultivo e expansão de fazenda, com competição online assíncrona opcional.
 
-> Estado atual: **Foundation / Spec Kit bootstrap**  
+> Estado atual: **Godot V1 transition / SPEC-004**  
 > Fonte de verdade de produto: `.specify/memory/constitution.md` + `specs/`.
 
 ## Visão
@@ -26,8 +26,8 @@ O núcleo do Maricá Game é o vínculo com animais que vivem, evoluem, deixam d
 - Founder, breeder e pedigree permanecem como histórico.
 - Sexo, reprodução e consanguinidade serão simples na V1.
 - Mutações espontâneas ficam fora da V1.
-- Marketplace usa moeda interna, preço livre, ofertas, trocas e histórico.
-- Não existe preço sugerido artificial.
+- A V1 usa economia local; marketplace player-to-player foi movido para pós-V1.
+- Um marketplace futuro continua sem preço sugerido artificial.
 - Cuidado afeta fortemente a expressão do potencial genético.
 - Abandono é a punição mais severa: doença, custo e possível morte se não houver tratamento.
 
@@ -38,10 +38,9 @@ O núcleo do Maricá Game é o vínculo com animais que vivem, evoluem, deixam d
   memory/
     constitution.md
 specs/
-  001-animal-core/
-    spec.md
-    plan.md
-    tasks.md
+  001-animal-core/          # product contract / historical Roblox delivery
+  003-agentic-quality-loop/
+  004-godot-v1-transition/ # active executable roadmap
 ```
 
 ## Próximo marco
@@ -50,7 +49,7 @@ Implementar a primeira vertical slice jogável do ciclo:
 
 **receber pet → cuidar → evoluir → encerrar ciclo de vida → gerar sucessores → manter pedigree**
 
-O marketplace entra após o ciclo animal básico estar funcional e testável.
+Após o núcleo animal, a ordem da V1 é plantas → estrutura da fazenda → progressão/cidade → leaderboard online opcional.
 
 
 ## Agent Operating System
@@ -61,11 +60,12 @@ O projeto usa skills locais versionadas, derivadas do padrão consolidado no `gr
 - **LORE** — cânone narrativo.
 - **ARTIST** — direção visual e aprovação.
 - **CENA** — materialização de cenas/assets.
-- **ROBLOX** — runtime de produção.
+- **ROBLOX** — migration source / future-port lane.
 - **QA** — gates automatizados.
 - **LENTE** — evidência visual versionada.
 - **RELATORIO** — status CAVEMAN.
-- **GODOT / 3JS** — lanes de referência/portabilidade.
+- **GODOT** — runtime canônico de produção da V1.
+- **3JS** — lane de referência/portabilidade.
 
 Catálogo: `.agents/skills/README.md`.
 
