@@ -1,0 +1,8 @@
+; Engine configuration file.
+; Marica Game V1 bootstrap. Exact Godot 4.x minor is intentionally pinned by G411.
+
+config_version=5
+
+[application]
+
+config/name="Marica Game"
