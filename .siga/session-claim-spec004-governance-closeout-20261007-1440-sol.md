@@ -10,4 +10,9 @@ Scope:
 - docs/ROBLOX-HANDOFF.md
 - .siga/session-claim-spec004-godot-v1-transition-20261007-1425-sol.md
 Opened: 2026-10-07T14:40:00-03:00
-Status: ACTIVE
+Status: COMPLETE_PENDING_MERGE
+Completed scope:
+- G404 complete: #29 SUPERSEDED; #26/#34 MIGRATION_SOURCE; all closed without merge.
+- G405 complete: docs/migration/ROBLOX-TO-GODOT-CONTRACT-MAP.md.
+- Previous SPEC-004 governance claim closed.
+Next after merge: G410.
