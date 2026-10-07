@@ -12,7 +12,7 @@
 - [x] **G403** Atualizar routing documental de SIGA/GODOT/ROBLOX para a nova autoridade.
 - [ ] **G404** Fechar/reclassificar PR #29 como SUPERSEDED e PRs #26/#34 como MIGRATION_SOURCE sem merge Luau.
 - [ ] **G405** Registrar mapa de contratos/fixtures aproveitáveis de #26/#34 antes de qualquer limpeza.
-- [ ] **G406** Marcar ADR-0002 como parcialmente superseded onde depender de DataStore/servidor, preservando semântica de tempo/idempotência.
+- [x] **G406** Marcar ADR-0002 como parcialmente superseded onde depender de DataStore/servidor, preservando semântica de tempo/idempotência.
 
 **Gate A:** master não contém conflito documental sobre runtime canônico.
 
