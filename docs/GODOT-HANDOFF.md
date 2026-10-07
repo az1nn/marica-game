@@ -12,24 +12,25 @@ Godot is the canonical V1 runtime.
 Delivered:
 - G410 established the Godot project lane under `game/`;
 - G411 pins the production engine to `4.7.2-stable` in `game/.godot-version`;
-- `game/README.md` defines the reproducible runtime contract for local development, tests and CI;
-- preview/beta/RC/dev builds do not satisfy the production baseline;
-- `game/project.godot` points maintainers to the canonical pin.
+- G412 selects GUT `v9.7.1` as the canonical Godot test runner;
+- `game/test-runner.lock.json` pins both the GUT release tag and upstream commit `aeb5d4f3f7f0a6c9b5e178876d6c99b791fda605`;
+- `game/README.md` records the engine and test-runner reproducibility contracts.
 
 Validation:
-- PR #38 exact-head `8a73d35`: Validate skills PASS; Roblox CI PASS;
+- PR #39 exact-head `201207a`: Validate skills PASS; Roblox CI PASS;
 - Roblox Behavioral SKIPPED/non-required under ADR-0004;
-- guarded squash merge landed as `9b8852e`;
-- G411 claim closed after merge.
+- merge guarded by expected head SHA;
+- G412 implementation merged to master as `5e18228`.
 
-Version evidence:
-- official Godot archive checked on 2026-10-07;
-- Godot 4.7.2-stable is the current stable Godot 4.x release;
-- Godot 4.8-dev7 is pre-release and excluded from the baseline.
+Compatibility evidence:
+- project runtime remains Godot `4.7.2-stable`;
+- GUT `v9.7.1` is the upstream line designated for Godot `4.7.x`;
+- the runner pin does not change engine version or add a competing framework.
 
 Boundary:
-- G412 owns test-runner selection and must remain compatible with 4.7.2-stable;
-- G413 owns Godot CI and must consume the same engine pin.
+- G413 owns Godot CI, runner installation/bootstrap, headless import/parse and exact-head execution;
+- G414 owns the first reproducible smoke scene;
+- domain code remains independent from Node/SceneTree/UI/HTTP/storage concrete.
 
 Next specialist task:
-**G412 — choose and pin a test runner compatible with Godot 4.7.2-stable.**
+**G413 — create Godot CI with import/headless parse on exact SHA.**
