@@ -1,19 +1,22 @@
 # SPEC-001 — Tasks
 
-**Mode:** executable backlog  
-**Rule:** atacar em ordem; não iniciar sistemas secundários antes dos gates P0.
+**Mode:** historical delivery record  
+**Active execution:** moved to SPEC-004 Godot V1 Transition  
+**Rule:** SIGA must select new executable work from specs/004-godot-v1-transition/tasks.md.
 
-## Phase A — Foundation
+## Delivered before runtime transition
+
+### Phase A — Foundation
 
 - [x] **T001** Bootstrap do repositório.
 - [x] **T002** Criar constituição Spec Kit.
 - [x] **T003** Registrar SPEC-001 Animal Core.
 - [x] **T004** Criar plano técnico inicial.
-- [x] **T005** Fechar ADR de engine/runtime.
-- [x] **T006** Fechar ADR de persistência e autoridade de tempo.
-- [x] **T007** Bootstrap do toolchain Roblox/Rojo/Jest e CI reproduzível.
+- [x] **T005** Fechar ADR de engine/runtime Roblox — historical; superseded by ADR-0004.
+- [x] **T006** Fechar ADR de persistência/tempo Roblox — semantic parts retained; platform details superseded.
+- [x] **T007** Bootstrap do toolchain Roblox/Rojo/Jest — legacy migration source.
 
-## Phase B — Domain P0
+### Phase B — Domain P0
 
 - [x] **T010** Implementar entidade Pet e IDs imutáveis.
 - [x] **T011** Implementar lineage/pedigree.
@@ -25,47 +28,18 @@
 - [x] **T017** Implementar soulbound como invariant de domínio.
 - [x] **T018** Implementar affection persistente.
 
-## Phase C — Succession P0
+## Superseded executable backlog
 
-- [ ] **T020** Definir algoritmo de avanço genético garantido.
-- [ ] **T021** Implementar geração determinística de sucessoras.
-- [ ] **T022** Garantir exatamente duas sucessoras por encerramento.
-- [ ] **T023** Tornar encerramento/sucessão idempotente.
-- [ ] **T024** Preservar pedigree na nova geração.
-- [ ] **T025** Testar ciclo acelerado completo de 2–4 semanas.
+As antigas tasks T020+ não são mais executáveis em Luau/Roblox para a V1.
 
-## Phase D — Playable Slice
+- T020 → SPEC-004 **G430**; PR #26 é MIGRATION_SOURCE.
+- T021 → SPEC-004 **G431**; PR #34 é MIGRATION_SOURCE.
+- T022–T025 → SPEC-004 **G432–G436**.
+- T030–T035 → SPEC-004 **G450–G458**.
+- T040–T047 marketplace/ownership online → pós-V1.
+- T050–T053 reprodução → permanece contrato de produto; será replanejada no runtime Godot depois do core de sucessão, sem preceder Animals/Plants/Farm Structure.
+- G001–G006 antigos → substituídos pelos gates da SPEC-004.
 
-- [ ] **T030** Criar UI mínima do pet.
-- [ ] **T031** Exibir fase de vida, saúde e cuidado.
-- [ ] **T032** Criar ações mínimas de cuidado/tratamento.
-- [ ] **T033** Exibir transição respeitosa de fim de vida.
-- [ ] **T034** Exibir escolha/continuidade com sucessoras.
-- [ ] **T035** Provar save/load sem regressão do ciclo.
+## Authoritative next roadmap
 
-## Phase E — Ownership & Market P1
-
-- [ ] **T040** Implementar ownership history.
-- [ ] **T041** Implementar transferência elegível.
-- [ ] **T042** Bloquear transferência do fundador soulbound.
-- [ ] **T043** Implementar moeda interna.
-- [ ] **T044** Implementar listing com preço livre.
-- [ ] **T045** Implementar ofertas.
-- [ ] **T046** Implementar trocas.
-- [ ] **T047** Implementar histórico de mercado.
-
-## Phase F — Reproduction V1
-
-- [ ] **T050** Implementar sexo simples.
-- [ ] **T051** Implementar reprodução simples.
-- [ ] **T052** Implementar regra simples de consanguinidade.
-- [ ] **T053** Verificar independência entre reprodução e sucessão automática.
-
-## Release Gate — Animal Core V1
-
-- [ ] **G001** Todos os invariantes de SPEC-001 cobertos por testes.
-- [ ] **G002** Vertical slice executável de ponta a ponta.
-- [ ] **G003** Ciclo offline/retorno validado.
-- [ ] **G004** Nenhuma ação de UI consegue violar soulbound.
-- [ ] **G005** Próxima geração mantém pedigree e progresso esperado.
-- [ ] **G006** Constituição e implementação sem divergências conhecidas.
+Ver: specs/004-godot-v1-transition/tasks.md
