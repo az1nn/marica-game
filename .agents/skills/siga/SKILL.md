@@ -107,12 +107,12 @@ SIGA selects the task and retains orchestration authority. Route implementation 
 - **LORE** — narrative canon, characters, places, tone and CÂNONE / RUMOR / ABERTO.
 - **ARTIST** — intended visual direction, concepts and human visual acceptance.
 - **CENA** — production visual materialization, scene composition, assets, lighting, integration and provenance.
-- **ROBLOX** — production runtime/platform engineering, server authority, adapters, remotes and runtime performance.
+- **ROBLOX** — legacy migration source / future-port lane under ADR-0004; no V1 production ownership.
 - **QA** — automated gates, deterministic domain tests, integration/E2E, persistence, performance and regression.
 - **GAUNTLET** — bounded adversarial quality loop for applicable high-risk/P0 changes; baseline, fresh criticism, mutation proof and regression hunting under SIGA authority.
 - **LENTE** — exact-head screenshot/video/object evidence and visual critique.
 - **RELATORIO** — mandatory terminal read-only reporter for every SIGA invocation; it re-reconciles live state and renders the canonical visual dashboard.
-- **GODOT** — portability/reference lane unless a ratified repository-local ADR/spec assigns production scope.
+- **GODOT** — canonical V1 production runtime under Constitution v2.0.0 / SPEC-004 / ADR-0004.
 - **3JS** — reference/prototype lane unless a ratified repository-local ADR/spec assigns production scope.
 - **siga-concurrency** — mandatory mutation/merge safety helper.
 
@@ -218,7 +218,8 @@ Possible gates:
 
 - deterministic domain unit/property tests;
 - persistence round-trip/idempotency tests;
-- Roblox server/client integration tests;
+- Godot headless/import/runtime tests for active V1 work;
+- Roblox integration tests only for explicitly retained migration/reference scope;
 - Studio/runtime smoke tests;
 - lint/static validation;
 - build/export validation when applicable;
