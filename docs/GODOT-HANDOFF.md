@@ -10,15 +10,19 @@ Authority:
 Godot is the canonical V1 runtime.
 
 Delivered:
-- G410 bootstrap implemented in `game/`;
-- `game/project.godot` created without prematurely pinning the engine minor;
-- domain/application/adapters/presentation/scenes/tests boundaries are repository-visible;
+- G410 merged through PR #37;
+- `game/project.godot` and the domain/application/adapters/presentation/scenes/tests structure are present on master;
 - domain boundary explicitly excludes Node, SceneTree, UI, HTTP and concrete storage.
 
 Validation:
-- required G410 paths are present on the exact branch head;
-- branch is based directly on current master with no base drift at implementation time;
-- G411 remains responsible for researching and pinning the exact stable Godot 4.x minor.
+- PR #37 exact-head `167a55e`: Validate skills PASS; Roblox CI PASS;
+- merge landed as `53af599`;
+- no open PR remains.
+
+G411 preflight:
+- official Godot archive checked on 2026-10-07;
+- `4.7.2-stable` is the current stable Godot 4.x release;
+- `4.8-dev7` is pre-release and is not a production baseline candidate.
 
 Next specialist task:
-**G411 — research and pin the stable Godot 4.x version for the project.**
+**G411 — pin Godot 4.7.2-stable and document the reproducible runtime version contract.**
