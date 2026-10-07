@@ -10,19 +10,21 @@ Authority:
 Godot is the canonical V1 runtime.
 
 Delivered:
-- G410 merged through PR #37;
-- `game/project.godot` and the domain/application/adapters/presentation/scenes/tests structure are present on master;
-- domain boundary explicitly excludes Node, SceneTree, UI, HTTP and concrete storage.
+- G410 established the Godot project lane under `game/`;
+- G411 pins the production engine to `4.7.2-stable` in `game/.godot-version`;
+- `game/README.md` defines the reproducible runtime contract for local development, tests and CI;
+- preview/beta/RC/dev builds do not satisfy the production baseline;
+- `game/project.godot` points maintainers to the canonical pin.
 
-Validation:
-- PR #37 exact-head `167a55e`: Validate skills PASS; Roblox CI PASS;
-- merge landed as `53af599`;
-- no open PR remains.
-
-G411 preflight:
+Version evidence:
 - official Godot archive checked on 2026-10-07;
-- `4.7.2-stable` is the current stable Godot 4.x release;
-- `4.8-dev7` is pre-release and is not a production baseline candidate.
+- Godot 4.7.2-stable is the current stable Godot 4.x release;
+- Godot 4.8-dev7 is pre-release and excluded from the baseline.
+
+Boundary:
+- G411 does not select the test runner or create CI;
+- G412 owns test-runner selection;
+- G413 owns Godot CI and must consume the same engine pin.
 
 Next specialist task:
-**G411 — pin Godot 4.7.2-stable and document the reproducible runtime version contract.**
+**G412 — choose and pin a test runner compatible with Godot 4.7.2-stable.**
