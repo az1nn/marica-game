@@ -1,8 +1,10 @@
 # SPEC-001 — Animal Core
 
-**Status:** READY FOR PLANNING  
+**Status:** PRODUCT CONTRACT / DELIVERY MOVED TO SPEC-004  
 **Priority:** P0  
-**Constitution:** v1.0.0
+**Constitution:** v2.0.0
+
+> Runtime/delivery amendment (2026-10-07): SPEC-004 + ADR-0004 govern implementation. Any Roblox-first, multiplayer-first or player-marketplace V1 language below is superseded by Constitution v2.0.0.
 
 ## 1. Problem
 
@@ -14,7 +16,7 @@ Entregar uma vertical slice que prove o loop principal:
 
 **receber pet → cuidar → observar evolução → chegar ao fim da vida → receber duas sucessoras → continuar a linhagem**
 
-Marketplace e reprodução avançada são extensões desse núcleo, não pré-requisitos para prová-lo.
+Reprodução simples permanece extensão do núcleo. Marketplace player-to-player foi movido para pós-V1 pela Constituição v2.0.0 e não é pré-requisito de release.
 
 ## 3. User Stories
 
@@ -64,7 +66,7 @@ Como jogador, quero que o fim da vida preserve a história da linhagem e abra a 
 - A nova geração possui avanço genético garantido segundo uma regra determinística/testável.
 - O jogador consegue continuar jogando com a nova geração.
 
-### US-005 — Preservar vínculo e propriedade — P2
+### US-005 — Preservar vínculo e propriedade — POST-V1 TRANSFER CONTRACT
 
 Como proprietário, quero que um pet mantenha sua história quando mudar de dono.
 
@@ -75,7 +77,7 @@ Como proprietário, quero que um pet mantenha sua história quando mudar de dono
 - Founder/breeder/pedigree continuam disponíveis como histórico.
 - Descendentes do fundador soulbound podem ser transferíveis.
 
-### US-006 — Negociar descendentes — P2
+### US-006 — Negociar descendentes — POST-V1
 
 Como jogador, quero vender, receber ofertas ou trocar pets elegíveis por moeda interna ou outros pets.
 
@@ -124,9 +126,9 @@ Como jogador, quero vender, receber ofertas ou trocar pets elegíveis por moeda 
 
 - **FR-020** Soulbound deve ser uma restrição de domínio, não apenas de UI.
 - **FR-021** Transferência não deve apagar afeição nem pedigree.
-- **FR-022** Marketplace deve utilizar moeda interna.
-- **FR-023** Preço é informado pelo vendedor sem preço sugerido obrigatório.
-- **FR-024** Ofertas, trocas e transações devem produzir histórico auditável.
+- **FR-022 [POST-V1]** Marketplace futuro deve utilizar moeda interna.
+- **FR-023 [POST-V1]** Preço futuro é informado pelo vendedor sem preço sugerido obrigatório.
+- **FR-024 [POST-V1]** Ofertas, trocas e transações futuras devem produzir histórico auditável.
 
 ### Reproduction
 
@@ -192,19 +194,21 @@ Campos exatos e storage são responsabilidade do plano de implementação.
 - Mercado com preço recomendado pelo sistema.
 - Reprodução altamente simulada.
 - Sistemas secundários que atrasem a prova do ciclo animal.
+- Multiplayer síncrono e marketplace player-to-player.
+- Dependência de backend para o core single-player.
 - Conteúdo de plantas antes da estabilização do núcleo animal.
 
 ## 8. Open Technical Decisions
 
 Estas decisões não alteram o contrato de produto e devem ser fechadas no plano técnico:
 
-- engine/runtime;
-- formato de persistência local/remota;
+- runtime/tooling Godot minor/test runner, sob SPEC-004;
+- formato final do schema de save local;
 - autoridade do relógio e proteção contra clock manipulation;
 - representação numérica da genética;
 - algoritmo exato de avanço garantido;
 - granularidade das fases de vida;
-- escopo online do marketplace na primeira entrega.
+- fórmula, identidade e provider do leaderboard assíncrono.
 
 ## 9. Definition of Done
 
