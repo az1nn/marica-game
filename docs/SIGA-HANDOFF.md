@@ -7,33 +7,29 @@ WORKSTREAM:
 SPEC-004 — Godot V1 Transition
 
 STATE:
-Phase B — Godot Foundation is active. G410 is merged and complete; the canonical Godot project lane now exists under game/.
+Phase B — Godot Foundation is active. G410 and G411 are complete; the canonical runtime is pinned to Godot 4.7.2-stable.
 
 MODE:
 ADVANCE
 
 DELIVERED:
-- PR #37 merged G410;
-- game/project.godot created;
-- game/src/domain, application, adapters and presentation boundaries created;
-- game/scenes and game/tests created;
-- domain boundary remains engine-independent and offline-first;
-- G410 session claim closed.
+- PR #38 merged G411;
+- `game/.godot-version` is the machine-readable engine pin;
+- `game/README.md` records the reproducible runtime contract;
+- `game/project.godot` references the canonical pin;
+- G411 session claim closed.
 
 QUALITY:
-- PR #37 exact-head 167a55e: Validate skills PASS; Roblox CI PASS;
+- PR #38 exact-head 8a73d35: Validate skills PASS; Roblox CI PASS;
 - Roblox Behavioral SKIPPED/non-required under ADR-0004;
 - merge guarded by expected head SHA;
-- post-merge master contains 53af599.
+- implementation merged to master as 9b8852e.
 
 BLOCKER / WAIT:
 none.
 
 CONCURRENCY:
-No open PR remains after G410 merge. Historical Roblox branches remain migration evidence only.
-
-G411 PREFLIGHT:
-Official Godot release archive checked on 2026-10-07: 4.7.2-stable is the current stable 4.x release; 4.8-dev7 is pre-release.
+No competing open PR or active overlapping claim was present at merge time.
 
 NEXT:
-G411 — pin Godot 4.7.2-stable as the project/runtime baseline and record the reproducible version contract.
+G412 — choose and pin a test runner compatible with Godot 4.7.2-stable.
