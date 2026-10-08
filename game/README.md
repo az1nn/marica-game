@@ -48,3 +48,15 @@ godot --headless --editor --path game --quit
 A non-zero exit fails the job; import, parse and version diagnostics are uploaded as a workflow artifact. These are **bootstrap/import gates**, not a claim that gameplay tests or the G414 smoke scene already exist. G414 adds the first executable smoke scene, followed by typed GDScript conventions (G415) and golden-parity tests (G416).
 
 When changing Godot or GUT versions, update the version pin, lockfile, workflow download checksum and compatibility evidence in a dedicated task. Prior green results from an older commit never validate a new head.
+
+## G414: minimal headless runtime smoke
+
+`game/project.godot` now points to `res://scenes/smoke.tscn` as a temporary boot scene. The Node2D scene intentionally contains no animal gameplay or final art. `game/tests/smoke_runner.gd` verifies scene loading, instantiation and `_ready()` with an explicit nonzero exit on failure.
+
+```sh
+godot --headless --editor --path game --import --quit
+godot --headless --path game --quit-after 3
+godot --headless --path game --script res://tests/smoke_runner.gd
+```
+
+CI checks for the exact `MARICA_G414_SCENE_READY` and `MARICA_G414_SMOKE_PASS` markers and uploads both logs. This gate proves only startup/scripting, not gameplay parity or visual acceptance. G415 owns typed GDScript conventions and G416 owns deterministic golden fixtures.
