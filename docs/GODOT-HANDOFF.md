@@ -7,30 +7,27 @@ Authority:
 - SPEC-004
 - ADR-0004
 
-Godot is the canonical V1 runtime.
+Runtime:
+- Canonical V1: Godot 4.7.2-stable / GDScript typed / single-player offline-first.
+- Runner: GUT v9.7.1 pinned to upstream commit aeb5d4f3f7f0a6c9b5e178876d6c99b791fda605.
 
 Delivered:
-- G410 established the Godot project lane under `game/`;
-- G411 pins the production engine to `4.7.2-stable` in `game/.godot-version`;
-- G412 selects GUT `v9.7.1` as the canonical Godot test runner;
-- `game/test-runner.lock.json` pins both the GUT release tag and upstream commit `aeb5d4f3f7f0a6c9b5e178876d6c99b791fda605`;
-- `game/README.md` records the engine and test-runner reproducibility contracts.
+- G410: bootstrap game/project.godot + layered project tree.
+- G411: game/.godot-version pins Godot 4.7.2-stable.
+- G412: game/test-runner.lock.json pins compatible GUT v9.7.1.
+- G413: .github/workflows/godot-ci.yml installs checksum-verified Godot and commit-verified GUT; checks out the exact PR head and executes headless import + editor parse/load.
 
 Validation:
-- PR #39 exact-head `201207a`: Validate skills PASS; Roblox CI PASS;
-- Roblox Behavioral SKIPPED/non-required under ADR-0004;
-- merge guarded by expected head SHA;
-- G412 implementation merged to master as `5e18228`.
-
-Compatibility evidence:
-- project runtime remains Godot `4.7.2-stable`;
-- GUT `v9.7.1` is the upstream line designated for Godot `4.7.x`;
-- the runner pin does not change engine version or add a competing framework.
+- PR #40 head 84cf076e9047d0534f01896129219a6909985931: Godot 4.7.2 import and parse PASS; Validate skills PASS; Roblox CI PASS; Roblox Behavioral SKIPPED/non-required.
+- Merge guarded by expected head SHA, master merge commit bdc6901d5cc888bcdcae890badd343c76e7b836b.
+- Godot CI artifact includes version/import/parse diagnostic logs.
+- G413 validates Godot bootstrap/import, not gameplay or GUT test cases; no unimplemented runtime capability is claimed.
 
 Boundary:
-- G413 owns Godot CI, runner installation/bootstrap, headless import/parse and exact-head execution;
-- G414 owns the first reproducible smoke scene;
-- domain code remains independent from Node/SceneTree/UI/HTTP/storage concrete.
+- G414 owns first minimal smoke scene with deterministic headless runtime execution.
+- G415 owns typed GDScript lint/format conventions.
+- G416 owns golden fixtures for Luau-to-Godot parity.
+- No Roblox Studio, backend, or leaderboard requirement may block the offline V1.
 
 Next specialist task:
-**G413 — create Godot CI with import/headless parse on exact SHA.**
+**G414 — create minimal smoke scene and reproducible headless execution.**
