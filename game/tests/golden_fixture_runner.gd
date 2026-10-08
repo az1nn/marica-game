@@ -76,8 +76,11 @@ func _run_catalog() -> void:
         return
 
     print(
-        "MARICA_G416_HARNESS_PASS active=", active_count,
-        " pending=", pending_count, " parity=NOT_YET_PROVEN"
+        "MARICA_G416_HARNESS_PASS active=",
+        active_count,
+        " pending=",
+        pending_count,
+        " parity=NOT_YET_PROVEN"
     )
     quit(0)
 
