@@ -92,7 +92,7 @@
     },
     {
       "id": "pet_id.from_string",
-      "status": "PENDING_PORT",
+      "status": "ACTIVE_PARITY",
       "milestone": "G420",
       "source": "src/shared/domain/PetId.luau",
       "cases": [
@@ -113,8 +113,35 @@
             "value": " \t "
           },
           "expected_error": "PetId must not be empty"
+        },
+        {
+          "id": "pet-id-empty",
+          "invariant": "empty Pet IDs are rejected exactly",
+          "input": {
+            "value": ""
+          },
+          "expected_error": "PetId must not be empty"
+        },
+        {
+          "id": "pet-id-non-string",
+          "invariant": "non-string Pet IDs are rejected exactly",
+          "input": {
+            "value": 42
+          },
+          "expected_error": "PetId must be a string"
+        },
+        {
+          "id": "pet-id-preserve-valid-whitespace",
+          "invariant": "valid nonblank input is returned without normalization",
+          "input": {
+            "value": " pet-002 "
+          },
+          "expected": {
+            "id": " pet-002 "
+          }
         }
-      ]
+      ],
+      "adapter": "game/src/domain/pet_id.gd"
     },
     {
       "id": "lineage_id.from_string",

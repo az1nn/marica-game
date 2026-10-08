@@ -85,3 +85,18 @@ godot --headless --path game --script res://tests/golden_fixture_runner.gd
 ```
 
 CI requires `MARICA_G416_CATALOG_VALID`, `MARICA_G416_HARNESS_PASS`, and `parity=NOT_YET_PROVEN` while adapters are not implemented. **A green G416 gate certifies harness readiness only.** G420 onwards must add actual Godot implementations and executable golden parity checks; G429/G430+ own domain/succession acceptance.
+
+## G420: Pet identity port and executable PetId golden parity
+
+The first pure Godot domain components are `src/domain/pet_id.gd` and `src/domain/pet.gd`. The Pet implementation is deliberately **identity-only**: pedigree, lifecycle, genetics, care, health, soulbound and affection remain owned by G421–G428, rather than depending on unported Luau. `pet_id.gd` deterministically validates nonempty strings and supports an injected Callable ID generator; unlike Luau exceptions, rejections are explicit `{ok:false,error:...}` results suitable for fixtures.
+
+`MaricaPet.create(id)` validates before construction. The Pet exposes `get_id()` and returns detached identity snapshots, with no public identity setter; this is API-level identity immutability, not a claim that GDScript has hard private fields. Other Pet fields are intentionally absent until their domain tasks are ported.
+
+The G416 fixture harness now executes five golden cases from `src/shared/domain/PetId.luau` as `ACTIVE_PARITY`. Cases from lineage, simulation time and genetics stay `PENDING_PORT`. `tools/godot/validate_golden_fixtures.py` rejects unauthorized promotion to `ACTIVE_PARITY`; CI requires positive PetId parity and the explicit overall `parity=NOT_YET_PROVEN` marker.
+
+```sh
+godot --headless --path game --script res://tests/golden_fixture_runner.gd
+godot --headless --path game --script res://tests/pet_identity_runner.gd
+```
+
+Passing G420 proves identity validation and the limited Pet shell only, **not** Animal Core parity or playability.

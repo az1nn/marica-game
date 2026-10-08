@@ -30,7 +30,7 @@
 
 ## Phase C — Animal Domain Port
 
-- [ ] **G420** Portar Pet + IDs imutáveis.
+- [x] **G420** Portar Pet + IDs imutáveis.
 - [ ] **G421** Portar lineage + pedigree.
 - [ ] **G422** Portar lifecycle state machine.
 - [ ] **G423** Portar simulation time/clock injetável.
