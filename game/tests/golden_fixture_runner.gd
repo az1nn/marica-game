@@ -73,18 +73,22 @@ func _check_contract(contract_value: Variant) -> Dictionary:
         print("MARICA_G416_PENDING_PORT ", identifier, " cases=", cases.size())
         return {"active": 0, "verified": 0, "pending": cases.size()}
     if status == "ACTIVE_SELFTEST" and identifier == "harness.deep_equal":
-        for case_value in cases:
-            if not _check_selftest_case(case_value):
-                return {}
-        return {"active": cases.size(), "verified": 0, "pending": 0}
+        return _verify_cases(cases, false)
     if status == "ACTIVE_PARITY" and identifier == "pet_id.from_string":
-        for case_value in cases:
-            if not _check_pet_id_case(case_value):
-                return {}
-        return {"active": 0, "verified": cases.size(), "pending": 0}
+        return _verify_cases(cases, true)
     _fail("unregistered ACTIVE contract: " + identifier)
     return {}
 
+
+func _verify_cases(cases: Array, is_parity: bool) -> Dictionary:
+    for case_value in cases:
+        if is_parity and not _check_pet_id_case(case_value):
+            return {}
+        if not is_parity and not _check_selftest_case(case_value):
+            return {}
+    if is_parity:
+        return {"active": 0, "verified": cases.size(), "pending": 0}
+    return {"active": cases.size(), "verified": 0, "pending": 0}
 
 func _check_pet_id_case(case_value: Variant) -> bool:
     if typeof(case_value) != TYPE_DICTIONARY:
