@@ -7,29 +7,30 @@ WORKSTREAM:
 SPEC-004 — Godot V1 Transition
 
 STATE:
-Phase C — Animal Domain Port. G420 implementation complete on PR #48 candidate, with G421 next after exact-head validation and merge. Godot 4.7.2-stable is canonical offline-first runtime.
+Phase B (G410–G416) complete. Phase C — Animal Domain Port G420 complete; G421 is next. Godot 4.7.2-stable production runtime remains offline-first.
 
 MODE:
-WATCH — G420 final exact-head CI
+ADVANCE
 
 DELIVERED:
-- G420 pure PetId validation + injected Callable generator and identity-only Pet (validated construction, ID getter and detached snapshot).
-- Five source-linked PetId golden fixtures executed with real Godot adapter; eight G421/G423/G430 fixtures still PENDING_PORT.
-- Python fixture guard rejects unauthorized active domain parity and G420 headless identity smoke test.
-- P0 mutation proof GOOD > BAD > RESTORE passed: whitespace-only-ID mutant detected and reverted.
+- G420 PR #48 merged: pure PetId validation and injected generator, identity-only Pet with no public ID setter and detached snapshots.
+- Five real Godot PetId fixtures ACTIVE_PARITY; eight remaining fixtures PENDING_PORT. No complete Animal Core parity asserted.
+- QA mutation proof caught bad whitespace-only ID validation; source restored and tests passed.
+- G420 claim closed via verified documentation closeout.
 
 QUALITY:
-- PR #48 preliminary candidate@e9e2ba20490274bdded541a48c390a55c0fce274: Godot CI PASS, Validate Skills PASS, with explicit mutation marker.
-- After spec/handoff edits, all required gates must run at the exact latest PR head before guarded merge.
-- No general animal, save, succession, visual, full gameplay or G421 pedigree parity claimed.
-
-CONCURRENCY:
-Dedicated branch feat/g420-godot-pet-identity and claim .siga/session-claim-g420-20261008-gpt6.md ACTIVE; post-claim barrier CLEAR; no other open PR at claim time.
+- PR #48 final head 10c803ce38c3308018c6601db9f933d9a0df2552: Godot CI PASS, Validate Skills PASS, Roblox CI PASS, Roblox Behavioral SKIPPED/non-required.
+- Expected-head guarded merge: master@a889f9132720ab251ae2b60c99d7c6115341a826.
+- Post-merge Godot CI PASS, Validate Skills PASS, Roblox CI PASS on master@a889f9132720ab251ae2b60c99d7c6115341a826.
+- No pedigree, lifecycle, health, care, genetics, succession, save, playable scene or visual acceptance asserted.
 
 BLOCKER / WAIT:
-Only current PR exact-head CI; no human product gate.
+None for G421.
+
+CONCURRENCY:
+G420 post-claim barrier CLEAR; no overlapping PR; expected-head merge guarded; claim CLOSED.
 
 NEXT:
-Verify final PR #48 SHA, merge with expected-head guard, close claim, advance G421 — lineage/pedigree.
+G421 — port lineage + pedigree to typed Godot and execute real golden parity cases.
 
 END FILE
