@@ -21,7 +21,7 @@
 - [x] **G410** Criar game/project.godot e estrutura domain/application/adapters/presentation/scenes/tests.
 - [x] **G411** Pesquisar e pinar a versão Godot 4.x estável usada pelo projeto.
 - [x] **G412** Escolher/pinar test runner compatível com a versão Godot selecionada.
-- [ ] **G413** Criar Godot CI com import/headless parse em SHA exato.
+- [x] **G413** Criar Godot CI com import/headless parse em SHA exato.
 - [ ] **G414** Criar smoke scene mínima e execução headless reproduzível.
 - [ ] **G415** Criar convenções GDScript tipado, lint/format quando aplicável.
 - [ ] **G416** Criar harness de golden fixtures para paridade Luau → Godot.
