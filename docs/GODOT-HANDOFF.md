@@ -1,6 +1,6 @@
 # GODOT HANDOFF
 
-Status: PRODUCTION / ADVANCE
+Status: PRODUCTION / G415 candidate — VERIFY
 
 Authority:
 - Constitution v2.0.0
@@ -9,25 +9,21 @@ Authority:
 
 Runtime:
 - Godot 4.7.2-stable / typed GDScript / single-player offline-first.
-- GUT v9.7.1 pinned to commit aeb5d4f3f7f0a6c9b5e178876d6c99b791fda605.
+- GUT v9.7.1 pinned to aeb5d4f3f7f0a6c9b5e178876d6c99b791fda605.
 
 Delivered:
-- G410: Godot project skeleton and layered runtime directories.
-- G411: stable engine version pinned in game/.godot-version.
-- G412: exact GUT runner pinned in game/test-runner.lock.json.
-- G413: CI downloads/checks pinned Godot and GUT, runs headless import + parse on exact commit.
-- G414: game/scenes/smoke.tscn is temporary main scene; typed Node2D _ready marker, standalone SceneTree smoke runner, reproducible headless boot and explicit exit code test; CI captures logs.
+- G410–G414: project foundation, pinned engine/test runner, exact-head Godot import/parse/runtime smoke.
+- G415: game/docs/GDSCRIPT-CONVENTIONS.md; pinned gdtoolkit 4.5.0; gdformat/gdlint configuration; Python typed-declaration guard with four positive/negative tests; Godot CI checks first-party scripts before engine import.
 
 Verification:
-- PR #42 head 33bf078116bc465395960b4b630e9237a763d5de: Godot CI PASS (engine/import/parse/scene boot/runner), Validate skills PASS, Roblox CI PASS; Roblox Behavioral SKIPPED and non-required by ADR-0004.
-- PR #42 merged with expected-head guard: master@2ba00afe358d42e9d50f8ab029142112c0f619bd.
-- Post-merge Godot CI PASS at master@2ba00afe358d42e9d50f8ab029142112c0f619bd.
-- Scope limited to smoke/bootstrap; no playable Animal Core, visual acceptance, fixture parity, save, or offline gameplay asserted.
+- PR #44 candidate 835d0af9d5e8c20c377e1afcb5426fd307d78526: Godot CI PASS (typing tests, formatting, lint, import/parse/boot/smoke), Validate skills PASS, Roblox CI PASS, Roblox Behavioral SKIPPED/non-required.
+- Later task/handoff commits require **new exact-head CI** before merge; the earlier candidate SHA is not delivery proof.
+- No gameplay parity, save, real animal slice or visual acceptance asserted.
 
 Boundary:
-- G415 owns typed GDScript coding standards and lint/format gates where applicable.
-- G416 owns golden-fixture harness before animal-domain migration.
-- No online/Roblox requirement can block the V1 Godot core.
+- No vendor changes to game/addons.
+- Godot core remains offline-only independent of online provider/Roblox.
+- G416 owns deterministic Luau → Godot golden-fixture harness, not G415.
 
 Next specialist task:
-**G415 — establish typed GDScript conventions and automated validation.**
+**G416 — create golden-fixture harness after PR #44 is verified and merged.**
