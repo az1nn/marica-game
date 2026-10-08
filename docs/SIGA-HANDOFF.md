@@ -7,29 +7,29 @@ WORKSTREAM:
 SPEC-004 — Godot V1 Transition
 
 STATE:
-Phase B — Godot Foundation. G410–G413 completed; next is G414. Offline-first Godot 4.7.2 is canonical.
+Phase B — Godot Foundation. G410–G414 complete. G415 next; production runtime remains Godot 4.7.2-stable, offline-first.
 
 MODE:
 ADVANCE
 
 DELIVERED:
-- PR #40 merged G413 to master@bdc6901d5cc888bcdcae890badd343c76e7b836b.
-- .github/workflows/godot-ci.yml introduced new production Godot CI.
-- Godot archive SHA-256 checked, GUT v9.7.1 exact commit checked.
-- Project headless import + editor parse/load run from the exact PR head.
-- G413 task checked and session claim closed in documentation closeout.
+- G414: PR #42 merged; minimal Godot scene is temporary main scene.
+- Typed _ready() marker and deterministic SceneTree smoke runner added.
+- Exact-head CI now boots the scene, executes script and enforces PASS marker/exit code.
+- Claim .siga/session-claim-g414-20261008-1140-gpt6.md closed via verified documentation closeout.
 
 QUALITY:
-- PR #40 exact-head 84cf076e9047d0534f01896129219a6909985931: Godot CI PASS; Validate skills PASS; Roblox CI PASS.
-- Roblox Behavioral SKIPPED/non-required under ADR-0004.
-- PR merged with expected-head guard after no base drift / competing open PR.
-- Evidence for Godot bootstrap only; G414 runtime smoke scene remains pending.
+- PR #42 exact head 33bf078116bc465395960b4b630e9237a763d5de: Godot CI PASS; Validate skills PASS; Roblox CI PASS; Behavioral SKIPPED/non-required.
+- PR #42 expected-head guarded merge: master@2ba00afe358d42e9d50f8ab029142112c0f619bd; post-merge Godot CI PASS.
+- Does NOT validate playable scenes, visuals, domain parity, or persistence.
 
 BLOCKER / WAIT:
-none for beginning G414.
+none for starting G415.
 
 CONCURRENCY:
-G413 was isolated in ci/g413-godot-headless-exact-sha; closure documented separately. No overlapping open PR at delivery.
+Only PR #42 touched G414 scope; post-claim barrier CLEAR; merged without base drift or competing open PR.
 
 NEXT:
-G414 — minimal smoke scene and reproducible headless execution.
+G415 — typed GDScript conventions and automated lint/format validation where applicable.
+
+END FILE
