@@ -82,15 +82,11 @@ func _check_selftest_case(case_value: Variant) -> bool:
     var fixture: Dictionary = case_value
     var case_input: Dictionary = fixture.get("input", {})
     var expected: Dictionary = fixture.get("expected", {})
-    var actual: Dictionary = {
-        "equal": _deep_equal(case_input.get("left"), case_input.get("right"))
-    }
+    var actual: Dictionary = {"equal": _deep_equal(case_input.get("left"), case_input.get("right"))}
     if not _deep_equal(expected, actual):
         _fail("fixture mismatch: " + str(fixture.get("id", "<unknown>")))
         return false
-    var repeat: Dictionary = {
-        "equal": _deep_equal(case_input.get("left"), case_input.get("right"))
-    }
+    var repeat: Dictionary = {"equal": _deep_equal(case_input.get("left"), case_input.get("right"))}
     if not _deep_equal(actual, repeat):
         _fail("nondeterministic harness result")
         return false
