@@ -1,6 +1,6 @@
 # GODOT HANDOFF
 
-Status: PRODUCTION / G416 candidate — VERIFY
+Status: PRODUCTION / ADVANCE
 
 Authority:
 - Constitution v2.0.0
@@ -12,21 +12,21 @@ Runtime:
 - GUT v9.7.1 pinned to aeb5d4f3f7f0a6c9b5e178876d6c99b791fda605.
 
 Delivered:
-- G410–G414: canonical project skeleton, pinned engine/test runner, exact-head CI and deterministic main-scene smoke.
-- G415: typed conventions, gdtoolkit 4.5.0 formatter/linter, declaration guard with four unit tests.
-- G416: game/tests/fixtures/golden.json versioned catalog; headless GDScript runner; Python fixture schema/provenance validator and eight negative/positive tests; CI gate.
-- G416 has four passing harness selftests and ten deferred source-backed domain cases. Deferred fixtures are explicitly marked PENDING_PORT and **must never count as animal parity**.
+- G410–G414: canonical Godot project, pinned engine/test runner, exact-head CI and deterministic smoke.
+- G415: typed conventions; gdtoolkit 4.5.0 formatting/linting; typed declaration guard.
+- G416: versioned golden fixture catalog at game/tests/fixtures/golden.json; schema/provenance validator; GDScript headless fixture runner; Python regression tests and exact-head Godot CI integration.
+- G416 executes four harness selftests; ten domain fixtures stay PENDING_PORT (PetId, LineageId, SimulationTime, Genetics). PASS for harness != PASS for domain parity.
 
 Verification:
-- PR #46 candidate head 70c6527e49c7c02cf2722548790c9b8444962371: Godot CI PASS (format, lint, engine import/parse/boot, G414 smoke, G416 harness), Validate skills PASS, Roblox CI PASS, Roblox Behavioral SKIPPED/non-required.
-- G416 runner output: MARICA_G416_HARNESS_PASS active=4 pending=10 parity=NOT_YET_PROVEN.
-- New documentation commits require fresh exact-head checks. No merge or post-merge check is asserted yet.
-- Animal logic parity, persistence, save/load, release export and visual acceptance are unverified.
+- PR #46 final head f05ed10d1a1057013fb225e3dad9622bfa813b80: Godot CI PASS (harness, import, parse, smoke, format/lint), Validate skills PASS, Roblox CI PASS.
+- PR #46 merged with expected-head guard into master@0b43c1de4baa93483aef860a27d86df57d7290dc.
+- Post-merge master@0b43c1de4baa93483aef860a27d86df57d7290dc: Godot CI PASS, Validate skills PASS, Roblox CI PASS.
+- Roblox Behavioral SKIPPED/non-required. No animal parity, persistence, playable farm or visual acceptance asserted.
 
-Boundaries:
-- G416 certifies only fixture infrastructure. Source references are legacy evidence, not runtime parity.
-- G420 is the next Animal Domain Port task: Pet identity + immutable IDs in pure GDScript with actual golden test adapters.
-- Remain offline-first and preserve legacy Luau until G429/G510 evidence proves applicable parity.
+Boundary:
+- Godot V1 remains single-player/offline-first; source provenance is legacy reference, not proof.
+- Actual Pet/ID fixture parity requires Godot domain implementation and exact-head adapter execution in G420.
+- Legacy Luau cannot be removed until the applicable migration parity gates pass.
 
 Next specialist task:
-**G420 — port Pet + immutable IDs and execute matching golden fixtures after G416 merge.**
+**G420 — port Pet + immutable IDs with real parity cases.**
