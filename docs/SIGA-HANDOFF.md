@@ -7,28 +7,29 @@ WORKSTREAM:
 SPEC-004 — Godot V1 Transition
 
 STATE:
-Phase B G410–G416 implemented. PR #46 delivery checks must pass on latest exact head; Phase C starts at G420 after G416 merge. Canonical Godot 4.7.2-stable, single-player/offline-first.
+Phase B (G410–G416) complete. Phase C — Animal Domain Port is next. Offline-first Godot 4.7.2-stable remains canonical.
 
 MODE:
-WATCH — current PR #46 exact-head CI
+ADVANCE
 
 DELIVERED:
-- G416 headless GDScript fixture harness and strict versioned catalog with Luau source provenance.
-- Python schema/negative tests and GitHub Actions integration.
-- Four harness selftests executed; ten PetId/LineageId/SimulationTime/genetics golden expectations retained as PENDING_PORT.
-- No domain parity, local save, playable farm or visual acceptance claimed.
+- G416 PR #46 merged: golden fixture catalog, provenance schema validation, deterministic headless GDScript runner.
+- 12 Python tests and 4 executable harness selftests; 10 legacy domain cases cataloged PENDING_PORT.
+- G416 claim closed via verified documentation closeout.
 
 QUALITY:
-- PR #46 candidate@70c6527e49c7c02cf2722548790c9b8444962371: Godot CI PASS (G414/G415 plus G416 catalog+runner), Validate skills PASS, Roblox CI PASS; Roblox Behavioral SKIPPED/non-required.
-- Fresh exact-head checks required after spec/handoff commits; old candidate SHA is stale for merge.
+- PR #46 delivery head f05ed10d1a1057013fb225e3dad9622bfa813b80: Godot CI PASS, Validate skills PASS, Roblox CI PASS, Roblox Behavioral SKIPPED/non-required.
+- Expected-head guarded merge: master@0b43c1de4baa93483aef860a27d86df57d7290dc.
+- Post-merge Godot CI PASS, Validate skills PASS, Roblox CI PASS on master@0b43c1de4baa93483aef860a27d86df57d7290dc.
+- Harness infrastructure PASS does NOT mean animal/succession parity or gameplay accepted.
 
 BLOCKER / WAIT:
-Await exact-head PR #46 checks. No product decision or human gate.
+none for starting G420.
 
 CONCURRENCY:
-Dedicated feat/g416-golden-fixture-harness; claim .siga/session-claim-g416-20261008-1758-gpt6.md ACTIVE until delivery, post-claim barrier CLEAR; PR #46 only in active scope.
+G416 post-claim barrier CLEAR; only PR #46 overlapped; no master drift; claim CLOSED.
 
 NEXT:
-Verify final PR #46 exact head and merge with SHA guard; close claim and advance to G420 — Pet + immutable IDs.
+G420 — implement pure Godot Pet + immutable IDs and run genuine golden parity tests before G421.
 
 END FILE
