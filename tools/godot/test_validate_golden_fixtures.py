@@ -20,8 +20,19 @@ class GoldenFixtureSchemaTests(unittest.TestCase):
 
     def test_rejects_unsupported_implicit_pass(self):
         fixture = copy.deepcopy(self.catalog)
-        fixture["contracts"][1]["status"] = "ACTIVE_PARITY"
+        fixture["contracts"][1]["status"] = "PARITY_PASS"
         self.assertTrue(any("unknown status" in e for e in validate(fixture)))
+
+    def test_rejects_unauthorized_future_parity(self):
+        fixture = copy.deepcopy(self.catalog)
+        fixture["contracts"][2]["status"] = "ACTIVE_PARITY"
+        fixture["contracts"][2]["adapter"] = "game/src/domain/pet_id.gd"
+        self.assertTrue(any("not authorized" in e for e in validate(fixture)))
+
+    def test_rejects_wrong_executable_adapter(self):
+        fixture = copy.deepcopy(self.catalog)
+        fixture["contracts"][1]["adapter"] = "game/tests/golden_fixture_runner.gd"
+        self.assertTrue(any("incorrect parity milestone or adapter" in e for e in validate(fixture)))
 
     def test_rejects_missing_provenance(self):
         fixture = copy.deepcopy(self.catalog)
