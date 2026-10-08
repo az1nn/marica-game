@@ -90,6 +90,7 @@ func _verify_cases(cases: Array, is_parity: bool) -> Dictionary:
         return {"active": 0, "verified": cases.size(), "pending": 0}
     return {"active": cases.size(), "verified": 0, "pending": 0}
 
+
 func _check_pet_id_case(case_value: Variant) -> bool:
     if typeof(case_value) != TYPE_DICTIONARY:
         _fail("invalid PetId fixture")
