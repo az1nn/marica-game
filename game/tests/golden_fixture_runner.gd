@@ -110,6 +110,7 @@ func _check_pet_id_case(case_value: Variant) -> bool:
         return false
     return true
 
+
 func _check_selftest_case(case_value: Variant) -> bool:
     if typeof(case_value) != TYPE_DICTIONARY:
         _fail("malformed self-test case")
