@@ -1,0 +1,242 @@
+{
+  "schema_version": 1,
+  "catalog": "SPEC-004 G416 Luau to Godot golden contracts",
+  "contracts": [
+    {
+      "id": "harness.deep_equal",
+      "status": "ACTIVE_SELFTEST",
+      "milestone": "G416",
+      "source": "game/tests/golden_fixture_runner.gd",
+      "cases": [
+        {
+          "id": "nested-equal",
+          "invariant": "structural comparison of deterministic nested state",
+          "input": {
+            "left": {
+              "pet": "p-1",
+              "traits": [
+                0.5,
+                0.75
+              ],
+              "status": {
+                "active": true
+              }
+            },
+            "right": {
+              "status": {
+                "active": true
+              },
+              "traits": [
+                0.5,
+                0.75
+              ],
+              "pet": "p-1"
+            }
+          },
+          "expected": {
+            "equal": true
+          }
+        },
+        {
+          "id": "nested-different",
+          "invariant": "negative guard detects a changed nested result",
+          "input": {
+            "left": {
+              "pet": "p-1",
+              "traits": [
+                0.5,
+                0.75
+              ]
+            },
+            "right": {
+              "pet": "p-1",
+              "traits": [
+                0.5,
+                0.7
+              ]
+            }
+          },
+          "expected": {
+            "equal": false
+          }
+        },
+        {
+          "id": "array-order-matters",
+          "invariant": "fixture matching preserves sequence order",
+          "input": {
+            "left": [
+              "a",
+              "b"
+            ],
+            "right": [
+              "b",
+              "a"
+            ]
+          },
+          "expected": {
+            "equal": false
+          }
+        },
+        {
+          "id": "identical-scalar",
+          "invariant": "fixture matching accepts identical scalar",
+          "input": {
+            "left": "lineage-1",
+            "right": "lineage-1"
+          },
+          "expected": {
+            "equal": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "pet_id.from_string",
+      "status": "PENDING_PORT",
+      "milestone": "G420",
+      "source": "src/shared/domain/PetId.luau",
+      "cases": [
+        {
+          "id": "pet-id-valid",
+          "invariant": "pet IDs are validated without mutation",
+          "input": {
+            "value": "pet-001"
+          },
+          "expected": {
+            "id": "pet-001"
+          }
+        },
+        {
+          "id": "pet-id-whitespace",
+          "invariant": "whitespace-only IDs rejected",
+          "input": {
+            "value": " \t "
+          },
+          "expected_error": "PetId must not be empty"
+        }
+      ]
+    },
+    {
+      "id": "lineage_id.from_string",
+      "status": "PENDING_PORT",
+      "milestone": "G421",
+      "source": "src/shared/domain/LineageId.luau",
+      "cases": [
+        {
+          "id": "lineage-valid",
+          "invariant": "lineage IDs are validated without mutation",
+          "input": {
+            "value": "lineage-001"
+          },
+          "expected": {
+            "id": "lineage-001"
+          }
+        },
+        {
+          "id": "lineage-empty",
+          "invariant": "empty lineage IDs rejected",
+          "input": {
+            "value": ""
+          },
+          "expected_error": "LineageId must not be empty"
+        }
+      ]
+    },
+    {
+      "id": "simulation_time.observe",
+      "status": "PENDING_PORT",
+      "milestone": "G423",
+      "source": "src/shared/domain/SimulationTime.luau",
+      "cases": [
+        {
+          "id": "clock-forward",
+          "invariant": "elapsed time derives from injected clock",
+          "input": {
+            "lastObservedAt": 100,
+            "clockNow": 112
+          },
+          "expected": {
+            "rawNow": 112,
+            "logicalNow": 112,
+            "elapsed": 12
+          }
+        },
+        {
+          "id": "clock-rollback",
+          "invariant": "clock rollback never rewinds logical time",
+          "input": {
+            "lastObservedAt": 112,
+            "clockNow": 95
+          },
+          "expected": {
+            "rawNow": 95,
+            "logicalNow": 112,
+            "elapsed": 0
+          }
+        },
+        {
+          "id": "clock-invalid-negative",
+          "invariant": "negative timestamps rejected",
+          "input": {
+            "lastObservedAt": 100,
+            "clockNow": -1
+          },
+          "expected_error": "Clock.now() must not be negative"
+        }
+      ]
+    },
+    {
+      "id": "genetics.advance_potential",
+      "status": "PENDING_PORT",
+      "milestone": "G430",
+      "source": "docs/migration/ROBLOX-TO-GODOT-CONTRACT-MAP.md",
+      "cases": [
+        {
+          "id": "first-sorted-trait",
+          "invariant": "seed zero selects lexicographically first trait",
+          "input": {
+            "potential": {
+              "resilience": 0.4,
+              "size": 0.5
+            },
+            "seed": 0
+          },
+          "expected": {
+            "potential": {
+              "resilience": 0.45,
+              "size": 0.5
+            }
+          }
+        },
+        {
+          "id": "saturated-fallback",
+          "invariant": "saturated trait is skipped cyclically",
+          "input": {
+            "potential": {
+              "resilience": 1,
+              "size": 0.5
+            },
+            "seed": 0
+          },
+          "expected": {
+            "potential": {
+              "resilience": 1,
+              "size": 0.55
+            }
+          }
+        },
+        {
+          "id": "invalid-fractional-seed",
+          "invariant": "fractional seed rejected",
+          "input": {
+            "potential": {
+              "resilience": 0.4
+            },
+            "seed": 0.5
+          },
+          "expected_error": "invalid genetic seed"
+        }
+      ]
+    }
+  ]
+}
