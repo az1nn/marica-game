@@ -1,5 +1,5 @@
-extends RefCounted
 class_name MaricaPet
+extends RefCounted
 
 # Identity-only Pet port (G420). Composite fields are assigned to G421-G428.
 const PET_ID = preload("res://src/domain/pet_id.gd")
