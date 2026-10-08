@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   headless:
-    name: Godot 4.7.2 import and parse
+    name: Godot 4.7.2 import, parse and smoke
     runs-on: ubuntu-22.04
     timeout-minutes: 15
     steps:
@@ -85,6 +85,22 @@ jobs:
           "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
             --headless --editor --path game --quit 2>&1 | tee "$RUNNER_TEMP/godot-parse.log"
 
+      - name: Headless main-scene boot (G414)
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --quit-after 3 2>&1 | tee "$RUNNER_TEMP/godot-scene-boot.log"
+          grep -Fq 'MARICA_G414_SCENE_READY' "$RUNNER_TEMP/godot-scene-boot.log"
+
+      - name: Deterministic runtime smoke (G414)
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/smoke_runner.gd 2>&1 | tee "$RUNNER_TEMP/godot-smoke.log"
+          grep -Fq 'MARICA_G414_SMOKE_PASS' "$RUNNER_TEMP/godot-smoke.log"
+
       - name: Upload Godot CI diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -94,4 +110,6 @@ jobs:
             ${{ runner.temp }}/godot-version.log
             ${{ runner.temp }}/godot-import.log
             ${{ runner.temp }}/godot-parse.log
+            ${{ runner.temp }}/godot-scene-boot.log
+            ${{ runner.temp }}/godot-smoke.log
           if-no-files-found: warn

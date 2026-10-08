@@ -7,3 +7,4 @@ config_version=5
 [application]
 
 config/name="Marica Game"
+run/main_scene="res://scenes/smoke.tscn"
