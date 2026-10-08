@@ -7,28 +7,29 @@ WORKSTREAM:
 SPEC-004 — Godot V1 Transition
 
 STATE:
-Phase B — Godot Foundation. G410–G414 merged; G415 implementation verified on candidate 835d0af; PR #44 still requires exact-head verification after spec/handoff update. G416 is the next documented step once G415 merges.
+Phase B — Godot Foundation. G410–G415 complete and merged; G416 is the sole next executable task. Godot 4.7.2-stable remains the offline-first canonical runtime.
 
 MODE:
-WATCH — G415 final PR head checks
+ADVANCE
 
 DELIVERED:
-- G415: typed GDScript rules; pinned gdtoolkit 4.5.0; gdformat/gdlint with 4-space/100-column target; explicit declaration guard and regression tests.
-- G415 static quality gate added before existing Godot headless import/parse/scene smoke.
-- G414 scripts normalized to deterministic formatter output; no gameplay or visual contract changed.
+- G415 PR #44 merged; typed GDScript conventions and first-party formatter/linter enforced in Godot CI.
+- gdtoolkit 4.5.0 pinned; four Python typing-guard tests and two normalized G414 smoke scripts.
+- G415 claim closed via verified documentation closeout.
 
 QUALITY:
-- PR #44 candidate@835d0af9d5e8c20c377e1afcb5426fd307d78526: Godot CI PASS, Validate skills PASS, Roblox CI PASS, Roblox Behavioral SKIPPED/non-required.
-- After writing task/handoff metadata, exact-head checks must be rerun; old SHA must not be called current proof.
-- No domain parity, save or playable scene acceptance is claimed.
+- PR #44 exact delivery head f4153041c436dd9177306f0647f662309cd601ce: Godot CI PASS; Validate skills PASS; Roblox CI PASS; Roblox Behavioral SKIPPED/non-required.
+- Expected-head guarded merge: master@10f4ce70d0ae908cea734f92db44ed17a2135159.
+- Post-merge Godot CI PASS; Validate skills PASS; Roblox CI PASS on master@10f4ce70d0ae908cea734f92db44ed17a2135159.
+- Does NOT prove animal-domain parity, saved progression, playable scenes or visuals.
 
 BLOCKER / WAIT:
-Wait for PR #44 new head CI; no human product gate.
+none for starting G416.
 
 CONCURRENCY:
-Dedicated branch chore/g415-typed-gdscript-quality; claim .siga/session-claim-g415-20261008-1331-gpt6.md ACTIVE until merged; only PR #44 overlaps G415 scope; post-claim barrier CLEAR.
+G415 post-claim barrier CLEAR; PR #44 was sole overlapping PR; no base drift at merge; session claim closed.
 
 NEXT:
-Validate current exact head of PR #44 and merge with expected-head guard; then close claim and advance to G416.
+G416 — implement deterministic golden-fixture harness before porting Animal Core.
 
 END FILE
