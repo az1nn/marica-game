@@ -64,4 +64,4 @@ CI checks for the exact `MARICA_G414_SCENE_READY` and `MARICA_G414_SMOKE_PASS` m
 ## G415: typed GDScript and style validation
 
 First-party GDScript conventions live in [docs/GDSCRIPT-CONVENTIONS.md](docs/GDSCRIPT-CONVENTIONS.md).
-The Godot CI exact-head job runs Python declaration guard tests, checks all `game/src` and `game/tests` scripts for explicit typing, and enforces pinned `gdtoolkit==4.5.1` `gdformat --check` plus `gdlint` before importing or executing Godot. Generated `addons` and `.godot` trees are excluded. The authoritative compiler/runtime gates remain the pinned Godot headless tests.
+The Godot CI exact-head job runs Python declaration guard tests, checks all `game/src` and `game/tests` scripts for explicit typing, and enforces pinned `gdtoolkit==4.5.0` `gdformat --check` plus `gdlint` before importing or executing Godot. Generated `addons` and `.godot` trees are excluded. The authoritative compiler/runtime gates remain the pinned Godot headless tests.
