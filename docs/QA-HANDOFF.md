@@ -1,30 +1,30 @@
 # QA HANDOFF
 
-Status: T018_VERIFIED
+Status: G420 candidate — VERIFY
 
-## Delivery evidence
+## Canonical V1 evidence
 
-T018 delivery HEAD: `4a2a74f30b2465bb9a7e9d3e8186930857c2f1bd`.
-Merged master: `11295a68468eb5ac7eb447c1a08b5195db5fd524`.
-PR: #20.
+Repository: az1nn/marica-game; Constitution v2.0.0; SPEC-004.
+Godot runtime: 4.7.2-stable, typed GDScript, offline-first.
 
-Authored Jest coverage:
-- affection defaults independently from momentary care;
-- persisted affection rejects invalid normalized values;
-- deterministic affection gain accumulates and caps at 1;
-- care-state updates do not overwrite persistent bond;
-- lifecycle and health transitions preserve persistent affection.
+G420 candidate PR #48 at e9e2ba20490274bdded541a48c390a55c0fce274:
+- Godot CI PASS (G414 smoke, G415 typing/format/lint, G416 harness, G420 PetId golden parity and identity runner);
+- Validate skills PASS; remaining checks must be repeated at final PR head;
+- five PetId ACTIVE_PARITY fixtures executed in Godot, eight other domain fixtures PENDING_PORT;
+- MARICA_G420_PET_IDENTITY_PASS;
+- MARICA_G420_PET_ID_PARITY_PASS cases=5;
+- MARICA_G420_MUTATION_PROOF_PASS good=pass bad=fail restore=pass.
 
-Exact delivery gates at `4a2a74f30b2465bb9a7e9d3e8186930857c2f1bd`:
-- Validate skills: PASS;
-- Roblox CI: PASS, including lockfile reproducibility, StyLua, Selene and production/test builds.
+## Adversarial verification
 
-Merge concurrency:
-- master remained at the expected base until PR #20 merged;
-- no competing open PR or ACTIVE claim overlapped T018.
+Baseline: accepted G416 master@4bbca87dbe80e20032b5c0d8ded2aadc367bed76.
+Known-bad mutant: change PetId validation from strip_edges().is_empty() to text == "" in ephemeral CI runner. Negative whitespace golden fixture fails; original file restored; exact-head tests pass.
+Critic isolation: no independently isolated agent; tests are objective and mutation backed.
+Regression hunt: prior G414/G415/G416 gates run in same Godot CI. No failures found in applicable adjacent tooling contracts.
+Human visual approval: N/A — no player-facing visuals changed.
 
-Known QA gap: CI builds Jest specs but does not execute Jest assertions headlessly. Treat authored behavioral specs as coverage evidence until that harness is wired.
+## Limitations and next gate
 
-## Next
-
-For T020, define and test the deterministic guaranteed genetic-advancement contract before implementing successor generation.
+G420 only validates identity semantics and an identity-only Pet shell; it does not prove complete Pet composite parity or animal gameplay.
+Legacy Roblox authored behavioral test-place execution remains optional/reference during Godot migration.
+Next: G421 lineage/pedigree port and its executable fixtures.
