@@ -1,6 +1,6 @@
 # GODOT HANDOFF
 
-Status: PRODUCTION / G420 candidate — VERIFY
+Status: PRODUCTION / ADVANCE
 
 Authority:
 - Constitution v2.0.0
@@ -12,21 +12,22 @@ Runtime:
 - GUT v9.7.1 pinned at aeb5d4f3f7f0a6c9b5e178876d6c99b791fda605.
 
 Delivered:
-- G410–G416: Godot foundation, pinned tools, headless smoke, typed GDScript, versioned golden harness.
-- G420: game/src/domain/pet_id.gd (deterministic type/nonblank validation and explicit Callable ID generation), game/src/domain/pet.gd (validated identity-only Pet, getter, detached serializable snapshot), game/tests/pet_identity_runner.gd.
-- Golden catalog now contains five ACTIVE_PARITY PetId cases (source: src/shared/domain/PetId.luau); eight fixtures for G421/G423/G430 remain PENDING_PORT.
-- Python validator rejects fake/unauthorized parity. Exact-head CI runs Godot executable golden fixture and identity tests.
+- G410–G416: foundation, exact-head CI, smoke, typed GDScript, deterministic golden harness.
+- G420: pure GDScript PetId validates string and whitespace, accepts explicit Callable generator; identity-only MaricaPet validates ID and exports detached serializable snapshots without public ID setter.
+- Five ACTIVE_PARITY PetId fixtures executed from src/shared/domain/PetId.luau; eight G421/G423/G430 fixtures remain PENDING_PORT.
+- CI checks actual Godot PetId behavior, negative cases, headless Pet identity, and mutation proof GOOD > BAD > RESTORE.
 
 Verification:
-- PR #48 preliminary head e9e2ba20490274bdded541a48c390a55c0fce274: Godot CI PASS; Validate skills PASS. Roblox CI applicable, await latest final head evidence.
-- G420 good/bad/restore mutation proof: PASS. Real whitespace-only PetId validation mutant causes golden failure and is not merged; restored source produces the PASS marker.
-- Spec/task/handoff changes after the preliminary check require fresh exact-head gates.
-- G420 parity covers PetId only; the Pet shell has no fields from G421–G428. No complete Animal Core parity, succession, save, playability or visual acceptance asserted.
+- PR #48 final head 10c803ce38c3308018c6601db9f933d9a0df2552: Godot CI PASS, Validate Skills PASS, Roblox CI PASS; Roblox Behavioral SKIPPED/non-required.
+- PR #48 merged with expected-head guard into master@a889f9132720ab251ae2b60c99d7c6115341a826.
+- Post-merge master@a889f9132720ab251ae2b60c99d7c6115341a826: Godot CI PASS, Validate Skills PASS, Roblox CI PASS.
+- Mutation proof: whitespace-only PetId bad mutant failed golden parity, original code restored and passed.
+- Scope only ID validation/identity shell; no full Pet composite, pedigree, lifecycle, care, health, genetics, succession, persistence, playability or visual acceptance asserted.
 
 Boundary:
-- Godot domain has no scene/online/Roblox dependency.
-- The Pet identity has no public setter; detached snapshots protect against caller-side snapshot mutation.
-- G421 owns lineage/pedigree; no unknown domain behavior silently imported from Luau.
+- No online/Roblox runtime dependency enters Godot domain.
+- Pet identity-only shell is intentionally extended by G421–G428.
+- Legacy sources preserved for future golden ports.
 
 Next specialist task:
-**G421 — port lineage and pedigree with genuine Godot golden parity, after G420 merge.**
+**G421 — port lineage and pedigree with executable Godot golden parity.**
