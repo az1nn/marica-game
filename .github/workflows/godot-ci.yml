@@ -1,0 +1,97 @@
+name: Godot CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: godot-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  headless:
+    name: Godot 4.7.2 import and parse
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Guard exact-head checkout and pinned tool contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          version = Path("game/.godot-version").read_text(encoding="utf-8").strip()
+          lock = json.loads(Path("game/test-runner.lock.json").read_text(encoding="utf-8"))
+          assert version == "4.7.2-stable", f"Unexpected Godot version: {version}"
+          assert lock["project_godot"] == version, "Engine/test runner mismatch"
+          assert lock["runner"] == "GUT" and lock["version"] == "v9.7.1", "Runner pin mismatch"
+          assert lock["commit"] == "aeb5d4f3f7f0a6c9b5e178876d6c99b791fda605", "GUT commit pin mismatch"
+          assert lock["install_path"] == "addons/gut", "Unexpected install path"
+          print(f"Exact-head pin gate PASS: Godot {version} + GUT {lock['version']}")
+          PY
+
+      - name: Install and verify pinned Godot editor
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --retry-all-errors \
+            --output "$RUNNER_TEMP/godot.zip" \
+            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --headless --version | tee "$RUNNER_TEMP/godot-version.log"
+          grep -q '4.7.2.stable' "$RUNNER_TEMP/godot-version.log"
+
+      - name: Bootstrap exact GUT release for subsequent GDScript tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet --depth 1 --single-branch --branch v9.7.1 \
+            https://github.com/bitwes/Gut.git "$RUNNER_TEMP/gut"
+          test "$(git -C "$RUNNER_TEMP/gut" rev-parse HEAD)" = "aeb5d4f3f7f0a6c9b5e178876d6c99b791fda605"
+          mkdir -p game/addons
+          cp -a "$RUNNER_TEMP/gut/addons/gut" game/addons/gut
+          test -f game/addons/gut/gut_cmdln.gd
+          echo "GUT v9.7.1 exact commit bootstrapped"
+
+      - name: Headless project import
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --editor --path game --import --quit 2>&1 | tee "$RUNNER_TEMP/godot-import.log"
+
+      - name: Headless project parse/load
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --editor --path game --quit 2>&1 | tee "$RUNNER_TEMP/godot-parse.log"
+
+      - name: Upload Godot CI diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-ci-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            ${{ runner.temp }}/godot-version.log
+            ${{ runner.temp }}/godot-import.log
+            ${{ runner.temp }}/godot-parse.log
+          if-no-files-found: warn
