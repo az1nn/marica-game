@@ -138,6 +138,39 @@ jobs:
           grep -Fq 'MARICA_G420_PET_ID_PARITY_PASS cases=5' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'parity=NOT_YET_PROVEN' "$RUNNER_TEMP/godot-g416-fixtures.log"
 
+      - name: G420 P0 mutation proof (GOOD > BAD > RESTORE)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp game/src/domain/pet_id.gd "$RUNNER_TEMP/g420-pet-id-good.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("game/src/domain/pet_id.gd")
+          original = path.read_text(encoding="utf-8")
+          target = "if text.strip_edges().is_empty():"
+          assert original.count(target) == 1, "PetId guard has drifted"
+          path.write_text(original.replace(target, 'if text == "":'), encoding="utf-8")
+          print("G420 bad mutant: whitespace-only IDs bypass guard")
+          PY
+          set +e
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/golden_fixture_runner.gd \
+            > "$RUNNER_TEMP/g420-mutant.log" 2>&1
+          mutant_exit="$?"
+          set -e
+          cp "$RUNNER_TEMP/g420-pet-id-good.gd" game/src/domain/pet_id.gd
+          if test "$mutant_exit" -eq 0; then
+            echo "G420 mutation proof failed: bad mutant unexpectedly passed"
+            exit 1
+          fi
+          grep -Fq 'PetId golden mismatch' "$RUNNER_TEMP/g420-mutant.log"
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/golden_fixture_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g420-restore.log"
+          grep -Fq 'MARICA_G420_PET_ID_PARITY_PASS cases=5' "$RUNNER_TEMP/g420-restore.log"
+          git diff --exit-code -- game/src/domain/pet_id.gd
+          echo "MARICA_G420_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
+
       - name: Upload Godot CI diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -151,4 +184,6 @@ jobs:
             ${{ runner.temp }}/godot-smoke.log
             ${{ runner.temp }}/godot-g416-fixtures.log
             ${{ runner.temp }}/godot-g420-pet.log
+            ${{ runner.temp }}/g420-mutant.log
+            ${{ runner.temp }}/g420-restore.log
           if-no-files-found: warn
