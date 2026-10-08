@@ -65,3 +65,23 @@ CI checks for the exact `MARICA_G414_SCENE_READY` and `MARICA_G414_SMOKE_PASS` m
 
 First-party GDScript conventions live in [docs/GDSCRIPT-CONVENTIONS.md](docs/GDSCRIPT-CONVENTIONS.md).
 The Godot CI exact-head job runs Python declaration guard tests, checks all `game/src` and `game/tests` scripts for explicit typing, and enforces pinned `gdtoolkit==4.5.0` `gdformat --check` plus `gdlint` before importing or executing Godot. Generated `addons` and `.godot` trees are excluded. The authoritative compiler/runtime gates remain the pinned Godot headless tests.
+
+## G416: deterministic golden-fixture harness (infrastructure only)
+
+`tests/fixtures/golden.json` is the versioned contract catalog. Every case carries an invariant name, deterministic input, expected result **or** expected error, and a source path from the legacy repository. A case is either:
+
+- `ACTIVE_SELFTEST`: validates the fixture transport/comparator, **not** animal behavior;
+- `PENDING_PORT`: documented legacy expectation that **must not** count toward parity until its SPEC-004 milestone ships a Godot domain adapter and real exact-head tests.
+
+`tools/godot/validate_golden_fixtures.py` rejects malformed and duplicate cases, missing provenance, ambiguous expected/error pairs and premature domain activation. `tests/golden_fixture_runner.gd` runs the G416 self-tests in headless Godot, prints explicit pending counters and fails on mismatches or unregistered active operations. It performs no network access.
+
+From repository root:
+
+```sh
+python3 -m unittest discover -s tools/godot -p 'test_*.py'
+python3 tools/godot/validate_golden_fixtures.py
+godot --headless --editor --path game --import --quit
+godot --headless --path game --script res://tests/golden_fixture_runner.gd
+```
+
+CI requires `MARICA_G416_CATALOG_VALID`, `MARICA_G416_HARNESS_PASS`, and `parity=NOT_YET_PROVEN` while adapters are not implemented. **A green G416 gate certifies harness readiness only.** G420 onwards must add actual Godot implementations and executable golden parity checks; G429/G430+ own domain/succession acceptance.
