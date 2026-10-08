@@ -2,6 +2,7 @@ extends SceneTree
 
 # G416: headless, offline fixture transport. Domain parity remains PENDING_PORT.
 const CATALOG_PATH: String = "res://tests/fixtures/golden.json"
+const PET_ID = preload("res://src/domain/pet_id.gd")
 
 
 func _initialize() -> void:
@@ -30,20 +31,25 @@ func _run_catalog() -> void:
     var contracts: Array = contracts_value
     var active_count: int = 0
     var pending_count: int = 0
+    var verified_count: int = 0
     for contract_value in contracts:
         var result: Dictionary = _check_contract(contract_value)
         if result.is_empty():
             return
         active_count += result["active"]
         pending_count += result["pending"]
+        verified_count += result["verified"]
 
-    if active_count == 0 or pending_count == 0:
+    if active_count == 0 or pending_count == 0 or verified_count == 0:
         _fail("both harness self-tests and deferred domain fixtures are required")
         return
 
+    print("MARICA_G420_PET_ID_PARITY_PASS cases=", verified_count)
     print(
         "MARICA_G416_HARNESS_PASS active=",
         active_count,
+        " verified=",
+        verified_count,
         " pending=",
         pending_count,
         " parity=NOT_YET_PROVEN"
@@ -65,15 +71,44 @@ func _check_contract(contract_value: Variant) -> Dictionary:
     var cases: Array = cases_value
     if status == "PENDING_PORT":
         print("MARICA_G416_PENDING_PORT ", identifier, " cases=", cases.size())
-        return {"active": 0, "pending": cases.size()}
-    if status != "ACTIVE_SELFTEST" or identifier != "harness.deep_equal":
-        _fail("unregistered ACTIVE contract: " + identifier)
-        return {}
-    for case_value in cases:
-        if not _check_selftest_case(case_value):
-            return {}
-    return {"active": cases.size(), "pending": 0}
+        return {"active": 0, "verified": 0, "pending": cases.size()}
+    if status == "ACTIVE_SELFTEST" and identifier == "harness.deep_equal":
+        for case_value in cases:
+            if not _check_selftest_case(case_value):
+                return {}
+        return {"active": cases.size(), "verified": 0, "pending": 0}
+    if status == "ACTIVE_PARITY" and identifier == "pet_id.from_string":
+        for case_value in cases:
+            if not _check_pet_id_case(case_value):
+                return {}
+        return {"active": 0, "verified": cases.size(), "pending": 0}
+    _fail("unregistered ACTIVE contract: " + identifier)
+    return {}
 
+
+func _check_pet_id_case(case_value: Variant) -> bool:
+    if typeof(case_value) != TYPE_DICTIONARY:
+        _fail("invalid PetId fixture")
+        return false
+    var fixture: Dictionary = case_value
+    var case_input: Dictionary = fixture.get("input", {})
+    var actual: Dictionary = PET_ID.from_string(case_input.get("value"))
+    var outcome: Dictionary = {}
+    if actual.get("ok", false):
+        outcome = {"id": actual.get("id")}
+    else:
+        outcome = {"error": actual.get("error", "")}
+    var expected: Dictionary = fixture.get("expected", {})
+    if fixture.has("expected_error"):
+        expected = {"error": fixture["expected_error"]}
+    if not _deep_equal(outcome, expected):
+        _fail("PetId golden mismatch: " + str(fixture.get("id", "unknown")))
+        return false
+    var repeat: Dictionary = PET_ID.from_string(case_input.get("value"))
+    if not _deep_equal(actual, repeat):
+        _fail("PetId golden nondeterminism")
+        return false
+    return true
 
 func _check_selftest_case(case_value: Variant) -> bool:
     if typeof(case_value) != TYPE_DICTIONARY:
