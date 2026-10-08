@@ -1,0 +1,2 @@
+# Align lint with the formatter; scope is game/src and game/tests (G415)
+max-line-length: 100
