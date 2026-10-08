@@ -1,2 +1,2 @@
 # Godot 4 GDScript formatter and linter; pin for reproducible CI.
-gdtoolkit==4.5.1
+gdtoolkit==4.5.0
