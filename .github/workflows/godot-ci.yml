@@ -127,6 +127,17 @@ jobs:
           grep -Fq 'MARICA_G416_HARNESS_PASS' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'parity=NOT_YET_PROVEN' "$RUNNER_TEMP/godot-g416-fixtures.log"
 
+      - name: G420 Pet identity and exact Luau PetId golden parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/pet_identity_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/godot-g420-pet.log"
+          grep -Fq 'MARICA_G420_PET_IDENTITY_PASS' "$RUNNER_TEMP/godot-g420-pet.log"
+          grep -Fq 'MARICA_G420_PET_ID_PARITY_PASS cases=5' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'parity=NOT_YET_PROVEN' "$RUNNER_TEMP/godot-g416-fixtures.log"
+
       - name: Upload Godot CI diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -139,4 +150,5 @@ jobs:
             ${{ runner.temp }}/godot-scene-boot.log
             ${{ runner.temp }}/godot-smoke.log
             ${{ runner.temp }}/godot-g416-fixtures.log
+            ${{ runner.temp }}/godot-g420-pet.log
           if-no-files-found: warn
