@@ -4,8 +4,10 @@ extends SceneTree
 const SMOKE_SCENE: String = "res://scenes/smoke.tscn"
 const READY_MARKER: StringName = &"marica_smoke_ready"
 
+
 func _initialize() -> void:
     call_deferred("_verify_smoke")
+
 
 func _verify_smoke() -> void:
     var packed: PackedScene = load(SMOKE_SCENE) as PackedScene
