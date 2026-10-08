@@ -55,6 +55,7 @@ jobs:
           "$RUNNER_TEMP/gdscript-style-venv/bin/pip" install --disable-pip-version-check -r game/requirements-gdscript.txt
           (
             cd game
+            "$RUNNER_TEMP/gdscript-style-venv/bin/gdformat" --diff src tests || true
             "$RUNNER_TEMP/gdscript-style-venv/bin/gdformat" --check src tests
             "$RUNNER_TEMP/gdscript-style-venv/bin/gdlint" src tests
           )
