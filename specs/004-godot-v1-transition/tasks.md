@@ -24,7 +24,7 @@
 - [x] **G413** Criar Godot CI com import/headless parse em SHA exato.
 - [x] **G414** Criar smoke scene mínima e execução headless reproduzível.
 - [x] **G415** Criar convenções GDScript tipado, lint/format quando aplicável.
-- [ ] **G416** Criar harness de golden fixtures para paridade Luau → Godot.
+- [x] **G416** Criar harness de golden fixtures para paridade Luau → Godot.
 
 **Gate B:** clone limpo consegue validar o projeto Godot sem Roblox Studio.
 
