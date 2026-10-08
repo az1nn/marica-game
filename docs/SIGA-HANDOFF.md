@@ -7,29 +7,29 @@ WORKSTREAM:
 SPEC-004 — Godot V1 Transition
 
 STATE:
-Phase B — Godot Foundation is active. G410, G411 and G412 are complete; engine and test runner are pinned reproducibly.
+Phase B — Godot Foundation. G410–G413 completed; next is G414. Offline-first Godot 4.7.2 is canonical.
 
 MODE:
 ADVANCE
 
 DELIVERED:
-- PR #39 merged G412;
-- canonical test runner is GUT v9.7.1;
-- `game/test-runner.lock.json` pins release + exact upstream commit;
-- `game/README.md` records the test-runner contract without changing Godot 4.7.2-stable;
-- G412 session claim closed.
+- PR #40 merged G413 to master@bdc6901d5cc888bcdcae890badd343c76e7b836b.
+- .github/workflows/godot-ci.yml introduced new production Godot CI.
+- Godot archive SHA-256 checked, GUT v9.7.1 exact commit checked.
+- Project headless import + editor parse/load run from the exact PR head.
+- G413 task checked and session claim closed in documentation closeout.
 
 QUALITY:
-- PR #39 exact-head `201207a`: Validate skills PASS; Roblox CI PASS;
-- Roblox Behavioral SKIPPED/non-required under ADR-0004;
-- merge guarded by expected head SHA;
-- implementation merged to master as `5e18228`.
+- PR #40 exact-head 84cf076e9047d0534f01896129219a6909985931: Godot CI PASS; Validate skills PASS; Roblox CI PASS.
+- Roblox Behavioral SKIPPED/non-required under ADR-0004.
+- PR merged with expected-head guard after no base drift / competing open PR.
+- Evidence for Godot bootstrap only; G414 runtime smoke scene remains pending.
 
 BLOCKER / WAIT:
-none.
+none for beginning G414.
 
 CONCURRENCY:
-No competing open PR or overlapping active claim was present at merge time.
+G413 was isolated in ci/g413-godot-headless-exact-sha; closure documented separately. No overlapping open PR at delivery.
 
 NEXT:
-G413 — create Godot CI with import/headless parse on exact SHA.
+G414 — minimal smoke scene and reproducible headless execution.
