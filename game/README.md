@@ -110,3 +110,16 @@ Construction returns explicit `{ok, pedigree|error}` results instead of relying 
 `tests/fixtures/golden.json` runs 6 `lineage_id.from_string` and 15 `pedigree.create` cases as `ACTIVE_PARITY`; PetId's 5 verified cases remain active. Simulation time and genetics remain `PENDING_PORT`. Python schema validation disallows unapproved migration contracts; the Godot runner checks deterministic repeatability, rejection cases, and structurally equivalent output.
 
 CI also runs `tests/lineage_pedigree_runner.gd`, which verifies injected lineage IDs and mutation-resistant detached snapshots, plus a GOOD→BAD→RESTORE mutation check against the forbidden founder-with-parent case. No lifecycle, genetics, succession, save, or playable farm behavior is certified by G421.
+
+## G422 — Pure lifecycle state machine (candidate)
+
+`src/domain/lifecycle.gd` ports the deterministic Luau `Lifecycle.luau` state machine (not the elapsed-time simulation, owned by G423). A new pet begins `juvenile/active`; legal stage advances are exactly `juvenile → adult → senior` without skips/reversals. The `health` end reason may terminate at any active stage; `natural` requires `senior`. Ended states are terminal. Transitions create replacement objects, not in-place mutations. `to_snapshot()` returns a fresh serializable dictionary, omitting `endReason` while active.
+
+The G416 catalog executes 19 `ACTIVE_PARITY` lifecycle scenarios from `src/shared/domain/Lifecycle.luau`, alongside previous G420/G421 parity; G423 time and G430 genetics remain `PENDING_PORT`. The headless `tests/lifecycle_runner.gd` verifies independent state snapshots and terminal behavior, while CI injects a broken natural-death guard and requires GOOD→BAD→RESTORE proof. The Godot domain returns `{ok,error|lifecycle}` instead of throwing Luau errors.
+
+```sh
+godot --headless --path game --script res://tests/golden_fixture_runner.gd
+godot --headless --path game --script res://tests/lifecycle_runner.gd
+```
+
+G422 parity does not imply full animal simulation, clock, composite Pet, save, succession or player-visible acceptance.
