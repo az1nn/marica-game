@@ -10,10 +10,14 @@ func _initialize() -> void:
 
 func _run_tests() -> void:
     if (
-        not _test_defaults_and_detachment()
-        or not _test_progression_and_critical_risk()
-        or not _test_recovery_and_treatment()
-        or not _test_input_validation()
+        not _test_defaults()
+        or not _test_detachment()
+        or not _test_early_progression()
+        or not _test_critical_progression()
+        or not _test_recovery()
+        or not _test_treatments()
+        or not _test_duration_inputs()
+        or not _test_action_inputs()
     ):
         quit(1)
         return
@@ -21,17 +25,26 @@ func _run_tests() -> void:
     quit(0)
 
 
-func _test_defaults_and_detachment() -> bool:
+func _test_defaults() -> bool:
     var created: Dictionary = HEALTH.create()
     if not created.get("ok", false):
         return _fail("healthy default rejected")
     var health: MaricaHealth = created["health"]
     if health.to_snapshot() != {"status": "healthy", "neglectHours": 0.0, "untreatedHours": 0.0}:
         return _fail("wrong health defaults")
+    var recovered: Dictionary = HEALTH.create({"neglectHours": 23.0, "untreatedHours": 99.0})
+    if not recovered.get("ok", false):
+        return _fail("valid persisted health rejected")
+    if recovered["health"].to_snapshot()["untreatedHours"] != 0.0:
+        return _fail("healthy status must normalize untreated duration")
+    return true
+
+
+func _test_detachment() -> bool:
     var source: Dictionary = {"neglectHours": 72.0, "untreatedHours": 12.0}
     var parsed: Dictionary = HEALTH.create(source)
     if not parsed.get("ok", false):
-        return _fail("valid state rejected")
+        return _fail("valid critical state rejected")
     var critical: MaricaHealth = parsed["health"]
     source["neglectHours"] = 0.0
     var exposed: Dictionary = critical.to_snapshot()
@@ -40,14 +53,11 @@ func _test_defaults_and_detachment() -> bool:
         return _fail("health retains a mutable state reference")
     if critical.to_snapshot()["neglectHours"] != 72.0:
         return _fail("health retains a mutable source reference")
-    var recovered: Dictionary = HEALTH.create({"neglectHours": 23.0, "untreatedHours": 99.0})
-    if recovered["health"].to_snapshot()["untreatedHours"] != 0.0:
-        return _fail("healthy status must normalize untreated duration")
     return true
 
 
-func _test_progression_and_critical_risk() -> bool:
-    var severe: Dictionary = {"hunger": 1.0, "hygiene": 0.0, "affection": 0.0, "energy": 0.0}
+func _test_early_progression() -> bool:
+    var severe: Dictionary = {"hunger": 1.0}
     var first: Dictionary = HEALTH.advance({}, severe, 12.0)
     if not first.get("ok", false):
         return _fail("short neglect refused")
@@ -62,6 +72,12 @@ func _test_progression_and_critical_risk() -> bool:
         != {"status": "sick", "neglectHours": 48.0, "untreatedHours": 0.0}
     ):
         return _fail("48h sick transition or untreated boundary drift")
+    return true
+
+
+func _test_critical_progression() -> bool:
+    var severe: Dictionary = {"hunger": 1.0}
+    var sick: Dictionary = HEALTH.advance({}, severe, 48.0)
     var critical: Dictionary = HEALTH.advance(sick["health"], severe, 24.0)
     if (
         critical["health"].to_snapshot()
@@ -84,7 +100,7 @@ func _test_progression_and_critical_risk() -> bool:
     return true
 
 
-func _test_recovery_and_treatment() -> bool:
+func _test_recovery() -> bool:
     var severe: Dictionary = {"hunger": 1.0}
     var neglected: Dictionary = HEALTH.advance({}, severe, 24.0)
     var recovered: Dictionary = HEALTH.advance(neglected["health"], {}, 24.0)
@@ -97,6 +113,11 @@ func _test_recovery_and_treatment() -> bool:
         != {"status": "sick", "neglectHours": 48.0, "untreatedHours": 12.0}
     ):
         return _fail("untreated sickness not retained under good care")
+    return true
+
+
+func _test_treatments() -> bool:
+    var sick: Dictionary = HEALTH.advance({}, {"hunger": 1.0}, 48.0)
     var basic: Dictionary = HEALTH.treat(sick["health"], "basic")
     var advanced: Dictionary = HEALTH.treat(sick["health"], "advanced")
     var emergency: Dictionary = HEALTH.treat(sick["health"], "emergency")
@@ -113,7 +134,7 @@ func _test_recovery_and_treatment() -> bool:
     return true
 
 
-func _test_input_validation() -> bool:
+func _test_duration_inputs() -> bool:
     if HEALTH.create({"neglectHours": -1}).get("ok", true):
         return _fail("negative neglect accepted")
     if HEALTH.create({"untreatedHours": INF}).get("ok", true):
@@ -124,6 +145,10 @@ func _test_input_validation() -> bool:
         return _fail("boolean duration accepted")
     if HEALTH.advance({}, {}, -1).get("ok", true):
         return _fail("negative elapsed accepted")
+    return true
+
+
+func _test_action_inputs() -> bool:
     if HEALTH.advance({}, {}, INF).get("ok", true):
         return _fail("nonfinite elapsed accepted")
     if HEALTH.advance({}, {"hunger": 2.0}, 10).get("ok", true):
