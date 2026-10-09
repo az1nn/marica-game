@@ -3,6 +3,8 @@ extends SceneTree
 # G416: headless, offline fixture transport. Domain parity remains PENDING_PORT.
 const CATALOG_PATH: String = "res://tests/fixtures/golden.json"
 const PET_ID = preload("res://src/domain/pet_id.gd")
+const LINEAGE_ID = preload("res://src/domain/lineage_id.gd")
+const PEDIGREE = preload("res://src/domain/pedigree.gd")
 
 
 func _initialize() -> void:
@@ -44,7 +46,6 @@ func _run_catalog() -> void:
         _fail("both harness self-tests and deferred domain fixtures are required")
         return
 
-    print("MARICA_G420_PET_ID_PARITY_PASS cases=", verified_count)
     print(
         "MARICA_G416_HARNESS_PASS active=",
         active_count,
@@ -73,48 +74,69 @@ func _check_contract(contract_value: Variant) -> Dictionary:
         print("MARICA_G416_PENDING_PORT ", identifier, " cases=", cases.size())
         return {"active": 0, "verified": 0, "pending": cases.size()}
     if status == "ACTIVE_SELFTEST" and identifier == "harness.deep_equal":
-        return _verify_cases(cases, false)
-    if status == "ACTIVE_PARITY" and identifier == "pet_id.from_string":
-        return _verify_cases(cases, true)
+        return _verify_selftests(cases)
+    if status == "ACTIVE_PARITY" and identifier in [
+        "pet_id.from_string", "lineage_id.from_string", "pedigree.create"
+    ]:
+        return _verify_domain_cases(identifier, cases)
     _fail("unregistered ACTIVE contract: " + identifier)
     return {}
 
 
-func _verify_cases(cases: Array, is_parity: bool) -> Dictionary:
+func _verify_selftests(cases: Array) -> Dictionary:
     for case_value in cases:
-        if is_parity and not _check_pet_id_case(case_value):
+        if not _check_selftest_case(case_value):
             return {}
-        if not is_parity and not _check_selftest_case(case_value):
-            return {}
-    if is_parity:
-        return {"active": 0, "verified": cases.size(), "pending": 0}
     return {"active": cases.size(), "verified": 0, "pending": 0}
 
 
-func _check_pet_id_case(case_value: Variant) -> bool:
+func _verify_domain_cases(identifier: String, cases: Array) -> Dictionary:
+    for case_value in cases:
+        if not _check_domain_case(identifier, case_value):
+            return {}
+    if identifier == "pet_id.from_string":
+        print("MARICA_G420_PET_ID_PARITY_PASS cases=", cases.size())
+    elif identifier == "lineage_id.from_string":
+        print("MARICA_G421_LINEAGE_ID_PARITY_PASS cases=", cases.size())
+    elif identifier == "pedigree.create":
+        print("MARICA_G421_PEDIGREE_PARITY_PASS cases=", cases.size())
+    return {"active": 0, "verified": cases.size(), "pending": 0}
+
+
+func _check_domain_case(identifier: String, case_value: Variant) -> bool:
     if typeof(case_value) != TYPE_DICTIONARY:
-        _fail("invalid PetId fixture")
+        _fail("invalid domain fixture: " + identifier)
         return false
     var fixture: Dictionary = case_value
     var case_input: Dictionary = fixture.get("input", {})
-    var actual: Dictionary = PET_ID.from_string(case_input.get("value"))
-    var outcome: Dictionary = {}
-    if actual.get("ok", false):
-        outcome = {"id": actual.get("id")}
-    else:
-        outcome = {"error": actual.get("error", "")}
+    var actual: Dictionary = _run_domain_operation(identifier, case_input)
     var expected: Dictionary = fixture.get("expected", {})
     if fixture.has("expected_error"):
         expected = {"error": fixture["expected_error"]}
-    if not _deep_equal(outcome, expected):
-        _fail("PetId golden mismatch: " + str(fixture.get("id", "unknown")))
+    if not _deep_equal(actual, expected):
+        _fail(identifier + " golden mismatch: " + str(fixture.get("id", "unknown")))
         return false
-    var repeat: Dictionary = PET_ID.from_string(case_input.get("value"))
+    var repeat: Dictionary = _run_domain_operation(identifier, case_input)
     if not _deep_equal(actual, repeat):
-        _fail("PetId golden nondeterminism")
+        _fail(identifier + " golden nondeterminism")
         return false
     return true
 
+
+func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictionary:
+    var result: Dictionary = {}
+    if identifier == "pet_id.from_string":
+        result = PET_ID.from_string(case_input.get("value"))
+    elif identifier == "lineage_id.from_string":
+        result = LINEAGE_ID.from_string(case_input.get("value"))
+    elif identifier == "pedigree.create":
+        result = PEDIGREE.create(case_input)
+    if not result.get("ok", false):
+        return {"error": result.get("error", "")}
+    if identifier == "pedigree.create":
+        var record: MaricaPedigree = result["pedigree"]
+        return record.to_snapshot()
+    return {"id": result.get("id")}
 
 func _check_selftest_case(case_value: Variant) -> bool:
     if typeof(case_value) != TYPE_DICTIONARY:
