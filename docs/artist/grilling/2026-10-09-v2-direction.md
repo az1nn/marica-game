@@ -257,6 +257,19 @@
 - C — Animação expressiva: movimento e efeitos pixel art evidenciam crescimento e colheita.
 - D — Híbrida funcional: silhuetas botânicas legíveis por estágio, com indicadores discretos somente quando relevantes ou ao selecionar.
 
+**Resposta humana:** C — Animação expressiva.
+
+**Decisão provisória:** comunicar crescimento e colheita por movimento, brilho e efeitos pixel art expressivos, preservando estágios botânicos reconhecíveis (G8 D). Aplicar animações em eventos relevantes sem converter o HUD minimalista (G12 A) em interface carregada. Não modificar duração, regras ou atributos do cultivo sem DESIGN.
+
+## G21 — Leitura visual da estrutura e expansão da fazenda
+
+**Pergunta:** Como comunicar limites de terrenos, áreas utilizáveis e futuras expansões sem poluir a estética cozy?
+
+- A — Delimitação orgânica: cercas, caminhos, vegetação e relevo comunicam os espaços sem grade visível.
+- B — Grade permanente: tiles e divisões sempre aparentes para facilitar posicionamento e planejamento.
+- C — Destaque de construção: mundo orgânico na exploração e grade/áreas válidas apenas ao construir ou reorganizar.
+- D — Híbrida contextual: limites orgânicos na exploração, overlays discretos para planejamento e feedback visual específico para expansão.
+
 **Resposta:** PENDENTE.
 
 ## Gates
