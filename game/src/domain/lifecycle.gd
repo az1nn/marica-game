@@ -39,7 +39,7 @@ static func end_life(current: MaricaLifecycle, reason: Variant) -> Dictionary:
         return {"ok": false, "error": "Lifecycle end reason is invalid"}
     if reason == "natural" and current._stage != "senior":
         return {"ok": false, "error": "Natural end of life requires senior stage"}
-    return {"ok": true, "lifecycle": MaricaLifecycle.new(current._stage, "ended", reason)}
+    return {"ok": true, "lifecycle": MaricaLifecycle.new(current._stage, "ended", str(reason))}
 
 
 static func _stage_index(value: Variant) -> int:
