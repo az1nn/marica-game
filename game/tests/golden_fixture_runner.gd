@@ -159,6 +159,12 @@ func _check_selftest_case(case_value: Variant) -> bool:
 
 
 func _deep_equal(left: Variant, right: Variant) -> bool:
+    # Luau and JSON use numeric scalars; GDScript distinguishes int and float.
+    # Permit exact numeric equality, never coercion of strings or booleans.
+    var left_number: bool = typeof(left) == TYPE_INT or typeof(left) == TYPE_FLOAT
+    var right_number: bool = typeof(right) == TYPE_INT or typeof(right) == TYPE_FLOAT
+    if left_number and right_number:
+        return left == right
     if typeof(left) != typeof(right):
         return false
     if typeof(left) == TYPE_DICTIONARY:
