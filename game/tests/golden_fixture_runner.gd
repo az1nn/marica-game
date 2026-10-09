@@ -9,6 +9,7 @@ const LIFECYCLE = preload("res://src/domain/lifecycle.gd")
 const SIMULATION_TIME = preload("res://src/domain/simulation_time.gd")
 const GENETICS = preload("res://src/domain/genetics.gd")
 const CARE = preload("res://src/domain/care.gd")
+const HEALTH = preload("res://src/domain/health.gd")
 var _fixture_clock_value: Variant = 0
 
 
@@ -94,7 +95,11 @@ func _check_contract(contract_value: Variant) -> Dictionary:
                 "genetics.express",
                 "care.create",
                 "care.quality",
-                "care.expression_factors"
+                "care.expression_factors",
+                "health.create",
+                "health.advance",
+                "health.treat",
+                "health.terminal_risk"
             ]
         )
     ):
@@ -134,6 +139,14 @@ func _verify_domain_cases(identifier: String, cases: Array) -> Dictionary:
         print("MARICA_G425_CARE_QUALITY_PARITY_PASS cases=", cases.size())
     elif identifier == "care.expression_factors":
         print("MARICA_G425_CARE_FACTORS_PARITY_PASS cases=", cases.size())
+    elif identifier == "health.create":
+        print("MARICA_G426_HEALTH_CREATE_PARITY_PASS cases=", cases.size())
+    elif identifier == "health.advance":
+        print("MARICA_G426_HEALTH_ADVANCE_PARITY_PASS cases=", cases.size())
+    elif identifier == "health.treat":
+        print("MARICA_G426_HEALTH_TREAT_PARITY_PASS cases=", cases.size())
+    elif identifier == "health.terminal_risk":
+        print("MARICA_G426_HEALTH_TERMINAL_PARITY_PASS cases=", cases.size())
     return {"active": 0, "verified": cases.size(), "pending": 0}
 
 
@@ -187,6 +200,18 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
         result = CARE.to_expression_factors(
             case_input.get("values", null), case_input.get("potential")
         )
+    elif identifier == "health.create":
+        result = HEALTH.create(case_input.get("values", null))
+    elif identifier == "health.advance":
+        result = HEALTH.advance(
+            case_input.get("state", null),
+            case_input.get("care", null),
+            case_input.get("elapsedHours")
+        )
+    elif identifier == "health.treat":
+        result = HEALTH.treat(case_input.get("state", null), case_input.get("treatment"))
+    elif identifier == "health.terminal_risk":
+        result = HEALTH.is_terminal_risk(case_input.get("state", null))
     if not result.get("ok", false):
         return {"error": result.get("error", "")}
     return _canonical_domain_result(identifier, result)
@@ -195,6 +220,8 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
 func _canonical_domain_result(identifier: String, result: Dictionary) -> Dictionary:
     if identifier.begins_with("care."):
         return _care_domain_result(identifier, result)
+    if identifier.begins_with("health."):
+        return _health_domain_result(identifier, result)
     if identifier in ["genetics.new_potential", "genetics.express"]:
         return result["traits"]
     if identifier == "simulation_time.observe":
@@ -214,6 +241,15 @@ func _care_domain_result(identifier: String, result: Dictionary) -> Dictionary:
     if identifier == "care.expression_factors":
         return result["factors"]
     return {"error": "Unknown care contract"}
+
+
+func _health_domain_result(identifier: String, result: Dictionary) -> Dictionary:
+    if identifier == "health.terminal_risk":
+        return {"terminal": result["terminal"]}
+    var state: MaricaHealth = result["health"]
+    if identifier == "health.treat":
+        return {"state": state.to_snapshot(), "cost": result["cost"]}
+    return state.to_snapshot()
 
 
 func _fixture_clock_now() -> Variant:
