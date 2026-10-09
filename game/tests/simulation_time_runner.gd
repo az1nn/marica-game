@@ -45,6 +45,10 @@ func _test_rollback() -> bool:
 
 
 func _test_validation() -> bool:
+    return _test_basic_validation() and _test_nonfinite_validation() and _test_clock_injection()
+
+
+func _test_basic_validation() -> bool:
     if _observe(-1, 0).get("error") != "Clock.now() must not be negative":
         return _fail("negative clock value accepted")
     if _observe(1, -1).get("error") != "lastObservedAt must not be negative":
@@ -53,16 +57,23 @@ func _test_validation() -> bool:
         return _fail("non-numeric clock accepted")
     if _observe(1, "invalid").get("error") != "lastObservedAt must be a finite number":
         return _fail("non-numeric previous observation accepted")
+    return true
+
+
+func _test_nonfinite_validation() -> bool:
     if _observe(NAN, 0).get("error") != "Clock.now() must be a finite number":
         return _fail("NaN clock accepted")
     if _observe(INF, 0).get("error") != "Clock.now() must be a finite number":
         return _fail("infinite clock accepted")
     if _observe(0, INF).get("error") != "lastObservedAt must be a finite number":
         return _fail("infinite previous observation accepted")
+    return true
+
+
+func _test_clock_injection() -> bool:
     if SIMULATION_TIME.observe(Callable(), 0).get("error") != "Clock must provide now()":
         return _fail("missing injected clock accepted")
     return true
-
 
 func _test_fractional() -> bool:
     if (
