@@ -101,6 +101,19 @@
 - C — Progressão visual rica: estágios de crescimento marcadamente distintos, com variação de folhagem, flores e frutos.
 - D — Híbrida: leitura botânica clara com fantasia cozy e evolução visual evidente, controlando densidade e custo de produção.
 
+**Resposta humana:** D — Híbrida.
+
+**Decisão provisória:** plantas mantêm leitura botânica identificável e estágios de crescimento visualmente distintos, com estilização fantasia cozy e detalhes mágicos discretos. A escala hierárquica, a grade de pixels e o custo de produção devem permanecer coerentes com G1–G7; não adicionar espécies, sistemas mágicos ou novos ciclos de cultivo sem decisão de DESIGN.
+
+## G9 — Composição e densidade da fazenda
+
+**Pergunta:** Como equilibrar densidade, caminhos e áreas interativas na composição pixel art 2.5D?
+
+- A — Compacta e organizada: canteiros regulares, corredores amplos e leitura funcional imediata.
+- B — Orgânica e acolhedora: caminhos sinuosos, vegetação espontânea e pequenos detalhes ambientais.
+- C — Densa e viva: muitos elementos, decoração e atividades visíveis, com risco maior de ruído visual.
+- D — Híbrida com hierarquia: núcleo funcional legível para animais e cultivos, bordas orgânicas e detalhes ambientais graduais.
+
 **Resposta:** PENDENTE.
 
 ## Gates
