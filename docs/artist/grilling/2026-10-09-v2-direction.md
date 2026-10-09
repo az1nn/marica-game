@@ -62,6 +62,19 @@
 - C — Pixel art refinada: pixels menores, texturas e animações mais detalhadas, maior custo de produção.
 - D — Escala hierárquica: personagens e interações em pixels maiores; cenário e fundos com detalhes mais finos, sob grade e escala coerentes.
 
+**Resposta humana:** D — Escala hierárquica.
+
+**Decisão provisória:** sprites dos animais, expressões e pontos de interação priorizam pixels maiores e leitura mobile; cenários e fundos podem usar detalhes mais finos sob grade, proporções e escala visual coerentes. Evitar mistura arbitrária de resoluções, filtros suavizados e inconsistência de pixel density. A resolução-base e o tamanho exato dos tiles permanecem indefinidos.
+
+## G6 — Enquadramento e câmera da fazenda
+
+**Pergunta:** Como o jogador deve enxergar e navegar pela fazenda em pixel art 2.5D?
+
+- A — Isométrica fixa: ângulo constante e deslocamento pela fazenda, composição rigorosa e previsível.
+- B — Isométrica com zoom: ângulo constante, zoom controlado e enquadramento adaptável para interações e mobile.
+- C — Top-down inclinado: leitura próxima ao alto, profundidade por camadas e foco em precisão de interação.
+- D — Câmera contextual: enquadramento geral isométrico, transições de câmera específicas para cuidados e eventos, mantendo legibilidade.
+
 **Resposta:** PENDENTE.
 
 ## Gates
