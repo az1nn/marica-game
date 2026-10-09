@@ -1,10 +1,10 @@
-# ARTIST Grilling — Maricá Game — proposta V2 (em coleta)
+# ARTIST Grilling — Maricá Game — direção V2 aprovada (G1–G25)
 
 - Data de abertura: 2026-10-09
 - Repositório: az1nn/marica-game
 - Origem: decisão humana explícita na sessão ARTIST Grilling
-- Estado: DRAFT / PROVISIONAL / NÃO IMPLEMENTAR
-- Autoridade: direção visual proposta; não substitui `docs/VISUAL-DIRECTION.md` até aprovação final e reconciliação por ARTIST + SIGA
+- Estado: DIREÇÃO ARTÍSTICA APROVADA / IMPLEMENTAÇÃO AINDA NÃO AUTORIZADA SEM GATES
+- Autoridade: direção ARTIST V2 aprovada explicitamente pelo usuário em 2026-10-09; a substituição do baseline operacional em `docs/VISUAL-DIRECTION.md` requer reconciliação SIGA com a master atual e validação dos gates.
 
 ## G1 — Identidade artística principal
 
@@ -341,13 +341,13 @@
 
 ## Gate de aprovação final
 
-**Estado:** PROPOSTA CONSOLIDADA / AGUARDA APROVAÇÃO HUMANA EXPLÍCITA.
+**Estado:** DIREÇÃO V2 APROVADA PELO USUÁRIO / IMPLEMENTAÇÃO E BASELINE OPERACIONAL PENDENTES DE RECONCILIAÇÃO SIGA.
 
-A mudança de baseline low-poly para full pixel art 2.5D é material e deve ser validada pelo usuário antes de substituir `docs/VISUAL-DIRECTION.md` ou abrir implementação visual. Não alterar código, cenas, assets ou runtime enquanto este gate estiver aberto.
+A mudança de baseline low-poly para full pixel art 2.5D foi aprovada explicitamente pelo usuário. Antes de substituir `docs/VISUAL-DIRECTION.md` ou executar cenas/assets, reconciliar a master atual, specs, tarefas e ownership, e preparar plano com gates de ARTIST, ARCH, LENTE e SIGA. Não alterar código, cenas, assets ou runtime enquanto este gate estiver aberto.
 
 ## Gates
 
 1. Não alterar estilo V1 ativo nem código/cenas/assets neste estágio.
-2. Proposta ARTIST V2 consolidada com G1–G21 humanas e G22–G25 técnicas delegadas; aguarda aprovação humana explícita.
+2. Direção ARTIST V2 G1–G25 aprovada explicitamente em 2026-10-09; G22–G25 permanecem identificadas como escolhas técnicas delegadas.
 3. Após aprovação, reconciliar direção visual, specs, pipeline de CENA e evidência LENTE sob SIGA.
 4. Respeitar ordem de produto Animals → Plants → Farm Structure.
