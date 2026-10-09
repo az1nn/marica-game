@@ -36,11 +36,9 @@ static func create(values: Variant = null) -> Dictionary:
         validated[field] = result["value"]
     return {
         "ok": true,
-        "care": MaricaCare.new(
-            validated["hunger"],
-            validated["hygiene"],
-            validated["affection"],
-            validated["energy"]
+        "care":
+        MaricaCare.new(
+            validated["hunger"], validated["hygiene"], validated["affection"], validated["energy"]
         ),
     }
 
