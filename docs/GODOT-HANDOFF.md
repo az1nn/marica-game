@@ -1,26 +1,26 @@
 # GODOT HANDOFF
 
-Status: G421 candidate / VERIFY exact-head
+Status: PRODUCTION / ADVANCE
 
 Authority: Constitution v2.0.0 · SPEC-004 · ADR-0004
-Runtime: Godot 4.7.2-stable, typed GDScript, offline-first; pinned GUT v9.7.1.
+Runtime: Godot 4.7.2-stable, typed GDScript, single-player/offline-first; GUT v9.7.1 pinned.
 
-Delivered foundation: G410–G416.
-Previously merged G420: pure PetId + identity-only Pet, five real golden fixtures and whitespace mutant proof.
-G421 candidate PR #50:
-- Pure lineage_id.gd validation + injected generator preserving LineageId.luau contract.
-- Pure pedigree.gd with nonnegative integer generation, founder no-parent invariant, 1–2 distinct direct parents for descendants, preserved source order, detached/copy-safe parent arrays and snapshots.
-- Golden catalog: 4 harness selftests; 5 PetId + 6 LineageId + 15 pedigree real domain cases ACTIVE_PARITY (26 total); 6 future time/genetics cases PENDING_PORT.
-- G421 headless runner verifies founder/descendant records, generator injection and mutation isolation.
-- GOOD > BAD > RESTORE pedigree mutant verified (founder mistakenly allowed a parent, golden gate rejected it).
+Delivered:
+- G410–G416: foundational engine, exact-head CI, deterministic headless runtime smoke and golden fixture harness.
+- G420: pure PetId, identity-only Pet, five verified golden fixtures and whitespace-ID mutation proof.
+- G421: pure LineageId validation and generator, pure Pedigree with founder/descendant generation and parent cardinality/uniqueness rules; detached snapshots prevent caller-side alias mutation.
+- 4 harness selftests, 26 ACTIVE_PARITY domain fixtures (5 PetId, 6 LineageId, 15 Pedigree); six future simulation time/genetics cases remain PENDING_PORT.
+- G421 mutation proof rejects an illegal founder with a direct parent; CI restores exact source and reruns fixtures.
 
-Verification evidence:
-- PR #50 intermediate head f71affe3a482e0ac40c8d428f356bac682cf62c4: Godot CI PASS (18 Python unit tests, formatting, lint, headless import/parse/smoke, G420 and G421 parity, both P0 mutation checks), Validate skills PASS, Roblox CI PASS, Roblox Behavioral SKIPPED/non-required.
-- Since task and handoff updates follow this SHA, check **the final PR head** again before merge. No green is automatically transferable to later commits.
-- No merge or post-merge state asserted here yet.
+Verification:
+- PR #50 final head 358cf82ba2bba9a12f77607fbfea76feba4092aa: Godot CI PASS, Validate skills PASS, Roblox CI PASS, Roblox Behavioral SKIPPED/non-required.
+- Guarded merge to master@664f6e5d9126af81505d59760b412209ae9e4fdb.
+- Post-merge master@664f6e5d9126af81505d59760b412209ae9e4fdb: Godot CI PASS, Validate skills PASS, Roblox CI PASS.
+- No full animal domain parity, lifecycle, health, care, genetics, succession, save, farm playability or visuals asserted.
 
-Limits:
-- G421 establishes ID, lineage and pedigree structural parity only, not lifecycle, health, care, genetics, time, succession, persistence, scene usability or visual/art acceptance.
-- No Roblox/online dependency in Godot domain. Legacy retained as migration source.
+Boundaries:
+- Pure Godot domain remains independent from Roblox, UI, SceneTree and online providers.
+- Pedigree structural parity precedes lifecycle; semantic authority remains with the approved Luau contracts and SPEC-004 migration map.
+- G429 eventually proves aggregate Animal Core parity, and G430+ own succession.
 
-Next after G421 merge: G422 — port lifecycle state machine with actual golden proof.
+Next: **G422 — port lifecycle state machine, with executable golden fixtures.**
