@@ -11,7 +11,7 @@ G420–G426 verified in their PR exact-head gates and merged into master@3aa715d
 Runtime: Godot 4.7.2-stable, offline-first single-player. G427 next.
 
 MODE:
-ADVANCE (post-merge master CI verification remains independent of PR verification)
+ADVANCE
 
 DELIVERED:
 - G426 PR #63 — pure typed GDScript MaricaHealth port of Luau Health.new/advance/treat/isTerminalRisk; neglected 24h, sick 48h, critical 72h, critical untreated terminal risk 48h.
@@ -20,7 +20,7 @@ DELIVERED:
 
 QUALITY:
 - PR #63 exact head 1781b79b4825a1acbcf9c2e89780e27bd1525e64 Godot CI PASS, Validate Skills PASS, Roblox CI PASS; Roblox Behavioral SKIPPED nonrequired.
-- Guarded squash merge master@3aa715d70643901cc68be984a4ae2141d578efe5. At this closeout draft's opening snapshot, master post-merge Godot CI was IN_PROGRESS; must re-check before claiming master PASS.
+- Guarded squash merge master@3aa715d70643901cc68be984a4ae2141d578efe5. Master post-merge Godot CI PASS, Validate Skills PASS, Roblox CI PASS at exact merge commit SHA.
 - Full Pet aggregate/end-of-life integration, G427–G429 parity, succession, save, Godot web export, ARTIST V2 visuals NOT PROVEN.
 
 BLOCKER / WAIT:
