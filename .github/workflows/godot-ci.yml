@@ -117,6 +117,14 @@ jobs:
             --headless --path game --script res://tests/smoke_runner.gd 2>&1 | tee "$RUNNER_TEMP/godot-smoke.log"
           grep -Fq 'MARICA_G414_SMOKE_PASS' "$RUNNER_TEMP/godot-smoke.log"
 
+      - name: G424 direct genetics script compile diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --check-only --script res://src/domain/genetics.gd \
+            2>&1 | tee "$RUNNER_TEMP/g424-parse.log"
+
       - name: G416 deterministic golden fixture harness
         shell: bash
         run: |
@@ -377,6 +385,7 @@ jobs:
             ${{ runner.temp }}/g423-time.log
             ${{ runner.temp }}/g423-mutant.log
             ${{ runner.temp }}/g423-restore.log
+            ${{ runner.temp }}/g424-parse.log
             ${{ runner.temp }}/g424-genetics.log
             ${{ runner.temp }}/g424-mutant.log
             ${{ runner.temp }}/g424-restore.log
