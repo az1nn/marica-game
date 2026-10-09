@@ -231,6 +231,32 @@
 - C — Atmosfera cinematográfica: transições marcantes, brilhos, sombras profundas e efeitos ambientais expressivos.
 - D — Híbrida legível: paletas e luzes pixel art por período, com limites de contraste e prioridade para leitura de animais e interações.
 
+**Resposta humana:** C — Atmosfera cinematográfica.
+
+**Decisão provisória:** ciclo de dia/noite com transições cromáticas marcantes, brilhos, sombras profundas e efeitos ambientais expressivos em full pixel art 2.5D. Validar contraste, leitura dos animais/interações e desempenho mobile antes de implementar. Não criar mecânicas novas.
+
+## G19 — Representação visual do clima e das estações
+
+**Pergunta:** Como chuva, vento, neblina e mudanças sazonais devem afetar a aparência da fazenda?
+
+- A — Paletas e tiles sazonais: variações de cor e vegetação, com poucos efeitos animados.
+- B — Partículas pixel art: chuva, folhas e vento animados, mantendo cenários essencialmente estáveis.
+- C — Transformação ambiental: mudanças visíveis em vegetação, solo, céu e iluminação, com efeitos atmosféricos ricos.
+- D — Híbrida escalonável: base de paletas e tiles por clima/estação, efeitos atmosféricos opcionais conforme desempenho e legibilidade.
+
+**Resposta humana:** A — Paletas e tiles sazonais.
+
+**Decisão provisória:** clima e estações alteram sobretudo paletas, tiles e vegetação, com animação ambiental limitada. Diferenciar esta escolha de G18 C: cinematografia se aplica ao ciclo dia/noite; clima e estações permanecem visualmente econômicos. Sem mecânicas climáticas adicionais.
+
+## G20 — Clareza visual do cultivo e da colheita
+
+**Pergunta:** Como distinguir visualmente os estágios das plantas e indicar o momento de colheita?
+
+- A — Silhuetas por estágio: sprites distintos de semente, broto, crescimento e maturidade, sem indicadores adicionais.
+- B — Marcadores discretos: ícones ou pequenos destaques mostram plantas prontas e que exigem cuidado.
+- C — Animação expressiva: movimento e efeitos pixel art evidenciam crescimento e colheita.
+- D — Híbrida funcional: silhuetas botânicas legíveis por estágio, com indicadores discretos somente quando relevantes ou ao selecionar.
+
 **Resposta:** PENDENTE.
 
 ## Gates
