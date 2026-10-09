@@ -189,13 +189,12 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
         )
     if not result.get("ok", false):
         return {"error": result.get("error", "")}
-    if identifier == "care.create":
-        var care: MaricaCare = result["care"]
-        return care.to_snapshot()
-    if identifier == "care.quality":
-        return {"quality": result["quality"]}
-    if identifier == "care.expression_factors":
-        return result["factors"]
+    return _canonical_domain_result(identifier, result)
+
+
+func _canonical_domain_result(identifier: String, result: Dictionary) -> Dictionary:
+    if identifier.begins_with("care."):
+        return _care_domain_result(identifier, result)
     if identifier in ["genetics.new_potential", "genetics.express"]:
         return result["traits"]
     if identifier == "simulation_time.observe":
@@ -204,6 +203,18 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
         var record: MaricaPedigree = result["pedigree"]
         return record.to_snapshot()
     return {"id": result.get("id")}
+
+
+func _care_domain_result(identifier: String, result: Dictionary) -> Dictionary:
+    if identifier == "care.create":
+        var care: MaricaCare = result["care"]
+        return care.to_snapshot()
+    if identifier == "care.quality":
+        return {"quality": result["quality"]}
+    if identifier == "care.expression_factors":
+        return result["factors"]
+    return {"error": "Unknown care contract"}
+
 
 
 func _fixture_clock_now() -> Variant:

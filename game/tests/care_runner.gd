@@ -69,6 +69,10 @@ func _test_factors() -> bool:
     var factors: Dictionary = result["factors"]
     if factors != {"size": 0.5, "resilience": 0.5}:
         return _fail("care factors must cover each genetic trait")
+    return _test_genetic_compatibility(genes, factors)
+
+
+func _test_genetic_compatibility(genes: Dictionary, factors: Dictionary) -> bool:
     var expression: Dictionary = GENETICS.express(genes, factors)
     if not expression.get("ok", false):
         return _fail("factors incompatible with G424 genetics")
