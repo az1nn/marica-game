@@ -26,9 +26,7 @@ func _test_defaults_and_detachment() -> bool:
     if not created.get("ok", false):
         return _fail("healthy default rejected")
     var health: MaricaHealth = created["health"]
-    if health.to_snapshot() != {
-        "status": "healthy", "neglectHours": 0.0, "untreatedHours": 0.0
-    }:
+    if health.to_snapshot() != {"status": "healthy", "neglectHours": 0.0, "untreatedHours": 0.0}:
         return _fail("wrong health defaults")
     var source: Dictionary = {"neglectHours": 72.0, "untreatedHours": 12.0}
     var parsed: Dictionary = HEALTH.create(source)
@@ -42,18 +40,14 @@ func _test_defaults_and_detachment() -> bool:
         return _fail("health retains a mutable state reference")
     if critical.to_snapshot()["neglectHours"] != 72.0:
         return _fail("health retains a mutable source reference")
-    var recovered: Dictionary = HEALTH.create(
-        {"neglectHours": 23.0, "untreatedHours": 99.0}
-    )
+    var recovered: Dictionary = HEALTH.create({"neglectHours": 23.0, "untreatedHours": 99.0})
     if recovered["health"].to_snapshot()["untreatedHours"] != 0.0:
         return _fail("healthy status must normalize untreated duration")
     return true
 
 
 func _test_progression_and_critical_risk() -> bool:
-    var severe: Dictionary = {
-        "hunger": 1.0, "hygiene": 0.0, "affection": 0.0, "energy": 0.0
-    }
+    var severe: Dictionary = {"hunger": 1.0, "hygiene": 0.0, "affection": 0.0, "energy": 0.0}
     var first: Dictionary = HEALTH.advance({}, severe, 12.0)
     if not first.get("ok", false):
         return _fail("short neglect refused")
@@ -63,14 +57,16 @@ func _test_progression_and_critical_risk() -> bool:
     if neglected["health"].to_snapshot()["status"] != "neglected":
         return _fail("24h must cause neglect")
     var sick: Dictionary = HEALTH.advance(neglected["health"], severe, 24.0)
-    if sick["health"].to_snapshot() != {
-        "status": "sick", "neglectHours": 48.0, "untreatedHours": 0.0
-    }:
+    if (
+        sick["health"].to_snapshot()
+        != {"status": "sick", "neglectHours": 48.0, "untreatedHours": 0.0}
+    ):
         return _fail("48h sick transition or untreated boundary drift")
     var critical: Dictionary = HEALTH.advance(sick["health"], severe, 24.0)
-    if critical["health"].to_snapshot() != {
-        "status": "critical", "neglectHours": 72.0, "untreatedHours": 24.0
-    }:
+    if (
+        critical["health"].to_snapshot()
+        != {"status": "critical", "neglectHours": 72.0, "untreatedHours": 24.0}
+    ):
         return _fail("72h must become critical with 24h untreated")
     if HEALTH.is_terminal_risk(critical["health"])["terminal"]:
         return _fail("terminal risk triggered too early")
@@ -80,9 +76,10 @@ func _test_progression_and_critical_risk() -> bool:
     if not HEALTH.is_terminal_risk(longer["health"])["terminal"]:
         return _fail("48h critical untreated must trigger terminal risk")
     var direct: Dictionary = HEALTH.advance({}, severe, 96.0)
-    if direct["health"].to_snapshot() != {
-        "status": "critical", "neglectHours": 96.0, "untreatedHours": 48.0
-    }:
+    if (
+        direct["health"].to_snapshot()
+        != {"status": "critical", "neglectHours": 96.0, "untreatedHours": 48.0}
+    ):
         return _fail("long severe neglect must reach untreated terminal threshold")
     return true
 
@@ -95,9 +92,10 @@ func _test_recovery_and_treatment() -> bool:
         return _fail("good care must recover neglected without disease")
     var sick: Dictionary = HEALTH.advance({}, severe, 48.0)
     var still_sick: Dictionary = HEALTH.advance(sick["health"], {}, 12.0)
-    if still_sick["health"].to_snapshot() != {
-        "status": "sick", "neglectHours": 48.0, "untreatedHours": 12.0
-    }:
+    if (
+        still_sick["health"].to_snapshot()
+        != {"status": "sick", "neglectHours": 48.0, "untreatedHours": 12.0}
+    ):
         return _fail("untreated sickness not retained under good care")
     var basic: Dictionary = HEALTH.treat(sick["health"], "basic")
     var advanced: Dictionary = HEALTH.treat(sick["health"], "advanced")
