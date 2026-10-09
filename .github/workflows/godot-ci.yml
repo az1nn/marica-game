@@ -117,6 +117,14 @@ jobs:
             --headless --path game --script res://tests/smoke_runner.gd 2>&1 | tee "$RUNNER_TEMP/godot-smoke.log"
           grep -Fq 'MARICA_G414_SMOKE_PASS' "$RUNNER_TEMP/godot-smoke.log"
 
+      - name: G424 direct genetics script compile diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --check-only --script res://src/domain/genetics.gd \
+            2>&1 | tee "$RUNNER_TEMP/g424-parse.log"
+
       - name: G416 deterministic golden fixture harness
         shell: bash
         run: |
@@ -307,6 +315,52 @@ jobs:
           git diff --exit-code -- game/src/domain/simulation_time.gd
           echo "MARICA_G423_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
 
+      - name: G424 pure genetics and Luau golden parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/genetics_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g424-genetics.log"
+          grep -Fq 'MARICA_G424_GENETICS_PASS' "$RUNNER_TEMP/g424-genetics.log"
+          grep -Fq 'MARICA_G424_POTENTIAL_PARITY_PASS cases=11' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'MARICA_G424_EXPRESSION_PARITY_PASS cases=12' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'MARICA_G416_PENDING_PORT genetics.advance_potential cases=3' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'parity=NOT_YET_PROVEN' "$RUNNER_TEMP/godot-g416-fixtures.log"
+
+      - name: G424 default expression-factor mutation proof (GOOD > BAD > RESTORE)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp game/src/domain/genetics.gd "$RUNNER_TEMP/g424-genetics-good.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("game/src/domain/genetics.gd")
+          source = path.read_text(encoding="utf-8")
+          target = "factor_map.get(raw_name, 1.0)"
+          assert source.count(target) == 1, "G424 default-factor invariant drifted"
+          path.write_text(source.replace(target, "factor_map.get(raw_name, 0.0)"), encoding="utf-8")
+          print("G424 bad mutant: omitted factor incorrectly suppresses inherited potential")
+          PY
+          set +e
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/golden_fixture_runner.gd \
+            > "$RUNNER_TEMP/g424-mutant.log" 2>&1
+          mutant_exit="$?"
+          set -e
+          cp "$RUNNER_TEMP/g424-genetics-good.gd" game/src/domain/genetics.gd
+          if test "$mutant_exit" -eq 0; then
+            echo "G424 mutant unexpectedly passed"
+            exit 1
+          fi
+          grep -Fq 'genetics.express golden mismatch' "$RUNNER_TEMP/g424-mutant.log"
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/golden_fixture_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g424-restore.log"
+          grep -Fq 'MARICA_G424_EXPRESSION_PARITY_PASS cases=12' "$RUNNER_TEMP/g424-restore.log"
+          git diff --exit-code -- game/src/domain/genetics.gd
+          echo "MARICA_G424_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
+
       - name: Upload Godot CI diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -331,4 +385,8 @@ jobs:
             ${{ runner.temp }}/g423-time.log
             ${{ runner.temp }}/g423-mutant.log
             ${{ runner.temp }}/g423-restore.log
+            ${{ runner.temp }}/g424-parse.log
+            ${{ runner.temp }}/g424-genetics.log
+            ${{ runner.temp }}/g424-mutant.log
+            ${{ runner.temp }}/g424-restore.log
           if-no-files-found: warn

@@ -7,6 +7,7 @@ const LINEAGE_ID = preload("res://src/domain/lineage_id.gd")
 const PEDIGREE = preload("res://src/domain/pedigree.gd")
 const LIFECYCLE = preload("res://src/domain/lifecycle.gd")
 const SIMULATION_TIME = preload("res://src/domain/simulation_time.gd")
+const GENETICS = preload("res://src/domain/genetics.gd")
 var _fixture_clock_value: Variant = 0
 
 
@@ -87,7 +88,9 @@ func _check_contract(contract_value: Variant) -> Dictionary:
                 "lineage_id.from_string",
                 "pedigree.create",
                 "lifecycle.transitions",
-                "simulation_time.observe"
+                "simulation_time.observe",
+                "genetics.new_potential",
+                "genetics.express"
             ]
         )
     ):
@@ -117,6 +120,10 @@ func _verify_domain_cases(identifier: String, cases: Array) -> Dictionary:
         print("MARICA_G422_LIFECYCLE_PARITY_PASS cases=", cases.size())
     elif identifier == "simulation_time.observe":
         print("MARICA_G423_SIMULATION_TIME_PARITY_PASS cases=", cases.size())
+    elif identifier == "genetics.new_potential":
+        print("MARICA_G424_POTENTIAL_PARITY_PASS cases=", cases.size())
+    elif identifier == "genetics.express":
+        print("MARICA_G424_EXPRESSION_PARITY_PASS cases=", cases.size())
     return {"active": 0, "verified": cases.size(), "pending": 0}
 
 
@@ -158,8 +165,14 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
         result = SIMULATION_TIME.observe(
             Callable(self, "_fixture_clock_now"), case_input.get("lastObservedAt")
         )
+    elif identifier == "genetics.new_potential":
+        result = GENETICS.new_potential(case_input.get("values"))
+    elif identifier == "genetics.express":
+        result = GENETICS.express(case_input.get("potential"), case_input.get("factors", null))
     if not result.get("ok", false):
         return {"error": result.get("error", "")}
+    if identifier in ["genetics.new_potential", "genetics.express"]:
+        return result["traits"]
     if identifier == "simulation_time.observe":
         return result["observation"]
     if identifier == "pedigree.create":
