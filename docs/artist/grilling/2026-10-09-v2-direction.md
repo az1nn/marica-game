@@ -75,6 +75,19 @@
 - C — Top-down inclinado: leitura próxima ao alto, profundidade por camadas e foco em precisão de interação.
 - D — Câmera contextual: enquadramento geral isométrico, transições de câmera específicas para cuidados e eventos, mantendo legibilidade.
 
+**Resposta humana:** D — Câmera contextual.
+
+**Decisão provisória:** a navegação geral mantém composição isométrica pixel art 2.5D; cuidados com animais e eventos podem receber enquadramentos contextuais para expressividade e legibilidade, sem implicar câmera 3D, zoom obrigatório ou implementação imediata. Transições devem respeitar grade visual, orientação espacial e acessibilidade mobile.
+
+## G7 — Animação e expressividade dos animais
+
+**Pergunta:** Qual linguagem de movimento deve orientar os animais da V2?
+
+- A — Minimalista: poucos frames e poses-chave, priorizando produção rápida e leitura.
+- B — Clássica frame a frame: ciclos pixel art fluidos e consistentes, com custo moderado.
+- C — Expressiva e reativa: animações de idle, humor, cuidado e interação com exagero cartoon controlado.
+- D — Híbrida por importância: animações simples para rotina e ciclos expressivos para vínculos, eventos e momentos especiais.
+
 **Resposta:** PENDENTE.
 
 ## Gates
