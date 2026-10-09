@@ -70,6 +70,8 @@
 
 ## Phase F — Playable Animal Slice
 
+**Visual companion:** SPEC-005 ARTIST V2 full pixel art 2.5D approved on 2026-10-09. Its visual tasks V201–V211 are a gated accompaniment to G450–G458; they do **not** mark these existing tasks complete or preempt G425–G449.
+
 - [ ] **G450** Criar fazenda compacta base.
 - [ ] **G451** Implementar câmera isométrica/elevada com zoom.
 - [ ] **G452** Integrar pet fundador ao runtime Godot.
