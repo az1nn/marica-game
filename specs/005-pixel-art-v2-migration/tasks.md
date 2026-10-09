@@ -8,7 +8,7 @@
 
 - [x] **V200** Human-approved V2 visual direction G1–G25 captured with provenance.
 - [x] **V200a** Spec/plan/tasks added; approved target visually distinguished from running V1 in `docs/VISUAL-DIRECTION.md`.
-- [ ] **V200b** PR #58 reconciled/merged on newest master and exact-head applicable CI gates green. Update only on verified merge.
+- [x] **V200b** PR #58 reconciled and squash-merged into `master@8ac31108dde8e24fa319b7f51dbbf58c1d0c492c` after exact-head Godot CI, Validate skills and Roblox CI PASS (Roblox Behavioral SKIPPED).
 
 ## R1 — Technical contract (ARCH + ART)
 

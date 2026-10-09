@@ -1,7 +1,7 @@
 # SIGA — ARTIST V2 / reconciliação e plano de transição
 
 **Data:** 2026-10-09  
-**Estado:** APPROVED DIRECTION / SPEC-KIT RECONCILED / IMPLEMENTATION NOT STARTED  
+**Estado:** APPROVED DIRECTION / SPEC-KIT MERGED (PR #58) / IMPLEMENTATION NOT STARTED  
 **Origem:** `docs/artist/grilling/2026-10-09-v2-direction.md` (G1–G25; aprovação humana explícita)  
 **Autoridade:** ORCHESTRATOR/SIGA coordena; ART aprova resultado visual; ARCH integridade técnica; SCENE implementa cenas sob contrato; INSPECTOR/LENTE verifica evidências; REPORTER encerra handoff.
 
@@ -63,8 +63,8 @@
 ## HANDOFF
 
 - **Decisão ARTIST V2:** APPROVED.
-- **Reconciliação documental com master e Spec Kit:** R0 DOCUMENTED / commit integrado contra master de referência; confirmar HEAD e checks no PR.
+- **Reconciliação documental com master e Spec Kit:** R0 PASS — PR #58 merged into `master@8ac31108dde8e24fa319b7f51dbbf58c1d0c492c` with exact-head Godot CI, Validate skills and Roblox CI success.
 - **Implementação de cenas/assets:** NOT STARTED.
 - **Gates visuais e técnicos:** NOT RUN.
-- **Próximo passo executável:** checar CI exact-head e merge protegido PR #58; depois SPEC-005 V201 prova renderização, sem antecipar as prioridades de domínio da SPEC-004.
+- **Próximo passo executável:** SPEC-004 G425 remains highest-priority animal domain task. SPEC-005 V201 pixel-art technical prototype is parallel-safe only under own claim and ARCH/ART approval; Vercel + Cloudflare dual-provider validation is a separate follow-up with shared immutable export SHA.
 - **Human gate:** apenas para conflitos materiais, escolhas artísticas ainda não decididas ou rejeição visual após evidência; não solicitar repetição da aprovação G1–G25.
