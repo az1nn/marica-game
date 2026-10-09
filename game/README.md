@@ -148,7 +148,7 @@ G423 merged via PR #54 at `master@da9f4c8919fc`. The exact PR head and post-merg
 master both passed required CI. The broader Animal Core parity remains unproven;
 G424 genetic potential/expressed traits is next.
 
-## G424 — genetic potential and expressed traits (candidate)
+## G424 — genetic potential and expressed traits (verified)
 
 `game/src/domain/genetics.gd` ports `Genetics.newPotential` and
 `Genetics.express` from the existing legacy Luau source, without importing
@@ -170,6 +170,7 @@ godot --headless --path game --script res://tests/genetics_runner.gd
 godot --headless --path game --script res://tests/golden_fixture_runner.gd
 ```
 
-Task status remains pending until exact-head and post-merge CI pass. This is
-not proof of a full Pet entity, care-driven trait expression, succession, save,
-or a playable animal lifecycle.
+G424 merged via PR #56 on master@6ecc44e6830c after exact-PR-head and
+post-merge Godot CI, Validate Skills and Roblox CI PASS. The G424 domain
+contract is verified; Pet/care composition and full Animal Core parity are
+still NOT_YET_PROVEN. G425 care state is next.

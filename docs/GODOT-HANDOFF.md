@@ -2,19 +2,19 @@
 
 Status: PRODUCTION / ADVANCE
 
-Authority: Constitution v2.0.0 · SPEC-004 · ADR-0004
+Authority: Constitution v2.0.0 · SPEC-004 · ADR-0004.
 Runtime: Godot 4.7.2-stable, typed GDScript, single-player/offline-first; GUT v9.7.1 pinned.
 
 Delivered:
-- G410–G416 foundation, exact-head CI, typing/formatting and golden harness.
-- G420 Pet identity shell + immutable IDs; G421 LineageId/Pedigree; G422 pure lifecycle.
-- G423 MaricaSimulationTime.observe with an injected Callable; validation of numeric, finite, nonnegative previous/current timestamps; rollback clamps logical time; explicit elapsed; no direct system clock, SceneTree, HTTP or save.
-- Godot-executed Luau parity: 54 ACTIVE_PARITY cases (5 PetId + 6 LineageId + 15 Pedigree + 19 Lifecycle + 9 SimulationTime), 4 harness selftests, 3 genetics PENDING_PORT.
-- G423 standalone headless runner and rollback mutation GOOD→BAD→RESTORE; G420–G422 mutation regressions retained.
+- G410–G416 foundation, exact-head CI, typed conventions and golden fixture harness.
+- G420 identity; G421 lineage/pedigree; G422 lifecycle; G423 injected monotonic simulation time.
+- G424 pure MaricaGenetics.new_potential and MaricaGenetics.express: validated names/unit-interval scores, default factor 1, reject unknown trait factors; detached maps and no engine/online coupling.
+- Golden parity: 77 ACTIVE_PARITY domain cases (G420 5, G421 21, G422 19, G423 9, G424 23); 4 selftests; 3 G430 advancement cases PENDING_PORT.
+- G424 independent headless regression and default-factor GOOD→BAD→RESTORE mutation proof, retaining G420–G423 baseline tests.
 
 Verification:
-- PR #54 exact head 4dc5431ab7bc5420ee8133ad081eaeb7c26f57d6 — Godot CI / Validate skills / Roblox CI PASS; Behavioral SKIPPED (non-required).
-- Expected-head guarded merge master@da9f4c8919fc4551b88ff6b954e1835f1f3fcb10 — all three required post-merge checks PASS.
-- No full Animal Core parity, genetics, care/health, succession, local save, farm playability, visual approval or online dependence claims.
+- PR #56 exact head 9af0130171614bb5fc432ab78967261dab1b40f2: Godot CI PASS, Validate Skills PASS, Roblox CI PASS, Roblox Behavioral SKIPPED/non-required.
+- Guarded merge master@6ecc44e6830ce130ff35fb955b0641743d2dbdac: all 3 required post-merge checks PASS.
+- Full Animal Core parity, trait expression wired into Pet/care, genetic advancement G430, successors, persistence, playability and visual approval NOT PROVEN.
 
-Next: **G424 — port genetic potential and expressed traits, preserve deterministic tests and domain boundary.**
+Next: **G425 — care state and deterministic decay/quality contract port.**
