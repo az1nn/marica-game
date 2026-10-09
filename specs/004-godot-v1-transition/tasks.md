@@ -34,7 +34,7 @@
 - [x] **G421** Portar lineage + pedigree.
 - [x] **G422** Portar lifecycle state machine.
 - [x] **G423** Portar simulation time/clock injetável.
-- [ ] **G424** Portar genetic potential + expressed traits.
+- [x] **G424** Portar genetic potential + expressed traits.
 - [ ] **G425** Portar care state.
 - [ ] **G426** Portar health/disease/treatment.
 - [ ] **G427** Portar soulbound invariant.
