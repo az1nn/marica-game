@@ -115,7 +115,10 @@ func _check_domain_case(identifier: String, case_value: Variant) -> bool:
     if fixture.has("expected_error"):
         expected = {"error": fixture["expected_error"]}
     if not _deep_equal(actual, expected):
-        _fail(identifier + " golden mismatch: " + str(fixture.get("id", "unknown")))
+        var error_label: String = identifier
+        if identifier == "pet_id.from_string":
+            error_label = "PetId"  # Compatibility with the G420 mutation gate.
+        _fail(error_label + " golden mismatch: " + str(fixture.get("id", "unknown")))
         return false
     var repeat: Dictionary = _run_domain_operation(identifier, case_input)
     if not _deep_equal(actual, repeat):
