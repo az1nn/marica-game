@@ -27,7 +27,7 @@ static func advance(current: MaricaLifecycle, next_stage: Variant) -> Dictionary
         return {"ok": false, "error": "Ended lifecycle cannot advance"}
     if next_index != _stage_index(current._stage) + 1:
         return {"ok": false, "error": "Lifecycle stages must advance exactly one step"}
-    return {"ok": true, "lifecycle": MaricaLifecycle.new(next_stage, "active", "")}
+    return {"ok": true, "lifecycle": MaricaLifecycle.new(str(next_stage), "active", "")}
 
 
 static func end_life(current: MaricaLifecycle, reason: Variant) -> Dictionary:
