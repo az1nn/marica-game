@@ -270,6 +270,19 @@
 - C — Destaque de construção: mundo orgânico na exploração e grade/áreas válidas apenas ao construir ou reorganizar.
 - D — Híbrida contextual: limites orgânicos na exploração, overlays discretos para planejamento e feedback visual específico para expansão.
 
+**Resposta humana:** D — Híbrida contextual.
+
+**Decisão provisória:** limites de terrenos e áreas da fazenda são orgânicos na exploração, com overlays discretos de planejamento e feedback visual específico para expansão. Preservar densidade funcional (G9 D), modularidade de estruturas (G10 D) e UI minimalista (G12 A). Não alterar mecânicas de construção, desbloqueio ou economia sem DESIGN.
+
+## G22 — Identidade visual dos edifícios e melhorias
+
+**Pergunta:** Como representar visualmente a evolução de construções e instalações da fazenda sem perder coesão?
+
+- A — Mudanças sutis: melhorias por pequenos detalhes, conservação e ornamentos, com silhueta estável.
+- B — Evolução em estágios: cada nível ganha silhueta e volume claramente distintos, com maior destaque visual.
+- C — Personalização cosmética: materiais, cores e decoração diferenciáveis, sem linguagem obrigatória de níveis.
+- D — Híbrida modular: silhueta-base reconhecível, expansões funcionais visíveis e detalhes cosméticos discretos.
+
 **Resposta:** PENDENTE.
 
 ## Gates
