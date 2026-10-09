@@ -75,9 +75,10 @@ func _check_contract(contract_value: Variant) -> Dictionary:
         return {"active": 0, "verified": 0, "pending": cases.size()}
     if status == "ACTIVE_SELFTEST" and identifier == "harness.deep_equal":
         return _verify_selftests(cases)
-    if status == "ACTIVE_PARITY" and identifier in [
-        "pet_id.from_string", "lineage_id.from_string", "pedigree.create"
-    ]:
+    if (
+        status == "ACTIVE_PARITY"
+        and identifier in ["pet_id.from_string", "lineage_id.from_string", "pedigree.create"]
+    ):
         return _verify_domain_cases(identifier, cases)
     _fail("unregistered ACTIVE contract: " + identifier)
     return {}
@@ -137,6 +138,7 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
         var record: MaricaPedigree = result["pedigree"]
         return record.to_snapshot()
     return {"id": result.get("id")}
+
 
 func _check_selftest_case(case_value: Variant) -> bool:
     if typeof(case_value) != TYPE_DICTIONARY:
