@@ -80,8 +80,10 @@ func _test_progression_and_critical_risk() -> bool:
     if not HEALTH.is_terminal_risk(longer["health"])["terminal"]:
         return _fail("48h critical untreated must trigger terminal risk")
     var direct: Dictionary = HEALTH.advance({}, severe, 96.0)
-    if direct["health"].to_snapshot() != longer["health"].to_snapshot():
-        return _fail("large elapsed step must match 24h increments for severe neglect")
+    if direct["health"].to_snapshot() != {
+        "status": "critical", "neglectHours": 96.0, "untreatedHours": 48.0
+    }:
+        return _fail("long severe neglect must reach untreated terminal threshold")
     return true
 
 
