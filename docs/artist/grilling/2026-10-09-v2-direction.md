@@ -127,6 +127,19 @@
 - C — Modular funcional: peças repetíveis, estruturas claras e expansão visual sistemática, com menor custo de produção.
 - D — Híbrida: arquitetura rural reconhecível, detalhes de fantasia cozy e módulos reutilizáveis sob grade pixel art consistente.
 
+**Resposta humana:** D — Híbrida.
+
+**Decisão provisória:** construções rurais reconhecíveis recebem detalhes de fantasia cozy discretos e são compostas por módulos reutilizáveis, respeitando a grade e a escala hierárquica full pixel art 2.5D. Silhuetas e pontos de interação devem ser legíveis em mobile. Não autoriza novos edifícios, mecânicas ou assets sem planejamento.
+
+## G11 — Interface e HUD no mundo pixel art
+
+**Pergunta:** Qual linguagem visual deve orientar HUD, menus, inventário e painéis de cuidado dos animais?
+
+- A — Pixel art integral: molduras, ícones, tipografia e controles rigidamente pixelados.
+- B — UI moderna discreta: interface limpa, tipografia legível e elementos pixel art apenas como acentos.
+- C — Livro de fazenda: painéis inspirados em madeira, papel e caderno ilustrado, com acabamento pixel art.
+- D — Híbrida acessível: ícones e molduras pixel art, tipografia e controles modernos legíveis, áreas de toque generosas e hierarquia mobile-first.
+
 **Resposta:** PENDENTE.
 
 ## Gates
