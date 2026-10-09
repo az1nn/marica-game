@@ -75,6 +75,7 @@ func _test_clock_injection() -> bool:
         return _fail("missing injected clock accepted")
     return true
 
+
 func _test_fractional() -> bool:
     if (
         _observe(101.75, 100.25).get("observation")
