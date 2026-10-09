@@ -49,6 +49,19 @@
 - C — Tropical encantado: vegetação exuberante, cores quentes e acentos mágicos discretos.
 - D — Ciclo dinâmico: identidade cromática que varia fortemente com hora, clima e estações.
 
+**Resposta humana:** D — Ciclo dinâmico.
+
+**Decisão provisória:** a identidade cromática da fazenda varia significativamente com hora, clima e estações, mantendo coerência de pixel art 2.5D, legibilidade dos animais e fantasia cozy. Não implica implementação de simulação climática ou estações no gameplay sem spec própria.
+
+## G5 — Densidade de pixels e detalhamento
+
+**Pergunta:** Qual escala de detalhamento deve orientar sprites, tiles e animações em toda a V2?
+
+- A — Pixel art macro: pixels grandes e formas simples, leitura imediata em telas pequenas.
+- B — Pixel art intermediária: silhuetas claras com detalhes moderados, equilíbrio entre expressividade e produção.
+- C — Pixel art refinada: pixels menores, texturas e animações mais detalhadas, maior custo de produção.
+- D — Escala hierárquica: personagens e interações em pixels maiores; cenário e fundos com detalhes mais finos, sob grade e escala coerentes.
+
 **Resposta:** PENDENTE.
 
 ## Gates
