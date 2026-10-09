@@ -132,6 +132,38 @@ class GoldenFixtureSchemaTests(unittest.TestCase):
         contract["status"] = "ACTIVE_PARITY"
         self.assertTrue(any("not authorized" in e for e in validate(fixture)))
 
+    def test_rejects_care_wrong_adapter(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "care.quality")
+        contract["adapter"] = "game/src/domain/genetics.gd"
+        self.assertTrue(any("incorrect parity" in e for e in validate(fixture)))
+
+    def test_rejects_care_wrong_source(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "care.create")
+        contract["source"] = "src/shared/domain/Genetics.luau"
+        self.assertTrue(any("requires exact legacy source" in e for e in validate(fixture)))
+
+    def test_rejects_care_missing_genetic_potential(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(
+            c for c in fixture["contracts"] if c["id"] == "care.expression_factors"
+        )
+        contract["cases"][0]["input"] = {"values": {"hunger": 0.5}}
+        self.assertTrue(any("care factors need potential" in e for e in validate(fixture)))
+
+    def test_rejects_care_partial_success_snapshot(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "care.create")
+        contract["cases"][0]["expected"].pop("energy")
+        self.assertTrue(any("normalized canonical result" in e for e in validate(fixture)))
+
+    def test_rejects_care_out_of_bounds_quality(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "care.quality")
+        contract["cases"][0]["expected"]["quality"] = 2
+        self.assertTrue(any("normalized canonical result" in e for e in validate(fixture)))
+
     def test_rejects_missing_provenance(self):
         fixture = copy.deepcopy(self.catalog)
         fixture["contracts"][1]["source"] = "../../foreign-repo/README.md"

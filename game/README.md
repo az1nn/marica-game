@@ -174,3 +174,29 @@ G424 merged via PR #56 on master@6ecc44e6830c after exact-PR-head and
 post-merge Godot CI, Validate Skills and Roblox CI PASS. The G424 domain
 contract is verified; Pet/care composition and full Animal Core parity are
 still NOT_YET_PROVEN. G425 care state is next.
+
+## G425 — pure care state and deterministic expression factors
+
+`src/domain/care.gd` ports legacy `src/shared/domain/Care.luau` into a typed,
+RefCounted state with detached snapshots. Defaults: hunger 0, hygiene 1,
+affection 1, energy 1. Each supplied need is finite and in [0,1], with
+explicit `{ok, care|error}` results. Care quality is the minimum of
+`1 - hunger`, hygiene, affection, and energy. Factors apply that same
+quality to every validated genetic trait; G424 genetics then derives the
+expressed traits. This does not mutate potential, and does not yet compose
+the full Pet aggregate (G429).
+
+21 exact-source golden cases (`care.create`: 9, `care.quality`: 6,
+`care.expression_factors`: 6) execute through the G416 harness as
+`ACTIVE_PARITY`. The separate headless care runner checks copy isolation,
+default values, bounded finite needs, weakest-need calculation, G424 trait
+compatibility and deterministic repeatability. CI mutates the hunger
+complement rule, requires a golden failure, then restores and reruns.
+
+```sh
+godot --headless --path game --script res://tests/care_runner.gd
+godot --headless --path game --script res://tests/golden_fixture_runner.gd
+```
+
+G426+ health, soulbound, affection, Pet composition, persistence and
+the full Animal Core remain unverified until their explicit milestones.

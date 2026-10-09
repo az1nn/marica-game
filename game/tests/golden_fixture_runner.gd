@@ -8,6 +8,7 @@ const PEDIGREE = preload("res://src/domain/pedigree.gd")
 const LIFECYCLE = preload("res://src/domain/lifecycle.gd")
 const SIMULATION_TIME = preload("res://src/domain/simulation_time.gd")
 const GENETICS = preload("res://src/domain/genetics.gd")
+const CARE = preload("res://src/domain/care.gd")
 var _fixture_clock_value: Variant = 0
 
 
@@ -90,7 +91,10 @@ func _check_contract(contract_value: Variant) -> Dictionary:
                 "lifecycle.transitions",
                 "simulation_time.observe",
                 "genetics.new_potential",
-                "genetics.express"
+                "genetics.express",
+                "care.create",
+                "care.quality",
+                "care.expression_factors"
             ]
         )
     ):
@@ -124,6 +128,12 @@ func _verify_domain_cases(identifier: String, cases: Array) -> Dictionary:
         print("MARICA_G424_POTENTIAL_PARITY_PASS cases=", cases.size())
     elif identifier == "genetics.express":
         print("MARICA_G424_EXPRESSION_PARITY_PASS cases=", cases.size())
+    elif identifier == "care.create":
+        print("MARICA_G425_CARE_CREATE_PARITY_PASS cases=", cases.size())
+    elif identifier == "care.quality":
+        print("MARICA_G425_CARE_QUALITY_PARITY_PASS cases=", cases.size())
+    elif identifier == "care.expression_factors":
+        print("MARICA_G425_CARE_FACTORS_PARITY_PASS cases=", cases.size())
     return {"active": 0, "verified": cases.size(), "pending": 0}
 
 
@@ -169,8 +179,22 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
         result = GENETICS.new_potential(case_input.get("values"))
     elif identifier == "genetics.express":
         result = GENETICS.express(case_input.get("potential"), case_input.get("factors", null))
+    elif identifier == "care.create":
+        result = CARE.create(case_input.get("values", null))
+    elif identifier == "care.quality":
+        result = CARE.quality(case_input.get("values", null))
+    elif identifier == "care.expression_factors":
+        result = CARE.to_expression_factors(
+            case_input.get("values", null), case_input.get("potential")
+        )
     if not result.get("ok", false):
         return {"error": result.get("error", "")}
+    return _canonical_domain_result(identifier, result)
+
+
+func _canonical_domain_result(identifier: String, result: Dictionary) -> Dictionary:
+    if identifier.begins_with("care."):
+        return _care_domain_result(identifier, result)
     if identifier in ["genetics.new_potential", "genetics.express"]:
         return result["traits"]
     if identifier == "simulation_time.observe":
@@ -179,6 +203,17 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
         var record: MaricaPedigree = result["pedigree"]
         return record.to_snapshot()
     return {"id": result.get("id")}
+
+
+func _care_domain_result(identifier: String, result: Dictionary) -> Dictionary:
+    if identifier == "care.create":
+        var care: MaricaCare = result["care"]
+        return care.to_snapshot()
+    if identifier == "care.quality":
+        return {"quality": result["quality"]}
+    if identifier == "care.expression_factors":
+        return result["factors"]
+    return {"error": "Unknown care contract"}
 
 
 func _fixture_clock_now() -> Variant:

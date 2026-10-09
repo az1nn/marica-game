@@ -1146,6 +1146,294 @@
       ]
     },
     {
+      "id": "care.create",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G425",
+      "adapter": "game/src/domain/care.gd",
+      "source": "src/shared/domain/Care.luau",
+      "cases": [
+        {
+          "id": "care-defaults",
+          "invariant": "Luau Care.new defaults: no hunger and full hygiene/affection/energy",
+          "input": {},
+          "expected": {
+            "hunger": 0,
+            "hygiene": 1,
+            "affection": 1,
+            "energy": 1
+          }
+        },
+        {
+          "id": "care-null-defaults",
+          "invariant": "omitted care uses default values",
+          "input": {
+            "values": null
+          },
+          "expected": {
+            "hunger": 0,
+            "hygiene": 1,
+            "affection": 1,
+            "energy": 1
+          }
+        },
+        {
+          "id": "care-hunger",
+          "invariant": "hunger overrides default without changing other needs",
+          "input": {
+            "values": {
+              "hunger": 0.25
+            }
+          },
+          "expected": {
+            "hunger": 0.25,
+            "hygiene": 1,
+            "affection": 1,
+            "energy": 1
+          }
+        },
+        {
+          "id": "care-mixed",
+          "invariant": "all supplied normalized needs are preserved",
+          "input": {
+            "values": {
+              "hunger": 0.25,
+              "hygiene": 0.75,
+              "affection": 0.5,
+              "energy": 0.25
+            }
+          },
+          "expected": {
+            "hunger": 0.25,
+            "hygiene": 0.75,
+            "affection": 0.5,
+            "energy": 0.25
+          }
+        },
+        {
+          "id": "care-unknown-field",
+          "invariant": "Luau Care.new ignores unrelated fields",
+          "input": {
+            "values": {
+              "hunger": 0,
+              "extra": 7
+            }
+          },
+          "expected": {
+            "hunger": 0,
+            "hygiene": 1,
+            "affection": 1,
+            "energy": 1
+          }
+        },
+        {
+          "id": "care-invalid-hunger-high",
+          "invariant": "hunger outside [0,1] rejected",
+          "input": {
+            "values": {
+              "hunger": 1.25
+            }
+          },
+          "expected_error": "Care.hunger must be between 0 and 1"
+        },
+        {
+          "id": "care-invalid-energy-low",
+          "invariant": "negative energy rejected",
+          "input": {
+            "values": {
+              "energy": -0.25
+            }
+          },
+          "expected_error": "Care.energy must be between 0 and 1"
+        },
+        {
+          "id": "care-invalid-affection-type",
+          "invariant": "affection must be numeric",
+          "input": {
+            "values": {
+              "affection": "low"
+            }
+          },
+          "expected_error": "Care.affection must be a finite number"
+        },
+        {
+          "id": "care-invalid-hygiene-bool",
+          "invariant": "boolean hygiene is not numeric",
+          "input": {
+            "values": {
+              "hygiene": true
+            }
+          },
+          "expected_error": "Care.hygiene must be a finite number"
+        }
+      ]
+    },
+    {
+      "id": "care.quality",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G425",
+      "adapter": "game/src/domain/care.gd",
+      "source": "src/shared/domain/Care.luau",
+      "cases": [
+        {
+          "id": "quality-perfect",
+          "invariant": "default care returns full quality",
+          "input": {},
+          "expected": {
+            "quality": 1
+          }
+        },
+        {
+          "id": "quality-hunger",
+          "invariant": "quality uses fed=1-hunger",
+          "input": {
+            "values": {
+              "hunger": 0.75
+            }
+          },
+          "expected": {
+            "quality": 0.25
+          }
+        },
+        {
+          "id": "quality-affection",
+          "invariant": "affection is the weakest need",
+          "input": {
+            "values": {
+              "hunger": 0.25,
+              "hygiene": 0.75,
+              "affection": 0.5,
+              "energy": 1
+            }
+          },
+          "expected": {
+            "quality": 0.5
+          }
+        },
+        {
+          "id": "quality-energy",
+          "invariant": "energy is the weakest need",
+          "input": {
+            "values": {
+              "energy": 0.25
+            }
+          },
+          "expected": {
+            "quality": 0.25
+          }
+        },
+        {
+          "id": "quality-zero",
+          "invariant": "starvation gives zero quality",
+          "input": {
+            "values": {
+              "hunger": 1
+            }
+          },
+          "expected": {
+            "quality": 0
+          }
+        },
+        {
+          "id": "quality-invalid",
+          "invariant": "quality rejects invalid care",
+          "input": {
+            "values": {
+              "hygiene": -0.5
+            }
+          },
+          "expected_error": "Care.hygiene must be between 0 and 1"
+        }
+      ]
+    },
+    {
+      "id": "care.expression_factors",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G425",
+      "adapter": "game/src/domain/care.gd",
+      "source": "src/shared/domain/Care.luau",
+      "cases": [
+        {
+          "id": "factors-default",
+          "invariant": "perfect care preserves factor one for each trait",
+          "input": {
+            "potential": {
+              "size": 0.8,
+              "resilience": 0.5
+            }
+          },
+          "expected": {
+            "size": 1,
+            "resilience": 1
+          }
+        },
+        {
+          "id": "factors-neglect",
+          "invariant": "affection neglect suppresses each trait equally",
+          "input": {
+            "values": {
+              "affection": 0.5
+            },
+            "potential": {
+              "size": 0.8,
+              "resilience": 0.5
+            }
+          },
+          "expected": {
+            "size": 0.5,
+            "resilience": 0.5
+          }
+        },
+        {
+          "id": "factors-hungry",
+          "invariant": "hunger reduces quality instead of increasing it",
+          "input": {
+            "values": {
+              "hunger": 0.75
+            },
+            "potential": {
+              "size": 1,
+              "resilience": 1
+            }
+          },
+          "expected": {
+            "size": 0.25,
+            "resilience": 0.25
+          }
+        },
+        {
+          "id": "factors-empty-potential",
+          "invariant": "no traits produces detached empty factors",
+          "input": {
+            "potential": {}
+          },
+          "expected": {}
+        },
+        {
+          "id": "factors-invalid-potential",
+          "invariant": "invalid gene scalar must be rejected",
+          "input": {
+            "potential": {
+              "size": 1.25
+            }
+          },
+          "expected_error": "Genetic potential.size must be between 0 and 1"
+        },
+        {
+          "id": "factors-invalid-care",
+          "invariant": "invalid care refuses trait expression factors",
+          "input": {
+            "values": {
+              "energy": -1
+            },
+            "potential": {
+              "size": 0.5
+            }
+          },
+          "expected_error": "Care.energy must be between 0 and 1"
+        }
+      ]
+    },
+    {
       "id": "genetics.advance_potential",
       "status": "PENDING_PORT",
       "milestone": "G430",
