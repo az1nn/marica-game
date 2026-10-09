@@ -78,9 +78,15 @@ func _check_contract(contract_value: Variant) -> Dictionary:
         return _verify_selftests(cases)
     if (
         status == "ACTIVE_PARITY"
-        and identifier in [
-            "pet_id.from_string", "lineage_id.from_string", "pedigree.create", "lifecycle.transitions"
-        ]
+        and (
+            identifier
+            in [
+                "pet_id.from_string",
+                "lineage_id.from_string",
+                "pedigree.create",
+                "lifecycle.transitions"
+            ]
+        )
     ):
         return _verify_domain_cases(identifier, cases)
     _fail("unregistered ACTIVE contract: " + identifier)
