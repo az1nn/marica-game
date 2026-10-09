@@ -1,6 +1,6 @@
 # ARTIST — V1 screen and asset map (Godot / V2 approved visual language)
 
-**Status:** S01 V3 SCREEN CONCEPT ACCEPTED; **DOG FOUNDER CONFIRMED**; **PET-ALT-001 CAPYBARA CONCEPT ACCEPTED**; **S01-A01 DOG SPRITE CONCEPT PENDING**; production sprites/runtime pending
+**Status:** S01 V3 SCREEN CONCEPT ACCEPTED; **DOG FOUNDER CONFIRMED**; **PET-ALT-001 CAPYBARA CONCEPT ACCEPTED**; **S01-A01 DOG SPRITE CONCEPT PENDING**; **S07-P01..P03 initial plant concepts ACCEPTED**; production sprites/runtime pending
 **Baseline:** `master@947010158d0bc63d21afcf18c75a0dab187b9e46` (2026-10-09)
 **Authority:** SPEC-004 V1 gameplay/screens, SPEC-005 ARTIST V2 G1–G25, `docs/VISUAL-DIRECTION.md`, `docs/lore/CANON.md`.
 **Purpose:** Queue individually reviewed screen concepts and corresponding art assets. This document does **not** claim that approved screen layouts, production sprites, or Godot scenes already exist.
@@ -24,7 +24,7 @@
 | S04 | Pet lifecycle and lineage | P0 | stage variants, portrait, soulbound marker, pedigree/lineage tree UI, affection/trait indicators | SPEC-001 US-001/003; G453 | QUEUED |
 | S05 | Respectful end-of-life | P0 | restrained transition, remembrance visual, simple message framing | SPEC-001 US-004; G455 | QUEUED |
 | S06 | Two successors / continuation | P0 | distinct successor portraits/silhouettes, generation marker, lineage continuation UI | SPEC-001 US-004; G456 | QUEUED |
-| S07 | Cultivation / planting | P1 after animal visual gate | soil/crop tiles, seed/bud/growth/maturity sprites, a minimum of 3 crops, one fruit tree, plot-selection and harvest effects | G460–G463; V206–V207; G8/G20 | LOCKED_BEHIND_R2 |
+| S07 | Cultivation / planting | P1 after animal visual gate | soil/crop tiles, seed/bud/growth/maturity sprites, **milho/tomate/cenoura** (3 accepted initial concepts), one expanded-slice fruit tree, plot-selection and harvest effects | G460–G463; V206–V207; G8/G20 | **P01–P03 CONCEPT_ACCEPTED**; S07 screen and runtime **LOCKED_BEHIND_R2** |
 | S08 | Harvest / inventory / animal food | P1 | crop/fruit/item icon set, inventory cells, food grades/states, harvest prompt | G464–G466; G454 | LOCKED_BEHIND_R2 |
 | S09 | Farm build and expansion | P1 after plants | fences, modular shelter, barn/building upgrade states, placement overlay/valid placement cells, capacity affordance | G470–G475; V208 | LOCKED_BEHIND_R3 |
 | S10 | Active slots / Nursery / Legacy Reserve | P1 after core | compact slot cards (~4 initial), active/reserve indicators, successor storage portraits | G471–G472 | LOCKED_BEHIND_R3 |
@@ -42,7 +42,7 @@
 | **PET-ALT-001** | Brown capybara-like companion with blue bandana / green pack | Character **concept board ACCEPTED**, independent visual | **Other animal (not founder)**; production sprite pending, no backpack mechanics assumed |
 | **PET-ALT-002** | Cream-white hen, red comb, golden beak/feet | Character **concept board ACCEPTED**, independent visual | **Third V1 animal type**, not founder; production sprite pending, no unapproved egg/food gameplay assumed |
 
-See `docs/artist/reviews/2026-10-09-founder-dog-and-alternate-capybara.md` for founder-role decision, `docs/artist/reviews/PET-ALT-002-2026-10-09-chicken-accepted.md` for approved chicken, and `specs/004-godot-v1-transition/spec.md` §3.1 for binding initial V1 scope: **exactly 3 animal types and exactly 3 unnamed initial plant/crop types**. Existing G463 fruit tree belongs to the later expanded crop slice.
+See `docs/artist/reviews/2026-10-09-founder-dog-and-alternate-capybara.md` for founder-role decision, `docs/artist/reviews/PET-ALT-002-2026-10-09-chicken-accepted.md` for approved chicken, and `specs/004-godot-v1-transition/spec.md` §3.1 for binding initial V1 scope: **exactly 3 animal types and exactly 3 named initial plant/crop types (milho, tomate, cenoura)**. Existing G463 fruit tree belongs to the later expanded crop slice.
 
 ## Reusable asset families — mapped requirements, not approved artwork
 
@@ -58,7 +58,7 @@ See `docs/artist/reviews/2026-10-09-founder-dog-and-alternate-capybara.md` for f
 - Farm/navigation HUD and selection affordances with generous touch zones.
 
 ### C. Plants/crops
-- **Exactly 3 initial crop/plant families** (identities to be decided under DESIGN/LORE), plus **1 fruit tree in the later expanded cultivation slice** under unchanged SPEC-004 US-403/G463; each stage (seed/young/growing/ripe) as domain requires; harvest-ready animations and harvested item icons.
+- **Exactly 3 initial crop/plant families:** S07-P01 **milho**, S07-P02 **tomate**, S07-P03 **cenoura** — all individual art concepts human-accepted on 2026-10-09. Their PNG sources are chat artifacts, not repository binaries or production imports. Plus **1 fruit tree in the later expanded cultivation slice** under unchanged SPEC-004 US-403/G463; each stage (seed/young/growing/ripe) as domain requires; harvest-ready animations and harvested item icons. See `docs/artist/reviews/S07-P01-P03-2026-10-09-plants-accepted.md`.
 - Inventory & food feedback; no speculative new botanical species or cultivation mechanics.
 
 ### D. City/services
