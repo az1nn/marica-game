@@ -23,6 +23,11 @@ APPROVED_PARITY = {
     ),
     "genetics.new_potential": ("G424", "game/src/domain/genetics.gd", "src/shared/domain/Genetics.luau"),
     "genetics.express": ("G424", "game/src/domain/genetics.gd", "src/shared/domain/Genetics.luau"),
+    "care.create": ("G425", "game/src/domain/care.gd", "src/shared/domain/Care.luau"),
+    "care.quality": ("G425", "game/src/domain/care.gd", "src/shared/domain/Care.luau"),
+    "care.expression_factors": (
+        "G425", "game/src/domain/care.gd", "src/shared/domain/Care.luau"
+    ),
 }
 
 
@@ -176,6 +181,37 @@ def validate(document: Any, root: Path = ROOT) -> list[str]:
                             for k, v in expected.items()
                         ):
                             errors.append(f"{key}/{case_id}: genetics success needs bounded trait map")
+                if key in {"care.create", "care.quality", "care.expression_factors"}:
+                    data = case.get("input")
+                    if not isinstance(data, dict):
+                        errors.append(f"{key}/{case_id}: care input must be object")
+                    elif key == "care.expression_factors":
+                        if "potential" not in data or not set(data).issubset({"values", "potential"}):
+                            errors.append(
+                                f"{key}/{case_id}: care factors need potential, optional values"
+                            )
+                    elif not set(data).issubset({"values"}):
+                        errors.append(f"{key}/{case_id}: care input may only contain values")
+                    if isinstance(data, dict) and "values" in data and (
+                        data["values"] is not None and not isinstance(data["values"], dict)
+                    ):
+                        errors.append(f"{key}/{case_id}: care values must be object or null")
+                    if has_expected:
+                        expected = case.get("expected")
+                        care_fields = {"hunger", "hygiene", "affection", "energy"}
+                        if key == "care.create":
+                            valid = isinstance(expected, dict) and set(expected) == care_fields
+                        elif key == "care.quality":
+                            valid = isinstance(expected, dict) and set(expected) == {"quality"}
+                        else:
+                            valid = isinstance(expected, dict)
+                        if not valid or any(
+                            type(v) not in (int, float) or not (0 <= v <= 1)
+                            for v in expected.values()
+                        ):
+                            errors.append(
+                                f"{key}/{case_id}: care success must be normalized canonical result"
+                            )
                 if key == "simulation_time.observe":
                     data = case.get("input")
                     if not isinstance(data, dict) or set(data) != {"lastObservedAt", "clockNow"}:
