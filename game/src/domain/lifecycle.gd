@@ -35,7 +35,7 @@ static func end_life(current: MaricaLifecycle, reason: Variant) -> Dictionary:
         return {"ok": false, "error": "Lifecycle stage is invalid"}
     if current._status != "active":
         return {"ok": false, "error": "Ended lifecycle is terminal"}
-    if reason != "natural" and reason != "health":
+    if typeof(reason) != TYPE_STRING or (reason != "natural" and reason != "health"):
         return {"ok": false, "error": "Lifecycle end reason is invalid"}
     if reason == "natural" and current._stage != "senior":
         return {"ok": false, "error": "Natural end of life requires senior stage"}
