@@ -13,7 +13,7 @@ Delivered:
 
 Verification:
 - PR #63 exact head `1781b79b4825a1acbcf9c2e89780e27bd1525e64`: Godot CI PASS, Validate skills PASS, Roblox CI PASS; Roblox Behavioral SKIPPED/nonrequired.
-- Guarded squash merge into `master@3aa715d70643901cc68be984a4ae2141d578efe5`. Post-merge CI was still running at this handoff snapshot; refresh exact-head evidence before claiming master PASS.
+- Guarded squash merge into `master@3aa715d70643901cc68be984a4ae2141d578efe5`. Post-merge master@3aa715d70643901cc68be984a4ae2141d578efe5 Godot CI PASS, Validate skills PASS, Roblox CI PASS (exact-head).
 - Full Pet aggregate health/end-life integration, G427–G429 remaining parity, succession, persistence, ARTIST V2 visual/runtime acceptance and Godot Web export remain NOT PROVEN.
 - ARTIST PR #62 remains a separate draft recording approved 3 animal species and 3 crop concepts; no visual/runtime PASS inferred.
 
