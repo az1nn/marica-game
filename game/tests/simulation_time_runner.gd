@@ -95,6 +95,7 @@ func _matches(result: Dictionary, raw_now: float, logical_now: float, elapsed: f
         and observation.get("elapsed") == elapsed
     )
 
+
 func _observe(raw_now: Variant, last_observed_at: Variant) -> Dictionary:
     _clock_value = raw_now
     return SIMULATION_TIME.observe(Callable(self, "_clock_now"), last_observed_at)
