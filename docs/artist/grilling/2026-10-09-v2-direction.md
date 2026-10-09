@@ -88,6 +88,19 @@
 - C — Expressiva e reativa: animações de idle, humor, cuidado e interação com exagero cartoon controlado.
 - D — Híbrida por importância: animações simples para rotina e ciclos expressivos para vínculos, eventos e momentos especiais.
 
+**Resposta humana:** D — Híbrida por importância.
+
+**Decisão provisória:** animações de rotina dos animais usam ciclos econômicos e legíveis; vínculos, cuidados relevantes, eventos e evolução recebem expressividade reforçada, com sprites e timing consistentes com full pixel art 2.5D e escala hierárquica. A escolha não autoriza ampliar mecânicas, produção de assets ou custos de animação sem planejamento e validação.
+
+## G8 — Linguagem visual das plantas e cultivos
+
+**Pergunta:** Como representar visualmente plantas e seus estágios de crescimento em pixel art 2.5D?
+
+- A — Botânica reconhecível: espécies facilmente identificáveis, estágios simples e proporções plausíveis.
+- B — Fantasia cozy: plantas estilizadas, formas expressivas e detalhes mágicos discretos, sem novas mecânicas.
+- C — Progressão visual rica: estágios de crescimento marcadamente distintos, com variação de folhagem, flores e frutos.
+- D — Híbrida: leitura botânica clara com fantasia cozy e evolução visual evidente, controlando densidade e custo de produção.
+
 **Resposta:** PENDENTE.
 
 ## Gates
