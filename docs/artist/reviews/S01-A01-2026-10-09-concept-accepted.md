@@ -37,3 +37,11 @@ The previously approved `S01 V3` **screen composition** depicts a tricolor puppy
 2. Prepare **one isolated, transparent S01-A01 production sprite** preserving whichever founder depiction is confirmed; no false framing of the board as ready-to-import assets.
 3. Review source sprite separately, then pose-specific frame assets with deterministic grid under V201/V201a ARCH gate.
 4. Keep S02/plant assets gated as before; no overwrite, merge, export, render or runtime changes based on this visual acceptance alone.
+
+---
+
+## Subsequent human clarification — 2026-10-09 (append-only addendum)
+
+The user decided explicitly: **"Outro animal, o cachorro é o fundador."** Therefore the capybara-like animal on **this approved board** is **PET-ALT-001, an additional non-founder animal**. The original heading printed `S01-A01 — PET FUNDADOR` is a **mislabel in the historical illustration**, not the game canon. The **tricolor puppy** in the approved S01 V3 screen remains the sole designated founder. **S01-A01** now refers to the still-pending isolated founder dog sprite, **not** this capybara concept board. This classification supersedes the previously open role conflict *without rescinding the visual acceptance* of the capybara concept.
+
+Authoritative decision: `docs/artist/reviews/2026-10-09-founder-dog-and-alternate-capybara.md`. No gameplay/LORE additions, import/animation/runtime sign-off, or materialized sprite are implied.
