@@ -216,7 +216,6 @@ func _care_domain_result(identifier: String, result: Dictionary) -> Dictionary:
     return {"error": "Unknown care contract"}
 
 
-
 func _fixture_clock_now() -> Variant:
     return _fixture_clock_value
 
