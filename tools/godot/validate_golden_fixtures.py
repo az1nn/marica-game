@@ -28,6 +28,12 @@ APPROVED_PARITY = {
     "care.expression_factors": (
         "G425", "game/src/domain/care.gd", "src/shared/domain/Care.luau"
     ),
+    "health.create": ("G426", "game/src/domain/health.gd", "src/shared/domain/Health.luau"),
+    "health.advance": ("G426", "game/src/domain/health.gd", "src/shared/domain/Health.luau"),
+    "health.treat": ("G426", "game/src/domain/health.gd", "src/shared/domain/Health.luau"),
+    "health.terminal_risk": (
+        "G426", "game/src/domain/health.gd", "src/shared/domain/Health.luau"
+    ),
 }
 
 
@@ -212,6 +218,58 @@ def validate(document: Any, root: Path = ROOT) -> list[str]:
                             errors.append(
                                 f"{key}/{case_id}: care success must be normalized canonical result"
                             )
+                if key.startswith("health."):
+                    data = case.get("input")
+                    allowed = {
+                        "health.create": {"values"},
+                        "health.advance": {"state", "care", "elapsedHours"},
+                        "health.treat": {"state", "treatment"},
+                        "health.terminal_risk": {"state"},
+                    }
+                    if not isinstance(data, dict) or not set(data).issubset(allowed[key]):
+                        errors.append(f"{key}/{case_id}: invalid Health input fields")
+                    if key == "health.advance" and (
+                        not isinstance(data, dict) or not {"care", "elapsedHours"}.issubset(data)
+                    ):
+                        errors.append(f"{key}/{case_id}: health advance needs care/elapsedHours")
+                    if key == "health.treat" and (
+                        not isinstance(data, dict) or "treatment" not in data
+                    ):
+                        errors.append(f"{key}/{case_id}: health treatment needs treatment")
+                    if has_expected:
+                        expected = case.get("expected")
+                        if key == "health.terminal_risk":
+                            if not isinstance(expected, dict) or (
+                                set(expected) != {"terminal"}
+                                or type(expected.get("terminal")) is not bool
+                            ):
+                                errors.append(f"{key}/{case_id}: invalid terminal risk result")
+                        else:
+                            record = (
+                                expected.get("state")
+                                if key == "health.treat" and isinstance(expected, dict)
+                                else expected
+                            )
+                            fields = {"status", "neglectHours", "untreatedHours"}
+                            valid_record = (
+                                isinstance(record, dict)
+                                and set(record) == fields
+                                and record.get("status")
+                                in {"healthy", "neglected", "sick", "critical"}
+                                and all(
+                                    type(record.get(field)) in (int, float)
+                                    and record[field] >= 0
+                                    for field in {"neglectHours", "untreatedHours"}
+                                )
+                            )
+                            if not valid_record:
+                                errors.append(f"{key}/{case_id}: invalid canonical health state")
+                            if key == "health.treat" and (
+                                not isinstance(expected, dict)
+                                or set(expected) != {"state", "cost"}
+                                or type(expected.get("cost")) is not int
+                            ):
+                                errors.append(f"{key}/{case_id}: invalid treatment result")
                 if key == "simulation_time.observe":
                     data = case.get("input")
                     if not isinstance(data, dict) or set(data) != {"lastObservedAt", "clockNow"}:
