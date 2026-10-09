@@ -164,6 +164,24 @@ class GoldenFixtureSchemaTests(unittest.TestCase):
         contract["cases"][0]["expected"]["quality"] = 2
         self.assertTrue(any("normalized canonical result" in e for e in validate(fixture)))
 
+    def test_rejects_health_wrong_source(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "health.advance")
+        contract["source"] = "src/shared/domain/Care.luau"
+        self.assertTrue(any("requires exact legacy source" in e for e in validate(fixture)))
+
+    def test_rejects_health_invalid_snapshot(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "health.create")
+        contract["cases"][0]["expected"].pop("untreatedHours")
+        self.assertTrue(any("canonical health state" in e for e in validate(fixture)))
+
+    def test_rejects_health_missing_elapsed(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "health.advance")
+        contract["cases"][0]["input"].pop("elapsedHours")
+        self.assertTrue(any("health advance needs" in e for e in validate(fixture)))
+
     def test_rejects_missing_provenance(self):
         fixture = copy.deepcopy(self.catalog)
         fixture["contracts"][1]["source"] = "../../foreign-repo/README.md"
