@@ -24,3 +24,9 @@ Boundaries:
 - G429 eventually proves aggregate Animal Core parity, and G430+ own succession.
 
 Next: **G422 — port lifecycle state machine, with executable golden fixtures.**
+
+
+G422 candidate in `feat/g422-godot-lifecycle`:
+- Pure lifecycle transitions implemented from `Lifecycle.luau`, with 19 new `ACTIVE_PARITY` fixtures, headless unit runner, natural-end mutation gate.
+- Status: IMPLEMENTED / awaiting exact-HEAD CI. G423 owns simulation time; no claim of full Animal Core parity.
+- Orchestrator must only mark G422 complete after current PR SHA passes all required CI and mutation proof.
