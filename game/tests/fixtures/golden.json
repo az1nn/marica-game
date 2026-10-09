@@ -745,7 +745,7 @@
     },
     {
       "id": "simulation_time.observe",
-      "status": "PENDING_PORT",
+      "status": "ACTIVE_PARITY",
       "milestone": "G423",
       "source": "src/shared/domain/SimulationTime.luau",
       "cases": [
@@ -783,8 +783,75 @@
             "clockNow": -1
           },
           "expected_error": "Clock.now() must not be negative"
+        },
+        {
+          "id": "clock-forward-fractional",
+          "invariant": "fractional elapsed time is deterministic",
+          "input": {
+            "lastObservedAt": 100.25,
+            "clockNow": 101.75
+          },
+          "expected": {
+            "rawNow": 101.75,
+            "logicalNow": 101.75,
+            "elapsed": 1.5
+          }
+        },
+        {
+          "id": "clock-equal",
+          "invariant": "equal observations yield zero elapsed",
+          "input": {
+            "lastObservedAt": 112,
+            "clockNow": 112
+          },
+          "expected": {
+            "rawNow": 112,
+            "logicalNow": 112,
+            "elapsed": 0
+          }
+        },
+        {
+          "id": "clock-zero",
+          "invariant": "zero timestamp remains valid",
+          "input": {
+            "lastObservedAt": 0,
+            "clockNow": 0
+          },
+          "expected": {
+            "rawNow": 0,
+            "logicalNow": 0,
+            "elapsed": 0
+          }
+        },
+        {
+          "id": "previous-invalid-negative",
+          "invariant": "negative previous observed time rejected",
+          "input": {
+            "lastObservedAt": -1,
+            "clockNow": 100
+          },
+          "expected_error": "lastObservedAt must not be negative"
+        },
+        {
+          "id": "clock-invalid-string",
+          "invariant": "non-numeric clock cannot be coerced into time",
+          "input": {
+            "lastObservedAt": 0,
+            "clockNow": "not-a-time"
+          },
+          "expected_error": "Clock.now() must be a finite number"
+        },
+        {
+          "id": "previous-invalid-string",
+          "invariant": "non-numeric previous time rejected",
+          "input": {
+            "lastObservedAt": "not-a-time",
+            "clockNow": 100
+          },
+          "expected_error": "lastObservedAt must be a finite number"
         }
-      ]
+      ],
+      "adapter": "game/src/domain/simulation_time.gd"
     },
     {
       "id": "genetics.advance_potential",

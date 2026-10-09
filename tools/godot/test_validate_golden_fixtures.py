@@ -25,7 +25,7 @@ class GoldenFixtureSchemaTests(unittest.TestCase):
 
     def test_rejects_unauthorized_future_parity(self):
         fixture = copy.deepcopy(self.catalog)
-        pending = next(c for c in fixture["contracts"] if c["id"] == "simulation_time.observe")
+        pending = next(c for c in fixture["contracts"] if c["id"] == "genetics.advance_potential")
         pending["status"] = "ACTIVE_PARITY"
         pending["adapter"] = "game/src/domain/pet_id.gd"
         self.assertTrue(any("not authorized" in e for e in validate(fixture)))
@@ -40,7 +40,7 @@ class GoldenFixtureSchemaTests(unittest.TestCase):
         contract = next(c for c in fixture["contracts"] if c["id"] == "simulation_time.observe")
         contract["status"] = "ACTIVE_PARITY"
         contract["adapter"] = "game/src/domain/pedigree.gd"
-        self.assertTrue(any("not authorized" in e for e in validate(fixture)))
+        self.assertTrue(any("incorrect parity milestone or adapter" in e for e in validate(fixture)))
 
     def test_rejects_pedigree_adapter_swap(self):
         fixture = copy.deepcopy(self.catalog)
@@ -77,6 +77,24 @@ class GoldenFixtureSchemaTests(unittest.TestCase):
         contract = next(c for c in fixture["contracts"] if c["id"] == "lifecycle.transitions")
         contract["source"] = "src/shared/domain/Pedigree.luau"
         self.assertTrue(any("requires exact legacy source" in e for e in validate(fixture)))
+
+    def test_rejects_time_wrong_source(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "simulation_time.observe")
+        contract["source"] = "src/shared/domain/Lifecycle.luau"
+        self.assertTrue(any("requires exact legacy source" in e for e in validate(fixture)))
+
+    def test_rejects_time_incomplete_input(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "simulation_time.observe")
+        contract["cases"][0]["input"].pop("clockNow")
+        self.assertTrue(any("time input requires" in e for e in validate(fixture)))
+
+    def test_rejects_time_partial_snapshot(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "simulation_time.observe")
+        contract["cases"][0]["expected"].pop("elapsed")
+        self.assertTrue(any("canonical observation" in e for e in validate(fixture)))
 
     def test_rejects_missing_provenance(self):
         fixture = copy.deepcopy(self.catalog)

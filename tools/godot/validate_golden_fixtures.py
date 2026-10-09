@@ -18,6 +18,9 @@ APPROVED_PARITY = {
     ),
     "pedigree.create": ("G421", "game/src/domain/pedigree.gd", "src/shared/domain/Pedigree.luau"),
     "lifecycle.transitions": ("G422", "game/src/domain/lifecycle.gd", "src/shared/domain/Lifecycle.luau"),
+    "simulation_time.observe": (
+        "G423", "game/src/domain/simulation_time.gd", "src/shared/domain/SimulationTime.luau"
+    ),
 }
 
 
@@ -153,6 +156,17 @@ def validate(document: Any, root: Path = ROOT) -> list[str]:
                             errors.append(f"{key}/{case_id}: lifecycle success must expect canonical snapshot")
                         elif type(expected["terminal"]) is not bool:
                             errors.append(f"{key}/{case_id}: lifecycle terminal must be boolean")
+                if key == "simulation_time.observe":
+                    data = case.get("input")
+                    if not isinstance(data, dict) or set(data) != {"lastObservedAt", "clockNow"}:
+                        errors.append(f"{key}/{case_id}: time input requires lastObservedAt/clockNow")
+                    if has_expected:
+                        expected = case.get("expected")
+                        names = {"rawNow", "logicalNow", "elapsed"}
+                        if not isinstance(expected, dict) or set(expected) != names:
+                            errors.append(f"{key}/{case_id}: time result must be canonical observation")
+                        elif any(type(expected[k]) not in (int, float) for k in names):
+                            errors.append(f"{key}/{case_id}: time result needs numeric timestamps")
             elif status == "PENDING_PORT":
                 pending += 1
 

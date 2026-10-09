@@ -6,6 +6,8 @@ const PET_ID = preload("res://src/domain/pet_id.gd")
 const LINEAGE_ID = preload("res://src/domain/lineage_id.gd")
 const PEDIGREE = preload("res://src/domain/pedigree.gd")
 const LIFECYCLE = preload("res://src/domain/lifecycle.gd")
+const SIMULATION_TIME = preload("res://src/domain/simulation_time.gd")
+var _fixture_clock_value: Variant = 0
 
 
 func _initialize() -> void:
@@ -84,7 +86,8 @@ func _check_contract(contract_value: Variant) -> Dictionary:
                 "pet_id.from_string",
                 "lineage_id.from_string",
                 "pedigree.create",
-                "lifecycle.transitions"
+                "lifecycle.transitions",
+                "simulation_time.observe"
             ]
         )
     ):
@@ -112,6 +115,8 @@ func _verify_domain_cases(identifier: String, cases: Array) -> Dictionary:
         print("MARICA_G421_PEDIGREE_PARITY_PASS cases=", cases.size())
     elif identifier == "lifecycle.transitions":
         print("MARICA_G422_LIFECYCLE_PARITY_PASS cases=", cases.size())
+    elif identifier == "simulation_time.observe":
+        print("MARICA_G423_SIMULATION_TIME_PARITY_PASS cases=", cases.size())
     return {"active": 0, "verified": cases.size(), "pending": 0}
 
 
@@ -148,12 +153,23 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
         result = PEDIGREE.create(case_input)
     elif identifier == "lifecycle.transitions":
         return _run_lifecycle_sequence(case_input)
+    elif identifier == "simulation_time.observe":
+        _fixture_clock_value = case_input.get("clockNow")
+        result = SIMULATION_TIME.observe(
+            Callable(self, "_fixture_clock_now"), case_input.get("lastObservedAt")
+        )
     if not result.get("ok", false):
         return {"error": result.get("error", "")}
+    if identifier == "simulation_time.observe":
+        return result["observation"]
     if identifier == "pedigree.create":
         var record: MaricaPedigree = result["pedigree"]
         return record.to_snapshot()
     return {"id": result.get("id")}
+
+
+func _fixture_clock_now() -> Variant:
+    return _fixture_clock_value
 
 
 func _run_lifecycle_sequence(case_input: Dictionary) -> Dictionary:

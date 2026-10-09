@@ -123,3 +123,26 @@ godot --headless --path game --script res://tests/lifecycle_runner.gd
 ```
 
 G422 parity does not imply full animal simulation, clock, composite Pet, save, succession or player-visible acceptance.
+
+## G423 — deterministic injected simulation clock (candidate)
+
+`src/domain/simulation_time.gd` mirrors the legacy Luau `SimulationTime.observe`
+contract with a typed, injectable `Callable` instead of reading wall time.
+Its pure observation `{rawNow, logicalNow, elapsed}` clamps device-clock rollback
+and rejects nonnumeric, nonfinite or negative timestamps. The explicit
+`{ok, observation|error}` envelope follows the existing Godot parity-adapter pattern.
+
+`tests/simulation_time_runner.gd` exercises multi-observation offline gaps,
+rollback and recovery, invalid clocks, NaN/infinity, fractional seconds and repeatability.
+Nine provenance-linked golden cases run through the G416 harness as `ACTIVE_PARITY`.
+The G423 CI gate also mutates away the rollback clamp and proves that golden parity fails,
+then restores the original source and rechecks. Neither lifecycle stage acceleration
+(G435) nor Animal Core parity (G429) is claimed here.
+
+```sh
+godot --headless --path game --script res://tests/simulation_time_runner.gd
+godot --headless --path game --script res://tests/golden_fixture_runner.gd
+```
+
+Do not mark G423 complete until the implementation PR exact-head and post-merge
+gates pass. G424 genetics remains next only after verified governance closeout.
