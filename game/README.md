@@ -124,7 +124,7 @@ godot --headless --path game --script res://tests/lifecycle_runner.gd
 
 G422 parity does not imply full animal simulation, clock, composite Pet, save, succession or player-visible acceptance.
 
-## G423 — deterministic injected simulation clock (candidate)
+## G423 — deterministic injected simulation clock (verified)
 
 `src/domain/simulation_time.gd` mirrors the legacy Luau `SimulationTime.observe`
 contract with a typed, injectable `Callable` instead of reading wall time.
@@ -144,5 +144,6 @@ godot --headless --path game --script res://tests/simulation_time_runner.gd
 godot --headless --path game --script res://tests/golden_fixture_runner.gd
 ```
 
-Do not mark G423 complete until the implementation PR exact-head and post-merge
-gates pass. G424 genetics remains next only after verified governance closeout.
+G423 merged via PR #54 at `master@da9f4c8919fc`. The exact PR head and post-merge
+master both passed required CI. The broader Animal Core parity remains unproven;
+G424 genetic potential/expressed traits is next.
