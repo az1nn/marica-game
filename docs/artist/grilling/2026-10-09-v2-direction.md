@@ -218,6 +218,19 @@
 - C — Vinheta ilustrada: transição curta em pixel art com arte contextual e sensação de viagem.
 - D — Híbrida funcional: navegação rápida com transição discreta por padrão e vinhetas pontuais em momentos narrativos importantes.
 
+**Resposta humana:** A — Corte direto.
+
+**Decisão provisória:** deslocamento entre fazenda e cidade usa troca direta de cena com transição curta e discreta, priorizando rapidez, previsibilidade e legibilidade mobile. Não incluir deslocamento contínuo, vinhetas ilustradas ou efeitos narrativos extras sem nova aprovação. Esta decisão visual não altera regras de navegação ou persistência do gameplay.
+
+## G18 — Representação visual do ciclo de dia e noite
+
+**Pergunta:** Como comunicar a passagem do dia para a noite preservando a leitura da fazenda e dos animais?
+
+- A — Paletas por período: manhã, tarde, entardecer e noite com mudanças discretas de cores, sem efeitos adicionais.
+- B — Iluminação pixel art: paletas por período com luzes e sombras estilizadas em camadas.
+- C — Atmosfera cinematográfica: transições marcantes, brilhos, sombras profundas e efeitos ambientais expressivos.
+- D — Híbrida legível: paletas e luzes pixel art por período, com limites de contraste e prioridade para leitura de animais e interações.
+
 **Resposta:** PENDENTE.
 
 ## Gates
