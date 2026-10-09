@@ -26,7 +26,8 @@
 
 ## R3 — Plants
 
-- [x] **V206-concepts** Human visual acceptance of isolated concept PNGs for three initial crops (S07-P01 milho, S07-P02 tomate, S07-P03 cenoura), recorded in ARTIST review. This *early concept approval* does not open R3 Godot integration, does not close V206/V207, and does not bypass the animal-first R2 gate.\n- [ ] **V206** Crop stages and growth/harvest animation language (G8/G20) tied to existing state.
+- [x] **V206-concepts** Human visual acceptance of isolated concept PNGs for three initial crops (S07-P01 milho, S07-P02 tomate, S07-P03 cenoura), recorded in ARTIST review. This *early concept approval* does not open R3 Godot integration, does not close V206/V207, and does not bypass the animal-first R2 gate.
+- [ ] **V206** Crop stages and growth/harvest animation language (G8/G20) tied to existing state.
 - [ ] **V207** Validate runtime evidence/mobile performance and care/harvest semantics unchanged.
 
 ## R4 — Farm and town
