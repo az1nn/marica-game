@@ -43,7 +43,9 @@ static func _copy_traits(values: Variant, label: String) -> Dictionary:
         if typeof(raw_name) != TYPE_STRING or str(raw_name).strip_edges().is_empty():
             return {"ok": false, "error": label + " trait name must be a non-empty string"}
         var trait_name: String = str(raw_name)
-        var scalar_result: Dictionary = _unit_value(trait_values[raw_name], label + "." + trait_name)
+        var scalar_result: Dictionary = _unit_value(
+            trait_values[raw_name], label + "." + trait_name
+        )
         if not scalar_result.get("ok", false):
             return scalar_result
         copy[trait_name] = scalar_result["value"]
