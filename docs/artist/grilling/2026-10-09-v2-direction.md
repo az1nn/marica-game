@@ -114,6 +114,19 @@
 - C — Densa e viva: muitos elementos, decoração e atividades visíveis, com risco maior de ruído visual.
 - D — Híbrida com hierarquia: núcleo funcional legível para animais e cultivos, bordas orgânicas e detalhes ambientais graduais.
 
+**Resposta humana:** D — Híbrida com hierarquia.
+
+**Decisão provisória:** o núcleo da fazenda prioriza legibilidade de animais, cultivos e interações, com caminhos funcionais; bordas orgânicas e detalhes ambientais são introduzidos gradualmente. Preservar composição compacta e densa sem obstrução visual, respeitando câmera contextual, escala hierárquica e acessibilidade mobile. Não autoriza construir cenas ou expandir escopo.
+
+## G10 — Linguagem visual das construções e estruturas
+
+**Pergunta:** Qual identidade devem ter celeiros, cercas, abrigos, oficinas e estruturas da fazenda?
+
+- A — Rural tradicional: madeira, telhas, pedra e silhuetas reconhecíveis, com acabamento pixel art simples.
+- B — Fantasia artesanal: volumes lúdicos, telhados expressivos, ornamentos delicados e materiais acolhedores.
+- C — Modular funcional: peças repetíveis, estruturas claras e expansão visual sistemática, com menor custo de produção.
+- D — Híbrida: arquitetura rural reconhecível, detalhes de fantasia cozy e módulos reutilizáveis sob grade pixel art consistente.
+
 **Resposta:** PENDENTE.
 
 ## Gates
