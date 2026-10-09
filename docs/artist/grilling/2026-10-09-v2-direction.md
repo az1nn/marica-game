@@ -23,6 +23,19 @@
 - C — Pixel art com mundo 3D real: geometria 3D renderizada rigidamente em pixels, sem estética low-poly suavizada nem texturas apenas pixeladas.
 - D — Híbrido: personagens em sprites pixelados e cenários 3D, ambos com pixelização coerente.
 
+**Resposta humana:** B — Pixel Art 2.5D.
+
+**Decisão provisória:** sprites/tilemaps pixelados com cenários multicamada, profundidade e iluminação estilizada. Preservar G1 full pixel art. Não interpretar 2.5D como autorização para arte low-poly ou substituição do runtime Godot.
+
+## G3 — Linguagem visual dos animais
+
+**Pergunta:** Qual proporção e expressividade devem orientar os sprites dos animais?
+
+- A — Chibi arredondado: cabeças grandes, corpos compactos, expressões marcantes.
+- B — Naturalista estilizado: anatomia reconhecível, proporções próximas às espécies reais.
+- C — Fantasia cozy: silhuetas originais, traços lúdicos e detalhes mágicos discretos.
+- D — Híbrido por espécie: proporções distintas, com consistência de pixel density e animação.
+
 **Resposta:** PENDENTE.
 
 ## Gates
