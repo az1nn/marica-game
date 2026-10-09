@@ -35,7 +35,7 @@
 - [x] **G422** Portar lifecycle state machine.
 - [x] **G423** Portar simulation time/clock injetável.
 - [x] **G424** Portar genetic potential + expressed traits.
-- [ ] **G425** Portar care state.
+- [x] **G425** Portar care state. Luau care defaults/quality/factors verified by 21 executable Godot golden cases, targeted runner and hunger inversion GOOD→BAD→RESTORE proof (PR #60).
 - [ ] **G426** Portar health/disease/treatment.
 - [ ] **G427** Portar soulbound invariant.
 - [ ] **G428** Portar affection persistente.
