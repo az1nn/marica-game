@@ -6,27 +6,16 @@ Authority: Constitution v2.0.0 · SPEC-004 · ADR-0004
 Runtime: Godot 4.7.2-stable, typed GDScript, single-player/offline-first; GUT v9.7.1 pinned.
 
 Delivered:
-- G410–G416: foundational engine, exact-head CI, deterministic headless runtime smoke and golden fixture harness.
-- G420: pure PetId, identity-only Pet, five verified golden fixtures and whitespace-ID mutation proof.
-- G421: pure LineageId validation and generator, pure Pedigree with founder/descendant generation and parent cardinality/uniqueness rules; detached snapshots prevent caller-side alias mutation.
-- 4 harness selftests, 26 ACTIVE_PARITY domain fixtures (5 PetId, 6 LineageId, 15 Pedigree); six future simulation time/genetics cases remain PENDING_PORT.
-- G421 mutation proof rejects an illegal founder with a direct parent; CI restores exact source and reruns fixtures.
+- G410–G416 foundation, exact-head CI, typed conventions and deterministic golden harness.
+- G420 Pet identity shell and immutable validated IDs.
+- G421 pure LineageId and Pedigree structural invariants and detached snapshots.
+- G422 pure MaricaLifecycle state machine: adjacent juvenile/adult/senior progression; health or natural end rules; terminal irreversibility and fresh snapshots.
+- 45 active parity fixtures total (G420 5, G421 21, G422 19); 4 harness selftests; G423 time and G430 genetics 6 cases still PENDING_PORT.
+- G422 mutation proof rejects premature natural end, then restores source, with G420/G421 mutation regressions retained.
 
 Verification:
-- PR #50 final head 358cf82ba2bba9a12f77607fbfea76feba4092aa: Godot CI PASS, Validate skills PASS, Roblox CI PASS, Roblox Behavioral SKIPPED/non-required.
-- Guarded merge to master@664f6e5d9126af81505d59760b412209ae9e4fdb.
-- Post-merge master@664f6e5d9126af81505d59760b412209ae9e4fdb: Godot CI PASS, Validate skills PASS, Roblox CI PASS.
-- No full animal domain parity, lifecycle, health, care, genetics, succession, save, farm playability or visuals asserted.
+- PR #52 exact head f344981a07d924039e789e7deca62d0bf8363705: Godot CI PASS, Validate skills PASS, Roblox CI PASS, Behavioral SKIPPED.
+- Guarded merge master@b9eb2e4adda8ec521ae8ad32c0f2eedb4547fa8d; post-merge all three required gates PASS.
+- No full Animal Core, timer simulation, health/care, genetics/succession, save, farm playability or visual acceptance claimed.
 
-Boundaries:
-- Pure Godot domain remains independent from Roblox, UI, SceneTree and online providers.
-- Pedigree structural parity precedes lifecycle; semantic authority remains with the approved Luau contracts and SPEC-004 migration map.
-- G429 eventually proves aggregate Animal Core parity, and G430+ own succession.
-
-Next: **G422 — port lifecycle state machine, with executable golden fixtures.**
-
-
-G422 candidate in `feat/g422-godot-lifecycle`:
-- Pure lifecycle transitions implemented from `Lifecycle.luau`, with 19 new `ACTIVE_PARITY` fixtures, headless unit runner, natural-end mutation gate.
-- Status: IMPLEMENTED / awaiting exact-HEAD CI. G423 owns simulation time; no claim of full Animal Core parity.
-- Orchestrator must only mark G422 complete after current PR SHA passes all required CI and mutation proof.
+Next: **G423 — port injectable deterministic simulation clock and rollback golden parity.**
