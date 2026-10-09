@@ -18,3 +18,10 @@ Known gap:
 - G421 validates structural lineage/pedigree only. Composite Pet, lifecycle, simulation clock, genetic potential, care/health, succession, persistent saves, UI and full Animal Core parity not yet proven.
 
 Next: G422 lifecycle state machine, deterministic golden parity + negative/mutation tests.
+
+
+G422 verification candidate:
+- 19 new Luau-origin lifecycle fixtures and strict schema checks.
+- `lifecycle_runner.gd` checks state replacement, snapshot isolation, terminal transitions.
+- Godot CI mutation must detect illegal natural death before `senior` and restore exact source.
+- All listed G422 gates are **PENDING exact-head CI** until a GitHub Actions result is inspected.
