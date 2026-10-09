@@ -60,6 +60,24 @@ class GoldenFixtureSchemaTests(unittest.TestCase):
         contract["cases"][0]["expected"].pop("parentPetIds")
         self.assertTrue(any("canonical snapshot" in e for e in validate(fixture)))
 
+    def test_rejects_lifecycle_invalid_action(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "lifecycle.transitions")
+        contract["cases"][0]["input"]["actions"] = [{"op": "rewind", "stage": "juvenile"}]
+        self.assertTrue(any("unrecognized lifecycle action" in e for e in validate(fixture)))
+
+    def test_rejects_lifecycle_partial_success(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "lifecycle.transitions")
+        contract["cases"][0]["expected"].pop("terminal")
+        self.assertTrue(any("canonical snapshot" in e for e in validate(fixture)))
+
+    def test_rejects_lifecycle_wrong_source(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "lifecycle.transitions")
+        contract["source"] = "src/shared/domain/Pedigree.luau"
+        self.assertTrue(any("requires exact legacy source" in e for e in validate(fixture)))
+
     def test_rejects_missing_provenance(self):
         fixture = copy.deepcopy(self.catalog)
         fixture["contracts"][1]["source"] = "../../foreign-repo/README.md"

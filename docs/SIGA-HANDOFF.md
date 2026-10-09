@@ -34,3 +34,10 @@ NEXT:
 G422 — implement Godot lifecycle state machine and executable golden parity fixtures.
 
 END FILE
+
+
+G422 active candidate (reconcile this section with live truth):
+- Branch: `feat/g422-godot-lifecycle`; claim `.siga/session-claim-g422-20261009-0901-gpt6.md` ACTIVE.
+- 19 lifecycle golden fixtures, pure GDScript state machine, and G422 headless/mutation tests authored; pending exact-head CI verification.
+- G421 remains the last merged/verified domain task; G422 remains unchecked until acceptance.
+- Next: verify G422 current head, repair failing gates if any, then guarded merge and closeout.

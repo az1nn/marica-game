@@ -413,6 +413,337 @@
       ]
     },
     {
+      "id": "lifecycle.transitions",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G422",
+      "source": "src/shared/domain/Lifecycle.luau",
+      "adapter": "game/src/domain/lifecycle.gd",
+      "cases": [
+        {
+          "id": "new-juvenile",
+          "invariant": "new lifecycle starts as active juvenile",
+          "input": {
+            "actions": []
+          },
+          "expected": {
+            "stage": "juvenile",
+            "status": "active",
+            "terminal": false
+          }
+        },
+        {
+          "id": "juvenile-to-adult",
+          "invariant": "first stage transition is exactly one step",
+          "input": {
+            "actions": [
+              {
+                "op": "advance",
+                "stage": "adult"
+              }
+            ]
+          },
+          "expected": {
+            "stage": "adult",
+            "status": "active",
+            "terminal": false
+          }
+        },
+        {
+          "id": "adult-to-senior",
+          "invariant": "two adjacent advances preserve order",
+          "input": {
+            "actions": [
+              {
+                "op": "advance",
+                "stage": "adult"
+              },
+              {
+                "op": "advance",
+                "stage": "senior"
+              }
+            ]
+          },
+          "expected": {
+            "stage": "senior",
+            "status": "active",
+            "terminal": false
+          }
+        },
+        {
+          "id": "health-juvenile",
+          "invariant": "health end may occur in juvenile stage",
+          "input": {
+            "actions": [
+              {
+                "op": "endLife",
+                "reason": "health"
+              }
+            ]
+          },
+          "expected": {
+            "stage": "juvenile",
+            "status": "ended",
+            "endReason": "health",
+            "terminal": true
+          }
+        },
+        {
+          "id": "health-adult",
+          "invariant": "health end may occur after maturation",
+          "input": {
+            "actions": [
+              {
+                "op": "advance",
+                "stage": "adult"
+              },
+              {
+                "op": "endLife",
+                "reason": "health"
+              }
+            ]
+          },
+          "expected": {
+            "stage": "adult",
+            "status": "ended",
+            "endReason": "health",
+            "terminal": true
+          }
+        },
+        {
+          "id": "health-senior",
+          "invariant": "health end is also possible at senior",
+          "input": {
+            "actions": [
+              {
+                "op": "advance",
+                "stage": "adult"
+              },
+              {
+                "op": "advance",
+                "stage": "senior"
+              },
+              {
+                "op": "endLife",
+                "reason": "health"
+              }
+            ]
+          },
+          "expected": {
+            "stage": "senior",
+            "status": "ended",
+            "endReason": "health",
+            "terminal": true
+          }
+        },
+        {
+          "id": "natural-senior",
+          "invariant": "natural ending is allowed only for senior",
+          "input": {
+            "actions": [
+              {
+                "op": "advance",
+                "stage": "adult"
+              },
+              {
+                "op": "advance",
+                "stage": "senior"
+              },
+              {
+                "op": "endLife",
+                "reason": "natural"
+              }
+            ]
+          },
+          "expected": {
+            "stage": "senior",
+            "status": "ended",
+            "endReason": "natural",
+            "terminal": true
+          }
+        },
+        {
+          "id": "reject-skip",
+          "invariant": "cannot skip juvenile to senior",
+          "input": {
+            "actions": [
+              {
+                "op": "advance",
+                "stage": "senior"
+              }
+            ]
+          },
+          "expected_error": "Lifecycle stages must advance exactly one step"
+        },
+        {
+          "id": "reject-backwards",
+          "invariant": "cannot advance adult backwards",
+          "input": {
+            "actions": [
+              {
+                "op": "advance",
+                "stage": "adult"
+              },
+              {
+                "op": "advance",
+                "stage": "juvenile"
+              }
+            ]
+          },
+          "expected_error": "Lifecycle stages must advance exactly one step"
+        },
+        {
+          "id": "reject-repeated",
+          "invariant": "cannot advance adult to adult",
+          "input": {
+            "actions": [
+              {
+                "op": "advance",
+                "stage": "adult"
+              },
+              {
+                "op": "advance",
+                "stage": "adult"
+              }
+            ]
+          },
+          "expected_error": "Lifecycle stages must advance exactly one step"
+        },
+        {
+          "id": "reject-natural-juvenile",
+          "invariant": "juvenile cannot die naturally",
+          "input": {
+            "actions": [
+              {
+                "op": "endLife",
+                "reason": "natural"
+              }
+            ]
+          },
+          "expected_error": "Natural end of life requires senior stage"
+        },
+        {
+          "id": "reject-natural-adult",
+          "invariant": "adult cannot die naturally",
+          "input": {
+            "actions": [
+              {
+                "op": "advance",
+                "stage": "adult"
+              },
+              {
+                "op": "endLife",
+                "reason": "natural"
+              }
+            ]
+          },
+          "expected_error": "Natural end of life requires senior stage"
+        },
+        {
+          "id": "reject-stage-name",
+          "invariant": "only three lifecycle stages permitted",
+          "input": {
+            "actions": [
+              {
+                "op": "advance",
+                "stage": "elder"
+              }
+            ]
+          },
+          "expected_error": "Lifecycle stage is invalid"
+        },
+        {
+          "id": "reject-stage-nonstring",
+          "invariant": "stage must be a string",
+          "input": {
+            "actions": [
+              {
+                "op": "advance",
+                "stage": 12
+              }
+            ]
+          },
+          "expected_error": "Lifecycle stage is invalid"
+        },
+        {
+          "id": "reject-end-reason",
+          "invariant": "end reason is limited to natural or health",
+          "input": {
+            "actions": [
+              {
+                "op": "endLife",
+                "reason": "unknown"
+              }
+            ]
+          },
+          "expected_error": "Lifecycle end reason is invalid"
+        },
+        {
+          "id": "reject-end-reason-number",
+          "invariant": "end reason must not be a number",
+          "input": {
+            "actions": [
+              {
+                "op": "endLife",
+                "reason": 100
+              }
+            ]
+          },
+          "expected_error": "Lifecycle end reason is invalid"
+        },
+        {
+          "id": "reject-advance-after-end",
+          "invariant": "ended lifecycle never advances",
+          "input": {
+            "actions": [
+              {
+                "op": "endLife",
+                "reason": "health"
+              },
+              {
+                "op": "advance",
+                "stage": "adult"
+              }
+            ]
+          },
+          "expected_error": "Ended lifecycle cannot advance"
+        },
+        {
+          "id": "reject-reend-after-end",
+          "invariant": "ended lifecycle never ends twice",
+          "input": {
+            "actions": [
+              {
+                "op": "endLife",
+                "reason": "health"
+              },
+              {
+                "op": "endLife",
+                "reason": "health"
+              }
+            ]
+          },
+          "expected_error": "Ended lifecycle is terminal"
+        },
+        {
+          "id": "reject-change-end-reason",
+          "invariant": "ended lifecycle cannot change termination reason",
+          "input": {
+            "actions": [
+              {
+                "op": "endLife",
+                "reason": "health"
+              },
+              {
+                "op": "endLife",
+                "reason": "natural"
+              }
+            ]
+          },
+          "expected_error": "Ended lifecycle is terminal"
+        }
+      ]
+    },
+    {
       "id": "simulation_time.observe",
       "status": "PENDING_PORT",
       "milestone": "G423",

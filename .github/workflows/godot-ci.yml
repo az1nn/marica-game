@@ -217,6 +217,50 @@ jobs:
           git diff --exit-code -- game/src/domain/pedigree.gd
           echo "MARICA_G421_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
 
+      - name: G422 lifecycle state machine and Luau golden parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/lifecycle_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g422-lifecycle.log"
+          grep -Fq 'MARICA_G422_LIFECYCLE_PASS' "$RUNNER_TEMP/g422-lifecycle.log"
+          grep -Fq 'MARICA_G422_LIFECYCLE_PARITY_PASS cases=19' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'parity=NOT_YET_PROVEN' "$RUNNER_TEMP/godot-g416-fixtures.log"
+
+      - name: G422 lifecycle natural-end mutation proof (GOOD > BAD > RESTORE)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp game/src/domain/lifecycle.gd "$RUNNER_TEMP/g422-lifecycle-good.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("game/src/domain/lifecycle.gd")
+          source = path.read_text(encoding="utf-8")
+          target = 'if reason == "natural" and current._stage != "senior":'
+          assert source.count(target) == 1, "G422 natural-end guard has drifted"
+          path.write_text(source.replace(target, 'if false and current._stage != "senior":'), encoding="utf-8")
+          print("G422 mutant: early natural end mistakenly allowed")
+          PY
+          set +e
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/golden_fixture_runner.gd \
+            > "$RUNNER_TEMP/g422-mutant.log" 2>&1
+          mutant_exit="$?"
+          set -e
+          cp "$RUNNER_TEMP/g422-lifecycle-good.gd" game/src/domain/lifecycle.gd
+          if test "$mutant_exit" -eq 0; then
+            echo "G422 mutant unexpectedly passed"
+            exit 1
+          fi
+          grep -Fq 'lifecycle.transitions golden mismatch' "$RUNNER_TEMP/g422-mutant.log"
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/golden_fixture_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g422-restore.log"
+          grep -Fq 'MARICA_G422_LIFECYCLE_PARITY_PASS cases=19' "$RUNNER_TEMP/g422-restore.log"
+          git diff --exit-code -- game/src/domain/lifecycle.gd
+          echo "MARICA_G422_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
+
       - name: Upload Godot CI diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -235,4 +279,7 @@ jobs:
             ${{ runner.temp }}/g421-lineage-pedigree.log
             ${{ runner.temp }}/g421-mutant.log
             ${{ runner.temp }}/g421-restore.log
+            ${{ runner.temp }}/g422-lifecycle.log
+            ${{ runner.temp }}/g422-mutant.log
+            ${{ runner.temp }}/g422-restore.log
           if-no-files-found: warn
