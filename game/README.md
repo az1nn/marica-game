@@ -100,3 +100,13 @@ godot --headless --path game --script res://tests/pet_identity_runner.gd
 ```
 
 Passing G420 proves identity validation and the limited Pet shell only, **not** Animal Core parity or playability.
+
+## G421 — Lineage and pedigree (real Godot parity)
+
+`src/domain/lineage_id.gd` validates and generates nonblank lineage IDs through an injected Callable (deterministic, no online service). `src/domain/pedigree.gd` constructs founder and descendant pedigree records with a validated lineage ID, founder Pet ID, nonnegative integral generation, zero parents for founders, one or two distinct parents for descendants, and stable direct-parent order. The source contracts are `src/shared/domain/LineageId.luau` and `src/shared/domain/Pedigree.luau`.
+
+Construction returns explicit `{ok, pedigree|error}` results instead of relying on Luau's `error()`; the golden runner compares equivalent values/errors. Input parent arrays are copied, accessors return detached copies, and snapshots are detached and serializable. There are **no public pedigree setters**. This proves practical API-level immutability, not language-enforced private fields.
+
+`tests/fixtures/golden.json` runs 6 `lineage_id.from_string` and 15 `pedigree.create` cases as `ACTIVE_PARITY`; PetId's 5 verified cases remain active. Simulation time and genetics remain `PENDING_PORT`. Python schema validation disallows unapproved migration contracts; the Godot runner checks deterministic repeatability, rejection cases, and structurally equivalent output.
+
+CI also runs `tests/lineage_pedigree_runner.gd`, which verifies injected lineage IDs and mutation-resistant detached snapshots, plus a GOOD→BAD→RESTORE mutation check against the forbidden founder-with-parent case. No lifecycle, genetics, succession, save, or playable farm behavior is certified by G421.
