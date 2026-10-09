@@ -11,7 +11,13 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 CATALOG = ROOT / "game/tests/fixtures/golden.json"
 VALID_STATUSES = {"ACTIVE_SELFTEST", "ACTIVE_PARITY", "PENDING_PORT"}
-APPROVED_PARITY = {"pet_id.from_string": ("G420", "game/src/domain/pet_id.gd")}
+APPROVED_PARITY = {
+    "pet_id.from_string": ("G420", "game/src/domain/pet_id.gd", "src/shared/domain/PetId.luau"),
+    "lineage_id.from_string": (
+        "G421", "game/src/domain/lineage_id.gd", "src/shared/domain/LineageId.luau"
+    ),
+    "pedigree.create": ("G421", "game/src/domain/pedigree.gd", "src/shared/domain/Pedigree.luau"),
+}
 
 
 def validate(document: Any, root: Path = ROOT) -> list[str]:
@@ -54,7 +60,7 @@ def validate(document: Any, root: Path = ROOT) -> list[str]:
                 errors.append(f"{key}: incorrect parity milestone or adapter")
             if approved is not None and not (root / approved[1]).is_file():
                 errors.append(f"{key}: missing executable Godot parity adapter")
-            if contract.get("source") != "src/shared/domain/PetId.luau":
+            if approved is not None and contract.get("source") != approved[2]:
                 errors.append(f"{key}: parity requires exact legacy source provenance")
         milestone = contract.get("milestone")
         if not isinstance(milestone, str) or not milestone.startswith("G4"):
@@ -105,10 +111,22 @@ def validate(document: Any, root: Path = ROOT) -> list[str]:
                     errors.append(f"{key}/{case_id}: self-test input needs left/right")
             elif status == "ACTIVE_PARITY":
                 verified += 1
-                if not isinstance(case.get("input"), dict) or set(case["input"]) != {"value"}:
-                    errors.append(f"{key}/{case_id}: PetId parity requires one value input")
-                if has_expected and case.get("expected", {}).keys() != {"id"}:
-                    errors.append(f"{key}/{case_id}: PetId success must expect id")
+                if key in {"pet_id.from_string", "lineage_id.from_string"}:
+                    if not isinstance(case.get("input"), dict) or set(case["input"]) != {"value"}:
+                        errors.append(f"{key}/{case_id}: ID parity requires exactly one value input")
+                    if has_expected and set(case.get("expected", {})) != {"id"}:
+                        errors.append(f"{key}/{case_id}: ID success must expect id")
+                if key == "pedigree.create":
+                    fields = {"lineageId", "generation", "founderPetId", "parentPetIds"}
+                    if not isinstance(case.get("input"), dict):
+                        errors.append(f"{key}/{case_id}: pedigree input must be object")
+                    elif not set(case["input"]).issubset(fields):
+                        errors.append(f"{key}/{case_id}: unrecognized pedigree input fields")
+                    if has_expected and (
+                        not isinstance(case.get("expected"), dict)
+                        or set(case["expected"]) != fields
+                    ):
+                        errors.append(f"{key}/{case_id}: pedigree success must expect canonical snapshot")
             elif status == "PENDING_PORT":
                 pending += 1
 
