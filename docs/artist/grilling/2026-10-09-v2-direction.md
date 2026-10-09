@@ -36,6 +36,19 @@
 - C — Fantasia cozy: silhuetas originais, traços lúdicos e detalhes mágicos discretos.
 - D — Híbrido por espécie: proporções distintas, com consistência de pixel density e animação.
 
+**Resposta humana:** C — Fantasia cozy.
+
+**Decisão provisória:** animais com silhuetas originais, traços lúdicos e detalhes mágicos discretos, preservando expressividade, legibilidade e identidade full pixel art 2.5D. Não implica novas mecânicas mágicas ou mudança de lore sem decisão específica.
+
+## G4 — Atmosfera cromática e iluminação
+
+**Pergunta:** Qual atmosfera visual deve dominar a fazenda?
+
+- A — Primavera luminosa: verdes frescos, céu claro e cores vivas, sombras suaves.
+- B — Pastel aconchegante: tons delicados, luz difusa e sensação tranquila.
+- C — Tropical encantado: vegetação exuberante, cores quentes e acentos mágicos discretos.
+- D — Ciclo dinâmico: identidade cromática que varia fortemente com hora, clima e estações.
+
 **Resposta:** PENDENTE.
 
 ## Gates
