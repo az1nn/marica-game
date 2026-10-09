@@ -1,6 +1,6 @@
 # ARTIST — V1 screen and asset map (Godot / V2 approved visual language)
 
-**Status:** S01 V3 SCREEN CONCEPT ACCEPTED; **DOG FOUNDER CONFIRMED**; **PET-ALT-001 CAPYBARA CONCEPT ACCEPTED**; **S01-A01 DOG SPRITE CONCEPT PENDING**; **S07-P01..P03 initial plant concepts ACCEPTED**; production sprites/runtime pending
+**Status:** **V1 3×3 COMPOSITE ART CONCEPT ACCEPTED** (2026-10-09); S01 V3 SCREEN CONCEPT ACCEPTED; DOG FOUNDER CONFIRMED; PET-ALT-001 CAPYBARA and PET-ALT-002 CHICKEN concept boards ACCEPTED; S07-P01..P03 PLANT CONCEPTS ACCEPTED; **S01-A01 ISOLATED DOG SPRITE PENDING**; Godot sprites/runtime unverified
 **Baseline:** `master@947010158d0bc63d21afcf18c75a0dab187b9e46` (2026-10-09)
 **Authority:** SPEC-004 V1 gameplay/screens, SPEC-005 ARTIST V2 G1–G25, `docs/VISUAL-DIRECTION.md`, `docs/lore/CANON.md`.
 **Purpose:** Queue individually reviewed screen concepts and corresponding art assets. This document does **not** claim that approved screen layouts, production sprites, or Godot scenes already exist.
@@ -43,6 +43,12 @@
 | **PET-ALT-002** | Cream-white hen, red comb, golden beak/feet | Character **concept board ACCEPTED**, independent visual | **Third V1 animal type**, not founder; production sprite pending, no unapproved egg/food gameplay assumed |
 
 See `docs/artist/reviews/2026-10-09-founder-dog-and-alternate-capybara.md` for founder-role decision, `docs/artist/reviews/PET-ALT-002-2026-10-09-chicken-accepted.md` for approved chicken, and `specs/004-godot-v1-transition/spec.md` §3.1 for binding initial V1 scope: **exactly 3 animal types and exactly 3 named initial plant/crop types (milho, tomate, cenoura)**. Existing G463 fruit tree belongs to the later expanded crop slice.
+
+## Consolidated V1 ARTIST board — ACCEPTED (concept only)
+
+The user explicitly approved the revised **3 animal × 3 crop** composite board on **2026-10-09**, after replacement of the earlier mistaken lettuce/pepper depictions. **Approved species:** founder **cachorro**; alternate **capivara**; alternate **galinha**; and crops **milho S07-P01 / tomate S07-P02 / cenoura S07-P03**. The approved 1536×1024 PNG `wide_game_concept_art_design_sheet_in_pixel_art_2.png` has SHA-256 `64985c0a27ef2975bd8c44d43c1e0e8a9a6cfac881862af14850d69050894098` and exists in the conversation, **not as a committed GitHub binary**.
+
+**Authoritative visual acceptance:** `docs/artist/reviews/V1-3X3-ART-CONCEPT-2026-10-09-accepted.md`; prior correction rationale: `docs/artist/reviews/V1-3X3-ART-CONCEPT-CORRECTION-2026-10-09.md`. Scope is reference/composition only: the board's egg-production caption and illustration-only animation sheets/technical grid labels do **not** add gameplay rules, pass ARCH/LENTE/runtime checks, or complete S01-A01 isolated sprite. **Next unchanged:** founder dog isolated sprite review first, with SPEC-005 R2/ARCH V201–V201a gates respected.
 
 ## Reusable asset families — mapped requirements, not approved artwork
 
