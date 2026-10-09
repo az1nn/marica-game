@@ -179,9 +179,7 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
         result = GENETICS.new_potential(case_input.get("values"))
     elif identifier == "genetics.express":
         result = GENETICS.express(case_input.get("potential"), case_input.get("factors", null))
-    if not result.get("ok", false):
-        return {"error": result.get("error", "")}
-    if identifier == "care.create":
+    elif identifier == "care.create":
         result = CARE.create(case_input.get("values", null))
     elif identifier == "care.quality":
         result = CARE.quality(case_input.get("values", null))
