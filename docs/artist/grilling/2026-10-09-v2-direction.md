@@ -283,11 +283,71 @@
 - C — Personalização cosmética: materiais, cores e decoração diferenciáveis, sem linguagem obrigatória de níveis.
 - D — Híbrida modular: silhueta-base reconhecível, expansões funcionais visíveis e detalhes cosméticos discretos.
 
-**Resposta:** PENDENTE.
+**Resposta técnica ARTIST (delegação para decisões não críticas):** D — Híbrida modular.
+
+**Decisão provisória:** conservar a silhueta-base reconhecível dos edifícios, mostrar expansões funcionais de modo visualmente identificável e limitar detalhes cosméticos para preservar legibilidade e coesão. Não pressupor níveis, módulos ou personalizações inexistentes no DESIGN. Esta resposta foi inferida autonomamente a pedido do usuário, não é aprovação final da direção V2.
+
+## G23 — Legibilidade e escalabilidade no mobile
+
+**Pergunta técnica:** Como escalar sprites, cenários e HUD em telas pequenas e diferentes proporções?
+
+- A — Escala única: manter a mesma densidade e tamanho aparente em todos os dispositivos.
+- B — Zoom livre: deixar escala e legibilidade principalmente a cargo da câmera.
+- C — Layout e enquadramento responsivos: preservar grid pixel-perfect com ajustes de enquadramento e HUD por dispositivo.
+- D — Recriação por dispositivo: múltiplos conjuntos artísticos por resolução.
+
+**Resposta técnica ARTIST (delegação):** C — Layout e enquadramento responsivos.
+
+**Decisão provisória:** preservar inteireza de pixels na arte, sprites sem blur, alvos de toque confortáveis, HUD limpo e leitura de animais e interações em telas pequenas. Ajustar enquadramento e layout por viewport, sem alterar gameplay ou contrariar câmera contextual (G6 D). Definir resolução-base e escalas exatas apenas em protótipo validado.
+
+## G24 — Hierarquia de efeitos e desempenho visual
+
+**Pergunta técnica:** Como conciliar a atmosfera cinematográfica (G18 C), as animações de cultivo (G20 C) e o feedback minimalista (G12 A) com o desempenho?
+
+- A — Efeitos máximos: manter todos os efeitos simultaneamente.
+- B — Prioridade por foco: enfatizar somente os eventos/áreas relevantes ao jogador e limitar sobreposições.
+- C — Sem pós-processamento: eliminar efeitos ambientais custosos.
+- D — Configuração irrestrita: deixar toda escolha visual ao jogador.
+
+**Resposta técnica ARTIST (delegação):** B — Prioridade por foco.
+
+**Decisão provisória:** aplicar efeitos expressivos no mundo em momentos significativos e controlar sua simultaneidade e custo; manter HUD discreto. Cinematografia de dia/noite não implica efeitos permanentes em cada objeto; clima e estação seguem predominantemente com paletas e tiles (G19 A). Medir no Godot alvo com LENTE/performance antes de aceitação.
+
+## G25 — Critério de validação da direção visual V2
+
+**Pergunta técnica:** Qual evidência deve preceder a substituição do baseline V1?
+
+- A — Aprovação textual: aceitar a descrição sem comparação visual.
+- B — Um único mockup: avaliar uma captura estática como suficiente.
+- C — Pacote de evidências comparativas: sprites, cenas e UI representativos com validação independente.
+- D — Implementação total: trocar todo o jogo antes de avaliar o resultado.
+
+**Resposta técnica ARTIST (delegação):** C — Pacote de evidências comparativas.
+
+**Decisão provisória:** após aprovação humana da proposta, preparar implementação incremental em escopo separado, com exemplos dos três pilares Animals → Plants → Farm Structure, UI mobile e momentos dia/noite. Validar sprites pixel-perfect, legibilidade, efeitos, navegação, desempenho, acessibilidade, evidência visual LENTE e comparação A/B independente do executor. Não confundir mockup com runtime aprovado; reject continua válido.
+
+## Consolidação provisória ARTIST V2 — síntese e conflitos
+
+- **Núcleo visual:** full pixel art (G1), mundo 2.5D por sprites/tilemaps (G2), fantasia cozy (G3), escala hierárquica (G5) e câmera contextual (G6).
+- **Animais:** expressividade por importância (G7) com estados informativos apenas sob demanda (G14); prioridade narrativa e visual preservada.
+- **Plantas:** crescimento botânico reconhecível (G8) e animações expressivas em momentos importantes (G20).
+- **Fazenda:** densidade funcional e orgânica (G9), estruturas reconhecíveis (G10), construção contextual (G21), melhorias modulares propostas (G22).
+- **Cidade:** orientação funcional (G15), NPCs híbridos (G16), corte direto entre cenas (G17).
+- **UI:** moderna e discreta (G11), feedback minimalista (G12), paleta estável (G13), responsividade pixel-perfect proposta (G23).
+- **Ambiente:** ciclo dinâmico (G4), dia/noite cinematográfico (G18), estações de baixo custo por paleta/tiles (G19), efeitos com prioridade por foco proposta (G24).
+- **Conflitos resolvidos na proposta:** efeitos cinematográficos e animações expressivas pertencem ao mundo e a eventos significativos, não à sobrecarga do HUD; clima/estação permanecem econômicos; performance e contraste não são negociáveis na verificação.
+- **Validação sugerida:** evidência comparativa incremental G25 C, com gates ARTIST, ARCH, LENTE e SIGA conforme autoridade de domínio.
+- **Proveniência:** G1–G21 são respostas humanas preservadas; G22–G25 são decisões técnicas inferidas por ARTIST sob delegação do usuário. Nenhuma decisão técnica equivale a aprovação humana do novo baseline.
+
+## Gate de aprovação final
+
+**Estado:** PROPOSTA CONSOLIDADA / AGUARDA APROVAÇÃO HUMANA EXPLÍCITA.
+
+A mudança de baseline low-poly para full pixel art 2.5D é material e deve ser validada pelo usuário antes de substituir `docs/VISUAL-DIRECTION.md` ou abrir implementação visual. Não alterar código, cenas, assets ou runtime enquanto este gate estiver aberto.
 
 ## Gates
 
 1. Não alterar estilo V1 ativo nem código/cenas/assets neste estágio.
-2. Consolidar respostas da sessão em proposta ARTIST V2 para aprovação humana explícita.
+2. Proposta ARTIST V2 consolidada com G1–G21 humanas e G22–G25 técnicas delegadas; aguarda aprovação humana explícita.
 3. Após aprovação, reconciliar direção visual, specs, pipeline de CENA e evidência LENTE sob SIGA.
 4. Respeitar ordem de produto Animals → Plants → Farm Structure.
