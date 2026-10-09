@@ -179,6 +179,32 @@
 - C — Expressão do animal: poses, expressões e sinais no próprio sprite como canal principal de estado.
 - D — Híbrido sob demanda: visão geral com poucos alertas semânticos e detalhes completos ao selecionar o animal, apoiados por sua expressão visual.
 
+**Resposta humana:** D — Híbrido sob demanda.
+
+**Decisão provisória:** visão geral com alertas semânticos essenciais; seleção do animal abre detalhes dos estados já previstos, apoiados por expressões dos sprites. Preservar G11 B, G12 A e G13 D. Não criar novos atributos de gameplay.
+
+## G15 — Identidade visual do centro da cidade
+
+**Pergunta:** Como o centro da cidade deve se relacionar visualmente com a fazenda, preservando full pixel art 2.5D?
+
+- A — Vila rural contínua: mesma arquitetura e paleta da fazenda, com ruas e serviços mais concentrados.
+- B — Vila fantástica: formas lúdicas e ornamentos mágicos mais evidentes, mantendo leitura de NPCs e serviços.
+- C — Centro funcional: ruas claras, fachadas distintas e sinalização forte para localizar serviços rapidamente.
+- D — Híbrida: continuidade cozy com a fazenda, identidade própria para serviços/NPCs e composição funcional acessível.
+
+**Resposta humana:** C — Centro funcional.
+
+**Decisão provisória:** ruas, fachadas e sinalização priorizam identificação imediata de serviços e NPCs. Preservar coerência full pixel art 2.5D, fantasia cozy e legibilidade mobile. Não ampliar serviços ou gameplay sem DESIGN.
+
+## G16 — Identidade visual dos NPCs da cidade
+
+**Pergunta:** Como distinguir NPCs, profissões e serviços sem competir visualmente com os animais?
+
+- A — Silhuetas profissionais: vestimentas e acessórios reconhecíveis, com cores funcionais.
+- B — Fantasia caricatural: personagens expressivos e figurinos lúdicos marcantes.
+- C — Sinalização contextual: aparência simples e profissão comunicada por placas e ícones próximos.
+- D — Híbrida: silhuetas claras, acessórios profissionais discretos e sinalização contextual, com animais mantendo protagonismo.
+
 **Resposta:** PENDENTE.
 
 ## Gates
