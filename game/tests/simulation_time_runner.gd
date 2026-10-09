@@ -24,22 +24,22 @@ func _run_tests() -> void:
 
 func _test_forward_and_repeat() -> bool:
     var first: Dictionary = _observe(1000, 900)
-    if first.get("observation") != {"rawNow": 1000, "logicalNow": 1000, "elapsed": 100}:
+    if not _matches(first, 1000.0, 1000.0, 100.0):
         return _fail("forward observation differs from injected time")
     var second: Dictionary = _observe(1250, first["observation"]["logicalNow"])
-    if second.get("observation") != {"rawNow": 1250, "logicalNow": 1250, "elapsed": 250}:
+    if not _matches(second, 1250.0, 1250.0, 250.0):
         return _fail("offline elapsed time is not deterministic")
-    if second != _observe(1250, 1000):
+    if not _matches(_observe(1250, 1000), 1250.0, 1250.0, 250.0):
         return _fail("repeated observations differ for identical inputs")
     return true
 
 
 func _test_rollback() -> bool:
     var rollback: Dictionary = _observe(900, 1000)
-    if rollback.get("observation") != {"rawNow": 900, "logicalNow": 1000, "elapsed": 0}:
+    if not _matches(rollback, 900.0, 1000.0, 0.0):
         return _fail("clock rollback moved logical time backwards")
     var recovery: Dictionary = _observe(1100, rollback["observation"]["logicalNow"])
-    if recovery.get("observation") != {"rawNow": 1100, "logicalNow": 1100, "elapsed": 100}:
+    if not _matches(recovery, 1100.0, 1100.0, 100.0):
         return _fail("clock recovery double-counted elapsed time")
     return true
 
@@ -77,15 +77,23 @@ func _test_clock_injection() -> bool:
 
 
 func _test_fractional() -> bool:
-    if (
-        _observe(101.75, 100.25).get("observation")
-        != {"rawNow": 101.75, "logicalNow": 101.75, "elapsed": 1.5}
-    ):
+    if not _matches(_observe(101.75, 100.25), 101.75, 101.75, 1.5):
         return _fail("fractional elapsed time truncated")
-    if _observe(0, 0).get("observation") != {"rawNow": 0, "logicalNow": 0, "elapsed": 0}:
+    if not _matches(_observe(0, 0), 0.0, 0.0, 0.0):
         return _fail("zero timestamps were rejected")
     return true
 
+
+func _matches(result: Dictionary, raw_now: float, logical_now: float, elapsed: float) -> bool:
+    if not result.get("ok", false):
+        return false
+    var observation: Dictionary = result.get("observation", {})
+    return (
+        observation.size() == 3
+        and observation.get("rawNow") == raw_now
+        and observation.get("logicalNow") == logical_now
+        and observation.get("elapsed") == elapsed
+    )
 
 func _observe(raw_now: Variant, last_observed_at: Variant) -> Dictionary:
     _clock_value = raw_now
