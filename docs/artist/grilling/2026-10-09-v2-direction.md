@@ -205,6 +205,19 @@
 - C — Sinalização contextual: aparência simples e profissão comunicada por placas e ícones próximos.
 - D — Híbrida: silhuetas claras, acessórios profissionais discretos e sinalização contextual, com animais mantendo protagonismo.
 
+**Resposta humana:** D — Híbrida.
+
+**Decisão provisória:** NPCs usam silhuetas legíveis, acessórios profissionais discretos e sinalização contextual de serviços, preservando a identidade full pixel art 2.5D e a clareza do centro funcional (G15 C). Animais permanecem protagonistas; não ampliar elenco, profissões ou sistemas sem DESIGN/LORE.
+
+## G17 — Transições visuais entre fazenda e cidade
+
+**Pergunta:** Como a mudança entre fazenda e centro urbano deve ser apresentada visualmente?
+
+- A — Corte direto: troca de cena imediata com transição curta e discreta.
+- B — Caminho contínuo: deslocamento visual pelo mapa sem tela de transição, mantendo escala e orientação.
+- C — Vinheta ilustrada: transição curta em pixel art com arte contextual e sensação de viagem.
+- D — Híbrida funcional: navegação rápida com transição discreta por padrão e vinhetas pontuais em momentos narrativos importantes.
+
 **Resposta:** PENDENTE.
 
 ## Gates
