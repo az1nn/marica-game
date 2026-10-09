@@ -17,9 +17,7 @@ var _status: String
 func _init(neglect_hours: float, untreated_hours: float) -> void:
     _neglect_hours = neglect_hours
     _status = _derive_status(neglect_hours)
-    _untreated_hours = (
-        0.0 if _status in ["healthy", "neglected"] else untreated_hours
-    )
+    _untreated_hours = (0.0 if _status in ["healthy", "neglected"] else untreated_hours)
 
 
 func to_snapshot() -> Dictionary:
@@ -71,10 +69,7 @@ static func advance(state: Variant, care_state: Variant, elapsed_hours: Variant)
 
     if care_quality < NEGLECT_QUALITY_THRESHOLD:
         next_neglect += hours
-    elif (
-        current._status in ["healthy", "neglected"]
-        and care_quality >= RECOVERY_QUALITY_THRESHOLD
-    ):
+    elif current._status in ["healthy", "neglected"] and care_quality >= RECOVERY_QUALITY_THRESHOLD:
         next_neglect = maxf(0.0, next_neglect - hours)
 
     var next_status: String = _derive_status(next_neglect)
@@ -117,8 +112,7 @@ static func is_terminal_risk(state: Variant) -> Dictionary:
         return parsed
     var current: MaricaHealth = parsed["health"]
     var terminal: bool = (
-        current._status == "critical"
-        and current._untreated_hours >= TERMINAL_UNTREATED_HOURS
+        current._status == "critical" and current._untreated_hours >= TERMINAL_UNTREATED_HOURS
     )
     return {"ok": true, "terminal": terminal}
 
