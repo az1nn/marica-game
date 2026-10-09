@@ -168,9 +168,7 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
     elif identifier == "genetics.new_potential":
         result = GENETICS.new_potential(case_input.get("values"))
     elif identifier == "genetics.express":
-        result = GENETICS.express(
-            case_input.get("potential"), case_input.get("factors", null)
-        )
+        result = GENETICS.express(case_input.get("potential"), case_input.get("factors", null))
     if not result.get("ok", false):
         return {"error": result.get("error", "")}
     if identifier in ["genetics.new_potential", "genetics.express"]:

@@ -24,7 +24,7 @@ static func express(potential: Variant, factors: Variant = null) -> Dictionary:
         if not potential_map.has(raw_name):
             return {
                 "ok": false,
-                "error": "Expression factor references unknown trait \"" + str(raw_name) + "\"",
+                "error": 'Expression factor references unknown trait "' + str(raw_name) + '"',
             }
 
     var expressed: Dictionary = {}
