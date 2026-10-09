@@ -40,8 +40,9 @@
 | --- | --- | --- | --- |
 | **S01-A01** | Tricolor puppy from approved S01 V3 | Screen V3 accepted; isolated sprite **PENDING** | **Founder / P0 first**, next isolated sprite review |
 | **PET-ALT-001** | Brown capybara-like companion with blue bandana / green pack | Character **concept board ACCEPTED**, independent visual | **Other animal (not founder)**; production sprite pending, no backpack mechanics assumed |
+| **PET-ALT-002** | Cream-white hen, red comb, golden beak/feet | Character **concept board ACCEPTED**, independent visual | **Third V1 animal type**, not founder; production sprite pending, no unapproved egg/food gameplay assumed |
 
-See `docs/artist/reviews/2026-10-09-founder-dog-and-alternate-capybara.md` for human decision and historical board-label correction.
+See `docs/artist/reviews/2026-10-09-founder-dog-and-alternate-capybara.md` for founder-role decision, `docs/artist/reviews/PET-ALT-002-2026-10-09-chicken-accepted.md` for approved chicken, and `specs/004-godot-v1-transition/spec.md` §3.1 for binding initial V1 scope: **exactly 3 animal types and exactly 3 unnamed initial plant/crop types**. Existing G463 fruit tree belongs to the later expanded crop slice.
 
 ## Reusable asset families — mapped requirements, not approved artwork
 
@@ -57,7 +58,7 @@ See `docs/artist/reviews/2026-10-09-founder-dog-and-alternate-capybara.md` for h
 - Farm/navigation HUD and selection affordances with generous touch zones.
 
 ### C. Plants/crops
-- At least **3 crop families + 1 fruit-tree family** per SPEC-004; each stage (seed/young/growing/ripe) as domain requires; harvest-ready animations and harvested item icons.
+- **Exactly 3 initial crop/plant families** (identities to be decided under DESIGN/LORE), plus **1 fruit tree in the later expanded cultivation slice** under unchanged SPEC-004 US-403/G463; each stage (seed/young/growing/ripe) as domain requires; harvest-ready animations and harvested item icons.
 - Inventory & food feedback; no speculative new botanical species or cultivation mechanics.
 
 ### D. City/services
