@@ -145,7 +145,7 @@
     },
     {
       "id": "lineage_id.from_string",
-      "status": "PENDING_PORT",
+      "status": "ACTIVE_PARITY",
       "milestone": "G421",
       "source": "src/shared/domain/LineageId.luau",
       "cases": [
@@ -166,6 +166,249 @@
             "value": ""
           },
           "expected_error": "LineageId must not be empty"
+        },
+        {
+          "id": "lineage-whitespace-only",
+          "invariant": "whitespace-only lineage IDs rejected",
+          "input": {
+            "value": " \t "
+          },
+          "expected_error": "LineageId must not be empty"
+        },
+        {
+          "id": "lineage-non-string",
+          "invariant": "number cannot become lineage identity",
+          "input": {
+            "value": 42
+          },
+          "expected_error": "LineageId must be a string"
+        },
+        {
+          "id": "lineage-preserve-whitespace",
+          "invariant": "nonblank IDs preserved verbatim",
+          "input": {
+            "value": " lin-2 "
+          },
+          "expected": {
+            "id": " lin-2 "
+          }
+        },
+        {
+          "id": "lineage-reject-null",
+          "invariant": "null is not a string",
+          "input": {
+            "value": null
+          },
+          "expected_error": "LineageId must be a string"
+        }
+      ],
+      "adapter": "game/src/domain/lineage_id.gd"
+    },
+    {
+      "id": "pedigree.create",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G421",
+      "source": "src/shared/domain/Pedigree.luau",
+      "adapter": "game/src/domain/pedigree.gd",
+      "cases": [
+        {
+          "id": "founder-default",
+          "invariant": "founder has zero parents and generation zero",
+          "input": {
+            "lineageId": "lineage-001",
+            "generation": 0,
+            "founderPetId": "pet-founder-001"
+          },
+          "expected": {
+            "lineageId": "lineage-001",
+            "generation": 0,
+            "founderPetId": "pet-founder-001",
+            "parentPetIds": []
+          }
+        },
+        {
+          "id": "founder-explicit",
+          "invariant": "explicit empty parents stay empty",
+          "input": {
+            "lineageId": "lineage-001",
+            "generation": 0,
+            "founderPetId": "pet-founder-001",
+            "parentPetIds": []
+          },
+          "expected": {
+            "lineageId": "lineage-001",
+            "generation": 0,
+            "founderPetId": "pet-founder-001",
+            "parentPetIds": []
+          }
+        },
+        {
+          "id": "child-one-parent",
+          "invariant": "direct parent IDs and founder ID are retained",
+          "input": {
+            "lineageId": "lineage-001",
+            "generation": 1,
+            "founderPetId": "pet-founder-001",
+            "parentPetIds": [
+              "pet-founder-001"
+            ]
+          },
+          "expected": {
+            "lineageId": "lineage-001",
+            "generation": 1,
+            "founderPetId": "pet-founder-001",
+            "parentPetIds": [
+              "pet-founder-001"
+            ]
+          }
+        },
+        {
+          "id": "child-two-parents",
+          "invariant": "at most two parents; order retained",
+          "input": {
+            "lineageId": "lineage-001",
+            "generation": 2,
+            "founderPetId": "pet-founder-001",
+            "parentPetIds": [
+              "pet-p1",
+              "pet-p2"
+            ]
+          },
+          "expected": {
+            "lineageId": "lineage-001",
+            "generation": 2,
+            "founderPetId": "pet-founder-001",
+            "parentPetIds": [
+              "pet-p1",
+              "pet-p2"
+            ]
+          }
+        },
+        {
+          "id": "generation-negative",
+          "invariant": "negative generation rejected",
+          "input": {
+            "lineageId": "lineage-001",
+            "generation": -1,
+            "founderPetId": "pet-founder-001"
+          },
+          "expected_error": "Pedigree generation must be a non-negative integer"
+        },
+        {
+          "id": "generation-fractional",
+          "invariant": "fractional generation rejected",
+          "input": {
+            "lineageId": "lineage-001",
+            "generation": 0.5,
+            "founderPetId": "pet-founder-001"
+          },
+          "expected_error": "Pedigree generation must be a non-negative integer"
+        },
+        {
+          "id": "generation-string",
+          "invariant": "non-numeric generation rejected",
+          "input": {
+            "lineageId": "lineage-001",
+            "generation": "1",
+            "founderPetId": "pet-founder-001"
+          },
+          "expected_error": "Pedigree generation must be a non-negative integer"
+        },
+        {
+          "id": "founder-with-parent",
+          "invariant": "founder must not have parents",
+          "input": {
+            "lineageId": "lineage-001",
+            "generation": 0,
+            "founderPetId": "pet-founder-001",
+            "parentPetIds": [
+              "pet-other"
+            ]
+          },
+          "expected_error": "Generation zero pedigree must not have parents"
+        },
+        {
+          "id": "descendant-no-parent",
+          "invariant": "non-founder must have direct parent",
+          "input": {
+            "lineageId": "lineage-001",
+            "generation": 1,
+            "founderPetId": "pet-founder-001"
+          },
+          "expected_error": "Descendant pedigree must have at least one direct parent"
+        },
+        {
+          "id": "duplicate-parents",
+          "invariant": "same direct parent cannot repeat",
+          "input": {
+            "lineageId": "lineage-001",
+            "generation": 1,
+            "founderPetId": "pet-founder-001",
+            "parentPetIds": [
+              "pet-p",
+              "pet-p"
+            ]
+          },
+          "expected_error": "Pedigree parent ids must be unique"
+        },
+        {
+          "id": "more-than-two-parents",
+          "invariant": "at most two distinct direct parents",
+          "input": {
+            "lineageId": "lineage-001",
+            "generation": 1,
+            "founderPetId": "pet-founder-001",
+            "parentPetIds": [
+              "pet-a",
+              "pet-b",
+              "pet-c"
+            ]
+          },
+          "expected_error": "Pedigree supports at most two direct parents"
+        },
+        {
+          "id": "invalid-lineage",
+          "invariant": "lineage validation precedes structure checks",
+          "input": {
+            "lineageId": " \t ",
+            "generation": 0,
+            "founderPetId": "pet-founder-001"
+          },
+          "expected_error": "LineageId must not be empty"
+        },
+        {
+          "id": "invalid-founder",
+          "invariant": "founder ID validated",
+          "input": {
+            "lineageId": "lineage-001",
+            "generation": 0,
+            "founderPetId": ""
+          },
+          "expected_error": "PetId must not be empty"
+        },
+        {
+          "id": "invalid-parent-id",
+          "invariant": "each direct parent ID validated",
+          "input": {
+            "lineageId": "lineage-001",
+            "generation": 1,
+            "founderPetId": "pet-founder-001",
+            "parentPetIds": [
+              " "
+            ]
+          },
+          "expected_error": "PetId must not be empty"
+        },
+        {
+          "id": "invalid-parent-type",
+          "invariant": "direct parents must be an array",
+          "input": {
+            "lineageId": "lineage-001",
+            "generation": 1,
+            "founderPetId": "pet-founder-001",
+            "parentPetIds": "pet-parent"
+          },
+          "expected_error": "Pedigree parent ids must be an array"
         }
       ]
     },
