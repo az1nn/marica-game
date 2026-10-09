@@ -68,6 +68,19 @@
 
 **Gate E:** fechar/abrir o jogo não reinicia nem duplica o ciclo animal.
 
+## V1 roster decision / Spec Kit trace (2026-10-09)
+
+**Decision accepted, implementation not marked done.** SPEC-004 §3.1 limits the **initial V1** to **3 animal types: tricolor dog (founder), capybara, chicken; 3 initial plant/crop types (names TBD under DESIGN/LORE)**. Existing G463 fruit tree belongs to the **expanded crop slice**, not a fourth initial type.
+
+- [x] **G-ROSTER-DECISION** Human scope locked and recorded in SPEC-004 §3.1. Chicken and capybara ARTIST concept boards approved; founder dog still awaits individual sprite review.
+- [ ] **G-ROSTER-ANIMALS** Verify all **three animal types** appear in V1 build with correct founder soulbound semantics, relevant care/lifecycle/successor behavior, and valid offline saves. Depends on G450–G458, G440–G447 and existing core domain gates.
+- [ ] **G-ROSTER-PLANTS-NAMES** DESIGN/LORE resolve **exactly three** concrete initial botanical identities under existing crop mechanics, without inventing additional scope; write choices into spec before production assets.
+- [ ] **G-ROSTER-PLANTS-VERIFY** Verify exactly three initial crops through planting/harvest/food/save offline; G463 expanded fruit tree must be separately testable without becoming a fourth initial offering.
+- [ ] **G-ROSTER-ART-FOUNDING-DOG** ARTIST: generate/review **one isolated S01-A01 tricolor dog founder sprite concept**, consistent with accepted S01 V3 before production sprites, ARCH import gates or LENTE runtime A/B.
+- [ ] **G-ROSTER-ART-ALTERNATES** ARTIST: independently isolate capybara PET-ALT-001 and chicken PET-ALT-002 sprites; the approved concept boards **do not count as Godot sprites or approved runtime**.
+
+Do not mark these implementation checks complete based on illustrative previews alone; SPEC-004 priority Animals → Plants → Farm Structure and SPEC-005 R2 gate remain unchanged.
+
 ## Phase F — Playable Animal Slice
 
 **Visual companion:** SPEC-005 ARTIST V2 full pixel art 2.5D approved on 2026-10-09. Its visual tasks V201–V211 are a gated accompaniment to G450–G458; they do **not** mark these existing tasks complete or preempt G425–G449.
@@ -85,6 +98,8 @@
 **Gate F:** Animal Core V1 é jogável ponta a ponta em Godot.
 
 ## Phase G — Plants
+
+**Initial crop quantity contract:** G462 is **three initial plants/crops**, species unnamed until G-ROSTER-PLANTS-NAMES. G463 preserves the distinct **expanded-slice** fruit-tree requirement; it is not a fourth initial option.
 
 - [ ] **G460** Implementar crop domain independente de cena.
 - [ ] **G461** Implementar planted_at/growth_duration e offline growth.
