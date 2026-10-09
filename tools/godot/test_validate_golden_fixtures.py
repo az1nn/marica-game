@@ -25,14 +25,40 @@ class GoldenFixtureSchemaTests(unittest.TestCase):
 
     def test_rejects_unauthorized_future_parity(self):
         fixture = copy.deepcopy(self.catalog)
-        fixture["contracts"][2]["status"] = "ACTIVE_PARITY"
-        fixture["contracts"][2]["adapter"] = "game/src/domain/pet_id.gd"
+        pending = next(c for c in fixture["contracts"] if c["id"] == "simulation_time.observe")
+        pending["status"] = "ACTIVE_PARITY"
+        pending["adapter"] = "game/src/domain/pet_id.gd"
         self.assertTrue(any("not authorized" in e for e in validate(fixture)))
 
     def test_rejects_wrong_executable_adapter(self):
         fixture = copy.deepcopy(self.catalog)
         fixture["contracts"][1]["adapter"] = "game/tests/golden_fixture_runner.gd"
         self.assertTrue(any("incorrect parity milestone or adapter" in e for e in validate(fixture)))
+
+    def test_rejects_future_time_parity(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "simulation_time.observe")
+        contract["status"] = "ACTIVE_PARITY"
+        contract["adapter"] = "game/src/domain/pedigree.gd"
+        self.assertTrue(any("not authorized" in e for e in validate(fixture)))
+
+    def test_rejects_pedigree_adapter_swap(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "pedigree.create")
+        contract["adapter"] = "game/src/domain/pet_id.gd"
+        self.assertTrue(any("incorrect parity" in e for e in validate(fixture)))
+
+    def test_rejects_pedigree_source_drift(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "pedigree.create")
+        contract["source"] = "src/shared/domain/LineageId.luau"
+        self.assertTrue(any("requires exact legacy source" in e for e in validate(fixture)))
+
+    def test_rejects_pedigree_expected_partial_snapshot(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "pedigree.create")
+        contract["cases"][0]["expected"].pop("parentPetIds")
+        self.assertTrue(any("canonical snapshot" in e for e in validate(fixture)))
 
     def test_rejects_missing_provenance(self):
         fixture = copy.deepcopy(self.catalog)

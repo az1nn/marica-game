@@ -171,6 +171,52 @@ jobs:
           git diff --exit-code -- game/src/domain/pet_id.gd
           echo "MARICA_G420_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
 
+      - name: G421 Lineage and Pedigree executable golden parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/lineage_pedigree_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g421-lineage-pedigree.log"
+          grep -Fq 'MARICA_G421_LINEAGE_PEDIGREE_PASS' "$RUNNER_TEMP/g421-lineage-pedigree.log"
+          grep -Fq 'MARICA_G421_LINEAGE_ID_PARITY_PASS cases=6' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'MARICA_G421_PEDIGREE_PARITY_PASS cases=15' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'MARICA_G420_PET_ID_PARITY_PASS cases=5' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'parity=NOT_YET_PROVEN' "$RUNNER_TEMP/godot-g416-fixtures.log"
+
+      - name: G421 pedigree mutation proof (GOOD > BAD > RESTORE)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp game/src/domain/pedigree.gd "$RUNNER_TEMP/g421-pedigree-good.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("game/src/domain/pedigree.gd")
+          source = path.read_text(encoding="utf-8")
+          target = "if generation == 0 and not parents.is_empty():"
+          assert source.count(target) == 1, "G421 founder guard has drifted"
+          path.write_text(source.replace(target, "if false and not parents.is_empty():"), encoding="utf-8")
+          print("G421 mutant: founder parents mistakenly allowed")
+          PY
+          set +e
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/golden_fixture_runner.gd \
+            > "$RUNNER_TEMP/g421-mutant.log" 2>&1
+          mutant_exit="$?"
+          set -e
+          cp "$RUNNER_TEMP/g421-pedigree-good.gd" game/src/domain/pedigree.gd
+          if test "$mutant_exit" -eq 0; then
+            echo "G421 mutation proof failed: bad mutant unexpectedly passed"
+            exit 1
+          fi
+          grep -Fq 'pedigree.create golden mismatch' "$RUNNER_TEMP/g421-mutant.log"
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/golden_fixture_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g421-restore.log"
+          grep -Fq 'MARICA_G421_PEDIGREE_PARITY_PASS cases=15' "$RUNNER_TEMP/g421-restore.log"
+          git diff --exit-code -- game/src/domain/pedigree.gd
+          echo "MARICA_G421_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
+
       - name: Upload Godot CI diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -186,4 +232,7 @@ jobs:
             ${{ runner.temp }}/godot-g420-pet.log
             ${{ runner.temp }}/g420-mutant.log
             ${{ runner.temp }}/g420-restore.log
+            ${{ runner.temp }}/g421-lineage-pedigree.log
+            ${{ runner.temp }}/g421-mutant.log
+            ${{ runner.temp }}/g421-restore.log
           if-no-files-found: warn
