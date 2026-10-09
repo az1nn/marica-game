@@ -1,6 +1,6 @@
 # ARTIST — V1 screen and asset map (Godot / V2 approved visual language)
 
-**Status:** INVENTORY PROPOSAL / CONCEPTS NOT YET ACCEPTED
+**Status:** S01 V3 SCREEN CONCEPT ACCEPTED; remaining concepts/assets/runtime pending
 **Baseline:** `master@947010158d0bc63d21afcf18c75a0dab187b9e46` (2026-10-09)
 **Authority:** SPEC-004 V1 gameplay/screens, SPEC-005 ARTIST V2 G1–G25, `docs/VISUAL-DIRECTION.md`, `docs/lore/CANON.md`.
 **Purpose:** Queue individually reviewed screen concepts and corresponding art assets. This document does **not** claim that approved screen layouts, production sprites, or Godot scenes already exist.
@@ -18,7 +18,7 @@
 
 | ID | Screen | Priority | Visual assets to map | Source | Status |
 | --- | --- | --- | --- | --- | --- |
-| S01 | Founder pet interaction & care | P0 / **first concept** | original pet silhouette, pixel poses, context floor/background, selection ring, compact state card, feed/care/treat/interact affordances, status/phase icons | SPEC-001 US-001/002; G452–G454; V202–V205 | CONCEPT_PENDING |
+| S01 | Founder pet interaction & care | P0 / **first concept** | original pet silhouette, pixel poses, context floor/background, selection ring, compact state card, feed/care/treat/interact affordances, status/phase icons | SPEC-001 US-001/002; G452–G454; V202–V205 | **CONCEPT_ACCEPTED V3** / individual assets pending |
 | S02 | Inherited farm overview | P0 | compact isometric/2.5D ground tiles, path, pet habitat, starter plots, original farm background, zone cues, minimal HUD, touch targets | G450–G451; G9/G10/G23 | QUEUED |
 | S03 | Pet health / treatment | P0 | sick/healthy/recovery expressions, veterinarian/treatment iconography, contextual care panel | SPEC-001 US-002; G426/G453/G454 | QUEUED |
 | S04 | Pet lifecycle and lineage | P0 | stage variants, portrait, soulbound marker, pedigree/lineage tree UI, affection/trait indicators | SPEC-001 US-001/003; G453 | QUEUED |
@@ -68,4 +68,4 @@
 4. Following concept acceptance, separately review **individual sprites/assets** before any Godot integration.
 5. Runtime approval only after V201/V201a technical decision, ART/ARCH gates, LENTE exact-head screenshots and A/B independent review.
 
-**Starting item:** `S01` — founder-pet interaction/care screen, isolated **portrait mobile-first concept** using approved full pixel art 2.5D world and understated modern UI. No other scene generated in this run.
+**S01 concept decision:** `ACCEPT` on V3, recorded in `docs/artist/reviews/S01-2026-10-09-v3-accepted.md`. This approval applies to the screen-level reference only; it does **not** certify the source PNG as repo-committed or runtime-accepted. **Next: S01-A01 isolated founder-pet sprite concept**, one asset per human review. Do not advance S02 or other screen concepts until the S01 asset review flow reaches its own gates.
