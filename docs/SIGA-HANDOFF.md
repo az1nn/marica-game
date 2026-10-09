@@ -7,28 +7,28 @@ WORKSTREAM:
 SPEC-004 — Godot V1 Transition
 
 STATE:
-Phase B complete; Phase C G420–G422 merged and verified. Godot 4.7.2-stable canonical, single-player/offline-first. Next G423.
+Godot foundation G410–G416 complete; Phase C G420–G423 merged and verified. Runtime Godot 4.7.2-stable, offline-first single-player. G424 next.
 
 MODE:
 ADVANCE
 
 DELIVERED:
-- G422 PR #52: pure lifecycle state machine with juvenile → adult → senior progression, natural end limited to senior, health end at any active stage, terminal immutability and detached snapshots.
-- 19 new Lifecycle ACTIVE_PARITY golden fixtures; 45 total verified domain cases (5 PetId, 6 LineageId, 15 Pedigree, 19 Lifecycle); 4 harness selftests; 6 future time/genetics PENDING_PORT.
-- G422 headless lifecycle runner and GOOD→BAD→RESTORE early-natural-death mutation proof.
+- G423 PR #54: pure deterministic injectable Callable clock in typed GDScript, valid finite nonnegative timestamps, clock rollback clamp, monotonic logicalNow and elapsed.
+- 9 G423 executable time golden parity cases. Animal-domain parity: 54 verified cases (PetId 5, lineage 6, pedigree 15, lifecycle 19, time 9); 4 harness selftests; 3 G430 genetics PENDING_PORT.
+- Independent G423 headless regression for forward/rollback/recovery, invalid clock/NaN/INF, fractional timestamps and repeatability; rollback GOOD→BAD→RESTORE mutation proof.
 
 QUALITY:
-- PR #52 exact head f344981a07d924039e789e7deca62d0bf8363705: Godot CI PASS, Validate skills PASS, Roblox CI PASS; Roblox Behavioral SKIPPED/non-required.
-- Guarded merge: master@b9eb2e4adda8ec521ae8ad32c0f2eedb4547fa8d; post-merge same 3 required gates PASS.
-- G420/G421 regression and mutation gates retained. Full Animal Core parity and visual/player acceptance NOT PROVEN.
+- PR #54 exact head 4dc5431ab7bc5420ee8133ad081eaeb7c26f57d6 — Godot CI PASS, Validate skills PASS, Roblox CI PASS; Roblox Behavioral SKIPPED/non-required.
+- Guarded merge master@da9f4c8919fc4551b88ff6b954e1835f1f3fcb10; all 3 required push checks PASS post-merge.
+- G420–G422 tests and mutation regressions retained. Full Animal Core parity, save, gameplay and visual/player acceptance NOT YET PROVEN.
 
 BLOCKER / WAIT:
-none for G423.
+none for G424.
 
 CONCURRENCY:
-G422 post-claim barrier CLEAR; no PR collision; claim CLOSED with G422 closeout.
+G423 claim CLOSED; PR #54 merged. No open PR collisions. ARTIST grilling branch isolated from time/domain changes.
 
 NEXT:
-G423 — port simulation time/clock injection to Godot, including deterministic forward/rollback golden parity.
+G424 — port genetic potential and expressed traits in pure Godot domain with executable legacy parity.
 
 END FILE
