@@ -1,6 +1,6 @@
 # ARTIST — V1 screen and asset map (Godot / V2 approved visual language)
 
-**Status:** S01 V3 SCREEN CONCEPT ACCEPTED; **S01-A01 CONCEPT BOARD ACCEPTED** (founder visual conflict open); production sprites/runtime pending
+**Status:** S01 V3 SCREEN CONCEPT ACCEPTED; **DOG FOUNDER CONFIRMED**; **PET-ALT-001 CAPYBARA CONCEPT ACCEPTED**; **S01-A01 DOG SPRITE CONCEPT PENDING**; production sprites/runtime pending
 **Baseline:** `master@947010158d0bc63d21afcf18c75a0dab187b9e46` (2026-10-09)
 **Authority:** SPEC-004 V1 gameplay/screens, SPEC-005 ARTIST V2 G1–G25, `docs/VISUAL-DIRECTION.md`, `docs/lore/CANON.md`.
 **Purpose:** Queue individually reviewed screen concepts and corresponding art assets. This document does **not** claim that approved screen layouts, production sprites, or Godot scenes already exist.
@@ -18,7 +18,7 @@
 
 | ID | Screen | Priority | Visual assets to map | Source | Status |
 | --- | --- | --- | --- | --- | --- |
-| S01 | Founder pet interaction & care | P0 / **first concept** | original pet silhouette, pixel poses, context floor/background, selection ring, compact state card, feed/care/treat/interact affordances, status/phase icons | SPEC-001 US-001/002; G452–G454; V202–V205 | **CONCEPT_ACCEPTED V3** / A01 concept board accepted; production sprite blocked by founder visual reconciliation |
+| S01 | Founder pet interaction & care | P0 / **first concept** | original pet silhouette, pixel poses, context floor/background, selection ring, compact state card, feed/care/treat/interact affordances, status/phase icons | SPEC-001 US-001/002; G452–G454; V202–V205 | **CONCEPT_ACCEPTED V3** / dog confirmed as founder; S01-A01 isolated dog sprite concept NEXT |
 | S02 | Inherited farm overview | P0 | compact isometric/2.5D ground tiles, path, pet habitat, starter plots, original farm background, zone cues, minimal HUD, touch targets | G450–G451; G9/G10/G23 | QUEUED |
 | S03 | Pet health / treatment | P0 | sick/healthy/recovery expressions, veterinarian/treatment iconography, contextual care panel | SPEC-001 US-002; G426/G453/G454 | QUEUED |
 | S04 | Pet lifecycle and lineage | P0 | stage variants, portrait, soulbound marker, pedigree/lineage tree UI, affection/trait indicators | SPEC-001 US-001/003; G453 | QUEUED |
@@ -34,10 +34,19 @@
 
 **Not V1 screen targets:** real-time multiplayer, peer-to-peer marketplace/trading, Robux or Roblox avatar UI. Fishing is optional only after G485 review.
 
+## Approved animal-role split
+
+| Asset ID | Depiction | Approval | Role / next gate |
+| --- | --- | --- | --- |
+| **S01-A01** | Tricolor puppy from approved S01 V3 | Screen V3 accepted; isolated sprite **PENDING** | **Founder / P0 first**, next isolated sprite review |
+| **PET-ALT-001** | Brown capybara-like companion with blue bandana / green pack | Character **concept board ACCEPTED**, independent visual | **Other animal (not founder)**; production sprite pending, no backpack mechanics assumed |
+
+See `docs/artist/reviews/2026-10-09-founder-dog-and-alternate-capybara.md` for human decision and historical board-label correction.
+
 ## Reusable asset families — mapped requirements, not approved artwork
 
 ### A. Animal-first (first production family)
-- Founder pet: original expressive cozy-fantasy silhouette and body proportions, orientation/idle/walk/eat/interact, care, health and age-state readable variations; animation economy follows G7. Species and name remain concept-only until LORE/DESIGN approval.
+- Founder pet: **tricolor puppy from accepted S01 V3** (human visual role decision; no pet name chosen); original cozy-fantasy silhouette and body proportions, orientation/idle/walk/eat/interact, care, health and age-state readable variations; animation economy follows G7. Other animals must not silently replace the founder.
 - Successors: **two** visually distinguishable next-generation silhouettes/portraits; lineage signification without novel mutation mechanics.
 - Pet UI: selectable outline/anchor, portrait, care actions (feed, care, treat, interact), hunger/hygiene/affection/health indicators as already modeled, life stage, pedigree, soulbound state, optional critical alert (not permanent dense bars).
 
@@ -68,4 +77,4 @@
 4. Following concept acceptance, separately review **individual sprites/assets** before any Godot integration.
 5. Runtime approval only after V201/V201a technical decision, ART/ARCH gates, LENTE exact-head screenshots and A/B independent review.
 
-**S01 concept decision:** `ACCEPT` on V3, recorded in `docs/artist/reviews/S01-2026-10-09-v3-accepted.md`. This approval applies to the screen-level reference only; it does **not** certify the source PNG as repo-committed or runtime-accepted. **S01-A01:** human ACCEPT of the **character concept board** recorded in `docs/artist/reviews/S01-A01-2026-10-09-concept-accepted.md` (chat PNG SHA only, no GitHub binary). Its capybara-like pet differs from the tricolor puppy-like founder in approved S01 V3; **DOMAIN_CONFLICT / OPEN** between references. Next: reconcile founder depiction with ART, DESIGN/LORE and the human owner, then isolate a production sprite for its own review. A01 board is not a valid Godot spritesheet. Do not claim canonical species, runtime acceptance or import. Do not advance S02 or other screen concepts until the S01 asset review flow reaches its own gates.
+**S01 concept decision:** `ACCEPT` on V3, recorded in `docs/artist/reviews/S01-2026-10-09-v3-accepted.md`. This approval applies to the screen-level reference only; it does **not** certify the source PNG as repo-committed or runtime-accepted. **Founder decision (resolved):** user confirmed **the dog is founder; the capybara is another animal**, in `docs/artist/reviews/2026-10-09-founder-dog-and-alternate-capybara.md`. The capybara-like sheet formerly printed `S01-A01 — PET FUNDADOR` remains **ACCEPT as PET-ALT-001 visual concept only**, NOT founder and NOT a Godot spritesheet; its historical review is preserved at `docs/artist/reviews/S01-A01-2026-10-09-concept-accepted.md`. **S01-A01 now designates the isolated dog founder sprite concept (PENDING).** Next: generate a **single isolated dog sprite** faithful to S01 V3 for human review; capybara family remains queued separately. No claim of canonical pet name, animal behavior, source PNG committed, runtime acceptance or import. Do not advance S02 or other screen concepts until the S01 asset review flow reaches its own gates.
