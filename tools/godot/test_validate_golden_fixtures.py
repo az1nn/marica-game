@@ -96,6 +96,42 @@ class GoldenFixtureSchemaTests(unittest.TestCase):
         contract["cases"][0]["expected"].pop("elapsed")
         self.assertTrue(any("canonical observation" in e for e in validate(fixture)))
 
+    def test_rejects_genetics_wrong_adapter(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "genetics.express")
+        contract["adapter"] = "game/src/domain/lifecycle.gd"
+        self.assertTrue(any("incorrect parity milestone or adapter" in e for e in validate(fixture)))
+
+    def test_rejects_genetics_wrong_source(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "genetics.new_potential")
+        contract["source"] = "src/shared/domain/Lifecycle.luau"
+        self.assertTrue(any("requires exact legacy source" in e for e in validate(fixture)))
+
+    def test_rejects_genetics_missing_potential(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "genetics.express")
+        contract["cases"][0]["input"] = {"factors": {}}
+        self.assertTrue(any("expression requires potential" in e for e in validate(fixture)))
+
+    def test_rejects_genetics_out_of_range_expected(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "genetics.new_potential")
+        contract["cases"][0]["expected"]["size"] = 9.0
+        self.assertTrue(any("bounded trait map" in e for e in validate(fixture)))
+
+    def test_rejects_genetics_wrong_success_shape(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "genetics.new_potential")
+        contract["cases"][0]["expected"] = {"size": "1"}
+        self.assertTrue(any("bounded trait map" in e for e in validate(fixture)))
+
+    def test_requires_g430_genetic_advancement_pending(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "genetics.advance_potential")
+        contract["status"] = "ACTIVE_PARITY"
+        self.assertTrue(any("not authorized" in e for e in validate(fixture)))
+
     def test_rejects_missing_provenance(self):
         fixture = copy.deepcopy(self.catalog)
         fixture["contracts"][1]["source"] = "../../foreign-repo/README.md"

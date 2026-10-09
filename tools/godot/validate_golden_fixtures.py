@@ -21,6 +21,8 @@ APPROVED_PARITY = {
     "simulation_time.observe": (
         "G423", "game/src/domain/simulation_time.gd", "src/shared/domain/SimulationTime.luau"
     ),
+    "genetics.new_potential": ("G424", "game/src/domain/genetics.gd", "src/shared/domain/Genetics.luau"),
+    "genetics.express": ("G424", "game/src/domain/genetics.gd", "src/shared/domain/Genetics.luau"),
 }
 
 
@@ -156,6 +158,24 @@ def validate(document: Any, root: Path = ROOT) -> list[str]:
                             errors.append(f"{key}/{case_id}: lifecycle success must expect canonical snapshot")
                         elif type(expected["terminal"]) is not bool:
                             errors.append(f"{key}/{case_id}: lifecycle terminal must be boolean")
+                if key in {"genetics.new_potential", "genetics.express"}:
+                    data = case.get("input")
+                    if not isinstance(data, dict):
+                        errors.append(f"{key}/{case_id}: genetics input must be object")
+                    elif key == "genetics.new_potential" and set(data) != {"values"}:
+                        errors.append(f"{key}/{case_id}: potential requires only values")
+                    elif key == "genetics.express" and (
+                        "potential" not in data or not set(data).issubset({"potential", "factors"})
+                    ):
+                        errors.append(f"{key}/{case_id}: expression requires potential, optional factors")
+                    if has_expected:
+                        expected = case.get("expected")
+                        if not isinstance(expected, dict) or any(
+                            not isinstance(k, str) or not k.strip()
+                            or type(v) not in (int, float) or not (0 <= v <= 1)
+                            for k, v in expected.items()
+                        ):
+                            errors.append(f"{key}/{case_id}: genetics success needs bounded trait map")
                 if key == "simulation_time.observe":
                     data = case.get("input")
                     if not isinstance(data, dict) or set(data) != {"lastObservedAt", "clockNow"}:

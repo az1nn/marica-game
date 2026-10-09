@@ -854,6 +854,298 @@
       "adapter": "game/src/domain/simulation_time.gd"
     },
     {
+      "id": "genetics.new_potential",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G424",
+      "source": "src/shared/domain/Genetics.luau",
+      "adapter": "game/src/domain/genetics.gd",
+      "cases": [
+        {
+          "id": "potential-two-traits",
+          "invariant": "copies bounded named potential",
+          "input": {
+            "values": {
+              "size": 1,
+              "resilience": 0.5
+            }
+          },
+          "expected": {
+            "size": 1,
+            "resilience": 0.5
+          }
+        },
+        {
+          "id": "potential-zero",
+          "invariant": "zero potential boundary is valid",
+          "input": {
+            "values": {
+              "size": 0
+            }
+          },
+          "expected": {
+            "size": 0
+          }
+        },
+        {
+          "id": "potential-one",
+          "invariant": "upper potential boundary valid",
+          "input": {
+            "values": {
+              "size": 1
+            }
+          },
+          "expected": {
+            "size": 1
+          }
+        },
+        {
+          "id": "potential-empty",
+          "invariant": "empty potential map is permitted",
+          "input": {
+            "values": {}
+          },
+          "expected": {}
+        },
+        {
+          "id": "potential-empty-name",
+          "invariant": "trait names cannot be empty",
+          "input": {
+            "values": {
+              "": 0.25
+            }
+          },
+          "expected_error": "Genetic potential trait name must be a non-empty string"
+        },
+        {
+          "id": "potential-whitespace-name",
+          "invariant": "trait names cannot consist only of whitespace",
+          "input": {
+            "values": {
+              "   ": 0.25
+            }
+          },
+          "expected_error": "Genetic potential trait name must be a non-empty string"
+        },
+        {
+          "id": "potential-over-one",
+          "invariant": "trait potentials bounded by one",
+          "input": {
+            "values": {
+              "size": 1.01
+            }
+          },
+          "expected_error": "Genetic potential.size must be between 0 and 1"
+        },
+        {
+          "id": "potential-under-zero",
+          "invariant": "trait potentials must be nonnegative",
+          "input": {
+            "values": {
+              "size": -0.01
+            }
+          },
+          "expected_error": "Genetic potential.size must be between 0 and 1"
+        },
+        {
+          "id": "potential-string",
+          "invariant": "nonnumeric potential rejected",
+          "input": {
+            "values": {
+              "size": "0.5"
+            }
+          },
+          "expected_error": "Genetic potential.size must be a finite number"
+        },
+        {
+          "id": "potential-boolean",
+          "invariant": "boolean potential rejected",
+          "input": {
+            "values": {
+              "size": true
+            }
+          },
+          "expected_error": "Genetic potential.size must be a finite number"
+        },
+        {
+          "id": "potential-not-map",
+          "invariant": "potential must be table",
+          "input": {
+            "values": 42
+          },
+          "expected_error": "Genetic potential must be a table"
+        }
+      ]
+    },
+    {
+      "id": "genetics.express",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G424",
+      "source": "src/shared/domain/Genetics.luau",
+      "adapter": "game/src/domain/genetics.gd",
+      "cases": [
+        {
+          "id": "expression-default",
+          "invariant": "missing factor defaults to one",
+          "input": {
+            "potential": {
+              "size": 1,
+              "resilience": 0.5
+            }
+          },
+          "expected": {
+            "size": 1,
+            "resilience": 0.5
+          }
+        },
+        {
+          "id": "expression-partial",
+          "invariant": "factor modifies only named trait",
+          "input": {
+            "potential": {
+              "size": 1,
+              "resilience": 0.5
+            },
+            "factors": {
+              "size": 0.25
+            }
+          },
+          "expected": {
+            "size": 0.25,
+            "resilience": 0.5
+          }
+        },
+        {
+          "id": "expression-two",
+          "invariant": "both traits multiply independently",
+          "input": {
+            "potential": {
+              "size": 1,
+              "resilience": 0.5
+            },
+            "factors": {
+              "size": 0.5,
+              "resilience": 0.25
+            }
+          },
+          "expected": {
+            "size": 0.5,
+            "resilience": 0.125
+          }
+        },
+        {
+          "id": "expression-zero-factor",
+          "invariant": "zero factor suppresses expressed trait",
+          "input": {
+            "potential": {
+              "size": 0.8
+            },
+            "factors": {
+              "size": 0
+            }
+          },
+          "expected": {
+            "size": 0
+          }
+        },
+        {
+          "id": "expression-no-potential",
+          "invariant": "empty maps supported",
+          "input": {
+            "potential": {},
+            "factors": {}
+          },
+          "expected": {}
+        },
+        {
+          "id": "expression-factor-over",
+          "invariant": "factor above one rejected",
+          "input": {
+            "potential": {
+              "size": 1
+            },
+            "factors": {
+              "size": 1.01
+            }
+          },
+          "expected_error": "Expression factors.size must be between 0 and 1"
+        },
+        {
+          "id": "expression-negative",
+          "invariant": "negative factor rejected",
+          "input": {
+            "potential": {
+              "size": 1
+            },
+            "factors": {
+              "size": -0.1
+            }
+          },
+          "expected_error": "Expression factors.size must be between 0 and 1"
+        },
+        {
+          "id": "expression-factor-string",
+          "invariant": "nonnumeric factor rejected",
+          "input": {
+            "potential": {
+              "size": 1
+            },
+            "factors": {
+              "size": "0.5"
+            }
+          },
+          "expected_error": "Expression factors.size must be a finite number"
+        },
+        {
+          "id": "expression-factor-blank-name",
+          "invariant": "factor names cannot be empty",
+          "input": {
+            "potential": {
+              "size": 1
+            },
+            "factors": {
+              "": 0.5
+            }
+          },
+          "expected_error": "Expression factors trait name must be a non-empty string"
+        },
+        {
+          "id": "expression-unknown",
+          "invariant": "unknown expression trait rejected",
+          "input": {
+            "potential": {
+              "size": 1
+            },
+            "factors": {
+              "speed": 0.5
+            }
+          },
+          "expected_error": "Expression factor references unknown trait \"speed\""
+        },
+        {
+          "id": "expression-potential-invalid",
+          "invariant": "expression revalidates potential",
+          "input": {
+            "potential": {
+              "size": -1
+            },
+            "factors": {}
+          },
+          "expected_error": "Genetic potential.size must be between 0 and 1"
+        },
+        {
+          "id": "expression-factor-map-invalid",
+          "invariant": "expression factors must be a table",
+          "input": {
+            "potential": {
+              "size": 1
+            },
+            "factors": 42
+          },
+          "expected_error": "Expression factors must be a table"
+        }
+      ]
+    },
+    {
       "id": "genetics.advance_potential",
       "status": "PENDING_PORT",
       "milestone": "G430",

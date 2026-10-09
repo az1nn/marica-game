@@ -147,3 +147,29 @@ godot --headless --path game --script res://tests/golden_fixture_runner.gd
 G423 merged via PR #54 at `master@da9f4c8919fc`. The exact PR head and post-merge
 master both passed required CI. The broader Animal Core parity remains unproven;
 G424 genetic potential/expressed traits is next.
+
+## G424 — genetic potential and expressed traits (candidate)
+
+`game/src/domain/genetics.gd` ports `Genetics.newPotential` and
+`Genetics.express` from the existing legacy Luau source, without importing
+Roblox or Node. Every trait requires a nonblank name and finite unit-interval
+value; an omitted expression factor defaults to 1, and unknown factor keys
+are rejected. All output dictionaries are detached copies, and genetic
+potential is not mutated by expression changes.
+
+The exact Luau source is used for 11 potential and 12 expression executable
+golden cases (including invalid-name, range, type and unknown-trait cases).
+`game/tests/genetics_runner.gd` independently checks copy isolation,
+determinism and nonfinite values. The G424 mutation proof changes the
+omitted-factor default from 1 to 0; it must fail golden parity, then pass
+after source restoration. G430 genetic *advancement* remains deliberately
+PENDING_PORT (3 legacy cases) and is not part of G424.
+
+```sh
+godot --headless --path game --script res://tests/genetics_runner.gd
+godot --headless --path game --script res://tests/golden_fixture_runner.gd
+```
+
+Task status remains pending until exact-head and post-merge CI pass. This is
+not proof of a full Pet entity, care-driven trait expression, succession, save,
+or a playable animal lifecycle.
