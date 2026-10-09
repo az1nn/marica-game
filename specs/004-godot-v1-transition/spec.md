@@ -39,6 +39,28 @@ A ordem de produto da V1 é:
 
 Features fora dessa ordem não podem bloquear a vertical slice principal.
 
+## 3.1 V1 initial content roster — HUMAN APPROVED (2026-10-09)
+
+This is a **product-scope constraint**, not a runtime implementation claim. In the first playable V1 release, the **initial available animal roster contains exactly three animal types**:
+
+| Role | Initial animal | ARTIST concept authority |
+| --- | --- | --- |
+| **Founder** (one, soulbound) | **Tricolor dog** (cachorro) | **S01 V3 screen ACCEPTED**; S01-A01 isolated dog sprite still PENDING |
+| Additional animal 1 | **Capybara** (capivara) | **PET-ALT-001 concept board ACCEPTED**, not founder |
+| Additional animal 2 | **Chicken** (galinha) | **PET-ALT-002 concept board ACCEPTED**, not founder |
+
+**AC-ROSTER-001**: These are three **types** in the initial V1 product catalog, not a requirement to grant three pets immediately at account creation. Founder assignment and soulbound identity remain as specified in SPEC-001; animal slots (~4 active) remain controlled by G471, independent of number of species.
+
+**AC-ROSTER-002**: The initial plant roster has **exactly three distinct crop/plant types** exposed to the player. Their botanical species and food mechanics are **not yet named or approved**; DESIGN/LORE must specify those three in a later bounded decision without automatically adding more. G462 continues to implement the three crops.
+
+**AC-ROSTER-003**: Existing US-403 and G463 require **one fruit-tree family in the first expanded cultivation slice**. That tree is **not counted as a fourth initial plant in the initial roster**. Release/scoping must explicitly distinguish initial three crops from expanded-slice tree to keep the existing requirement without silently inflating the initial roster.
+
+**AC-ROSTER-004**: Core mechanics, genetics, two successors, care, offline saves and platform stay unchanged; do not infer eggs, backpack inventory, farm automation, or special species powers from artwork. No additional animal or plant species is approved for the *initial* V1 roster.
+
+**AC-ROSTER-005**: V1 content acceptance requires in-engine verification of the three animal types and three initial plant types, with deterministic domain behavior, correct save/persistence and readable ARTIST V2 visuals; concept-art approval is separate from production/runtime validation.
+
+**Provenance:** user requested “para V1 será isso, 3 animais iniciais e 3 plantas iniciais, galinha será o terceiro animal” and subsequently approved the chicken concept. Founder dog/capybara roles were explicitly resolved earlier. Companion documentation: SPEC-005 visual tasks and `docs/artist/reviews/`. No other botanical identities were provided.
+
 ## 4. User-visible V1 contract
 
 ### US-401 — Jogar sem conexão — P0
