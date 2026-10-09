@@ -17,6 +17,7 @@ APPROVED_PARITY = {
         "G421", "game/src/domain/lineage_id.gd", "src/shared/domain/LineageId.luau"
     ),
     "pedigree.create": ("G421", "game/src/domain/pedigree.gd", "src/shared/domain/Pedigree.luau"),
+    "lifecycle.transitions": ("G422", "game/src/domain/lifecycle.gd", "src/shared/domain/Lifecycle.luau"),
 }
 
 
@@ -127,6 +128,31 @@ def validate(document: Any, root: Path = ROOT) -> list[str]:
                         or set(case["expected"]) != fields
                     ):
                         errors.append(f"{key}/{case_id}: pedigree success must expect canonical snapshot")
+                if key == "lifecycle.transitions":
+                    data = case.get("input")
+                    actions = data.get("actions") if isinstance(data, dict) else None
+                    if not isinstance(data, dict) or set(data) != {"actions"} or not isinstance(actions, list):
+                        errors.append(f"{key}/{case_id}: lifecycle requires actions array")
+                    else:
+                        for action in actions:
+                            if not isinstance(action, dict):
+                                errors.append(f"{key}/{case_id}: action must be an object")
+                            elif action.get("op") == "advance" and set(action) != {"op", "stage"}:
+                                errors.append(f"{key}/{case_id}: advance requires stage")
+                            elif action.get("op") == "endLife" and set(action) != {"op", "reason"}:
+                                errors.append(f"{key}/{case_id}: endLife requires reason")
+                            elif action.get("op") not in {"advance", "endLife"}:
+                                errors.append(f"{key}/{case_id}: unrecognized lifecycle action")
+                    if has_expected:
+                        expected = case.get("expected")
+                        valid = [
+                            {"stage", "status", "terminal"},
+                            {"stage", "status", "endReason", "terminal"},
+                        ]
+                        if not isinstance(expected, dict) or set(expected) not in valid:
+                            errors.append(f"{key}/{case_id}: lifecycle success must expect canonical snapshot")
+                        elif type(expected["terminal"]) is not bool:
+                            errors.append(f"{key}/{case_id}: lifecycle terminal must be boolean")
             elif status == "PENDING_PORT":
                 pending += 1
 
