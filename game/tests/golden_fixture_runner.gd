@@ -5,6 +5,7 @@ const CATALOG_PATH: String = "res://tests/fixtures/golden.json"
 const PET_ID = preload("res://src/domain/pet_id.gd")
 const LINEAGE_ID = preload("res://src/domain/lineage_id.gd")
 const PEDIGREE = preload("res://src/domain/pedigree.gd")
+const LIFECYCLE = preload("res://src/domain/lifecycle.gd")
 
 
 func _initialize() -> void:
@@ -77,7 +78,9 @@ func _check_contract(contract_value: Variant) -> Dictionary:
         return _verify_selftests(cases)
     if (
         status == "ACTIVE_PARITY"
-        and identifier in ["pet_id.from_string", "lineage_id.from_string", "pedigree.create"]
+        and identifier in [
+            "pet_id.from_string", "lineage_id.from_string", "pedigree.create", "lifecycle.transitions"
+        ]
     ):
         return _verify_domain_cases(identifier, cases)
     _fail("unregistered ACTIVE contract: " + identifier)
@@ -101,6 +104,8 @@ func _verify_domain_cases(identifier: String, cases: Array) -> Dictionary:
         print("MARICA_G421_LINEAGE_ID_PARITY_PASS cases=", cases.size())
     elif identifier == "pedigree.create":
         print("MARICA_G421_PEDIGREE_PARITY_PASS cases=", cases.size())
+    elif identifier == "lifecycle.transitions":
+        print("MARICA_G422_LIFECYCLE_PARITY_PASS cases=", cases.size())
     return {"active": 0, "verified": cases.size(), "pending": 0}
 
 
@@ -135,12 +140,34 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
         result = LINEAGE_ID.from_string(case_input.get("value"))
     elif identifier == "pedigree.create":
         result = PEDIGREE.create(case_input)
+    elif identifier == "lifecycle.transitions":
+        return _run_lifecycle_sequence(case_input)
     if not result.get("ok", false):
         return {"error": result.get("error", "")}
     if identifier == "pedigree.create":
         var record: MaricaPedigree = result["pedigree"]
         return record.to_snapshot()
     return {"id": result.get("id")}
+
+
+func _run_lifecycle_sequence(case_input: Dictionary) -> Dictionary:
+    var lifecycle: MaricaLifecycle = LIFECYCLE.start()
+    var actions: Array = case_input.get("actions", [])
+    for action_value in actions:
+        var action: Dictionary = action_value
+        var transition: Dictionary = {}
+        if action.get("op") == "advance":
+            transition = LIFECYCLE.advance(lifecycle, action.get("stage"))
+        elif action.get("op") == "endLife":
+            transition = LIFECYCLE.end_life(lifecycle, action.get("reason"))
+        else:
+            return {"error": "Unknown lifecycle operation"}
+        if not transition.get("ok", false):
+            return {"error": transition.get("error", "")}
+        lifecycle = transition["lifecycle"]
+    var snapshot: Dictionary = lifecycle.to_snapshot()
+    snapshot["terminal"] = lifecycle.is_terminal()
+    return snapshot
 
 
 func _check_selftest_case(case_value: Variant) -> bool:
