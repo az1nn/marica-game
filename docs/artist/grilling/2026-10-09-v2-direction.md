@@ -166,6 +166,19 @@
 - C — Adaptativa ao ambiente: tema claro/escuro alterna conforme cena e horário, mantendo contraste.
 - D — Neutra fixa com acentos contextuais: base de interface consistente, independente do clima/horário, e pequenas cores de estado semanticamente estáveis.
 
+**Resposta humana:** D — Neutra fixa com acentos contextuais.
+
+**Decisão provisória:** manter uma base cromática de interface consistente e legível independentemente de horário, clima ou estação; usar acentos contextuais discretos e cores de estado semanticamente estáveis. Preservar UI moderna discreta (G11 B), feedback minimalista (G12 A), contraste e acessibilidade mobile-first. A decisão não fixa ainda tokens ou valores hexadecimais.
+
+## G14 — Representação visual dos estados dos animais
+
+**Pergunta:** Como diferenciar fome, higiene, afeição, saúde e outros estados relevantes sem sobrecarregar a UI?
+
+- A — Ícones semânticos: símbolos claros e estados textuais curtos, com indicação de severidade.
+- B — Barras compactas: medidores numéricos ou de progresso para cada estado, sempre visíveis.
+- C — Expressão do animal: poses, expressões e sinais no próprio sprite como canal principal de estado.
+- D — Híbrido sob demanda: visão geral com poucos alertas semânticos e detalhes completos ao selecionar o animal, apoiados por sua expressão visual.
+
 **Resposta:** PENDENTE.
 
 ## Gates
