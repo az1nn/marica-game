@@ -54,7 +54,7 @@ func _run_tests() -> void:
     if not health_end.is_terminal() or health_end.to_snapshot().get("endReason") != "health":
         _fail("health early end wrong")
         return
-    if not senior.to_snapshot()["status"] == "active" or adult.is_terminal():
+    if senior.to_snapshot()["status"] != "active" or adult.is_terminal():
         _fail("ending a state mutated its predecessor")
         return
     print("MARICA_G422_LIFECYCLE_PASS")
