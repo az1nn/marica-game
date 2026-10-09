@@ -140,6 +140,32 @@
 - C — Livro de fazenda: painéis inspirados em madeira, papel e caderno ilustrado, com acabamento pixel art.
 - D — Híbrida acessível: ícones e molduras pixel art, tipografia e controles modernos legíveis, áreas de toque generosas e hierarquia mobile-first.
 
+**Resposta humana:** B — UI moderna discreta.
+
+**Decisão provisória:** HUD, menus, inventário e painéis usam interface limpa, tipografia contemporânea legível e controles claros; elementos pixel art são acentos visuais. Preservar contraste, alvos de toque e navegação mobile-first. O mundo continua integralmente pixel art 2.5D.
+
+## G12 — Feedback visual das interações
+
+**Pergunta:** Como comunicar ações, estados e recompensas sem poluir visualmente a fazenda?
+
+- A — Minimalista: destaques de seleção, ícones simples e mensagens curtas, com poucos efeitos.
+- B — Cartoon expressivo: partículas, saltos e reações visuais marcantes em quase toda ação.
+- C — Diegético: feedback integrado ao mundo por gestos dos animais e sinais contextuais.
+- D — Híbrido hierárquico: feedback discreto na rotina e expressivo em vínculos e marcos importantes.
+
+**Resposta humana:** A — Minimalista.
+
+**Decisão provisória:** utilizar realces de seleção, ícones simples e mensagens curtas para estados, ações e recompensas, com efeitos pontuais e parcimoniosos. A escolha não elimina a expressividade de animações dos animais aprovada em G7, mas evita sobrecarregar o HUD e o cenário.
+
+## G13 — Paleta e contraste da interface
+
+**Pergunta:** Qual tratamento cromático deve orientar a UI moderna discreta sobre os ambientes dinâmicos da fazenda?
+
+- A — Neutra clara: superfícies claras e tipografia escura, com acentos discretos.
+- B — Neutra escura: painéis grafite translúcidos, texto claro e acentos contidos.
+- C — Adaptativa ao ambiente: tema claro/escuro alterna conforme cena e horário, mantendo contraste.
+- D — Neutra fixa com acentos contextuais: base de interface consistente, independente do clima/horário, e pequenas cores de estado semanticamente estáveis.
+
 **Resposta:** PENDENTE.
 
 ## Gates
