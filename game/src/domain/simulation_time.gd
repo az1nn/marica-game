@@ -21,7 +21,8 @@ static func observe(clock: Callable, last_observed_at: Variant) -> Dictionary:
     var logical_now: float = maxf(raw_now, previous)
     return {
         "ok": true,
-        "observation": {
+        "observation":
+        {
             "rawNow": raw_now,
             "logicalNow": logical_now,
             "elapsed": logical_now - previous,

@@ -65,13 +65,12 @@ func _test_validation() -> bool:
 
 
 func _test_fractional() -> bool:
-    if _observe(101.75, 100.25).get("observation") != {
-        "rawNow": 101.75, "logicalNow": 101.75, "elapsed": 1.5
-    }:
+    if (
+        _observe(101.75, 100.25).get("observation")
+        != {"rawNow": 101.75, "logicalNow": 101.75, "elapsed": 1.5}
+    ):
         return _fail("fractional elapsed time truncated")
-    if _observe(0, 0).get("observation") != {
-        "rawNow": 0, "logicalNow": 0, "elapsed": 0
-    }:
+    if _observe(0, 0).get("observation") != {"rawNow": 0, "logicalNow": 0, "elapsed": 0}:
         return _fail("zero timestamps were rejected")
     return true
 
