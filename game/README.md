@@ -111,7 +111,7 @@ Construction returns explicit `{ok, pedigree|error}` results instead of relying 
 
 CI also runs `tests/lineage_pedigree_runner.gd`, which verifies injected lineage IDs and mutation-resistant detached snapshots, plus a GOOD→BAD→RESTORE mutation check against the forbidden founder-with-parent case. No lifecycle, genetics, succession, save, or playable farm behavior is certified by G421.
 
-## G422 — Pure lifecycle state machine (candidate)
+## G422 — Pure lifecycle state machine (verified in PR #52)
 
 `src/domain/lifecycle.gd` ports the deterministic Luau `Lifecycle.luau` state machine (not the elapsed-time simulation, owned by G423). A new pet begins `juvenile/active`; legal stage advances are exactly `juvenile → adult → senior` without skips/reversals. The `health` end reason may terminate at any active stage; `natural` requires `senior`. Ended states are terminal. Transitions create replacement objects, not in-place mutations. `to_snapshot()` returns a fresh serializable dictionary, omitting `endReason` while active.
 
