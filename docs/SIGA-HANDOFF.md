@@ -4,33 +4,32 @@ APP:
 Maricá Game
 
 WORKSTREAM:
-SPEC-004 — Godot V1 Transition
+SPEC-004 — Godot V1 Transition, Phase C Animal Domain
 
 STATE:
-Foundation Phase B complete. Phase C G420–G425 verified and merged on master@947010158d0bc63d21afcf18c75a0dab187b9e46.
-Runtime: Godot 4.7.2-stable, single-player, offline-first. G426 next.
+G420–G426 verified in their PR exact-head gates and merged into master@3aa715d70643901cc68be984a4ae2141d578efe5.
+Runtime: Godot 4.7.2-stable, offline-first single-player. G427 next.
 
 MODE:
 ADVANCE
 
 DELIVERED:
-- G425 PR #60: MaricaCare pure typed GDScript port, finite unit scores, defaults hunger=0 hygiene/affection/energy=1; weakest essential need quality (1-hunger, hygiene, affection, energy).
-- Care.to_expression_factors creates deterministic per-trait factors compatible with G424 genetics, without mutating potential.
-- 21 new executable Luau-derived golden cases (create 9 / quality 6 / factors 6); 98 total ACTIVE_PARITY domain cases, 4 harness selftests, 3 G430 advancement cases PENDING_PORT.
-- Independent care regression verifies snapshots/detachment, invalid/nonfinite values, deterministic G424 expression; hunger inverse GOOD→BAD→RESTORE mutation proof.
+- G426 PR #63 — pure typed GDScript MaricaHealth port of Luau Health.new/advance/treat/isTerminalRisk; neglected 24h, sick 48h, critical 72h, critical untreated terminal risk 48h.
+- Good care reverses early neglect, never automatically cures disease; basic/advanced/emergency treatment reductions and costs preserved.
+- 35 new ACTIVE_PARITY golden cases, 133 total domain cases, 4 harness selftests, 3 future G430 fixtures PENDING_PORT. Independent health regression and GOOD→BAD→RESTORE 48h sickness mutation proof PASS.
 
 QUALITY:
-- PR #60 exact head ca36f3ab2d74c3bde0131f453938d22d3d889c0c: Godot CI PASS, Validate Skills PASS, Roblox CI PASS; Roblox Behavioral SKIPPED (nonrequired).
-- Guarded squash merge master@947010158d0bc63d21afcf18c75a0dab187b9e46, post-merge Godot CI PASS, Validate Skills PASS and Roblox CI PASS.
-- G420–G424 regression gates retained; full Pet aggregate, G426–G429 domain parity, succession, save, export web, and ARTIST V2 visual/runtime acceptance NOT YET PROVEN.
+- PR #63 exact head 1781b79b4825a1acbcf9c2e89780e27bd1525e64 Godot CI PASS, Validate Skills PASS, Roblox CI PASS; Roblox Behavioral SKIPPED nonrequired.
+- Guarded squash merge master@3aa715d70643901cc68be984a4ae2141d578efe5. Master post-merge Godot CI PASS, Validate Skills PASS, Roblox CI PASS at exact merge commit SHA.
+- Full Pet aggregate/end-of-life integration, G427–G429 parity, succession, save, Godot web export, ARTIST V2 visuals NOT PROVEN.
 
 BLOCKER / WAIT:
-None for G426. Vercel + Cloudflare same-artifact deploy verification waits for separate Godot Web export build and provider configuration; not a G426 dependency.
+No human product blocker for G427. Vercel+Cloudflare same-artifact deploy is deferred to Godot Web export milestone, not this task.
 
 CONCURRENCY:
-G425 claim CLOSED; PR #60 merged; no open PR overlaps at reconciliation. SPEC-005 ARTIST V2 target remains approved but visuals not implemented.
+G426 claim CLOSED in closeout documentation. ARTIST PR #62 remains draft, separate visual/concept scope but overlaps SPEC-004 tasks.md; its future merge needs fresh base reconcile rather than blind overwrite.
 
 NEXT:
-G426 — port Health.new/advance/treat and prove deterministic Luau/Godot behavior, preserving animal-first and no new online dependency.
+G427 — port Soulbound invariant from Luau to typed pure GDScript with executable fixture parity and tests; preserve animal-first and 3 animal / 3 crop concept approvals without presuming runtime import.
 
 END FILE
