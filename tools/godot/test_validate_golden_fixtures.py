@@ -25,8 +25,9 @@ class GoldenFixtureSchemaTests(unittest.TestCase):
 
     def test_rejects_unauthorized_future_parity(self):
         fixture = copy.deepcopy(self.catalog)
-        fixture["contracts"][2]["status"] = "ACTIVE_PARITY"
-        fixture["contracts"][2]["adapter"] = "game/src/domain/pet_id.gd"
+        pending = next(c for c in fixture["contracts"] if c["id"] == "simulation_time.observe")
+        pending["status"] = "ACTIVE_PARITY"
+        pending["adapter"] = "game/src/domain/pet_id.gd"
         self.assertTrue(any("not authorized" in e for e in validate(fixture)))
 
     def test_rejects_wrong_executable_adapter(self):
