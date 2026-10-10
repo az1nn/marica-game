@@ -242,6 +242,19 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
 func _canonical_domain_result(identifier: String, result: Dictionary) -> Dictionary:
     if identifier.begins_with("care."):
         return _care_domain_result(identifier, result)
+    if identifier.begins_with("health.") or identifier.begins_with("soulbound.") or identifier == "pet.soulbound":
+        return _special_domain_result(identifier, result)
+    if identifier in ["genetics.new_potential", "genetics.express"]:
+        return result["traits"]
+    if identifier == "simulation_time.observe":
+        return result["observation"]
+    if identifier == "pedigree.create":
+        var record: MaricaPedigree = result["pedigree"]
+        return record.to_snapshot()
+    return {"id": result.get("id")}
+
+
+func _special_domain_result(identifier: String, result: Dictionary) -> Dictionary:
     if identifier.begins_with("health."):
         return _health_domain_result(identifier, result)
     if identifier == "pet.soulbound":
@@ -253,16 +266,7 @@ func _canonical_domain_result(identifier: String, result: Dictionary) -> Diction
         }
     if identifier == "soulbound.create":
         return {"soulbound": result["soulbound"]}
-    if identifier.begins_with("soulbound."):
-        return {"transferable": result["transferable"]}
-    if identifier in ["genetics.new_potential", "genetics.express"]:
-        return result["traits"]
-    if identifier == "simulation_time.observe":
-        return result["observation"]
-    if identifier == "pedigree.create":
-        var record: MaricaPedigree = result["pedigree"]
-        return record.to_snapshot()
-    return {"id": result.get("id")}
+    return {"transferable": result["transferable"]}
 
 
 func _care_domain_result(identifier: String, result: Dictionary) -> Dictionary:
