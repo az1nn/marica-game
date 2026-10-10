@@ -63,9 +63,7 @@ func _create_and_detach() -> bool:
 
 
 func _care_reexpression() -> bool:
-    var result: Dictionary = PET.create_composite(
-        "pet-founder", _pedigree(), null, {"speed": 0.8}
-    )
+    var result: Dictionary = PET.create_composite("pet-founder", _pedigree(), null, {"speed": 0.8})
     if not result.get("ok", false):
         return _fail("trait setup failed")
     var original: MaricaPet = result["pet"]
