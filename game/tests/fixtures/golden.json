@@ -1434,6 +1434,547 @@
       ]
     },
     {
+      "id": "health.create",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G426",
+      "adapter": "game/src/domain/health.gd",
+      "source": "src/shared/domain/Health.luau",
+      "cases": [
+        {
+          "id": "health-defaults",
+          "invariant": "Luau default durations zero",
+          "input": {},
+          "expected": {
+            "status": "healthy",
+            "neglectHours": 0,
+            "untreatedHours": 0
+          }
+        },
+        {
+          "id": "health-null-defaults",
+          "invariant": "Nil-like state creates healthy defaults",
+          "input": {
+            "values": null
+          },
+          "expected": {
+            "status": "healthy",
+            "neglectHours": 0,
+            "untreatedHours": 0
+          }
+        },
+        {
+          "id": "health-partial",
+          "invariant": "Persisted neglect with absent untreated defaults to zero",
+          "input": {
+            "values": {
+              "neglectHours": 12
+            }
+          },
+          "expected": {
+            "status": "healthy",
+            "neglectHours": 12,
+            "untreatedHours": 0
+          }
+        },
+        {
+          "id": "health-boundary-24",
+          "invariant": "Neglected exactly at 24h",
+          "input": {
+            "values": {
+              "neglectHours": 24
+            }
+          },
+          "expected": {
+            "status": "neglected",
+            "neglectHours": 24,
+            "untreatedHours": 0
+          }
+        },
+        {
+          "id": "health-boundary-48",
+          "invariant": "Sick exactly at 48h, no prior untreated",
+          "input": {
+            "values": {
+              "neglectHours": 48
+            }
+          },
+          "expected": {
+            "status": "sick",
+            "neglectHours": 48,
+            "untreatedHours": 0
+          }
+        },
+        {
+          "id": "health-critical",
+          "invariant": "Critical retains untreated duration",
+          "input": {
+            "values": {
+              "neglectHours": 72,
+              "untreatedHours": 24
+            }
+          },
+          "expected": {
+            "status": "critical",
+            "neglectHours": 72,
+            "untreatedHours": 24
+          }
+        },
+        {
+          "id": "health-normalize-untreated",
+          "invariant": "Untreated duration resets if not sick",
+          "input": {
+            "values": {
+              "neglectHours": 12,
+              "untreatedHours": 48
+            }
+          },
+          "expected": {
+            "status": "healthy",
+            "neglectHours": 12,
+            "untreatedHours": 0
+          }
+        },
+        {
+          "id": "health-ignore-status",
+          "invariant": "Persisted status is derived, never trusted",
+          "input": {
+            "values": {
+              "neglectHours": 24,
+              "status": "critical"
+            }
+          },
+          "expected": {
+            "status": "neglected",
+            "neglectHours": 24,
+            "untreatedHours": 0
+          }
+        },
+        {
+          "id": "health-negative",
+          "invariant": "Negative neglect duration is rejected",
+          "input": {
+            "values": {
+              "neglectHours": -1
+            }
+          },
+          "expected_error": "Health.neglectHours must not be negative"
+        },
+        {
+          "id": "health-invalid-type",
+          "invariant": "Non-numeric duration is rejected",
+          "input": {
+            "values": {
+              "untreatedHours": "two"
+            }
+          },
+          "expected_error": "Health.untreatedHours must be a finite number"
+        }
+      ]
+    },
+    {
+      "id": "health.advance",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G426",
+      "adapter": "game/src/domain/health.gd",
+      "source": "src/shared/domain/Health.luau",
+      "cases": [
+        {
+          "id": "advance-short",
+          "invariant": "12h severe neglect remains healthy",
+          "input": {
+            "state": {},
+            "care": {
+              "hunger": 1
+            },
+            "elapsedHours": 12
+          },
+          "expected": {
+            "status": "healthy",
+            "neglectHours": 12,
+            "untreatedHours": 0
+          }
+        },
+        {
+          "id": "advance-24",
+          "invariant": "24h severe neglect crosses neglected boundary",
+          "input": {
+            "state": {},
+            "care": {
+              "hunger": 1
+            },
+            "elapsedHours": 24
+          },
+          "expected": {
+            "status": "neglected",
+            "neglectHours": 24,
+            "untreatedHours": 0
+          }
+        },
+        {
+          "id": "advance-48",
+          "invariant": "48h neglect crosses sick boundary, zero untreated at exact threshold",
+          "input": {
+            "state": {},
+            "care": {
+              "hunger": 1
+            },
+            "elapsedHours": 48
+          },
+          "expected": {
+            "status": "sick",
+            "neglectHours": 48,
+            "untreatedHours": 0
+          }
+        },
+        {
+          "id": "advance-72",
+          "invariant": "72h neglect crosses critical, 24h untreated",
+          "input": {
+            "state": {},
+            "care": {
+              "hunger": 1
+            },
+            "elapsedHours": 72
+          },
+          "expected": {
+            "status": "critical",
+            "neglectHours": 72,
+            "untreatedHours": 24
+          }
+        },
+        {
+          "id": "advance-critical",
+          "invariant": "Ongoing sickness accumulates untreated hours",
+          "input": {
+            "state": {
+              "neglectHours": 48,
+              "untreatedHours": 0
+            },
+            "care": {
+              "hunger": 1
+            },
+            "elapsedHours": 24
+          },
+          "expected": {
+            "status": "critical",
+            "neglectHours": 72,
+            "untreatedHours": 24
+          }
+        },
+        {
+          "id": "advance-critical-good-care",
+          "invariant": "Good care cannot reverse disease without treatment",
+          "input": {
+            "state": {
+              "neglectHours": 72,
+              "untreatedHours": 24
+            },
+            "care": {},
+            "elapsedHours": 24
+          },
+          "expected": {
+            "status": "critical",
+            "neglectHours": 72,
+            "untreatedHours": 48
+          }
+        },
+        {
+          "id": "advance-recover-neglect",
+          "invariant": "Healthy care reverses pre-sickness neglect",
+          "input": {
+            "state": {
+              "neglectHours": 24
+            },
+            "care": {},
+            "elapsedHours": 24
+          },
+          "expected": {
+            "status": "healthy",
+            "neglectHours": 0,
+            "untreatedHours": 0
+          }
+        },
+        {
+          "id": "advance-sick-good",
+          "invariant": "Sick retains health status even after 12h good care",
+          "input": {
+            "state": {
+              "neglectHours": 48
+            },
+            "care": {},
+            "elapsedHours": 12
+          },
+          "expected": {
+            "status": "sick",
+            "neglectHours": 48,
+            "untreatedHours": 12
+          }
+        },
+        {
+          "id": "advance-midquality",
+          "invariant": "At 0.5 quality, neither neglect nor recovery applies",
+          "input": {
+            "state": {
+              "neglectHours": 24
+            },
+            "care": {
+              "hygiene": 0.5
+            },
+            "elapsedHours": 12
+          },
+          "expected": {
+            "status": "neglected",
+            "neglectHours": 24,
+            "untreatedHours": 0
+          }
+        },
+        {
+          "id": "advance-recover-boundary",
+          "invariant": "At 0.75 quality pre-sickness can recover",
+          "input": {
+            "state": {
+              "neglectHours": 24
+            },
+            "care": {
+              "hygiene": 0.75
+            },
+            "elapsedHours": 12
+          },
+          "expected": {
+            "status": "healthy",
+            "neglectHours": 12,
+            "untreatedHours": 0
+          }
+        },
+        {
+          "id": "advance-zero",
+          "invariant": "Zero elapsed preserves durations",
+          "input": {
+            "state": {
+              "neglectHours": 48,
+              "untreatedHours": 10
+            },
+            "care": {
+              "hunger": 1
+            },
+            "elapsedHours": 0
+          },
+          "expected": {
+            "status": "sick",
+            "neglectHours": 48,
+            "untreatedHours": 10
+          }
+        },
+        {
+          "id": "advance-negative",
+          "invariant": "Elapsed duration cannot be negative",
+          "input": {
+            "state": {},
+            "care": {},
+            "elapsedHours": -1
+          },
+          "expected_error": "elapsedHours must not be negative"
+        },
+        {
+          "id": "advance-invalid-care",
+          "invariant": "Care input validation precedes progression",
+          "input": {
+            "state": {},
+            "care": {
+              "hunger": 2
+            },
+            "elapsedHours": 12
+          },
+          "expected_error": "Care.hunger must be between 0 and 1"
+        }
+      ]
+    },
+    {
+      "id": "health.treat",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G426",
+      "adapter": "game/src/domain/health.gd",
+      "source": "src/shared/domain/Health.luau",
+      "cases": [
+        {
+          "id": "treat-basic",
+          "invariant": "Basic treatment costs 10 and reduces neglect by 24",
+          "input": {
+            "state": {
+              "neglectHours": 48
+            },
+            "treatment": "basic"
+          },
+          "expected": {
+            "state": {
+              "status": "neglected",
+              "neglectHours": 24,
+              "untreatedHours": 0
+            },
+            "cost": 10
+          }
+        },
+        {
+          "id": "treat-advanced",
+          "invariant": "Advanced treatment costs 30 and reduces neglect by 48",
+          "input": {
+            "state": {
+              "neglectHours": 48
+            },
+            "treatment": "advanced"
+          },
+          "expected": {
+            "state": {
+              "status": "healthy",
+              "neglectHours": 0,
+              "untreatedHours": 0
+            },
+            "cost": 30
+          }
+        },
+        {
+          "id": "treat-emergency",
+          "invariant": "Emergency treatment costs 75 and reduces neglect by 96",
+          "input": {
+            "state": {
+              "neglectHours": 72,
+              "untreatedHours": 48
+            },
+            "treatment": "emergency"
+          },
+          "expected": {
+            "state": {
+              "status": "healthy",
+              "neglectHours": 0,
+              "untreatedHours": 0
+            },
+            "cost": 75
+          }
+        },
+        {
+          "id": "treat-partial",
+          "invariant": "Treatment retains residual neglect and clears untreated",
+          "input": {
+            "state": {
+              "neglectHours": 80,
+              "untreatedHours": 48
+            },
+            "treatment": "advanced"
+          },
+          "expected": {
+            "state": {
+              "status": "neglected",
+              "neglectHours": 32,
+              "untreatedHours": 0
+            },
+            "cost": 30
+          }
+        },
+        {
+          "id": "treat-healthy",
+          "invariant": "Healthy pets must not be treated",
+          "input": {
+            "state": {},
+            "treatment": "basic"
+          },
+          "expected_error": "Healthy pet does not require treatment"
+        },
+        {
+          "id": "treat-invalid",
+          "invariant": "Unknown treatment must fail",
+          "input": {
+            "state": {
+              "neglectHours": 48
+            },
+            "treatment": "magic"
+          },
+          "expected_error": "Health treatment is invalid"
+        },
+        {
+          "id": "treat-invalid-type",
+          "invariant": "Treatment option must be string",
+          "input": {
+            "state": {
+              "neglectHours": 48
+            },
+            "treatment": 5
+          },
+          "expected_error": "Health treatment is invalid"
+        }
+      ]
+    },
+    {
+      "id": "health.terminal_risk",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G426",
+      "adapter": "game/src/domain/health.gd",
+      "source": "src/shared/domain/Health.luau",
+      "cases": [
+        {
+          "id": "terminal-critical-48",
+          "invariant": "Terminal threshold is critical with 48h untreated",
+          "input": {
+            "state": {
+              "neglectHours": 72,
+              "untreatedHours": 48
+            }
+          },
+          "expected": {
+            "terminal": true
+          }
+        },
+        {
+          "id": "terminal-critical-47",
+          "invariant": "47h critical untreated is not terminal",
+          "input": {
+            "state": {
+              "neglectHours": 72,
+              "untreatedHours": 47
+            }
+          },
+          "expected": {
+            "terminal": false
+          }
+        },
+        {
+          "id": "terminal-sick-100",
+          "invariant": "Sick alone cannot be terminal before critical",
+          "input": {
+            "state": {
+              "neglectHours": 48,
+              "untreatedHours": 100
+            }
+          },
+          "expected": {
+            "terminal": false
+          }
+        },
+        {
+          "id": "terminal-healthy",
+          "invariant": "Default state never terminal",
+          "input": {
+            "state": {}
+          },
+          "expected": {
+            "terminal": false
+          }
+        },
+        {
+          "id": "terminal-neglected-normalization",
+          "invariant": "Persisted untreated hours cleared when neglected",
+          "input": {
+            "state": {
+              "neglectHours": 24,
+              "untreatedHours": 48
+            }
+          },
+          "expected": {
+            "terminal": false
+          }
+        }
+      ]
+    },
+    {
       "id": "genetics.advance_potential",
       "status": "PENDING_PORT",
       "milestone": "G430",
