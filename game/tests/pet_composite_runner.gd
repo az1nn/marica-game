@@ -148,6 +148,10 @@ func _terminal_and_immutability() -> bool:
     var repeated: Dictionary = pet.advance_health(-1)
     if not repeated.get("ok", false) or repeated["pet"].to_snapshot() != pet.to_snapshot():
         return _fail("ended Pet advance must be an idempotent no-op")
+    return _verify_terminal_bond(pet)
+
+
+func _verify_terminal_bond(pet: MaricaPet) -> bool:
     var bonded: Dictionary = pet.gain_affection(0.2)
     if (
         not bonded.get("ok", false)
