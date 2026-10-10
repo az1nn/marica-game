@@ -1,18 +1,18 @@
 # QA HANDOFF
 
-Status: G428 VERIFIED / ADVANCE G429
-
-Authority: SPEC-004 · Godot 4.7.2-stable · Godot-first single-player/offline-first.
+Status: G429 VERIFIED / ADVANCE G430
+Authority: SPEC-004 · Godot 4.7.2-stable · offline-first single-player.
 
 Verified:
-- G428 PR #67 exact head `6b31669ef7a3f651e45416d19c3b5b770dd68e79`: Godot CI, Validate Skills and Roblox CI PASS; Roblox Behavioral skipped/nonrequired.
-- Guarded merge master@`d4ab3fed49606ad13e0fa1881f5a1715ea7a6f97`; three corresponding master post-merge workflow gates PASS.
-- Godot import/parse/startup/smoke, Python fixture schema/provenance unit suite, typed declaration guard, gdformat and gdlint PASS.
-- 188 ACTIVE_PARITY executable Luau→Godot golden cases, 4 harness selftests and 3 G430 genetic advancement PENDING_PORT cases.
-- G428 independent regression proves normalized, finite persistent affection, gain cap, immutable Pet snapshot/identity/Soulbound semantics; GOOD→BAD→RESTORE cap-inversion mutation gate PASS. Earlier G420–G427 mutation suites remain PASS in exact-head Godot CI.
+- PR #69 exact head `9edde5513bef35974480e10ce2c1ec072781203a`: Godot CI / Validate Skills / Roblox CI **PASS**; Roblox Behavioral SKIPPED/nonrequired.
+- Guarded squash merge master@`66604001dd20182755b9b3120cf1aa892e50d807`: same three required workflows **PASS** after merge.
+- G429 independent Pet composite regression, detached nested snapshots/immutability, Care→expression coupling, lifecycle, health treatment and terminal, Soulbound and persistent bond preserved.
+- 209 ACTIVE_PARITY Luau→Godot executable golden cases = 188 previously proven + **21 G429 composite**; 4 harness selftests; three G430 genetics advancement fixtures remain PENDING_PORT.
+- G429 terminal health guard GOOD → BAD → RESTORE mutation was detected by golden fixture runtime on exact PR head. All previous domain regression/mutation gates still PASS in Godot CI.
+- Pinned Godot import/parse/boot/smoke, GDScript typing, gdformat/gdlint, Python fixture schema/provenance suite PASS.
 
 Limits:
-- Standalone Pet Affection shell is not composite Pet care/health/lifecycle integration. Full animal loop parity still NOT_YET_PROVEN.
-- No Godot local save, succession, ARTIST production sprite/LENTE runtime or Web export acceptance.
+- Source-linked aggregate golden parity does not prove succession, two successors, idempotency, save/load, full 2–4-week simulation, artwork, LENTE or Web export.
+- No V1 online dependency or gameplay scene capability is claimed.
 
-Next: G429 composite Pet behavioral parity and mutation/adversarial gates before succession work.
+Next: G430 deterministic potential advancement via exact Luau-source fixtures and independent mutation/regression proof.
