@@ -88,6 +88,7 @@ func _snapshot_roundtrip(bonded: MaricaPet) -> bool:
         return _fail("serialized affection did not restore")
     return true
 
+
 func _founder_and_descendant_separation() -> bool:
     var founder: Dictionary = PET.create("pet-f", true, 0.9)
     var child: Dictionary = PET.create("pet-c", false)
