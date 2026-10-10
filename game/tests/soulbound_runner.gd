@@ -60,10 +60,12 @@ func _pet_binding_and_detachment() -> bool:
     if not created.get("ok", false):
         return _fail("founder with explicit binding cannot be created")
     var founder: MaricaPet = created["pet"]
-    if not founder.is_soulbound() or founder.is_transferable():
-        return _fail("bound founder incorrectly transferable")
-    if founder.assert_transferable().get("ok", true):
-        return _fail("bound founder transfer assertion must fail")
+    if (
+        not founder.is_soulbound()
+        or founder.is_transferable()
+        or founder.assert_transferable().get("ok", true)
+    ):
+        return _fail("bound founder transfer guard must fail")
     var snapshot: Dictionary = founder.to_snapshot()
     if snapshot != {"id": "pet-founder-001", "soulbound": true}:
         return _fail("founder soulbound missing from detached snapshot")
