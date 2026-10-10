@@ -166,6 +166,10 @@ func _reject_invalid_state() -> bool:
     var shell: Dictionary = PET.create("pet-shell")
     if not shell.get("ok", false) or shell["pet"].advance_health(1).get("ok", true):
         return _fail("isolated shell was mistaken for composite")
+    return _reject_invalid_transitions()
+
+
+func _reject_invalid_transitions() -> bool:
     var created: Dictionary = PET.create_composite("pet-founder", _pedigree())
     if not created.get("ok", false):
         return _fail("minimal composite setup failed")
