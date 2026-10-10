@@ -109,7 +109,8 @@ func _check_contract(contract_value: Variant) -> Dictionary:
                 "pet.soulbound",
                 "affection.create",
                 "affection.increase",
-                "pet.affection"
+                "pet.affection",
+                "pet.composite"
             ]
         )
     ):
@@ -171,6 +172,8 @@ func _verify_domain_cases(identifier: String, cases: Array) -> Dictionary:
         print("MARICA_G428_AFFECTION_INCREASE_PARITY_PASS cases=", cases.size())
     elif identifier == "pet.affection":
         print("MARICA_G428_PET_AFFECTION_PARITY_PASS cases=", cases.size())
+    elif identifier == "pet.composite":
+        print("MARICA_G429_PET_COMPOSITE_PARITY_PASS cases=", cases.size())
     return {"active": 0, "verified": cases.size(), "pending": 0}
 
 
@@ -248,6 +251,8 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
         result = AFFECTION.create(case_input.get("value", null))
     elif identifier == "affection.increase":
         result = AFFECTION.increase(case_input.get("state", null), case_input.get("gain"))
+    elif identifier == "pet.composite":
+        return _run_pet_composite(case_input)
     elif identifier == "pet.affection":
         result = PET.create(
             case_input.get("id", null),
@@ -263,6 +268,80 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
     if not result.get("ok", false):
         return {"error": result.get("error", "")}
     return _canonical_domain_result(identifier, result)
+
+
+func _run_pet_composite(case_input: Dictionary) -> Dictionary:
+    var lifecycle: MaricaLifecycle = LIFECYCLE.start()
+    var lifecycle_actions: Array = case_input.get("lifecycleActions", [])
+    for entry in lifecycle_actions:
+        var action: Dictionary = entry
+        var outcome: Dictionary = {}
+        if action.get("op") == "advance":
+            outcome = LIFECYCLE.advance(lifecycle, action.get("stage"))
+        elif action.get("op") == "endLife":
+            outcome = LIFECYCLE.end_life(lifecycle, action.get("reason"))
+        else:
+            return {"error": "Unknown Pet lifecycle operation"}
+        if not outcome.get("ok", false):
+            return {"error": outcome.get("error", "")}
+        lifecycle = outcome["lifecycle"]
+
+    var result: Dictionary = PET.create_composite(
+        case_input.get("id", null),
+        case_input.get("pedigree", null),
+        lifecycle,
+        case_input.get("potential", null),
+        case_input.get("care", null),
+        case_input.get("health", null),
+        case_input.get("soulbound", null),
+        case_input.get("affection", null)
+    )
+    if not result.get("ok", false):
+        return {"error": result.get("error", "")}
+    var pet: MaricaPet = result["pet"]
+    var last_cost: Variant = null
+    var actions: Array = case_input.get("actions", [])
+    for entry in actions:
+        var action: Dictionary = entry
+        var op: String = str(action.get("op", ""))
+        if op == "withCare":
+            result = pet.with_care_state(action.get("state"))
+        elif op == "withHealth":
+            result = pet.with_health_state(action.get("state"))
+        elif op == "withFactors":
+            result = pet.with_expression_factors(action.get("factors"))
+        elif op == "advanceHealth":
+            result = pet.advance_health(action.get("hours"))
+        elif op == "treat":
+            result = pet.apply_treatment(action.get("treatment"))
+        elif op == "gainAffection":
+            result = pet.gain_affection(action.get("gain"))
+        elif op == "withAffection":
+            result = pet.with_affection(action.get("value"))
+        elif op in ["withLifecycle", "endLife"]:
+            var transition: Dictionary = {}
+            if op == "withLifecycle":
+                transition = LIFECYCLE.advance(lifecycle, action.get("stage"))
+            else:
+                transition = LIFECYCLE.end_life(lifecycle, action.get("reason"))
+            if not transition.get("ok", false):
+                return {"error": transition.get("error", "")}
+            lifecycle = transition["lifecycle"]
+            result = pet.with_lifecycle(lifecycle)
+        else:
+            return {"error": "Unknown Pet aggregate operation"}
+        if not result.get("ok", false):
+            return {"error": result.get("error", "")}
+        pet = result["pet"]
+        if result.has("cost"):
+            last_cost = result["cost"]
+
+    var snapshot: Dictionary = pet.to_snapshot()
+    snapshot["active"] = pet.is_active()
+    snapshot["transferable"] = pet.is_transferable()
+    if last_cost != null:
+        snapshot["cost"] = last_cost
+    return snapshot
 
 
 func _canonical_domain_result(identifier: String, result: Dictionary) -> Dictionary:
