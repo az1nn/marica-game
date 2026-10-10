@@ -45,6 +45,7 @@ APPROVED_PARITY = {
     "affection.create": ("G428", "game/src/domain/affection.gd", "src/shared/domain/Affection.luau"),
     "affection.increase": ("G428", "game/src/domain/affection.gd", "src/shared/domain/Affection.luau"),
     "pet.affection": ("G428", "game/src/domain/pet.gd", "src/shared/domain/Pet.luau"),
+    "pet.composite": ("G429", "game/src/domain/pet.gd", "src/shared/domain/Pet.luau"),
 }
 
 
@@ -337,6 +338,74 @@ def validate(document: Any, root: Path = ROOT) -> list[str]:
                                 or type(expected.get("cost")) is not int
                             ):
                                 errors.append(f"{key}/{case_id}: invalid treatment result")
+                if key == "pet.composite":
+                    data = case.get("input")
+                    allowed = {
+                        "id", "pedigree", "potential", "care", "health",
+                        "soulbound", "affection", "lifecycleActions", "actions",
+                    }
+                    if (
+                        not isinstance(data, dict)
+                        or not {"id", "pedigree"}.issubset(data)
+                        or not set(data).issubset(allowed)
+                        or not isinstance(data.get("id"), str)
+                        or not isinstance(data.get("pedigree"), dict)
+                    ):
+                        errors.append(f"{key}/{case_id}: composite needs id and pedigree")
+                    elif any(
+                        name in data and not isinstance(data[name], dict)
+                        for name in {"potential", "care", "health"}
+                    ):
+                        errors.append(f"{key}/{case_id}: composite states must be objects")
+                    if isinstance(data, dict):
+                        valid_ops = {
+                            "withCare", "withHealth", "withFactors", "advanceHealth",
+                            "treat", "gainAffection", "withAffection",
+                            "withLifecycle", "endLife",
+                        }
+                        for name in ("actions", "lifecycleActions"):
+                            sequence = data.get(name, [])
+                            if not isinstance(sequence, list):
+                                errors.append(f"{key}/{case_id}: {name} must be an array")
+                            elif any(
+                                not isinstance(action, dict)
+                                or not isinstance(action.get("op"), str)
+                                or (
+                                    name == "actions"
+                                    and action["op"] not in valid_ops
+                                )
+                                or (
+                                    name == "lifecycleActions"
+                                    and action["op"] not in {"advance", "endLife"}
+                                )
+                                for action in sequence
+                            ):
+                                errors.append(f"{key}/{case_id}: invalid composite action")
+                    if has_expected:
+                        expected = case.get("expected")
+                        fields = {
+                            "id", "pedigree", "lifecycle", "geneticPotential",
+                            "expressedTraits", "careState", "healthState",
+                            "soulbound", "affection", "active", "transferable",
+                        }
+                        if (
+                            not isinstance(expected, dict)
+                            or set(expected) not in [fields, fields | {"cost"}]
+                            or any(type(expected[name]) is not bool for name in
+                                   ("soulbound", "active", "transferable"))
+                            or type(expected["affection"]) not in (int, float)
+                            or not 0 <= expected["affection"] <= 1
+                            or not isinstance(expected["pedigree"], dict)
+                            or not isinstance(expected["lifecycle"], dict)
+                            or not isinstance(expected["geneticPotential"], dict)
+                            or not isinstance(expected["expressedTraits"], dict)
+                            or not isinstance(expected["careState"], dict)
+                            or not isinstance(expected["healthState"], dict)
+                            or ("cost" in expected and type(expected["cost"]) is not int)
+                        ):
+                            errors.append(
+                                f"{key}/{case_id}: composite needs canonical full snapshot"
+                            )
                 if key == "simulation_time.observe":
                     data = case.get("input")
                     if not isinstance(data, dict) or set(data) != {"lastObservedAt", "clockNow"}:
