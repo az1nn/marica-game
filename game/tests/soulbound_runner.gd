@@ -33,6 +33,8 @@ func _defaults_and_types() -> bool:
         var rejected: Dictionary = SOULBOUND.create(bad)
         if rejected.get("ok", true) or rejected.get("error") != "Soulbound state must be a boolean":
             return _fail("invalid persisted soulbound value accepted")
+    if PET.create("pet-invalid", "true").get("ok", true):
+        return _fail("invalid persisted Pet binding must reject")
     return true
 
 
@@ -72,8 +74,6 @@ func _pet_binding_and_detachment() -> bool:
     var restored: Dictionary = PET.create("pet-founder-001", true)
     if not restored.get("ok", false) or not restored["pet"].is_soulbound():
         return _fail("restoration of explicit binding failed")
-    if PET.create("pet-invalid", "true").get("ok", true):
-        return _fail("invalid persisted Pet binding must reject")
     return true
 
 
