@@ -268,17 +268,12 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
 func _canonical_domain_result(identifier: String, result: Dictionary) -> Dictionary:
     if identifier.begins_with("care."):
         return _care_domain_result(identifier, result)
-    if identifier.begins_with("affection."):
-        return {"affection": result["affection"]}
-    if identifier == "pet.affection":
-        var pet: MaricaPet = result["pet"]
-        return {
-            "id": pet.get_id(), "soulbound": pet.is_soulbound(), "affection": pet.get_affection()
-        }
     if (
         identifier.begins_with("health.")
         or identifier.begins_with("soulbound.")
         or identifier == "pet.soulbound"
+        or identifier.begins_with("affection.")
+        or identifier == "pet.affection"
     ):
         return _special_domain_result(identifier, result)
     if identifier in ["genetics.new_potential", "genetics.express"]:
@@ -303,6 +298,15 @@ func _special_domain_result(identifier: String, result: Dictionary) -> Dictionar
         }
     if identifier == "soulbound.create":
         return {"soulbound": result["soulbound"]}
+    if identifier.begins_with("affection."):
+        return {"affection": result["affection"]}
+    if identifier == "pet.affection":
+        var bonded: MaricaPet = result["pet"]
+        return {
+            "id": bonded.get_id(),
+            "soulbound": bonded.is_soulbound(),
+            "affection": bonded.get_affection()
+        }
     return {"transferable": result["transferable"]}
 
 

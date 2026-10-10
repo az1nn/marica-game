@@ -62,10 +62,19 @@ func _pet_immutability() -> bool:
     if not increased.get("ok", false):
         return _fail("gain failed for valid bonded pet")
     var bonded: MaricaPet = increased["pet"]
-    if original.get_affection() != 0.4 or bonded.get_affection() != 0.65:
-        return _fail("gain mutated original or lost increase")
-    if original.get_id() != bonded.get_id() or not bonded.is_soulbound():
-        return _fail("gain lost immutable id or founder binding")
+    if (
+        original.get_affection() != 0.4
+        or bonded.get_affection() != 0.65
+        or original.get_id() != bonded.get_id()
+        or not bonded.is_soulbound()
+    ):
+        return _fail("immutable affection, Pet ID or founder binding regressed")
+    if original.gain_affection(-0.1).get("ok", true):
+        return _fail("invalid gain mutated Pet")
+    return _snapshot_roundtrip(bonded)
+
+
+func _snapshot_roundtrip(bonded: MaricaPet) -> bool:
     var snapshot: Dictionary = bonded.to_snapshot()
     snapshot["id"] = "tampered"
     snapshot["affection"] = 0.0
@@ -77,10 +86,7 @@ func _pet_immutability() -> bool:
     )
     if not restored.get("ok", false) or restored["pet"].get_affection() != 0.65:
         return _fail("serialized affection did not restore")
-    if original.gain_affection(-0.1).get("ok", true):
-        return _fail("invalid gain mutated Pet")
     return true
-
 
 func _founder_and_descendant_separation() -> bool:
     var founder: Dictionary = PET.create("pet-f", true, 0.9)
