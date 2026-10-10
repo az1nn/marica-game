@@ -242,7 +242,11 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
 func _canonical_domain_result(identifier: String, result: Dictionary) -> Dictionary:
     if identifier.begins_with("care."):
         return _care_domain_result(identifier, result)
-    if identifier.begins_with("health.") or identifier.begins_with("soulbound.") or identifier == "pet.soulbound":
+    if (
+        identifier.begins_with("health.")
+        or identifier.begins_with("soulbound.")
+        or identifier == "pet.soulbound"
+    ):
         return _special_domain_result(identifier, result)
     if identifier in ["genetics.new_potential", "genetics.express"]:
         return result["traits"]
