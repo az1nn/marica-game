@@ -2525,6 +2525,878 @@
       ]
     },
     {
+      "id": "pet.composite",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G429",
+      "source": "src/shared/domain/Pet.luau",
+      "adapter": "game/src/domain/pet.gd",
+      "cases": [
+        {
+          "id": "new-founder-defaults",
+          "invariant": "Pet.new retains founder pedigree and normalized defaults",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            }
+          },
+          "expected": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "lifecycle": {
+              "stage": "juvenile",
+              "status": "active"
+            },
+            "geneticPotential": {},
+            "expressedTraits": {},
+            "careState": {
+              "hunger": 0,
+              "hygiene": 1,
+              "affection": 1,
+              "energy": 1
+            },
+            "healthState": {
+              "status": "healthy",
+              "neglectHours": 0,
+              "untreatedHours": 0
+            },
+            "soulbound": false,
+            "affection": 0,
+            "active": true,
+            "transferable": true
+          }
+        },
+        {
+          "id": "new-care-drives-expression",
+          "invariant": "Pet.new couples expressed traits to momentary Care quality; persistent bond remains separate",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "potential": {
+              "speed": 0.8
+            },
+            "care": {
+              "hunger": 0.5
+            },
+            "soulbound": true,
+            "affection": 0.4
+          },
+          "expected": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "lifecycle": {
+              "stage": "juvenile",
+              "status": "active"
+            },
+            "geneticPotential": {
+              "speed": 0.8
+            },
+            "expressedTraits": {
+              "speed": 0.4
+            },
+            "careState": {
+              "hunger": 0.5,
+              "hygiene": 1,
+              "affection": 1,
+              "energy": 1
+            },
+            "healthState": {
+              "status": "healthy",
+              "neglectHours": 0,
+              "untreatedHours": 0
+            },
+            "soulbound": true,
+            "affection": 0.4,
+            "active": true,
+            "transferable": false
+          }
+        },
+        {
+          "id": "care-reexpression",
+          "invariant": "Pet.withCareState recomputes expression without changing genetic potential",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "potential": {
+              "speed": 0.8
+            },
+            "actions": [
+              {
+                "op": "withCare",
+                "state": {
+                  "hunger": 0.25
+                }
+              }
+            ]
+          },
+          "expected": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "lifecycle": {
+              "stage": "juvenile",
+              "status": "active"
+            },
+            "geneticPotential": {
+              "speed": 0.8
+            },
+            "expressedTraits": {
+              "speed": 0.6000000000000001
+            },
+            "careState": {
+              "hunger": 0.25,
+              "hygiene": 1,
+              "affection": 1,
+              "energy": 1
+            },
+            "healthState": {
+              "status": "healthy",
+              "neglectHours": 0,
+              "untreatedHours": 0
+            },
+            "soulbound": false,
+            "affection": 0,
+            "active": true,
+            "transferable": true
+          }
+        },
+        {
+          "id": "factor-override",
+          "invariant": "Pet.withExpressionFactors replaces expressed traits without changing Care",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "potential": {
+              "speed": 0.8
+            },
+            "actions": [
+              {
+                "op": "withFactors",
+                "factors": {
+                  "speed": 0.25
+                }
+              }
+            ]
+          },
+          "expected": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "lifecycle": {
+              "stage": "juvenile",
+              "status": "active"
+            },
+            "geneticPotential": {
+              "speed": 0.8
+            },
+            "expressedTraits": {
+              "speed": 0.2
+            },
+            "careState": {
+              "hunger": 0,
+              "hygiene": 1,
+              "affection": 1,
+              "energy": 1
+            },
+            "healthState": {
+              "status": "healthy",
+              "neglectHours": 0,
+              "untreatedHours": 0
+            },
+            "soulbound": false,
+            "affection": 0,
+            "active": true,
+            "transferable": true
+          }
+        },
+        {
+          "id": "health-state-replacement",
+          "invariant": "Pet.withHealthState keeps expression and persistent Affection unchanged",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "potential": {
+              "speed": 0.8
+            },
+            "affection": 0.6,
+            "actions": [
+              {
+                "op": "withHealth",
+                "state": {
+                  "neglectHours": 50,
+                  "untreatedHours": 10
+                }
+              }
+            ]
+          },
+          "expected": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "lifecycle": {
+              "stage": "juvenile",
+              "status": "active"
+            },
+            "geneticPotential": {
+              "speed": 0.8
+            },
+            "expressedTraits": {
+              "speed": 0.8
+            },
+            "careState": {
+              "hunger": 0,
+              "hygiene": 1,
+              "affection": 1,
+              "energy": 1
+            },
+            "healthState": {
+              "status": "sick",
+              "neglectHours": 50,
+              "untreatedHours": 10
+            },
+            "soulbound": false,
+            "affection": 0.6,
+            "active": true,
+            "transferable": true
+          }
+        },
+        {
+          "id": "advance-neglect-24h",
+          "invariant": "Pet.advanceHealth accumulates neglect against persistent Care quality",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "potential": {
+              "speed": 0.8
+            },
+            "care": {
+              "hunger": 1
+            },
+            "actions": [
+              {
+                "op": "advanceHealth",
+                "hours": 24
+              }
+            ]
+          },
+          "expected": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "lifecycle": {
+              "stage": "juvenile",
+              "status": "active"
+            },
+            "geneticPotential": {
+              "speed": 0.8
+            },
+            "expressedTraits": {
+              "speed": 0
+            },
+            "careState": {
+              "hunger": 1,
+              "hygiene": 1,
+              "affection": 1,
+              "energy": 1
+            },
+            "healthState": {
+              "status": "neglected",
+              "neglectHours": 24,
+              "untreatedHours": 0
+            },
+            "soulbound": false,
+            "affection": 0,
+            "active": true,
+            "transferable": true
+          }
+        },
+        {
+          "id": "advance-terminal-health",
+          "invariant": "Pet.advanceHealth closes life at critical untreated risk without altering bond or traits",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "potential": {
+              "speed": 0.8
+            },
+            "care": {
+              "hunger": 1
+            },
+            "health": {
+              "neglectHours": 72,
+              "untreatedHours": 48
+            },
+            "soulbound": true,
+            "affection": 0.3,
+            "actions": [
+              {
+                "op": "advanceHealth",
+                "hours": 1
+              }
+            ]
+          },
+          "expected": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "lifecycle": {
+              "stage": "juvenile",
+              "status": "ended",
+              "endReason": "health"
+            },
+            "geneticPotential": {
+              "speed": 0.8
+            },
+            "expressedTraits": {
+              "speed": 0
+            },
+            "careState": {
+              "hunger": 1,
+              "hygiene": 1,
+              "affection": 1,
+              "energy": 1
+            },
+            "healthState": {
+              "status": "critical",
+              "neglectHours": 73,
+              "untreatedHours": 49
+            },
+            "soulbound": true,
+            "affection": 0.3,
+            "active": false,
+            "transferable": false
+          }
+        },
+        {
+          "id": "ended-advance-noop",
+          "invariant": "Pet.advanceHealth ignores elapsed time after terminal lifecycle",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "lifecycleActions": [
+              {
+                "op": "endLife",
+                "reason": "health"
+              }
+            ],
+            "actions": [
+              {
+                "op": "advanceHealth",
+                "hours": -1
+              }
+            ]
+          },
+          "expected": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "lifecycle": {
+              "stage": "juvenile",
+              "status": "ended",
+              "endReason": "health"
+            },
+            "geneticPotential": {},
+            "expressedTraits": {},
+            "careState": {
+              "hunger": 0,
+              "hygiene": 1,
+              "affection": 1,
+              "energy": 1
+            },
+            "healthState": {
+              "status": "healthy",
+              "neglectHours": 0,
+              "untreatedHours": 0
+            },
+            "soulbound": false,
+            "affection": 0,
+            "active": false,
+            "transferable": true
+          }
+        },
+        {
+          "id": "treatment-advanced",
+          "invariant": "Pet.applyTreatment returns exact medical price, state and unchanged Care",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "potential": {
+              "speed": 0.8
+            },
+            "care": {
+              "hunger": 1
+            },
+            "health": {
+              "neglectHours": 72,
+              "untreatedHours": 2
+            },
+            "actions": [
+              {
+                "op": "treat",
+                "treatment": "advanced"
+              }
+            ]
+          },
+          "expected": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "lifecycle": {
+              "stage": "juvenile",
+              "status": "active"
+            },
+            "geneticPotential": {
+              "speed": 0.8
+            },
+            "expressedTraits": {
+              "speed": 0
+            },
+            "careState": {
+              "hunger": 1,
+              "hygiene": 1,
+              "affection": 1,
+              "energy": 1
+            },
+            "healthState": {
+              "status": "neglected",
+              "neglectHours": 24,
+              "untreatedHours": 0
+            },
+            "soulbound": false,
+            "affection": 0,
+            "active": true,
+            "transferable": true,
+            "cost": 30
+          }
+        },
+        {
+          "id": "healthy-treatment-rejected",
+          "invariant": "Pet.applyTreatment rejects unnecessary treatment",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "actions": [
+              {
+                "op": "treat",
+                "treatment": "basic"
+              }
+            ]
+          },
+          "expected_error": "Healthy pet does not require treatment"
+        },
+        {
+          "id": "ended-treatment-rejected",
+          "invariant": "Pet.applyTreatment refuses treatment on terminal pet",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "lifecycleActions": [
+              {
+                "op": "endLife",
+                "reason": "health"
+              }
+            ],
+            "health": {
+              "neglectHours": 72,
+              "untreatedHours": 48
+            },
+            "actions": [
+              {
+                "op": "treat",
+                "treatment": "emergency"
+              }
+            ]
+          },
+          "expected_error": "Ended pet cannot receive treatment"
+        },
+        {
+          "id": "persistent-bond",
+          "invariant": "Pet.gainAffection preserves founder binding and all composite state",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "soulbound": true,
+            "affection": 0.6,
+            "actions": [
+              {
+                "op": "gainAffection",
+                "gain": 0.5
+              }
+            ]
+          },
+          "expected": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "lifecycle": {
+              "stage": "juvenile",
+              "status": "active"
+            },
+            "geneticPotential": {},
+            "expressedTraits": {},
+            "careState": {
+              "hunger": 0,
+              "hygiene": 1,
+              "affection": 1,
+              "energy": 1
+            },
+            "healthState": {
+              "status": "healthy",
+              "neglectHours": 0,
+              "untreatedHours": 0
+            },
+            "soulbound": true,
+            "affection": 1,
+            "active": true,
+            "transferable": false
+          }
+        },
+        {
+          "id": "replace-bond",
+          "invariant": "Pet.withAffection leaves momentary Care.affection unchanged",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "care": {
+              "affection": 0.5
+            },
+            "actions": [
+              {
+                "op": "withAffection",
+                "value": 0.2
+              }
+            ]
+          },
+          "expected": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "lifecycle": {
+              "stage": "juvenile",
+              "status": "active"
+            },
+            "geneticPotential": {},
+            "expressedTraits": {},
+            "careState": {
+              "hunger": 0,
+              "hygiene": 1,
+              "affection": 0.5,
+              "energy": 1
+            },
+            "healthState": {
+              "status": "healthy",
+              "neglectHours": 0,
+              "untreatedHours": 0
+            },
+            "soulbound": false,
+            "affection": 0.2,
+            "active": true,
+            "transferable": true
+          }
+        },
+        {
+          "id": "advance-stage-adult",
+          "invariant": "Pet.withLifecycle keeps all other component states",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "soulbound": true,
+            "affection": 0.5,
+            "actions": [
+              {
+                "op": "withLifecycle",
+                "stage": "adult"
+              }
+            ]
+          },
+          "expected": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "lifecycle": {
+              "stage": "adult",
+              "status": "active"
+            },
+            "geneticPotential": {},
+            "expressedTraits": {},
+            "careState": {
+              "hunger": 0,
+              "hygiene": 1,
+              "affection": 1,
+              "energy": 1
+            },
+            "healthState": {
+              "status": "healthy",
+              "neglectHours": 0,
+              "untreatedHours": 0
+            },
+            "soulbound": true,
+            "affection": 0.5,
+            "active": true,
+            "transferable": false
+          }
+        },
+        {
+          "id": "invalid-pedigree",
+          "invariant": "Pet.new rejects missing lineage ID",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "generation": 0
+            }
+          },
+          "expected_error": "LineageId must be a string"
+        },
+        {
+          "id": "negative-elapsed",
+          "invariant": "Pet.advanceHealth rejects negative elapsed time",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "actions": [
+              {
+                "op": "advanceHealth",
+                "hours": -1
+              }
+            ]
+          },
+          "expected_error": "elapsedHours must not be negative"
+        },
+        {
+          "id": "unknown-expression-factor",
+          "invariant": "Pet.withExpressionFactors rejects unknown trait",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "potential": {
+              "speed": 0.8
+            },
+            "actions": [
+              {
+                "op": "withFactors",
+                "factors": {
+                  "agility": 0.5
+                }
+              }
+            ]
+          },
+          "expected_error": "Expression factor references unknown trait \"agility\""
+        },
+        {
+          "id": "invalid-care",
+          "invariant": "Pet.withCareState revalidates normalized care",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "actions": [
+              {
+                "op": "withCare",
+                "state": {
+                  "hunger": 1.1
+                }
+              }
+            ]
+          },
+          "expected_error": "Care.hunger must be between 0 and 1"
+        },
+        {
+          "id": "invalid-health",
+          "invariant": "Pet.withHealthState rejects negative neglect duration",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "actions": [
+              {
+                "op": "withHealth",
+                "state": {
+                  "neglectHours": -1
+                }
+              }
+            ]
+          },
+          "expected_error": "Health.neglectHours must not be negative"
+        },
+        {
+          "id": "natural-end-juvenile",
+          "invariant": "Pet.withLifecycle preserves senior-only natural end guard",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "actions": [
+              {
+                "op": "endLife",
+                "reason": "natural"
+              }
+            ]
+          },
+          "expected_error": "Natural end of life requires senior stage"
+        },
+        {
+          "id": "invalid-affection-gain",
+          "invariant": "Pet.gainAffection rejects negative persistent gains",
+          "input": {
+            "id": "pet-f",
+            "pedigree": {
+              "lineageId": "lineage-01",
+              "generation": 0,
+              "founderPetId": "pet-f",
+              "parentPetIds": []
+            },
+            "actions": [
+              {
+                "op": "gainAffection",
+                "gain": -0.1
+              }
+            ]
+          },
+          "expected_error": "Affection gain must not be negative"
+        }
+      ]
+    },
+    {
       "id": "pet.affection",
       "status": "ACTIVE_PARITY",
       "milestone": "G428",
