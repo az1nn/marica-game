@@ -11,6 +11,7 @@ const GENETICS = preload("res://src/domain/genetics.gd")
 const CARE = preload("res://src/domain/care.gd")
 const HEALTH = preload("res://src/domain/health.gd")
 const SOULBOUND = preload("res://src/domain/soulbound.gd")
+const AFFECTION = preload("res://src/domain/affection.gd")
 const PET = preload("res://src/domain/pet.gd")
 var _fixture_clock_value: Variant = 0
 
@@ -105,7 +106,10 @@ func _check_contract(contract_value: Variant) -> Dictionary:
                 "soulbound.create",
                 "soulbound.is_transferable",
                 "soulbound.assert_transferable",
-                "pet.soulbound"
+                "pet.soulbound",
+                "affection.create",
+                "affection.increase",
+                "pet.affection"
             ]
         )
     ):
@@ -161,6 +165,12 @@ func _verify_domain_cases(identifier: String, cases: Array) -> Dictionary:
         print("MARICA_G427_SOULBOUND_ASSERT_PARITY_PASS cases=", cases.size())
     elif identifier == "pet.soulbound":
         print("MARICA_G427_PET_SOULBOUND_PARITY_PASS cases=", cases.size())
+    elif identifier == "affection.create":
+        print("MARICA_G428_AFFECTION_CREATE_PARITY_PASS cases=", cases.size())
+    elif identifier == "affection.increase":
+        print("MARICA_G428_AFFECTION_INCREASE_PARITY_PASS cases=", cases.size())
+    elif identifier == "pet.affection":
+        print("MARICA_G428_PET_AFFECTION_PARITY_PASS cases=", cases.size())
     return {"active": 0, "verified": cases.size(), "pending": 0}
 
 
@@ -234,6 +244,22 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
         result = SOULBOUND.assert_transferable(case_input.get("value", null))
     elif identifier == "pet.soulbound":
         result = PET.create(case_input.get("id", null), case_input.get("soulbound", null))
+    elif identifier == "affection.create":
+        result = AFFECTION.create(case_input.get("value", null))
+    elif identifier == "affection.increase":
+        result = AFFECTION.increase(case_input.get("state", null), case_input.get("gain"))
+    elif identifier == "pet.affection":
+        result = PET.create(
+            case_input.get("id", null),
+            case_input.get("soulbound", null),
+            case_input.get("affection", null)
+        )
+        if result.get("ok", false):
+            var pet: MaricaPet = result["pet"]
+            if case_input.has("gain"):
+                result = pet.gain_affection(case_input["gain"])
+            elif case_input.has("replace"):
+                result = pet.with_affection(case_input["replace"])
     if not result.get("ok", false):
         return {"error": result.get("error", "")}
     return _canonical_domain_result(identifier, result)
@@ -246,6 +272,8 @@ func _canonical_domain_result(identifier: String, result: Dictionary) -> Diction
         identifier.begins_with("health.")
         or identifier.begins_with("soulbound.")
         or identifier == "pet.soulbound"
+        or identifier.begins_with("affection.")
+        or identifier == "pet.affection"
     ):
         return _special_domain_result(identifier, result)
     if identifier in ["genetics.new_potential", "genetics.express"]:
@@ -270,6 +298,15 @@ func _special_domain_result(identifier: String, result: Dictionary) -> Dictionar
         }
     if identifier == "soulbound.create":
         return {"soulbound": result["soulbound"]}
+    if identifier.begins_with("affection."):
+        return {"affection": result["affection"]}
+    if identifier == "pet.affection":
+        var bonded: MaricaPet = result["pet"]
+        return {
+            "id": bonded.get_id(),
+            "soulbound": bonded.is_soulbound(),
+            "affection": bonded.get_affection()
+        }
     return {"transferable": result["transferable"]}
 
 

@@ -42,6 +42,9 @@ APPROVED_PARITY = {
         "G427", "game/src/domain/soulbound.gd", "src/shared/domain/Soulbound.luau"
     ),
     "pet.soulbound": ("G427", "game/src/domain/pet.gd", "src/shared/domain/Pet.luau"),
+    "affection.create": ("G428", "game/src/domain/affection.gd", "src/shared/domain/Affection.luau"),
+    "affection.increase": ("G428", "game/src/domain/affection.gd", "src/shared/domain/Affection.luau"),
+    "pet.affection": ("G428", "game/src/domain/pet.gd", "src/shared/domain/Pet.luau"),
 }
 
 
@@ -247,6 +250,41 @@ def validate(document: Any, root: Path = ROOT) -> list[str]:
                             for name in fields - {"id"}
                         ):
                             errors.append(f"{key}/{case_id}: Soulbound result must contain booleans")
+                if key in {"affection.create", "affection.increase", "pet.affection"}:
+                    data = case.get("input")
+                    allowed = {
+                        "affection.create": {"value"},
+                        "affection.increase": {"state", "gain"},
+                        "pet.affection": {"id", "soulbound", "affection", "gain", "replace"},
+                    }
+                    if not isinstance(data, dict) or not set(data).issubset(allowed[key]):
+                        errors.append(f"{key}/{case_id}: invalid Affection input fields")
+                    if key == "pet.affection" and (
+                        not isinstance(data, dict)
+                        or "id" not in data
+                        or {"gain", "replace"}.issubset(data)
+                    ):
+                        errors.append(f"{key}/{case_id}: Pet affection needs id and one update action")
+                    if has_expected:
+                        expected = case.get("expected")
+                        keys = (
+                            {"id", "soulbound", "affection"} if key == "pet.affection"
+                            else {"affection"}
+                        )
+                        if not isinstance(expected, dict) or set(expected) != keys:
+                            errors.append(f"{key}/{case_id}: invalid Affection canonical result")
+                        elif (
+                            type(expected["affection"]) not in (int, float)
+                            or not (0 <= expected["affection"] <= 1)
+                            or (
+                                key == "pet.affection"
+                                and (
+                                    type(expected["id"]) is not str
+                                    or type(expected["soulbound"]) is not bool
+                                )
+                            )
+                        ):
+                            errors.append(f"{key}/{case_id}: affection result must be normalized")
                 if key.startswith("health."):
                     data = case.get("input")
                     allowed = {
