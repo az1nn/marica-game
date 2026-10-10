@@ -1,6 +1,6 @@
 # ARTIST — V1 screen and asset map (Godot / V2 approved visual language)
 
-**Status:** **V1 3×3 COMPOSITE ART CONCEPT ACCEPTED** (2026-10-09); S01 V3 SCREEN CONCEPT ACCEPTED; DOG FOUNDER CONFIRMED; PET-ALT-001 CAPYBARA and PET-ALT-002 CHICKEN concept boards ACCEPTED; S07-P01..P03 PLANT CONCEPTS ACCEPTED; **S01-A01 ISOLATED DOG PNG PREVIEW GENERATED / HUMAN CONCEPT APPROVAL PENDING**; Godot sprites/runtime unverified
+**Status:** **V1 3×3 COMPOSITE ART CONCEPT ACCEPTED** (2026-10-09); S01 V3 SCREEN CONCEPT ACCEPTED; DOG FOUNDER CONFIRMED; PET-ALT-001 CAPYBARA and PET-ALT-002 CHICKEN concept boards ACCEPTED; S07-P01..P03 PLANT CONCEPTS ACCEPTED; **S01-A01 ISOLATED DOG CONCEPT ACCEPTED / TECHNICAL_REVISE (V201/V201a OPEN)**; Godot sprites/runtime unverified
 **Baseline:** `master@947010158d0bc63d21afcf18c75a0dab187b9e46` (2026-10-09)
 **Authority:** SPEC-004 V1 gameplay/screens, SPEC-005 ARTIST V2 G1–G25, `docs/VISUAL-DIRECTION.md`, `docs/lore/CANON.md`.
 **Purpose:** Queue individually reviewed screen concepts and corresponding art assets. This document does **not** claim that approved screen layouts, production sprites, or Godot scenes already exist.
@@ -38,7 +38,7 @@
 
 | Asset ID | Depiction | Approval | Role / next gate |
 | --- | --- | --- | --- |
-| **S01-A01** | Tricolor puppy from approved S01 V3 | Screen V3 accepted; isolated sprite **PENDING** | **Founder / P0 first**, next isolated sprite review |
+| **S01-A01** | Tricolor puppy from approved S01 V3 | Screen V3 accepted; isolated character **CONCEPT_ACCEPTED**; technical production **REVISE** | **Founder / P0 first**, next isolated sprite review |
 | **PET-ALT-001** | Brown capybara-like companion with blue bandana / green pack | Character **concept board ACCEPTED**, independent visual | **Other animal (not founder)**; production sprite pending, no backpack mechanics assumed |
 | **PET-ALT-002** | Cream-white hen, red comb, golden beak/feet | Character **concept board ACCEPTED**, independent visual | **Third V1 animal type**, not founder; production sprite pending, no unapproved egg/food gameplay assumed |
 
@@ -52,7 +52,7 @@ The user explicitly approved the revised **3 animal × 3 crop** composite board 
 
 ## Current S01-A01 human visual gate (2026-10-10)
 
-The actual *single-dog* cutout candidate was prepared from a new pixel-art concept sheet: **362×400 transparent RGBA PNG**, plus checkerboard preview. The **three animal / three plant V1 concept board remains accepted**, but this **isolated dog source sprite has NOT been approved yet**. Evidence and SHA-256 for the conversation-local art files: `docs/artist/reviews/S01-A01-2026-10-10-isolated-dog-preview-pending.md`. **Do not mark sprite approval, Godot import, atlas, or animation tasks complete until the user decides and ARCH/ART/LENTE technical checks run.**
+The actual *single-dog* cutout candidate was prepared from a new pixel-art concept sheet: **362×400 transparent RGBA PNG**, plus checkerboard preview. The **three animal / three plant V1 concept board remains accepted**, and this **isolated dog source sprite concept was approved on 2026-10-10**. Technical review remains **REVISE** pending V201/V201a. Evidence and SHA-256 for the conversation-local art files: `docs/artist/reviews/S01-A01-2026-10-10-isolated-dog-preview-pending.md`. **Visual concept ACCEPTED**; do not mark production sprite, Godot import, atlas, or animation complete until ARCH/ART/LENTE technical checks run. Audit: `docs/artist/reviews/S01-A01-2026-10-10-technical-audit.md`.
 
 ## Reusable asset families — mapped requirements, not approved artwork
 
@@ -88,4 +88,4 @@ The actual *single-dog* cutout candidate was prepared from a new pixel-art conce
 4. Following concept acceptance, separately review **individual sprites/assets** before any Godot integration.
 5. Runtime approval only after V201/V201a technical decision, ART/ARCH gates, LENTE exact-head screenshots and A/B independent review.
 
-**S01 concept decision:** `ACCEPT` on V3, recorded in `docs/artist/reviews/S01-2026-10-09-v3-accepted.md`. This approval applies to the screen-level reference only; it does **not** certify the source PNG as repo-committed or runtime-accepted. **Founder decision (resolved):** user confirmed **the dog is founder; the capybara is another animal**, in `docs/artist/reviews/2026-10-09-founder-dog-and-alternate-capybara.md`. The capybara-like sheet formerly printed `S01-A01 — PET FUNDADOR` remains **ACCEPT as PET-ALT-001 visual concept only**, NOT founder and NOT a Godot spritesheet; its historical review is preserved at `docs/artist/reviews/S01-A01-2026-10-09-concept-accepted.md`. **S01-A01 now designates the isolated dog founder sprite concept (PENDING).** Next: generate a **single isolated dog sprite** faithful to S01 V3 for human review; capybara family remains queued separately. No claim of canonical pet name, animal behavior, source PNG committed, runtime acceptance or import. Do not advance S02 or other screen concepts until the S01 asset review flow reaches its own gates.
+**S01 concept decision:** `ACCEPT` on V3, recorded in `docs/artist/reviews/S01-2026-10-09-v3-accepted.md`. This approval applies to the screen-level reference only; it does **not** certify the source PNG as repo-committed or runtime-accepted. **Founder decision (resolved):** user confirmed **the dog is founder; the capybara is another animal**, in `docs/artist/reviews/2026-10-09-founder-dog-and-alternate-capybara.md`. The capybara-like sheet formerly printed `S01-A01 — PET FUNDADOR` remains **ACCEPT as PET-ALT-001 visual concept only**, NOT founder and NOT a Godot spritesheet; its historical review is preserved at `docs/artist/reviews/S01-A01-2026-10-09-concept-accepted.md`. **S01-A01 now designates the isolated dog founder sprite concept (ACCEPTED by human on 2026-10-10; technical production REVISE).** Next: generate a **single isolated dog sprite** faithful to S01 V3 for human review; capybara family remains queued separately. No claim of canonical pet name, animal behavior, source PNG committed, runtime acceptance or import. Do not advance S02 or other screen concepts until the S01 asset review flow reaches its own gates.
