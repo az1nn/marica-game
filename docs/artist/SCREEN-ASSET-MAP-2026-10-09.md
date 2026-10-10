@@ -1,6 +1,6 @@
 # ARTIST — V1 screen and asset map (Godot / V2 approved visual language)
 
-**Status:** **V1 3×3 COMPOSITE ART CONCEPT ACCEPTED** (2026-10-09); S01 V3 SCREEN CONCEPT ACCEPTED; DOG FOUNDER CONFIRMED; PET-ALT-001 CAPYBARA and PET-ALT-002 CHICKEN concept boards ACCEPTED; S07-P01..P03 PLANT CONCEPTS ACCEPTED; **S01-A01 ISOLATED DOG SPRITE PENDING**; Godot sprites/runtime unverified
+**Status:** **V1 3×3 COMPOSITE ART CONCEPT ACCEPTED** (2026-10-09); S01 V3 SCREEN CONCEPT ACCEPTED; DOG FOUNDER CONFIRMED; PET-ALT-001 CAPYBARA and PET-ALT-002 CHICKEN concept boards ACCEPTED; S07-P01..P03 PLANT CONCEPTS ACCEPTED; **S01-A01 ISOLATED DOG PNG PREVIEW GENERATED / HUMAN CONCEPT APPROVAL PENDING**; Godot sprites/runtime unverified
 **Baseline:** `master@947010158d0bc63d21afcf18c75a0dab187b9e46` (2026-10-09)
 **Authority:** SPEC-004 V1 gameplay/screens, SPEC-005 ARTIST V2 G1–G25, `docs/VISUAL-DIRECTION.md`, `docs/lore/CANON.md`.
 **Purpose:** Queue individually reviewed screen concepts and corresponding art assets. This document does **not** claim that approved screen layouts, production sprites, or Godot scenes already exist.
@@ -49,6 +49,10 @@ See `docs/artist/reviews/2026-10-09-founder-dog-and-alternate-capybara.md` for f
 The user explicitly approved the revised **3 animal × 3 crop** composite board on **2026-10-09**, after replacement of the earlier mistaken lettuce/pepper depictions. **Approved species:** founder **cachorro**; alternate **capivara**; alternate **galinha**; and crops **milho S07-P01 / tomate S07-P02 / cenoura S07-P03**. The approved 1536×1024 PNG `wide_game_concept_art_design_sheet_in_pixel_art_2.png` has SHA-256 `64985c0a27ef2975bd8c44d43c1e0e8a9a6cfac881862af14850d69050894098` and exists in the conversation, **not as a committed GitHub binary**.
 
 **Authoritative visual acceptance:** `docs/artist/reviews/V1-3X3-ART-CONCEPT-2026-10-09-accepted.md`; prior correction rationale: `docs/artist/reviews/V1-3X3-ART-CONCEPT-CORRECTION-2026-10-09.md`. Scope is reference/composition only: the board's egg-production caption and illustration-only animation sheets/technical grid labels do **not** add gameplay rules, pass ARCH/LENTE/runtime checks, or complete S01-A01 isolated sprite. **Next unchanged:** founder dog isolated sprite review first, with SPEC-005 R2/ARCH V201–V201a gates respected.
+
+## Current S01-A01 human visual gate (2026-10-10)
+
+The actual *single-dog* cutout candidate was prepared from a new pixel-art concept sheet: **362×400 transparent RGBA PNG**, plus checkerboard preview. The **three animal / three plant V1 concept board remains accepted**, but this **isolated dog source sprite has NOT been approved yet**. Evidence and SHA-256 for the conversation-local art files: `docs/artist/reviews/S01-A01-2026-10-10-isolated-dog-preview-pending.md`. **Do not mark sprite approval, Godot import, atlas, or animation tasks complete until the user decides and ARCH/ART/LENTE technical checks run.**
 
 ## Reusable asset families — mapped requirements, not approved artwork
 
