@@ -10,6 +10,8 @@ const SIMULATION_TIME = preload("res://src/domain/simulation_time.gd")
 const GENETICS = preload("res://src/domain/genetics.gd")
 const CARE = preload("res://src/domain/care.gd")
 const HEALTH = preload("res://src/domain/health.gd")
+const SOULBOUND = preload("res://src/domain/soulbound.gd")
+const PET = preload("res://src/domain/pet.gd")
 var _fixture_clock_value: Variant = 0
 
 
@@ -99,7 +101,11 @@ func _check_contract(contract_value: Variant) -> Dictionary:
                 "health.create",
                 "health.advance",
                 "health.treat",
-                "health.terminal_risk"
+                "health.terminal_risk",
+                "soulbound.create",
+                "soulbound.is_transferable",
+                "soulbound.assert_transferable",
+                "pet.soulbound"
             ]
         )
     ):
@@ -147,6 +153,14 @@ func _verify_domain_cases(identifier: String, cases: Array) -> Dictionary:
         print("MARICA_G426_HEALTH_TREAT_PARITY_PASS cases=", cases.size())
     elif identifier == "health.terminal_risk":
         print("MARICA_G426_HEALTH_TERMINAL_PARITY_PASS cases=", cases.size())
+    elif identifier == "soulbound.create":
+        print("MARICA_G427_SOULBOUND_CREATE_PARITY_PASS cases=", cases.size())
+    elif identifier == "soulbound.is_transferable":
+        print("MARICA_G427_SOULBOUND_TRANSFER_PARITY_PASS cases=", cases.size())
+    elif identifier == "soulbound.assert_transferable":
+        print("MARICA_G427_SOULBOUND_ASSERT_PARITY_PASS cases=", cases.size())
+    elif identifier == "pet.soulbound":
+        print("MARICA_G427_PET_SOULBOUND_PARITY_PASS cases=", cases.size())
     return {"active": 0, "verified": cases.size(), "pending": 0}
 
 
@@ -212,6 +226,14 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
         result = HEALTH.treat(case_input.get("state", null), case_input.get("treatment"))
     elif identifier == "health.terminal_risk":
         result = HEALTH.is_terminal_risk(case_input.get("state", null))
+    elif identifier == "soulbound.create":
+        result = SOULBOUND.create(case_input.get("value", null))
+    elif identifier == "soulbound.is_transferable":
+        result = SOULBOUND.is_transferable(case_input.get("value", null))
+    elif identifier == "soulbound.assert_transferable":
+        result = SOULBOUND.assert_transferable(case_input.get("value", null))
+    elif identifier == "pet.soulbound":
+        result = PET.create(case_input.get("id", null), case_input.get("soulbound", null))
     if not result.get("ok", false):
         return {"error": result.get("error", "")}
     return _canonical_domain_result(identifier, result)
@@ -220,8 +242,12 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
 func _canonical_domain_result(identifier: String, result: Dictionary) -> Dictionary:
     if identifier.begins_with("care."):
         return _care_domain_result(identifier, result)
-    if identifier.begins_with("health."):
-        return _health_domain_result(identifier, result)
+    if (
+        identifier.begins_with("health.")
+        or identifier.begins_with("soulbound.")
+        or identifier == "pet.soulbound"
+    ):
+        return _special_domain_result(identifier, result)
     if identifier in ["genetics.new_potential", "genetics.express"]:
         return result["traits"]
     if identifier == "simulation_time.observe":
@@ -230,6 +256,21 @@ func _canonical_domain_result(identifier: String, result: Dictionary) -> Diction
         var record: MaricaPedigree = result["pedigree"]
         return record.to_snapshot()
     return {"id": result.get("id")}
+
+
+func _special_domain_result(identifier: String, result: Dictionary) -> Dictionary:
+    if identifier.begins_with("health."):
+        return _health_domain_result(identifier, result)
+    if identifier == "pet.soulbound":
+        var pet: MaricaPet = result["pet"]
+        return {
+            "id": pet.get_id(),
+            "soulbound": pet.is_soulbound(),
+            "transferable": pet.is_transferable()
+        }
+    if identifier == "soulbound.create":
+        return {"soulbound": result["soulbound"]}
+    return {"transferable": result["transferable"]}
 
 
 func _care_domain_result(identifier: String, result: Dictionary) -> Dictionary:

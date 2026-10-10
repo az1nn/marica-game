@@ -34,6 +34,14 @@ APPROVED_PARITY = {
     "health.terminal_risk": (
         "G426", "game/src/domain/health.gd", "src/shared/domain/Health.luau"
     ),
+    "soulbound.create": ("G427", "game/src/domain/soulbound.gd", "src/shared/domain/Soulbound.luau"),
+    "soulbound.is_transferable": (
+        "G427", "game/src/domain/soulbound.gd", "src/shared/domain/Soulbound.luau"
+    ),
+    "soulbound.assert_transferable": (
+        "G427", "game/src/domain/soulbound.gd", "src/shared/domain/Soulbound.luau"
+    ),
+    "pet.soulbound": ("G427", "game/src/domain/pet.gd", "src/shared/domain/Pet.luau"),
 }
 
 
@@ -218,6 +226,27 @@ def validate(document: Any, root: Path = ROOT) -> list[str]:
                             errors.append(
                                 f"{key}/{case_id}: care success must be normalized canonical result"
                             )
+                if key.startswith("soulbound.") or key == "pet.soulbound":
+                    data = case.get("input")
+                    allowed = {"id", "soulbound"} if key == "pet.soulbound" else {"value"}
+                    if not isinstance(data, dict) or not set(data).issubset(allowed):
+                        errors.append(f"{key}/{case_id}: invalid Soulbound input fields")
+                    if key == "pet.soulbound" and (not isinstance(data, dict) or "id" not in data):
+                        errors.append(f"{key}/{case_id}: Pet soulbound requires id")
+                    if has_expected:
+                        expected = case.get("expected")
+                        fields = (
+                            {"id", "soulbound", "transferable"} if key == "pet.soulbound"
+                            else {"soulbound"} if key == "soulbound.create"
+                            else {"transferable"}
+                        )
+                        if not isinstance(expected, dict) or set(expected) != fields:
+                            errors.append(f"{key}/{case_id}: invalid Soulbound canonical result")
+                        elif not all(
+                            type(expected[name]) is bool
+                            for name in fields - {"id"}
+                        ):
+                            errors.append(f"{key}/{case_id}: Soulbound result must contain booleans")
                 if key.startswith("health."):
                     data = case.get("input")
                     allowed = {

@@ -2026,6 +2026,254 @@
           "expected_error": "invalid genetic seed"
         }
       ]
+    },
+    {
+      "id": "soulbound.create",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G427",
+      "source": "src/shared/domain/Soulbound.luau",
+      "adapter": "game/src/domain/soulbound.gd",
+      "cases": [
+        {
+          "id": "default-unbound",
+          "invariant": "nil defaults to unbound",
+          "input": {},
+          "expected": {
+            "soulbound": false
+          }
+        },
+        {
+          "id": "explicit-null",
+          "invariant": "explicit null behaves as Lua nil",
+          "input": {
+            "value": null
+          },
+          "expected": {
+            "soulbound": false
+          }
+        },
+        {
+          "id": "explicit-founder",
+          "invariant": "explicit true binds founder",
+          "input": {
+            "value": true
+          },
+          "expected": {
+            "soulbound": true
+          }
+        },
+        {
+          "id": "explicit-unbound",
+          "invariant": "false remains false",
+          "input": {
+            "value": false
+          },
+          "expected": {
+            "soulbound": false
+          }
+        },
+        {
+          "id": "reject-persisted-string",
+          "invariant": "cannot coerce a saved string",
+          "input": {
+            "value": "true"
+          },
+          "expected_error": "Soulbound state must be a boolean"
+        },
+        {
+          "id": "reject-persisted-number",
+          "invariant": "cannot coerce a saved number",
+          "input": {
+            "value": 1
+          },
+          "expected_error": "Soulbound state must be a boolean"
+        },
+        {
+          "id": "reject-persisted-object",
+          "invariant": "cannot coerce a saved object",
+          "input": {
+            "value": {
+              "bound": true
+            }
+          },
+          "expected_error": "Soulbound state must be a boolean"
+        }
+      ]
+    },
+    {
+      "id": "soulbound.is_transferable",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G427",
+      "source": "src/shared/domain/Soulbound.luau",
+      "adapter": "game/src/domain/soulbound.gd",
+      "cases": [
+        {
+          "id": "default-transferable",
+          "invariant": "unbound by default can transfer",
+          "input": {},
+          "expected": {
+            "transferable": true
+          }
+        },
+        {
+          "id": "null-transferable",
+          "invariant": "explicit null unbound is transferable",
+          "input": {
+            "value": null
+          },
+          "expected": {
+            "transferable": true
+          }
+        },
+        {
+          "id": "bound-protected",
+          "invariant": "bound founder cannot transfer",
+          "input": {
+            "value": true
+          },
+          "expected": {
+            "transferable": false
+          }
+        },
+        {
+          "id": "unbound-allowed",
+          "invariant": "unbound animal can transfer",
+          "input": {
+            "value": false
+          },
+          "expected": {
+            "transferable": true
+          }
+        },
+        {
+          "id": "invalid-transfer-state",
+          "invariant": "invalid persisted state cannot pass",
+          "input": {
+            "value": "false"
+          },
+          "expected_error": "Soulbound state must be a boolean"
+        }
+      ]
+    },
+    {
+      "id": "soulbound.assert_transferable",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G427",
+      "source": "src/shared/domain/Soulbound.luau",
+      "adapter": "game/src/domain/soulbound.gd",
+      "cases": [
+        {
+          "id": "default-assert",
+          "invariant": "unbound is eligible",
+          "input": {},
+          "expected": {
+            "transferable": true
+          }
+        },
+        {
+          "id": "bound-assert",
+          "invariant": "bound founder must throw in Luau",
+          "input": {
+            "value": true
+          },
+          "expected_error": "Soulbound pet cannot be transferred"
+        },
+        {
+          "id": "unbound-assert",
+          "invariant": "explicit unbound is eligible",
+          "input": {
+            "value": false
+          },
+          "expected": {
+            "transferable": true
+          }
+        },
+        {
+          "id": "invalid-assert",
+          "invariant": "invalid persisted state throws at validation",
+          "input": {
+            "value": 0
+          },
+          "expected_error": "Soulbound state must be a boolean"
+        }
+      ]
+    },
+    {
+      "id": "pet.soulbound",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G427",
+      "source": "src/shared/domain/Pet.luau",
+      "adapter": "game/src/domain/pet.gd",
+      "cases": [
+        {
+          "id": "regular-default",
+          "invariant": "new regular pet defaults to transferable",
+          "input": {
+            "id": "pet-regular-001"
+          },
+          "expected": {
+            "id": "pet-regular-001",
+            "soulbound": false,
+            "transferable": true
+          }
+        },
+        {
+          "id": "founder-bound",
+          "invariant": "explicit bound founder not transferable",
+          "input": {
+            "id": "pet-founder-001",
+            "soulbound": true
+          },
+          "expected": {
+            "id": "pet-founder-001",
+            "soulbound": true,
+            "transferable": false
+          }
+        },
+        {
+          "id": "explicit-false",
+          "invariant": "explicit false preserves transferable state",
+          "input": {
+            "id": "pet-free-001",
+            "soulbound": false
+          },
+          "expected": {
+            "id": "pet-free-001",
+            "soulbound": false,
+            "transferable": true
+          }
+        },
+        {
+          "id": "descendant-default",
+          "invariant": "non-founder never implicitly inherits founder binding",
+          "input": {
+            "id": "pet-descendant-001"
+          },
+          "expected": {
+            "id": "pet-descendant-001",
+            "soulbound": false,
+            "transferable": true
+          }
+        },
+        {
+          "id": "invalid-persisted",
+          "invariant": "Pet rejects string soulbound without coercion",
+          "input": {
+            "id": "pet-invalid-001",
+            "soulbound": "yes"
+          },
+          "expected_error": "Soulbound state must be a boolean"
+        },
+        {
+          "id": "invalid-id",
+          "invariant": "Pet retains immutable ID validation",
+          "input": {
+            "id": "",
+            "soulbound": true
+          },
+          "expected_error": "PetId must not be empty"
+        }
+      ]
     }
   ]
 }
