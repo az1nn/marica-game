@@ -2577,12 +2577,12 @@
             "id": "pet-aff-gain",
             "soulbound": true,
             "affection": 0.4,
-            "gain": 0.2
+            "gain": 0.25
           },
           "expected": {
             "id": "pet-aff-gain",
             "soulbound": true,
-            "affection": 0.6
+            "affection": 0.65
           }
         },
         {
