@@ -37,7 +37,7 @@
 - [x] **G424** Portar genetic potential + expressed traits.
 - [x] **G425** Portar care state. Luau care defaults/quality/factors verified by 21 executable Godot golden cases, targeted runner and hunger inversion GOOD→BAD→RESTORE proof (PR #60).
 - [x] **G426** Portar health/disease/treatment. Pure `MaricaHealth` GDScript matches Luau Health.new/advance/treat/isTerminalRisk thresholds and costs; 35 executable golden cases (create 10 / advance 13 / treat 7 / terminal 5), independent state runner, and 48h sickness-boundary mutation proof on PR #63. Pet aggregate/end-of-life wiring is separately pending, not implied by this isolated port.
-- [ ] **G427** Portar soulbound invariant.
+- [x] **G427** Portar soulbound invariant. `MaricaSoulbound` reproduz Luau new/isTransferable/assertTransferable; estado explícito em `MaricaPet`, fundador bloqueado para transferência e descendentes unbound por default. 22 casos ACTIVE_PARITY, runner independente e GOOD→BAD→RESTORE comprovados no PR #65; integração com todas as transições do agregado permanece G429.
 - [ ] **G428** Portar affection persistente.
 - [ ] **G429** Provar golden parity para G420–G428.
 

@@ -1,35 +1,27 @@
 CAVEMAN HANDOFF v1
 
-APP:
-Maricá Game
+APP: Maricá Game
+WORKSTREAM: SPEC-004 · Phase C Animal Domain
+MODE: ADVANCE
+BASE: master@ee30eef23b2ec59451dfd93fcc27638ed385213f
 
-WORKSTREAM:
-SPEC-004 — Godot V1 Transition, Phase C Animal Domain
+DONE:
+- G427 — Soulbound Luau→Godot port: null defaults unbound, strict persisted boolean, explicit founder binding blocks transfers, descendants default unbound.
+- New pure Soulbound domain + `MaricaPet` binding state; +22 Luau-provenance ACTIVE_PARITY cases (155 total); 4 harness selftests; 3 G430 fixtures still PENDING_PORT.
+- Independent regression + transfer-inversion GOOD→BAD→RESTORE mutation proof.
 
-STATE:
-G420–G426 verified in their PR exact-head gates and merged into master@3aa715d70643901cc68be984a4ae2141d578efe5.
-Runtime: Godot 4.7.2-stable, offline-first single-player. G427 next.
-
-MODE:
-ADVANCE
-
-DELIVERED:
-- G426 PR #63 — pure typed GDScript MaricaHealth port of Luau Health.new/advance/treat/isTerminalRisk; neglected 24h, sick 48h, critical 72h, critical untreated terminal risk 48h.
-- Good care reverses early neglect, never automatically cures disease; basic/advanced/emergency treatment reductions and costs preserved.
-- 35 new ACTIVE_PARITY golden cases, 133 total domain cases, 4 harness selftests, 3 future G430 fixtures PENDING_PORT. Independent health regression and GOOD→BAD→RESTORE 48h sickness mutation proof PASS.
-
-QUALITY:
-- PR #63 exact head 1781b79b4825a1acbcf9c2e89780e27bd1525e64 Godot CI PASS, Validate Skills PASS, Roblox CI PASS; Roblox Behavioral SKIPPED nonrequired.
-- Guarded squash merge master@3aa715d70643901cc68be984a4ae2141d578efe5. Master post-merge Godot CI PASS, Validate Skills PASS, Roblox CI PASS at exact merge commit SHA.
-- Full Pet aggregate/end-of-life integration, G427–G429 parity, succession, save, Godot web export, ARTIST V2 visuals NOT PROVEN.
-
-BLOCKER / WAIT:
-No human product blocker for G427. Vercel+Cloudflare same-artifact deploy is deferred to Godot Web export milestone, not this task.
+VERIFY:
+- PR #65 head `cdeaa7d04b5ccec38b785296d8061570e15f0b13` — Godot CI PASS, Validate skills PASS, Roblox CI PASS. Roblox Behavioral skipped/non-required.
+- Squash merged guarded to master@ee30eef23b2ec59451dfd93fcc27638ed385213f; master post-merge Godot CI / Validate skills / Roblox CI PASS.
+- G429 full Pet aggregate parity, G430+ genetic succession, offline save, ARTIST runtime visual acceptance, web export NOT PROVEN.
 
 CONCURRENCY:
-G426 claim CLOSED in closeout documentation. ARTIST PR #62 remains draft, separate visual/concept scope but overlaps SPEC-004 tasks.md; its future merge needs fresh base reconcile rather than blind overwrite.
+- #65 merged; no conflicting open PR at closeout start.
+- G427 claim being closed by this documentation follow-up. Any newer default-branch edits require reconcile before merge.
+- V1 ARTIST roster documented as concepts via merged PR #62, not production binary assets.
+
+WAIT / BLOCKER:
+No human product decision required to start G428. No current artifact import or cloud deploy gate on Phase C.
 
 NEXT:
-G427 — port Soulbound invariant from Luau to typed pure GDScript with executable fixture parity and tests; preserve animal-first and 3 animal / 3 crop concept approvals without presuming runtime import.
-
-END FILE
+G428 — port persistent affection Luau→typed pure GDScript, fixtures + deterministic regression + mutation proof, exact-head CI.
