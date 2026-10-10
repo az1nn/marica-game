@@ -41,9 +41,10 @@ func _transfer_guard() -> bool:
         return _fail("regular pets must be transferable")
     if SOULBOUND.is_transferable(true) != {"ok": true, "transferable": false}:
         return _fail("soulbound founder must not be transferable")
-    if SOULBOUND.assert_transferable(true) != {
-        "ok": false, "error": "Soulbound pet cannot be transferred"
-    }:
+    if (
+        SOULBOUND.assert_transferable(true)
+        != {"ok": false, "error": "Soulbound pet cannot be transferred"}
+    ):
         return _fail("assertTransferable must block soulbound pets")
     if SOULBOUND.assert_transferable(false) != {"ok": true, "transferable": true}:
         return _fail("assertTransferable must allow unbound pets")
