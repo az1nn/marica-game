@@ -132,6 +132,30 @@ class GoldenFixtureSchemaTests(unittest.TestCase):
         contract["status"] = "ACTIVE_PARITY"
         self.assertTrue(any("not authorized" in e for e in validate(fixture)))
 
+    def test_rejects_affection_wrong_source(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "affection.create")
+        contract["source"] = "src/shared/domain/Care.luau"
+        self.assertTrue(any("requires exact legacy source" in e for e in validate(fixture)))
+
+    def test_rejects_affection_bad_adapter(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "affection.increase")
+        contract["adapter"] = "game/src/domain/care.gd"
+        self.assertTrue(any("incorrect parity" in e for e in validate(fixture)))
+
+    def test_rejects_affection_invalid_result(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "affection.create")
+        contract["cases"][0]["expected"] = {"affection": 2}
+        self.assertTrue(any("affection result must be normalized" in e for e in validate(fixture)))
+
+    def test_rejects_pet_affection_ambiguous_update(self):
+        fixture = copy.deepcopy(self.catalog)
+        contract = next(c for c in fixture["contracts"] if c["id"] == "pet.affection")
+        contract["cases"][0]["input"] = {"id": "pet", "gain": 0.2, "replace": 0.9}
+        self.assertTrue(any("one update action" in e for e in validate(fixture)))
+
     def test_rejects_care_wrong_adapter(self):
         fixture = copy.deepcopy(self.catalog)
         contract = next(c for c in fixture["contracts"] if c["id"] == "care.quality")

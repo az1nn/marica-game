@@ -2274,6 +2274,374 @@
           "expected_error": "PetId must not be empty"
         }
       ]
+    },
+    {
+      "id": "affection.create",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G428",
+      "source": "src/shared/domain/Affection.luau",
+      "adapter": "game/src/domain/affection.gd",
+      "cases": [
+        {
+          "id": "default-zero",
+          "invariant": "nil defaults persistent bond to zero",
+          "input": {},
+          "expected": {
+            "affection": 0
+          }
+        },
+        {
+          "id": "explicit-null",
+          "invariant": "nil persisted bond defaults to zero",
+          "input": {
+            "value": null
+          },
+          "expected": {
+            "affection": 0
+          }
+        },
+        {
+          "id": "zero",
+          "invariant": "lower normalized boundary",
+          "input": {
+            "value": 0
+          },
+          "expected": {
+            "affection": 0
+          }
+        },
+        {
+          "id": "fraction",
+          "invariant": "persisted fractional bond remains exact",
+          "input": {
+            "value": 0.65
+          },
+          "expected": {
+            "affection": 0.65
+          }
+        },
+        {
+          "id": "one",
+          "invariant": "upper normalized boundary",
+          "input": {
+            "value": 1
+          },
+          "expected": {
+            "affection": 1
+          }
+        },
+        {
+          "id": "negative",
+          "invariant": "negative persisted bond is invalid",
+          "input": {
+            "value": -0.01
+          },
+          "expected_error": "Affection must be between 0 and 1"
+        },
+        {
+          "id": "over-one",
+          "invariant": "bond beyond 1 is invalid",
+          "input": {
+            "value": 1.01
+          },
+          "expected_error": "Affection must be between 0 and 1"
+        },
+        {
+          "id": "string",
+          "invariant": "saved numeric string cannot be coerced",
+          "input": {
+            "value": "0.5"
+          },
+          "expected_error": "Affection must be a finite number"
+        },
+        {
+          "id": "boolean",
+          "invariant": "saved boolean is not a numeric bond",
+          "input": {
+            "value": true
+          },
+          "expected_error": "Affection must be a finite number"
+        },
+        {
+          "id": "object",
+          "invariant": "saved object is invalid",
+          "input": {
+            "value": {
+              "affection": 0.3
+            }
+          },
+          "expected_error": "Affection must be a finite number"
+        },
+        {
+          "id": "array",
+          "invariant": "saved array is invalid",
+          "input": {
+            "value": [
+              0.3
+            ]
+          },
+          "expected_error": "Affection must be a finite number"
+        }
+      ]
+    },
+    {
+      "id": "affection.increase",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G428",
+      "source": "src/shared/domain/Affection.luau",
+      "adapter": "game/src/domain/affection.gd",
+      "cases": [
+        {
+          "id": "fractional-gain",
+          "invariant": "bond accumulates deterministically",
+          "input": {
+            "state": 0.4,
+            "gain": 0.25
+          },
+          "expected": {
+            "affection": 0.65
+          }
+        },
+        {
+          "id": "capped-gain",
+          "invariant": "bond has normalized cap",
+          "input": {
+            "state": 0.65,
+            "gain": 1
+          },
+          "expected": {
+            "affection": 1
+          }
+        },
+        {
+          "id": "zero-gain",
+          "invariant": "zero gain leaves persisted state",
+          "input": {
+            "state": 0.3,
+            "gain": 0
+          },
+          "expected": {
+            "affection": 0.3
+          }
+        },
+        {
+          "id": "from-zero",
+          "invariant": "bond grows from default",
+          "input": {
+            "state": 0,
+            "gain": 0.5
+          },
+          "expected": {
+            "affection": 0.5
+          }
+        },
+        {
+          "id": "already-capped",
+          "invariant": "capped bond stays capped",
+          "input": {
+            "state": 1,
+            "gain": 0.3
+          },
+          "expected": {
+            "affection": 1
+          }
+        },
+        {
+          "id": "oversized-gain",
+          "invariant": "positive large gain saturates",
+          "input": {
+            "state": 0.2,
+            "gain": 100
+          },
+          "expected": {
+            "affection": 1
+          }
+        },
+        {
+          "id": "null-state",
+          "invariant": "missing old bond uses zero",
+          "input": {
+            "state": null,
+            "gain": 0.2
+          },
+          "expected": {
+            "affection": 0.2
+          }
+        },
+        {
+          "id": "missing-state",
+          "invariant": "missing state uses zero",
+          "input": {
+            "gain": 0.2
+          },
+          "expected": {
+            "affection": 0.2
+          }
+        },
+        {
+          "id": "negative-gain",
+          "invariant": "negative gain rejected",
+          "input": {
+            "state": 0.5,
+            "gain": -0.01
+          },
+          "expected_error": "Affection gain must not be negative"
+        },
+        {
+          "id": "gain-string",
+          "invariant": "numeric strings not coerced",
+          "input": {
+            "state": 0.5,
+            "gain": "0.2"
+          },
+          "expected_error": "Affection gain must be a finite number"
+        },
+        {
+          "id": "gain-bool",
+          "invariant": "boolean gains invalid",
+          "input": {
+            "state": 0.5,
+            "gain": true
+          },
+          "expected_error": "Affection gain must be a finite number"
+        },
+        {
+          "id": "gain-missing",
+          "invariant": "missing gain invalid",
+          "input": {
+            "state": 0.5
+          },
+          "expected_error": "Affection gain must be a finite number"
+        },
+        {
+          "id": "state-invalid",
+          "invariant": "persisted state is validated before gain",
+          "input": {
+            "state": -0.2,
+            "gain": 0.2
+          },
+          "expected_error": "Affection must be between 0 and 1"
+        }
+      ]
+    },
+    {
+      "id": "pet.affection",
+      "status": "ACTIVE_PARITY",
+      "milestone": "G428",
+      "source": "src/shared/domain/Pet.luau",
+      "adapter": "game/src/domain/pet.gd",
+      "cases": [
+        {
+          "id": "default-bond",
+          "invariant": "new pet begins with zero persistent affection",
+          "input": {
+            "id": "pet-aff-default"
+          },
+          "expected": {
+            "id": "pet-aff-default",
+            "soulbound": false,
+            "affection": 0
+          }
+        },
+        {
+          "id": "saved-bond",
+          "invariant": "pet restores saved persistent affection",
+          "input": {
+            "id": "pet-aff-saved",
+            "affection": 0.7
+          },
+          "expected": {
+            "id": "pet-aff-saved",
+            "soulbound": false,
+            "affection": 0.7
+          }
+        },
+        {
+          "id": "founder-bond",
+          "invariant": "founder bound state independent from affection",
+          "input": {
+            "id": "pet-aff-founder",
+            "soulbound": true,
+            "affection": 0.8
+          },
+          "expected": {
+            "id": "pet-aff-founder",
+            "soulbound": true,
+            "affection": 0.8
+          }
+        },
+        {
+          "id": "gain-immutable",
+          "invariant": "gain modifies bond without resetting id/binding",
+          "input": {
+            "id": "pet-aff-gain",
+            "soulbound": true,
+            "affection": 0.4,
+            "gain": 0.2
+          },
+          "expected": {
+            "id": "pet-aff-gain",
+            "soulbound": true,
+            "affection": 0.6
+          }
+        },
+        {
+          "id": "gain-capped",
+          "invariant": "gain is capped for pet bond",
+          "input": {
+            "id": "pet-aff-cap",
+            "affection": 0.8,
+            "gain": 0.5
+          },
+          "expected": {
+            "id": "pet-aff-cap",
+            "soulbound": false,
+            "affection": 1
+          }
+        },
+        {
+          "id": "replace",
+          "invariant": "explicit replacement copies identity and binding",
+          "input": {
+            "id": "pet-aff-replace",
+            "soulbound": true,
+            "affection": 0.4,
+            "replace": 0.9
+          },
+          "expected": {
+            "id": "pet-aff-replace",
+            "soulbound": true,
+            "affection": 0.9
+          }
+        },
+        {
+          "id": "invalid-saved",
+          "invariant": "Pet rejects invalid persisted affection",
+          "input": {
+            "id": "pet-aff-invalid",
+            "affection": 1.1
+          },
+          "expected_error": "Affection must be between 0 and 1"
+        },
+        {
+          "id": "invalid-gain",
+          "invariant": "Pet rejects negative gain",
+          "input": {
+            "id": "pet-aff-neg",
+            "gain": -0.1
+          },
+          "expected_error": "Affection gain must not be negative"
+        },
+        {
+          "id": "invalid-replace",
+          "invariant": "Pet rejects invalid replacement",
+          "input": {
+            "id": "pet-aff-no",
+            "replace": "1"
+          },
+          "expected_error": "Affection must be a finite number"
+        }
+      ]
     }
   ]
 }

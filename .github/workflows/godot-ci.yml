@@ -534,6 +534,61 @@ jobs:
           git diff --exit-code -- game/src/domain/soulbound.gd
           echo "MARICA_G427_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
 
+      - name: G428 persistent Affection domain compile diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --check-only --script res://src/domain/affection.gd \
+            2>&1 | tee "$RUNNER_TEMP/g428-parse.log"
+
+      - name: G428 independent affection regression and Luau golden parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/affection_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g428-affection.log"
+          grep -Fq 'MARICA_G428_AFFECTION_PASS' "$RUNNER_TEMP/g428-affection.log"
+          grep -Fq 'MARICA_G428_AFFECTION_CREATE_PARITY_PASS cases=11' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'MARICA_G428_AFFECTION_INCREASE_PARITY_PASS cases=13' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'MARICA_G428_PET_AFFECTION_PARITY_PASS cases=9' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'MARICA_G416_PENDING_PORT genetics.advance_potential cases=3' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'parity=NOT_YET_PROVEN' "$RUNNER_TEMP/godot-g416-fixtures.log"
+
+      - name: G428 bond cap mutation proof (GOOD > BAD > RESTORE)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp game/src/domain/affection.gd "$RUNNER_TEMP/g428-affection-good.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("game/src/domain/affection.gd")
+          source = path.read_text(encoding="utf-8")
+          target = "minf(1.0, current + delta)"
+          assert source.count(target) == 1, "G428 affection cap drifted"
+          path.write_text(source.replace(target, "maxf(1.0, current + delta)"), encoding="utf-8")
+          print("G428 bad mutant: normalized cap becomes floor at one")
+          PY
+          set +e
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/golden_fixture_runner.gd \
+            > "$RUNNER_TEMP/g428-mutant.log" 2>&1
+          mutant_exit="$?"
+          set -e
+          cp "$RUNNER_TEMP/g428-affection-good.gd" game/src/domain/affection.gd
+          if test "$mutant_exit" -eq 0; then
+            echo "G428 mutant unexpectedly passed"
+            exit 1
+          fi
+          grep -Fq 'affection.increase golden mismatch' "$RUNNER_TEMP/g428-mutant.log"
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/golden_fixture_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g428-restore.log"
+          grep -Fq 'MARICA_G428_AFFECTION_INCREASE_PARITY_PASS cases=13' "$RUNNER_TEMP/g428-restore.log"
+          git diff --exit-code -- game/src/domain/affection.gd
+          echo "MARICA_G428_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
+
       - name: Upload Godot CI diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -574,4 +629,8 @@ jobs:
             ${{ runner.temp }}/g427-soulbound.log
             ${{ runner.temp }}/g427-mutant.log
             ${{ runner.temp }}/g427-restore.log
+            ${{ runner.temp }}/g428-parse.log
+            ${{ runner.temp }}/g428-affection.log
+            ${{ runner.temp }}/g428-mutant.log
+            ${{ runner.temp }}/g428-restore.log
           if-no-files-found: warn

@@ -67,7 +67,7 @@ func _pet_binding_and_detachment() -> bool:
     ):
         return _fail("bound founder transfer guard must fail")
     var snapshot: Dictionary = founder.to_snapshot()
-    if snapshot != {"id": "pet-founder-001", "soulbound": true}:
+    if snapshot != {"id": "pet-founder-001", "soulbound": true, "affection": 0.0}:
         return _fail("founder soulbound missing from detached snapshot")
     snapshot["soulbound"] = false
     snapshot["id"] = "pet-tampered"
