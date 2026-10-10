@@ -273,9 +273,7 @@ func _canonical_domain_result(identifier: String, result: Dictionary) -> Diction
     if identifier == "pet.affection":
         var pet: MaricaPet = result["pet"]
         return {
-            "id": pet.get_id(),
-            "soulbound": pet.is_soulbound(),
-            "affection": pet.get_affection()
+            "id": pet.get_id(), "soulbound": pet.is_soulbound(), "affection": pet.get_affection()
         }
     if (
         identifier.begins_with("health.")

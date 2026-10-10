@@ -70,9 +70,7 @@ func _pet_immutability() -> bool:
     snapshot["id"] = "tampered"
     snapshot["affection"] = 0.0
     snapshot["soulbound"] = false
-    if bonded.to_snapshot() != {
-        "id": "pet-affection-001", "soulbound": true, "affection": 0.65
-    }:
+    if bonded.to_snapshot() != {"id": "pet-affection-001", "soulbound": true, "affection": 0.65}:
         return _fail("snapshot mutation wrote through to Pet")
     var restored: Dictionary = PET.create(
         bonded.get_id(), bonded.is_soulbound(), bonded.to_snapshot()["affection"]

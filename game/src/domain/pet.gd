@@ -20,7 +20,9 @@ func _init(validated_id: String, bound: bool = false, affection: float = 0.0) ->
     _affection = affection
 
 
-static func create(value: Variant, soulbound: Variant = null, affection: Variant = null) -> Dictionary:
+static func create(
+    value: Variant, soulbound: Variant = null, affection: Variant = null
+) -> Dictionary:
     var parsed: Dictionary = PET_ID.from_string(value)
     if not parsed.get("ok", false):
         return {"ok": false, "error": parsed.get("error", "Invalid PetId")}
@@ -52,10 +54,7 @@ func with_affection(value: Variant) -> Dictionary:
     var validated: Dictionary = AFFECTION.create(value)
     if not validated.get("ok", false):
         return validated
-    return {
-        "ok": true,
-        "pet": MaricaPet.new(_pet_id, _soulbound, float(validated["affection"]))
-    }
+    return {"ok": true, "pet": MaricaPet.new(_pet_id, _soulbound, float(validated["affection"]))}
 
 
 func gain_affection(gain: Variant) -> Dictionary:
