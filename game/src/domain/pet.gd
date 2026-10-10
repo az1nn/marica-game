@@ -116,9 +116,7 @@ static func _replacement(
     health: MaricaHealth,
     bond: float
 ) -> MaricaPet:
-    var replacement: MaricaPet = MaricaPet.new(
-        previous._pet_id, previous._soulbound, bond
-    )
+    var replacement: MaricaPet = MaricaPet.new(previous._pet_id, previous._soulbound, bond)
     replacement._composite = true
     replacement._pedigree = previous._pedigree
     replacement._lifecycle = life
@@ -159,10 +157,7 @@ func with_affection(value: Variant) -> Dictionary:
         return validated
     var bond: float = float(validated["affection"])
     if _composite:
-        return {
-            "ok": true,
-            "pet": _replacement(self, _lifecycle, _expressed, _care, _health, bond)
-        }
+        return {"ok": true, "pet": _replacement(self, _lifecycle, _expressed, _care, _health, bond)}
     return {"ok": true, "pet": MaricaPet.new(_pet_id, _soulbound, bond)}
 
 
@@ -177,8 +172,7 @@ func with_lifecycle(lifecycle: Variant) -> Dictionary:
     if not _composite or not (lifecycle is MaricaLifecycle):
         return {"ok": false, "error": "Pet composite lifecycle is required"}
     return {
-        "ok": true,
-        "pet": _replacement(self, lifecycle, _expressed, _care, _health, _affection)
+        "ok": true, "pet": _replacement(self, lifecycle, _expressed, _care, _health, _affection)
     }
 
 
@@ -190,8 +184,7 @@ func with_expression_factors(factors: Variant) -> Dictionary:
         return result
     return {
         "ok": true,
-        "pet":
-        _replacement(self, _lifecycle, result["traits"], _care, _health, _affection)
+        "pet": _replacement(self, _lifecycle, result["traits"], _care, _health, _affection)
     }
 
 
@@ -222,9 +215,7 @@ func with_health_state(state: Variant) -> Dictionary:
         return health
     return {
         "ok": true,
-        "pet": _replacement(
-            self, _lifecycle, _expressed, _care, health["health"], _affection
-        )
+        "pet": _replacement(self, _lifecycle, _expressed, _care, health["health"], _affection)
     }
 
 
@@ -247,9 +238,7 @@ func advance_health(elapsed_hours: Variant) -> Dictionary:
         next_lifecycle = ended["lifecycle"]
     return {
         "ok": true,
-        "pet": _replacement(
-            self, next_lifecycle, _expressed, _care, advanced["health"], _affection
-        )
+        "pet": _replacement(self, next_lifecycle, _expressed, _care, advanced["health"], _affection)
     }
 
 
@@ -263,8 +252,7 @@ func apply_treatment(treatment: Variant) -> Dictionary:
         return result
     return {
         "ok": true,
-        "pet":
-        _replacement(self, _lifecycle, _expressed, _care, result["health"], _affection),
+        "pet": _replacement(self, _lifecycle, _expressed, _care, result["health"], _affection),
         "cost": result["cost"],
     }
 
