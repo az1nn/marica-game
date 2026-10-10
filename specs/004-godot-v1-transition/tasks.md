@@ -68,6 +68,24 @@
 
 **Gate E:** fechar/abrir o jogo não reinicia nem duplica o ciclo animal.
 
+## V1 roster decision / Spec Kit trace (2026-10-09)
+
+**Decision accepted, implementation not marked done.** SPEC-004 §3.1 limits the **initial V1** to **3 animal types: tricolor dog (founder), capybara, chicken; 3 initial plant/crop types: milho (S07-P01), tomate (S07-P02), cenoura (S07-P03)**. Existing G463 fruit tree belongs to the **expanded crop slice**, not a fourth initial type.
+
+- [x] **G-ROSTER-DECISION** Human scope locked and recorded in SPEC-004 §3.1. Chicken and capybara ARTIST concept boards approved; founder dog still awaits individual sprite review.
+- [ ] **G-ROSTER-ANIMALS** Verify all **three animal types** appear in V1 build with correct founder soulbound semantics, relevant care/lifecycle/successor behavior, and valid offline saves. Depends on G450–G458, G440–G447 and existing core domain gates.
+- [x] **G-ROSTER-PLANTS-NAMES** Human chose **exactly three** initial species: milho / tomate / cenoura; recorded in SPEC-004 §3.1 with DESIGN/LORE domain mechanics unchanged. No additional crop approved.
+- [x] **G-ROSTER-ART-PLANTS-CONCEPTS** ARTIST: generate three individual transparent PNG previews and record human visual **ACCEPT** for S07-P01 / P02 / P03. See `docs/artist/reviews/S07-P01-P03-2026-10-09-plants-accepted.md`; binaries are conversation artifacts, not committed/imported runtime assets.
+- [x] **G-ROSTER-ART-3X3-CONCEPT** ARTIST: revised consolidated **3 animals × 3 plants** board accepted by human on 2026-10-09, with milho/tomate/cenoura replacing erroneous alface/pimenta composite. This completes **composite concept review only**, not independent sprites, verified animation frames, Godot import, runtime or LENTE acceptance. Evidence: `docs/artist/reviews/V1-3X3-ART-CONCEPT-2026-10-09-accepted.md`.
+- [ ] **G-ROSTER-PLANTS-VERIFY** Verify exactly three initial crops through planting/harvest/food/save offline; G463 expanded fruit tree must be separately testable without becoming a fourth initial offering.
+- [x] **G-ROSTER-ART-FOUNDING-DOG** ARTIST: **isolated S01-A01 tricolor dog founder concept ACCEPTED** by human 2026-10-10, consistent with S01 V3; evidence `docs/artist/reviews/S01-A01-2026-10-10-isolated-dog-preview-pending.md` (append-only acceptance). This completes **concept review only**; no production sprite, import or runtime validation.
+- [x] **G-ROSTER-ART-DOG-AUDIT** ARTIST/ARCH preflight (source-bytes only): PNG SHA-256 + RGBA 362×400 / binary alpha PASS, 24,532 opaque colors observed; 128px/48 and 96-color nearest-neighbor **technical prototypes only**, with **production validation REVISE/OPEN**. Evidence `docs/artist/reviews/S01-A01-2026-10-10-technical-audit.md`. GitHub PNG binaries, pixel-grid contract, animations, Godot runtime and LENTE still pending.
+- [ ] **G-ROSTER-ART-DOG-TECH** ARCH/ART: obtain source PNG, verify alpha-edge quality, true dimensions, palette and pixel grid; resolve V201/V201a before approving production-resolution assets.
+- [ ] **G-ROSTER-ART-DOG-ANIM** ART/SCENE: generate and validate isolated aligned pose/animation frames against approved identity, then test Godot import, movement and LENTE exact-head runtime A/B.
+- [ ] **G-ROSTER-ART-ALTERNATES** ARTIST: independently isolate capybara PET-ALT-001 and chicken PET-ALT-002 sprites; the approved concept boards **do not count as Godot sprites or approved runtime**.
+
+Do not mark these implementation checks complete based on illustrative previews alone; SPEC-004 priority Animals → Plants → Farm Structure and SPEC-005 R2 gate remain unchanged.
+
 ## Phase F — Playable Animal Slice
 
 **Visual companion:** SPEC-005 ARTIST V2 full pixel art 2.5D approved on 2026-10-09. Its visual tasks V201–V211 are a gated accompaniment to G450–G458; they do **not** mark these existing tasks complete or preempt G425–G449.
@@ -85,6 +103,8 @@
 **Gate F:** Animal Core V1 é jogável ponta a ponta em Godot.
 
 ## Phase G — Plants
+
+**Initial crop quantity contract:** G462 is **three initial plants/crops: milho, tomate, cenoura** (identities accepted; no runtime completion claimed). G463 preserves the distinct **expanded-slice** fruit-tree requirement; it is not a fourth initial option.
 
 - [ ] **G460** Implementar crop domain independente de cena.
 - [ ] **G461** Implementar planted_at/growth_duration e offline growth.
