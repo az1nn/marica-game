@@ -1,19 +1,18 @@
 # QA HANDOFF
 
-Status: G424 VERIFIED / ADVANCE
+Status: G428 VERIFIED / ADVANCE G429
 
-Authority: SPEC-004 · Godot 4.7.2-stable · single-player/offline-first.
+Authority: SPEC-004 · Godot 4.7.2-stable · Godot-first single-player/offline-first.
 
 Verified:
-- PR #56 exact head 9af0130171614bb5fc432ab78967261dab1b40f2: Godot CI PASS, Validate Skills PASS, Roblox CI PASS; Roblox Behavioral SKIPPED/non-required.
-- Guarded merge master@6ecc44e6830ce130ff35fb955b0641743d2dbdac; all three required post-merge checks PASS.
-- Typed declaration guard, Python fixture schema/provenance suite, gdformat/gdlint and Godot headless import/parse/boot/smoke PASS.
-- 4 harness selftests, 77 domain ACTIVE_PARITY cases: PetId 5 + LineageId 6 + Pedigree 15 + Lifecycle 19 + SimulationTime 9 + Genetic potential 11 + Expressed traits 12.
-- G430 guaranteed advancement cases 3 remain PENDING_PORT, not PASS.
-- G424 targeted genetics regression and default-factor mutation GOOD→BAD→RESTORE PASS. G420–G423 regression and mutation gates PASS.
+- G428 PR #67 exact head `6b31669ef7a3f651e45416d19c3b5b770dd68e79`: Godot CI, Validate Skills and Roblox CI PASS; Roblox Behavioral skipped/nonrequired.
+- Guarded merge master@`d4ab3fed49606ad13e0fa1881f5a1715ea7a6f97`; three corresponding master post-merge workflow gates PASS.
+- Godot import/parse/startup/smoke, Python fixture schema/provenance unit suite, typed declaration guard, gdformat and gdlint PASS.
+- 188 ACTIVE_PARITY executable Luau→Godot golden cases, 4 harness selftests and 3 G430 genetic advancement PENDING_PORT cases.
+- G428 independent regression proves normalized, finite persistent affection, gain cap, immutable Pet snapshot/identity/Soulbound semantics; GOOD→BAD→RESTORE cap-inversion mutation gate PASS. Earlier G420–G427 mutation suites remain PASS in exact-head Godot CI.
 
 Limits:
-- Standalone potential/expression parity does not prove composition with Pet/care, aging, advancement, successor generation, save or player runtime.
-- Full Animal Core parity stays NOT_YET_PROVEN; no visual/player acceptance.
+- Standalone Pet Affection shell is not composite Pet care/health/lifecycle integration. Full animal loop parity still NOT_YET_PROVEN.
+- No Godot local save, succession, ARTIST production sprite/LENTE runtime or Web export acceptance.
 
-Next: G425 deterministic care state, golden parity and negative/mutation regression.
+Next: G429 composite Pet behavioral parity and mutation/adversarial gates before succession work.
