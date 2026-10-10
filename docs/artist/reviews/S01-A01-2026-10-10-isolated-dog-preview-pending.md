@@ -19,3 +19,8 @@
 **Human review question:** Does this individual 3/4-angle tricolor puppy correctly preserve the founder identity from S01 V3? Respond `ACCEPT / REVISE / REJECT`. Human acceptance approves only this isolated sprite **concept**, not technical import, animation, ready-to-ship production, or release.
 
 **Next on ACCEPT:** ARCH V201/V201a pixel grid + transparency/alpha quality + source-scale constraints; ART review; then one production animation set at a time and SCENE/LENTE actual Godot capture. Preserve animals-first P0, S02 queue and S07 crop gate R2. **No automatic merge.**
+
+
+## Human decision — 2026-10-10
+
+**ACCEPT** — user explicitly approved the isolated S01-A01 tricolor founder-dog preview and authorized proceeding to the next production gates. This supersedes only the `CONCEPT_PENDING` review state above; original pending evidence remains preserved for audit. **Final state: `ISOLATED_CONCEPT_ACCEPTED`.** The approved PNG remains a conversation-local 362×400 RGBA candidate, not a committed GitHub binary or a validated Godot sprite atlas. Next: verify source bytes and alpha/pixel grid, resolve ARCH V201/V201a constraints, produce aligned production poses, validate ART/SCENE, and run Godot/LENTE exact-head checks before claiming runtime PASS. No merge or engine integration authorized solely by this acceptance.
