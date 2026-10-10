@@ -3,25 +3,26 @@ CAVEMAN HANDOFF v1
 APP: Maricá Game
 WORKSTREAM: SPEC-004 · Phase C Animal Domain
 MODE: ADVANCE
-BASE: master@ee30eef23b2ec59451dfd93fcc27638ed385213f
+BASE: master@d4ab3fed49606ad13e0fa1881f5a1715ea7a6f97
+PR: #67 MERGED (exact head 6b31669ef7a3f651e45416d19c3b5b770dd68e79)
 
 DONE:
-- G427 — Soulbound Luau→Godot port: null defaults unbound, strict persisted boolean, explicit founder binding blocks transfers, descendants default unbound.
-- New pure Soulbound domain + `MaricaPet` binding state; +22 Luau-provenance ACTIVE_PARITY cases (155 total); 4 harness selftests; 3 G430 fixtures still PENDING_PORT.
-- Independent regression + transfer-inversion GOOD→BAD→RESTORE mutation proof.
+- G428 isolated Affection port: 0 default; finite [0,1] saved bond; saturated, nonnegative gain; snapshot and immutable Pet transformations independent of Soulbound.
+- +33 Luau-source ACTIVE_PARITY cases = 188 total; 4 harness selftests; G430 genetics cases 3 still PENDING_PORT.
+- Standalone regression + cap-inversion GOOD → BAD → RESTORE mutation proof.
 
 VERIFY:
-- PR #65 head `cdeaa7d04b5ccec38b785296d8061570e15f0b13` — Godot CI PASS, Validate skills PASS, Roblox CI PASS. Roblox Behavioral skipped/non-required.
-- Squash merged guarded to master@ee30eef23b2ec59451dfd93fcc27638ed385213f; master post-merge Godot CI / Validate skills / Roblox CI PASS.
-- G429 full Pet aggregate parity, G430+ genetic succession, offline save, ARTIST runtime visual acceptance, web export NOT PROVEN.
+- PR #67 exact head Godot CI PASS, Validate skills PASS, Roblox CI PASS.
+- Guarded squash merge master@d4ab3fed49606ad13e0fa1881f5a1715ea7a6f97; master post-merge same three CI gates PASS including G428 tests.
+- Roblox Behavioral SKIPPED / nonrequired.
+- Full Pet composite parity G429, succession G430+, save G440+, production visual acceptance and Web export NOT PROVEN.
 
 CONCURRENCY:
-- #65 merged; no conflicting open PR at closeout start.
-- G427 claim being closed by this documentation follow-up. Any newer default-branch edits require reconcile before merge.
-- V1 ARTIST roster documented as concepts via merged PR #62, not production binary assets.
+- Implementation claim G428 CLOSED in documentation follow-up. No competing open PR at verified closeout start.
+- ARTIST concept acceptance preserved; production asset human gates remain open.
 
 WAIT / BLOCKER:
-No human product decision required to start G428. No current artifact import or cloud deploy gate on Phase C.
+No human decision needed for G429. No active gameplay/persistence acceptance implied by domain-only parity.
 
 NEXT:
-G428 — port persistent affection Luau→typed pure GDScript, fixtures + deterministic regression + mutation proof, exact-head CI.
+G429 — integrate Pet lifecycle/care/health/affection transitions, prove cross-contract golden parity and regression/mutation gates in Godot.
