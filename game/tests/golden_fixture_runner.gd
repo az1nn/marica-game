@@ -270,7 +270,7 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
     return _canonical_domain_result(identifier, result)
 
 
-func _run_pet_composite(case_input: Dictionary) -> Dictionary:
+func _prepare_pet_lifecycle(case_input: Dictionary) -> Dictionary:
     var lifecycle: MaricaLifecycle = LIFECYCLE.start()
     var lifecycle_actions: Array = case_input.get("lifecycleActions", [])
     for entry in lifecycle_actions:
@@ -281,10 +281,18 @@ func _run_pet_composite(case_input: Dictionary) -> Dictionary:
         elif action.get("op") == "endLife":
             outcome = LIFECYCLE.end_life(lifecycle, action.get("reason"))
         else:
-            return {"error": "Unknown Pet lifecycle operation"}
+            return {"ok": false, "error": "Unknown Pet lifecycle operation"}
         if not outcome.get("ok", false):
-            return {"error": outcome.get("error", "")}
+            return outcome
         lifecycle = outcome["lifecycle"]
+    return {"ok": true, "lifecycle": lifecycle}
+
+
+func _run_pet_composite(case_input: Dictionary) -> Dictionary:
+    var prepared: Dictionary = _prepare_pet_lifecycle(case_input)
+    if not prepared.get("ok", false):
+        return {"error": prepared.get("error", "")}
+    var lifecycle: MaricaLifecycle = prepared["lifecycle"]
 
     var result: Dictionary = PET.create_composite(
         case_input.get("id", null),
