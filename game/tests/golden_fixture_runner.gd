@@ -368,16 +368,20 @@ func _canonical_domain_result(identifier: String, result: Dictionary) -> Diction
         or identifier == "pet.affection"
     ):
         return _special_domain_result(identifier, result)
-    if identifier in ["genetics.new_potential", "genetics.express"]:
-        return result["traits"]
-    if identifier == "genetics.advance_potential":
-        return {"potential": result["traits"]}
+    if identifier in ["genetics.new_potential", "genetics.express", "genetics.advance_potential"]:
+        return _genetics_domain_result(identifier, result)
     if identifier == "simulation_time.observe":
         return result["observation"]
     if identifier == "pedigree.create":
         var record: MaricaPedigree = result["pedigree"]
         return record.to_snapshot()
     return {"id": result.get("id")}
+
+
+func _genetics_domain_result(identifier: String, result: Dictionary) -> Dictionary:
+    if identifier == "genetics.advance_potential":
+        return {"potential": result["traits"]}
+    return result["traits"]
 
 
 func _special_domain_result(identifier: String, result: Dictionary) -> Dictionary:
