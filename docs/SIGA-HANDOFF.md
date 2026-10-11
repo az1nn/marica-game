@@ -3,26 +3,25 @@ CAVEMAN HANDOFF v1
 APP: Maricá Game
 WORKSTREAM: SPEC-004 · Phase D Succession P0
 MODE: ADVANCE
-BASE: master@66604001dd20182755b9b3120cf1aa892e50d807
-PR: #69 MERGED (exact head 9edde5513bef35974480e10ce2c1ec072781203a)
+BASE: master@0f9239a35b0ea00f5763e68216e1f2f9ce9bb1bf
+PR: #71 MERGED (exact head fb2b8eb2d3c29f8406fed13408533cde8a8eaad7)
 
 DONE:
-- G429 composite Pet port: immutable pedigree, lifecycle, expressed genetics, Care, Health, persistent affection, Soulbound, treatment and terminal-risk transitions; previous isolated shell contracts preserved.
-- +21 Luau-source ACTIVE_PARITY golden cases = 209 total; 4 harness selftests; G430 genetics 3 cases PENDING_PORT.
-- Independent composite regression + terminal-risk GOOD → BAD → RESTORE mutation proof.
+- G430: typed Godot deterministic genetic advancement, modulo seed, lexicographically sorted cyclic trait selection, +0.05 capped gain, full saturation no-op, detached inputs/outputs.
+- +15 executable G430 golden parity cases = 224 ACTIVE_PARITY; 4 harness selftests; G431 two successor-seed fixtures PENDING_PORT.
+- Independent regression, source-linked fixture schema/provenance and P0 cap GOOD → BAD → RESTORE mutation proof.
 
 VERIFY:
-- PR #69 exact head Godot CI PASS, Validate skills PASS, Roblox CI PASS.
-- Guarded squash merge master@66604001dd20182755b9b3120cf1aa892e50d807; same three master post-merge workflows PASS including G429 golden and mutation proof.
-- Roblox Behavioral SKIPPED/nonrequired.
-- G430+ successor algorithms / exactly two / idempotency, save G440+, visuals/LENTE and export NOT PROVEN.
+- PR #71 exact head: Godot CI PASS, Validate Skills PASS, Roblox CI PASS; nonrequired Roblox Behavioral SKIPPED.
+- Guarded squash merge master@0f9239a35b0ea00f5763e68216e1f2f9ce9bb1bf; all three master post-merge workflows PASS including G430 mutation and previous domain regression gates.
+- No G431 actual successor, G432 exactly two, G433 idempotence, G440 save, G450 scene or G500 Web export acceptance.
 
 CONCURRENCY:
-- G429 claim CLOSED in this documentation follow-up; no competing open PR at guarded merge.
-- ARTIST concepts retained with separate production sprite gates.
+- G430 session claim CLOSED; no overlapping PR at guarded merge.
+- ARTIST accepted concepts remain distinct from production sprites / runtime evidence.
 
 WAIT / BLOCKER:
-- No human decision needed for G430. No playable loop or local save accepted solely from Phase C domain parity.
+- No human gate for G431. Vercel deployment success does not prove Godot HTML5 export or playable Web preview.
 
 NEXT:
-G430 — port deterministic genetic potential advancement using prior Luau contract/PR #26, prove executable golden parity, independent regression and mutation.
+G431 — implement deterministic single-successor creation from legacy Luau PR #34, explicitly preserving G430 genetic potential semantics and detached pedigree/state; add executable golden parity and independent regression/mutation.
