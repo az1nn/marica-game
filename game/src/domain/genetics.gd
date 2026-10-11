@@ -35,7 +35,6 @@ static func express(potential: Variant, factors: Variant = null) -> Dictionary:
     return {"ok": true, "traits": expressed}
 
 
-
 static func advance_potential(potential: Variant, seed: Variant) -> Dictionary:
     var potential_result: Dictionary = _copy_traits(potential, "Genetic potential")
     if not potential_result.get("ok", false):

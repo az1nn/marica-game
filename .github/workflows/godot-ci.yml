@@ -602,7 +602,7 @@ jobs:
           grep -Fq 'MARICA_G429_PET_COMPOSITE_PASS' "$RUNNER_TEMP/g429-composite.log"
           grep -Fq 'MARICA_G429_PET_COMPOSITE_PARITY_PASS cases=21' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'MARICA_G416_PENDING_PORT succession.create_successor cases=2' "$RUNNER_TEMP/godot-g416-fixtures.log"
-          grep -Fq 'verified=209' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'verified=224' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'parity=NOT_YET_PROVEN' "$RUNNER_TEMP/godot-g416-fixtures.log"
 
       - name: G429 Pet terminal guard mutation (GOOD > BAD > RESTORE)
