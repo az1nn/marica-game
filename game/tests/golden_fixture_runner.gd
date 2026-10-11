@@ -96,6 +96,7 @@ func _check_contract(contract_value: Variant) -> Dictionary:
                 "simulation_time.observe",
                 "genetics.new_potential",
                 "genetics.express",
+                "genetics.advance_potential",
                 "care.create",
                 "care.quality",
                 "care.expression_factors",
@@ -144,6 +145,8 @@ func _verify_domain_cases(identifier: String, cases: Array) -> Dictionary:
         print("MARICA_G424_POTENTIAL_PARITY_PASS cases=", cases.size())
     elif identifier == "genetics.express":
         print("MARICA_G424_EXPRESSION_PARITY_PASS cases=", cases.size())
+    elif identifier == "genetics.advance_potential":
+        print("MARICA_G430_GENETIC_ADVANCEMENT_PARITY_PASS cases=", cases.size())
     elif identifier == "care.create":
         print("MARICA_G425_CARE_CREATE_PARITY_PASS cases=", cases.size())
     elif identifier == "care.quality":
@@ -219,6 +222,8 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
         result = GENETICS.new_potential(case_input.get("values"))
     elif identifier == "genetics.express":
         result = GENETICS.express(case_input.get("potential"), case_input.get("factors", null))
+    elif identifier == "genetics.advance_potential":
+        result = GENETICS.advance_potential(case_input.get("potential"), case_input.get("seed"))
     elif identifier == "care.create":
         result = CARE.create(case_input.get("values", null))
     elif identifier == "care.quality":
@@ -363,14 +368,20 @@ func _canonical_domain_result(identifier: String, result: Dictionary) -> Diction
         or identifier == "pet.affection"
     ):
         return _special_domain_result(identifier, result)
-    if identifier in ["genetics.new_potential", "genetics.express"]:
-        return result["traits"]
+    if identifier in ["genetics.new_potential", "genetics.express", "genetics.advance_potential"]:
+        return _genetics_domain_result(identifier, result)
     if identifier == "simulation_time.observe":
         return result["observation"]
     if identifier == "pedigree.create":
         var record: MaricaPedigree = result["pedigree"]
         return record.to_snapshot()
     return {"id": result.get("id")}
+
+
+func _genetics_domain_result(identifier: String, result: Dictionary) -> Dictionary:
+    if identifier == "genetics.advance_potential":
+        return {"potential": result["traits"]}
+    return result["traits"]
 
 
 func _special_domain_result(identifier: String, result: Dictionary) -> Dictionary:
