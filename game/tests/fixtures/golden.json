@@ -1976,7 +1976,7 @@
     },
     {
       "id": "genetics.advance_potential",
-      "status": "PENDING_PORT",
+      "status": "ACTIVE_PARITY",
       "milestone": "G430",
       "source": "docs/migration/ROBLOX-TO-GODOT-CONTRACT-MAP.md",
       "cases": [
@@ -1998,8 +1998,42 @@
           }
         },
         {
+          "id": "second-sorted-trait",
+          "invariant": "seed one selects lexicographically second trait",
+          "input": {
+            "potential": {
+              "resilience": 0.4,
+              "size": 0.5
+            },
+            "seed": 1
+          },
+          "expected": {
+            "potential": {
+              "resilience": 0.4,
+              "size": 0.55
+            }
+          }
+        },
+        {
+          "id": "seed-wraparound",
+          "invariant": "seed modulo trait count is deterministic",
+          "input": {
+            "potential": {
+              "resilience": 0.4,
+              "size": 0.5
+            },
+            "seed": 3
+          },
+          "expected": {
+            "potential": {
+              "resilience": 0.4,
+              "size": 0.55
+            }
+          }
+        },
+        {
           "id": "saturated-fallback",
-          "invariant": "saturated trait is skipped cyclically",
+          "invariant": "saturated seed-selected trait scans to next trait",
           "input": {
             "potential": {
               "resilience": 1,
@@ -2015,6 +2049,94 @@
           }
         },
         {
+          "id": "cyclic-fallback",
+          "invariant": "cyclic scan wraps from last saturated trait",
+          "input": {
+            "potential": {
+              "resilience": 0.3,
+              "size": 0.4,
+              "temper": 1
+            },
+            "seed": 2
+          },
+          "expected": {
+            "potential": {
+              "resilience": 0.35,
+              "size": 0.4,
+              "temper": 1
+            }
+          }
+        },
+        {
+          "id": "near-cap",
+          "invariant": "advance is capped by remaining normalized headroom",
+          "input": {
+            "potential": {
+              "resilience": 0.98,
+              "size": 1
+            },
+            "seed": 0
+          },
+          "expected": {
+            "potential": {
+              "resilience": 1,
+              "size": 1
+            }
+          }
+        },
+        {
+          "id": "all-saturated",
+          "invariant": "fully saturated potential remains unchanged",
+          "input": {
+            "potential": {
+              "resilience": 1,
+              "size": 1
+            },
+            "seed": 1
+          },
+          "expected": {
+            "potential": {
+              "resilience": 1,
+              "size": 1
+            }
+          }
+        },
+        {
+          "id": "single-trait",
+          "invariant": "single trait advances regardless of seed rotation",
+          "input": {
+            "potential": {
+              "resilience": 0.25
+            },
+            "seed": 16
+          },
+          "expected": {
+            "potential": {
+              "resilience": 0.3
+            }
+          }
+        },
+        {
+          "id": "invalid-empty",
+          "invariant": "empty map cannot guarantee advancement",
+          "input": {
+            "potential": {},
+            "seed": 0
+          },
+          "expected_error": "Genetic potential must contain at least one trait for guaranteed advancement"
+        },
+        {
+          "id": "invalid-negative-seed",
+          "invariant": "negative seed rejected",
+          "input": {
+            "potential": {
+              "resilience": 0.4
+            },
+            "seed": -1
+          },
+          "expected_error": "Genetic advancement seed must be a non-negative integer"
+        },
+        {
           "id": "invalid-fractional-seed",
           "invariant": "fractional seed rejected",
           "input": {
@@ -2023,7 +2145,80 @@
             },
             "seed": 0.5
           },
-          "expected_error": "invalid genetic seed"
+          "expected_error": "Genetic advancement seed must be a non-negative integer"
+        },
+        {
+          "id": "invalid-string-seed",
+          "invariant": "string seed cannot coerce to numeric",
+          "input": {
+            "potential": {
+              "resilience": 0.4
+            },
+            "seed": "1"
+          },
+          "expected_error": "Genetic advancement seed must be a finite number"
+        },
+        {
+          "id": "invalid-potential-type",
+          "invariant": "nonmap potential rejected",
+          "input": {
+            "potential": [],
+            "seed": 0
+          },
+          "expected_error": "Genetic potential must be a table"
+        },
+        {
+          "id": "invalid-trait-value",
+          "invariant": "out-of-range parental value rejected",
+          "input": {
+            "potential": {
+              "resilience": 1.2
+            },
+            "seed": 0
+          },
+          "expected_error": "Genetic potential.resilience must be between 0 and 1"
+        },
+        {
+          "id": "invalid-trait-name",
+          "invariant": "blank parental trait rejected",
+          "input": {
+            "potential": {
+              " ": 0.3
+            },
+            "seed": 0
+          },
+          "expected_error": "Genetic potential trait name must be a non-empty string"
+        }
+      ],
+      "adapter": "game/src/domain/genetics.gd"
+    },
+    {
+      "id": "succession.create_successor",
+      "status": "PENDING_PORT",
+      "milestone": "G431",
+      "source": "docs/migration/ROBLOX-TO-GODOT-CONTRACT-MAP.md",
+      "cases": [
+        {
+          "id": "pending-sibling-one",
+          "invariant": "ordinal one derives same genetic seed",
+          "input": {
+            "successionSeed": 40,
+            "ordinal": 1
+          },
+          "expected": {
+            "seed": 40
+          }
+        },
+        {
+          "id": "pending-sibling-two",
+          "invariant": "ordinal two derives next genetic seed",
+          "input": {
+            "successionSeed": 40,
+            "ordinal": 2
+          },
+          "expected": {
+            "seed": 41
+          }
         }
       ]
     },

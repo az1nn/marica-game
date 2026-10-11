@@ -23,6 +23,10 @@ APPROVED_PARITY = {
     ),
     "genetics.new_potential": ("G424", "game/src/domain/genetics.gd", "src/shared/domain/Genetics.luau"),
     "genetics.express": ("G424", "game/src/domain/genetics.gd", "src/shared/domain/Genetics.luau"),
+    "genetics.advance_potential": (
+        "G430", "game/src/domain/genetics.gd",
+        "docs/migration/ROBLOX-TO-GODOT-CONTRACT-MAP.md",
+    ),
     "care.create": ("G425", "game/src/domain/care.gd", "src/shared/domain/Care.luau"),
     "care.quality": ("G425", "game/src/domain/care.gd", "src/shared/domain/Care.luau"),
     "care.expression_factors": (
@@ -181,7 +185,7 @@ def validate(document: Any, root: Path = ROOT) -> list[str]:
                             errors.append(f"{key}/{case_id}: lifecycle success must expect canonical snapshot")
                         elif type(expected["terminal"]) is not bool:
                             errors.append(f"{key}/{case_id}: lifecycle terminal must be boolean")
-                if key in {"genetics.new_potential", "genetics.express"}:
+                if key in {"genetics.new_potential", "genetics.express", "genetics.advance_potential"}:
                     data = case.get("input")
                     if not isinstance(data, dict):
                         errors.append(f"{key}/{case_id}: genetics input must be object")
@@ -191,8 +195,15 @@ def validate(document: Any, root: Path = ROOT) -> list[str]:
                         "potential" not in data or not set(data).issubset({"potential", "factors"})
                     ):
                         errors.append(f"{key}/{case_id}: expression requires potential, optional factors")
+                    elif key == "genetics.advance_potential" and set(data) != {"potential", "seed"}:
+                        errors.append(f"{key}/{case_id}: advancement requires potential and seed")
                     if has_expected:
                         expected = case.get("expected")
+                        if key == "genetics.advance_potential":
+                            if not isinstance(expected, dict) or set(expected) != {"potential"}:
+                                errors.append(f"{key}/{case_id}: advancement requires canonical potential")
+                                continue
+                            expected = expected["potential"]
                         if not isinstance(expected, dict) or any(
                             not isinstance(k, str) or not k.strip()
                             or type(v) not in (int, float) or not (0 <= v <= 1)
