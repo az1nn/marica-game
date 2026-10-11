@@ -1,18 +1,17 @@
 # QA HANDOFF
 
-Status: G429 VERIFIED / ADVANCE G430
+Status: G430 VERIFIED / ADVANCE G431
 Authority: SPEC-004 · Godot 4.7.2-stable · offline-first single-player.
 
 Verified:
-- PR #69 exact head `9edde5513bef35974480e10ce2c1ec072781203a`: Godot CI / Validate Skills / Roblox CI **PASS**; Roblox Behavioral SKIPPED/nonrequired.
-- Guarded squash merge master@`66604001dd20182755b9b3120cf1aa892e50d807`: same three required workflows **PASS** after merge.
-- G429 independent Pet composite regression, detached nested snapshots/immutability, Care→expression coupling, lifecycle, health treatment and terminal, Soulbound and persistent bond preserved.
-- 209 ACTIVE_PARITY Luau→Godot executable golden cases = 188 previously proven + **21 G429 composite**; 4 harness selftests; three G430 genetics advancement fixtures remain PENDING_PORT.
-- G429 terminal health guard GOOD → BAD → RESTORE mutation was detected by golden fixture runtime on exact PR head. All previous domain regression/mutation gates still PASS in Godot CI.
-- Pinned Godot import/parse/boot/smoke, GDScript typing, gdformat/gdlint, Python fixture schema/provenance suite PASS.
+- PR #71 exact head `fb2b8eb2d3c29f8406fed13408533cde8a8eaad7`: Godot CI / Validate Skills / Roblox CI **PASS**. Roblox Behavioral SKIPPED/nonrequired.
+- Guarded squash merge master@`0f9239a35b0ea00f5763e68216e1f2f9ce9bb1bf`: all three required push workflows **PASS**.
+- G430: 15 new deterministic Luau migration-source cases with schema/provenance validation; total **224 ACTIVE_PARITY** + 4 harness selftests. Two G431 successor fixtures remain PENDING_PORT.
+- Seed rotation, sorted keys, cyclic saturated fallback, bounded +0.05 gain, all-saturated equality, invalid integer/nonfinite seeds, input validation and detached/repeatable snapshots covered by golden or independent regression.
+- G430 cap mutation GOOD → BAD → RESTORE detected at current PR head. G420–G429 regression and mutation gates continue PASS at master head.
 
 Limits:
-- Source-linked aggregate golden parity does not prove succession, two successors, idempotency, save/load, full 2–4-week simulation, artwork, LENTE or Web export.
-- No V1 online dependency or gameplay scene capability is claimed.
+- G431 successor creation, exactly-two generation, idempotence, full 2–4-week simulation and G440+ save/load are NOT proven.
+- No player-facing visual, HTML5/Web export, Vercel in-browser runtime or LENTE visual acceptance is claimed.
 
-Next: G430 deterministic potential advancement via exact Luau-source fixtures and independent mutation/regression proof.
+Next: G431 successor primitive using legacy PR #34: preserve deterministic seed+ordinal, pedigree/lineage, fresh care and health, affection 0, descendants unbound; prove source-linked golden and mutation evidence.

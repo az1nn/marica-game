@@ -162,8 +162,8 @@ golden cases (including invalid-name, range, type and unknown-trait cases).
 `game/tests/genetics_runner.gd` independently checks copy isolation,
 determinism and nonfinite values. The G424 mutation proof changes the
 omitted-factor default from 1 to 0; it must fail golden parity, then pass
-after source restoration. G430 genetic *advancement* remains deliberately
-PENDING_PORT (3 legacy cases) and is not part of G424.
+after source restoration. G430 genetic *advancement* was separate from G424 and is now implemented
+and verified in PR #71; G431 successor creation remains PENDING_PORT.
 
 ```sh
 godot --headless --path game --script res://tests/genetics_runner.gd
@@ -200,3 +200,29 @@ godot --headless --path game --script res://tests/golden_fixture_runner.gd
 
 G426+ health, soulbound, affection, Pet composition, persistence and
 the full Animal Core remain unverified until their explicit milestones.
+
+
+## G430 — deterministic genetic potential advancement (verified)
+
+`MaricaGenetics.advance_potential(potential, seed)` implements SPEC-004 G430
+from legacy PR #26, through the repository's migration contract. The seed is a
+finite nonnegative integer; lexicographically sorted trait keys rotate
+cyclically by seed modulo trait count. The first unsaturated trait gains +0.05
+without exceeding 1. Fully saturated maps remain unchanged. Input maps are
+never mutated.
+
+Fifteen source-linked `genetics.advance_potential` golden cases now execute
+in Godot as `ACTIVE_PARITY` (224 total across the domain); two successor
+seed fixtures remain `G431 PENDING_PORT`. Independent regressions cover
+repeatability, invalid seeds, saturation and mutation-resistant snapshots.
+CI injects the known-bad advancement-cap inversion, requires fixture failure,
+then restores the original source and reruns to PASS.
+
+```sh
+godot --headless --path game --script res://tests/genetics_runner.gd
+godot --headless --path game --script res://tests/golden_fixture_runner.gd
+```
+
+PR #71 exact head `fb2b8eb` and master post-merge `0f9239a` passed Godot CI,
+Validate Skills and Roblox CI. No successor creation (G431), persistence
+(G440+), gameplay-scene or Web export (G500+) acceptance is implied.
