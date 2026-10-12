@@ -652,7 +652,7 @@ jobs:
           grep -Fq 'MARICA_G424_GENETICS_PASS' "$RUNNER_TEMP/g430-genetics.log"
           grep -Fq 'MARICA_G430_GENETIC_ADVANCEMENT_PARITY_PASS cases=15' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'MARICA_G431_SUCCESSION_PARITY_PASS cases=14' "$RUNNER_TEMP/godot-g416-fixtures.log"
-          grep -Fq 'verified=224' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'verified=238' "$RUNNER_TEMP/godot-g416-fixtures.log"
 
       - name: G430 advancement cap mutation proof (GOOD > BAD > RESTORE)
         shell: bash
