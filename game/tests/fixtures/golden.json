@@ -2776,8 +2776,8 @@
           "id": "seed-sum-overflow-rejected",
           "invariant": "integer seed arithmetic refuses lossy overflow",
           "input": {
-            "successionSeed": 9007199254740991,
-            "ordinal": 2
+            "successionSeed": 9007199254740000,
+            "ordinal": 1000
           },
           "expected_error": "Derived genetic seed exceeds safe integer range"
         }
