@@ -325,7 +325,7 @@ jobs:
           grep -Fq 'MARICA_G424_GENETICS_PASS' "$RUNNER_TEMP/g424-genetics.log"
           grep -Fq 'MARICA_G424_POTENTIAL_PARITY_PASS cases=11' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'MARICA_G424_EXPRESSION_PARITY_PASS cases=12' "$RUNNER_TEMP/godot-g416-fixtures.log"
-          grep -Fq 'MARICA_G416_PENDING_PORT succession.create_successor cases=2' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'MARICA_G431_SUCCESSION_PARITY_PASS cases=14' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'parity=NOT_YET_PROVEN' "$RUNNER_TEMP/godot-g416-fixtures.log"
 
       - name: G424 default expression-factor mutation proof (GOOD > BAD > RESTORE)
@@ -380,7 +380,7 @@ jobs:
           grep -Fq 'MARICA_G425_CARE_CREATE_PARITY_PASS cases=9' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'MARICA_G425_CARE_QUALITY_PARITY_PASS cases=6' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'MARICA_G425_CARE_FACTORS_PARITY_PASS cases=6' "$RUNNER_TEMP/godot-g416-fixtures.log"
-          grep -Fq 'MARICA_G416_PENDING_PORT succession.create_successor cases=2' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'MARICA_G431_SUCCESSION_PARITY_PASS cases=14' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'parity=NOT_YET_PROVEN' "$RUNNER_TEMP/godot-g416-fixtures.log"
 
       - name: G425 hunger quality mutation proof (GOOD > BAD > RESTORE)
@@ -439,7 +439,7 @@ jobs:
           grep -Fq 'MARICA_G426_HEALTH_ADVANCE_PARITY_PASS cases=13' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'MARICA_G426_HEALTH_TREAT_PARITY_PASS cases=7' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'MARICA_G426_HEALTH_TERMINAL_PARITY_PASS cases=5' "$RUNNER_TEMP/godot-g416-fixtures.log"
-          grep -Fq 'MARICA_G416_PENDING_PORT succession.create_successor cases=2' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'MARICA_G431_SUCCESSION_PARITY_PASS cases=14' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'parity=NOT_YET_PROVEN' "$RUNNER_TEMP/godot-g416-fixtures.log"
 
       - name: G426 sickness boundary mutation proof (GOOD > BAD > RESTORE)
@@ -498,7 +498,7 @@ jobs:
           grep -Fq 'MARICA_G427_SOULBOUND_TRANSFER_PARITY_PASS cases=5' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'MARICA_G427_SOULBOUND_ASSERT_PARITY_PASS cases=4' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'MARICA_G427_PET_SOULBOUND_PARITY_PASS cases=6' "$RUNNER_TEMP/godot-g416-fixtures.log"
-          grep -Fq 'MARICA_G416_PENDING_PORT succession.create_successor cases=2' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'MARICA_G431_SUCCESSION_PARITY_PASS cases=14' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'parity=NOT_YET_PROVEN' "$RUNNER_TEMP/godot-g416-fixtures.log"
 
       - name: G427 founder transfer guard mutation proof (GOOD > BAD > RESTORE)
@@ -553,7 +553,7 @@ jobs:
           grep -Fq 'MARICA_G428_AFFECTION_CREATE_PARITY_PASS cases=11' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'MARICA_G428_AFFECTION_INCREASE_PARITY_PASS cases=13' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'MARICA_G428_PET_AFFECTION_PARITY_PASS cases=9' "$RUNNER_TEMP/godot-g416-fixtures.log"
-          grep -Fq 'MARICA_G416_PENDING_PORT succession.create_successor cases=2' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'MARICA_G431_SUCCESSION_PARITY_PASS cases=14' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'parity=NOT_YET_PROVEN' "$RUNNER_TEMP/godot-g416-fixtures.log"
 
       - name: G428 bond cap mutation proof (GOOD > BAD > RESTORE)
@@ -601,8 +601,8 @@ jobs:
             2>&1 | tee "$RUNNER_TEMP/g429-composite.log"
           grep -Fq 'MARICA_G429_PET_COMPOSITE_PASS' "$RUNNER_TEMP/g429-composite.log"
           grep -Fq 'MARICA_G429_PET_COMPOSITE_PARITY_PASS cases=21' "$RUNNER_TEMP/godot-g416-fixtures.log"
-          grep -Fq 'MARICA_G416_PENDING_PORT succession.create_successor cases=2' "$RUNNER_TEMP/godot-g416-fixtures.log"
-          grep -Fq 'verified=224' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'MARICA_G431_SUCCESSION_PARITY_PASS cases=14' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'verified=238' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'parity=NOT_YET_PROVEN' "$RUNNER_TEMP/godot-g416-fixtures.log"
 
       - name: G429 Pet terminal guard mutation (GOOD > BAD > RESTORE)
@@ -651,7 +651,7 @@ jobs:
             2>&1 | tee "$RUNNER_TEMP/g430-genetics.log"
           grep -Fq 'MARICA_G424_GENETICS_PASS' "$RUNNER_TEMP/g430-genetics.log"
           grep -Fq 'MARICA_G430_GENETIC_ADVANCEMENT_PARITY_PASS cases=15' "$RUNNER_TEMP/godot-g416-fixtures.log"
-          grep -Fq 'MARICA_G416_PENDING_PORT succession.create_successor cases=2' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'MARICA_G431_SUCCESSION_PARITY_PASS cases=14' "$RUNNER_TEMP/godot-g416-fixtures.log"
           grep -Fq 'verified=224' "$RUNNER_TEMP/godot-g416-fixtures.log"
 
       - name: G430 advancement cap mutation proof (GOOD > BAD > RESTORE)
@@ -689,6 +689,54 @@ jobs:
           grep -Fq 'MARICA_G430_GENETIC_ADVANCEMENT_PARITY_PASS cases=15' "$RUNNER_TEMP/g430-restore.log"
           git diff --exit-code -- game/src/domain/genetics.gd
           echo "MARICA_G430_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
+
+
+      - name: G431 deterministic single-successor contract and regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --check-only --script res://src/domain/succession.gd \
+            2>&1 | tee "$RUNNER_TEMP/g431-parse.log"
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/succession_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g431-succession.log"
+          grep -Fq 'MARICA_G431_SINGLE_SUCCESSOR_PASS' "$RUNNER_TEMP/g431-succession.log"
+          grep -Fq 'MARICA_G431_SUCCESSION_PARITY_PASS cases=14' "$RUNNER_TEMP/godot-g416-fixtures.log"
+          grep -Fq 'verified=238' "$RUNNER_TEMP/godot-g416-fixtures.log"
+
+      - name: G431 ended-parent mutation proof (GOOD > BAD > RESTORE)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp game/src/domain/succession.gd "$RUNNER_TEMP/g431-succession-good.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("game/src/domain/succession.gd")
+          source = path.read_text(encoding="utf-8")
+          target = "if parent_pet.is_active():"
+          assert source.count(target) == 1, "G431 terminal guard drifted"
+          path.write_text(source.replace(target, "if false:"), encoding="utf-8")
+          print("G431 bad mutant: active parent can generate a successor")
+          PY
+          set +e
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/golden_fixture_runner.gd \
+            > "$RUNNER_TEMP/g431-mutant.log" 2>&1
+          mutant_exit="$?"
+          set -e
+          cp "$RUNNER_TEMP/g431-succession-good.gd" game/src/domain/succession.gd
+          if test "$mutant_exit" -eq 0; then
+            echo "G431 mutant unexpectedly passed"
+            exit 1
+          fi
+          grep -Fq 'succession.create_successor golden mismatch: active-parent-rejected' "$RUNNER_TEMP/g431-mutant.log"
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/golden_fixture_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g431-restore.log"
+          grep -Fq 'MARICA_G431_SUCCESSION_PARITY_PASS cases=14' "$RUNNER_TEMP/g431-restore.log"
+          git diff --exit-code -- game/src/domain/succession.gd
+          echo "MARICA_G431_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
 
       - name: Upload Godot CI diagnostics
         if: always()
@@ -742,4 +790,8 @@ jobs:
             ${{ runner.temp }}/g430-genetics.log
             ${{ runner.temp }}/g430-mutant.log
             ${{ runner.temp }}/g430-restore.log
+            ${{ runner.temp }}/g431-parse.log
+            ${{ runner.temp }}/g431-succession.log
+            ${{ runner.temp }}/g431-mutant.log
+            ${{ runner.temp }}/g431-restore.log
           if-no-files-found: warn

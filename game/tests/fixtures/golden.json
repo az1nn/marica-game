@@ -2194,12 +2194,12 @@
     },
     {
       "id": "succession.create_successor",
-      "status": "PENDING_PORT",
+      "status": "ACTIVE_PARITY",
       "milestone": "G431",
       "source": "docs/migration/ROBLOX-TO-GODOT-CONTRACT-MAP.md",
       "cases": [
         {
-          "id": "pending-sibling-one",
+          "id": "sibling-one",
           "invariant": "ordinal one derives same genetic seed",
           "input": {
             "successionSeed": 40,
@@ -2210,7 +2210,7 @@
           }
         },
         {
-          "id": "pending-sibling-two",
+          "id": "sibling-two",
           "invariant": "ordinal two derives next genetic seed",
           "input": {
             "successionSeed": 40,
@@ -2219,8 +2219,570 @@
           "expected": {
             "seed": 41
           }
+        },
+        {
+          "id": "ended-founder-ordinal-one",
+          "invariant": "same ended founder and inputs produce identical successor with resilience advancement",
+          "input": {
+            "parent": {
+              "id": "pet-founder-001",
+              "pedigree": {
+                "lineageId": "lineage-001",
+                "generation": 0,
+                "founderPetId": "pet-founder-001",
+                "parentPetIds": []
+              },
+              "potential": {
+                "resilience": 0.4,
+                "size": 0.5
+              },
+              "lifecycleActions": [
+                {
+                  "op": "endLife",
+                  "reason": "health"
+                }
+              ],
+              "soulbound": true,
+              "affection": 0.8,
+              "care": {
+                "hunger": 0.85
+              },
+              "health": {
+                "neglectHours": 72,
+                "untreatedHours": 12
+              }
+            },
+            "successorId": "pet-child-001",
+            "successionSeed": 0,
+            "ordinal": 1
+          },
+          "expected": {
+            "id": "pet-child-001",
+            "pedigree": {
+              "lineageId": "lineage-001",
+              "generation": 1,
+              "founderPetId": "pet-founder-001",
+              "parentPetIds": [
+                "pet-founder-001"
+              ]
+            },
+            "lifecycle": {
+              "stage": "juvenile",
+              "status": "active"
+            },
+            "geneticPotential": {
+              "resilience": 0.45,
+              "size": 0.5
+            },
+            "expressedTraits": {
+              "resilience": 0.45,
+              "size": 0.5
+            },
+            "careState": {
+              "hunger": 0,
+              "hygiene": 1,
+              "affection": 1,
+              "energy": 1
+            },
+            "healthState": {
+              "status": "healthy",
+              "neglectHours": 0,
+              "untreatedHours": 0
+            },
+            "soulbound": false,
+            "affection": 0
+          }
+        },
+        {
+          "id": "ended-founder-ordinal-two",
+          "invariant": "successor ordinal rotates deterministic trait selection",
+          "input": {
+            "parent": {
+              "id": "pet-founder-001",
+              "pedigree": {
+                "lineageId": "lineage-001",
+                "generation": 0,
+                "founderPetId": "pet-founder-001",
+                "parentPetIds": []
+              },
+              "potential": {
+                "resilience": 0.4,
+                "size": 0.5
+              },
+              "lifecycleActions": [
+                {
+                  "op": "endLife",
+                  "reason": "health"
+                }
+              ],
+              "soulbound": true,
+              "affection": 0.8,
+              "care": {
+                "hunger": 0.85
+              },
+              "health": {
+                "neglectHours": 72,
+                "untreatedHours": 12
+              }
+            },
+            "successorId": "pet-child-002",
+            "successionSeed": 0,
+            "ordinal": 2
+          },
+          "expected": {
+            "id": "pet-child-002",
+            "pedigree": {
+              "lineageId": "lineage-001",
+              "generation": 1,
+              "founderPetId": "pet-founder-001",
+              "parentPetIds": [
+                "pet-founder-001"
+              ]
+            },
+            "lifecycle": {
+              "stage": "juvenile",
+              "status": "active"
+            },
+            "geneticPotential": {
+              "resilience": 0.4,
+              "size": 0.55
+            },
+            "expressedTraits": {
+              "resilience": 0.4,
+              "size": 0.55
+            },
+            "careState": {
+              "hunger": 0,
+              "hygiene": 1,
+              "affection": 1,
+              "energy": 1
+            },
+            "healthState": {
+              "status": "healthy",
+              "neglectHours": 0,
+              "untreatedHours": 0
+            },
+            "soulbound": false,
+            "affection": 0
+          }
+        },
+        {
+          "id": "descendant-lineage",
+          "invariant": "generation advances, founder lineage and direct parent remain explicit",
+          "input": {
+            "parent": {
+              "id": "pet-parent-001",
+              "pedigree": {
+                "lineageId": "lineage-001",
+                "generation": 1,
+                "founderPetId": "pet-founder-001",
+                "parentPetIds": [
+                  "pet-parent-001"
+                ]
+              },
+              "potential": {
+                "resilience": 0.4,
+                "size": 0.5
+              },
+              "lifecycleActions": [
+                {
+                  "op": "endLife",
+                  "reason": "health"
+                }
+              ],
+              "soulbound": false,
+              "affection": 0.25,
+              "care": {
+                "hunger": 0.85
+              },
+              "health": {
+                "neglectHours": 72,
+                "untreatedHours": 12
+              }
+            },
+            "successorId": "pet-grandchild",
+            "successionSeed": 40,
+            "ordinal": 2
+          },
+          "expected": {
+            "id": "pet-grandchild",
+            "pedigree": {
+              "lineageId": "lineage-001",
+              "generation": 2,
+              "founderPetId": "pet-founder-001",
+              "parentPetIds": [
+                "pet-parent-001"
+              ]
+            },
+            "lifecycle": {
+              "stage": "juvenile",
+              "status": "active"
+            },
+            "geneticPotential": {
+              "resilience": 0.4,
+              "size": 0.55
+            },
+            "expressedTraits": {
+              "resilience": 0.4,
+              "size": 0.55
+            },
+            "careState": {
+              "hunger": 0,
+              "hygiene": 1,
+              "affection": 1,
+              "energy": 1
+            },
+            "healthState": {
+              "status": "healthy",
+              "neglectHours": 0,
+              "untreatedHours": 0
+            },
+            "soulbound": false,
+            "affection": 0
+          }
+        },
+        {
+          "id": "saturated-genome",
+          "invariant": "all-saturated potential remains equal without mutating parent",
+          "input": {
+            "parent": {
+              "id": "pet-founder-001",
+              "pedigree": {
+                "lineageId": "lineage-001",
+                "generation": 0,
+                "founderPetId": "pet-founder-001",
+                "parentPetIds": []
+              },
+              "potential": {
+                "resilience": 1,
+                "size": 1
+              },
+              "lifecycleActions": [
+                {
+                  "op": "endLife",
+                  "reason": "health"
+                }
+              ],
+              "soulbound": true,
+              "affection": 0.8,
+              "care": {
+                "hunger": 0.85
+              },
+              "health": {
+                "neglectHours": 72,
+                "untreatedHours": 12
+              }
+            },
+            "successorId": "pet-saturated",
+            "successionSeed": 0,
+            "ordinal": 1
+          },
+          "expected": {
+            "id": "pet-saturated",
+            "pedigree": {
+              "lineageId": "lineage-001",
+              "generation": 1,
+              "founderPetId": "pet-founder-001",
+              "parentPetIds": [
+                "pet-founder-001"
+              ]
+            },
+            "lifecycle": {
+              "stage": "juvenile",
+              "status": "active"
+            },
+            "geneticPotential": {
+              "resilience": 1,
+              "size": 1
+            },
+            "expressedTraits": {
+              "resilience": 1,
+              "size": 1
+            },
+            "careState": {
+              "hunger": 0,
+              "hygiene": 1,
+              "affection": 1,
+              "energy": 1
+            },
+            "healthState": {
+              "status": "healthy",
+              "neglectHours": 0,
+              "untreatedHours": 0
+            },
+            "soulbound": false,
+            "affection": 0
+          }
+        },
+        {
+          "id": "active-parent-rejected",
+          "invariant": "parent must already be terminal",
+          "input": {
+            "parent": {
+              "id": "pet-founder-001",
+              "pedigree": {
+                "lineageId": "lineage-001",
+                "generation": 0,
+                "founderPetId": "pet-founder-001",
+                "parentPetIds": []
+              },
+              "potential": {
+                "resilience": 0.4,
+                "size": 0.5
+              },
+              "lifecycleActions": [],
+              "soulbound": true,
+              "affection": 0.8,
+              "care": {
+                "hunger": 0.85
+              },
+              "health": {
+                "neglectHours": 72,
+                "untreatedHours": 12
+              }
+            },
+            "successorId": "pet-child-001",
+            "successionSeed": 0,
+            "ordinal": 1
+          },
+          "expected_error": "Successor can only be generated from an ended pet"
+        },
+        {
+          "id": "negative-seed-rejected",
+          "invariant": "succession seed nonnegative",
+          "input": {
+            "parent": {
+              "id": "pet-founder-001",
+              "pedigree": {
+                "lineageId": "lineage-001",
+                "generation": 0,
+                "founderPetId": "pet-founder-001",
+                "parentPetIds": []
+              },
+              "potential": {
+                "resilience": 0.4,
+                "size": 0.5
+              },
+              "lifecycleActions": [
+                {
+                  "op": "endLife",
+                  "reason": "health"
+                }
+              ],
+              "soulbound": true,
+              "affection": 0.8,
+              "care": {
+                "hunger": 0.85
+              },
+              "health": {
+                "neglectHours": 72,
+                "untreatedHours": 12
+              }
+            },
+            "successorId": "pet-child-001",
+            "successionSeed": -1,
+            "ordinal": 1
+          },
+          "expected_error": "Succession seed must be a non-negative integer"
+        },
+        {
+          "id": "fractional-seed-rejected",
+          "invariant": "succession seed integral",
+          "input": {
+            "parent": {
+              "id": "pet-founder-001",
+              "pedigree": {
+                "lineageId": "lineage-001",
+                "generation": 0,
+                "founderPetId": "pet-founder-001",
+                "parentPetIds": []
+              },
+              "potential": {
+                "resilience": 0.4,
+                "size": 0.5
+              },
+              "lifecycleActions": [
+                {
+                  "op": "endLife",
+                  "reason": "health"
+                }
+              ],
+              "soulbound": true,
+              "affection": 0.8,
+              "care": {
+                "hunger": 0.85
+              },
+              "health": {
+                "neglectHours": 72,
+                "untreatedHours": 12
+              }
+            },
+            "successorId": "pet-child-001",
+            "successionSeed": 0.5,
+            "ordinal": 1
+          },
+          "expected_error": "Succession seed must be a non-negative integer"
+        },
+        {
+          "id": "zero-ordinal-rejected",
+          "invariant": "successor ordinal starts at one",
+          "input": {
+            "parent": {
+              "id": "pet-founder-001",
+              "pedigree": {
+                "lineageId": "lineage-001",
+                "generation": 0,
+                "founderPetId": "pet-founder-001",
+                "parentPetIds": []
+              },
+              "potential": {
+                "resilience": 0.4,
+                "size": 0.5
+              },
+              "lifecycleActions": [
+                {
+                  "op": "endLife",
+                  "reason": "health"
+                }
+              ],
+              "soulbound": true,
+              "affection": 0.8,
+              "care": {
+                "hunger": 0.85
+              },
+              "health": {
+                "neglectHours": 72,
+                "untreatedHours": 12
+              }
+            },
+            "successorId": "pet-child-001",
+            "successionSeed": 0,
+            "ordinal": 0
+          },
+          "expected_error": "Successor ordinal must be greater than zero"
+        },
+        {
+          "id": "fractional-ordinal-rejected",
+          "invariant": "successor ordinal integral",
+          "input": {
+            "parent": {
+              "id": "pet-founder-001",
+              "pedigree": {
+                "lineageId": "lineage-001",
+                "generation": 0,
+                "founderPetId": "pet-founder-001",
+                "parentPetIds": []
+              },
+              "potential": {
+                "resilience": 0.4,
+                "size": 0.5
+              },
+              "lifecycleActions": [
+                {
+                  "op": "endLife",
+                  "reason": "health"
+                }
+              ],
+              "soulbound": true,
+              "affection": 0.8,
+              "care": {
+                "hunger": 0.85
+              },
+              "health": {
+                "neglectHours": 72,
+                "untreatedHours": 12
+              }
+            },
+            "successorId": "pet-child-001",
+            "successionSeed": 0,
+            "ordinal": 1.5
+          },
+          "expected_error": "Successor ordinal must be a non-negative integer"
+        },
+        {
+          "id": "invalid-child-id-rejected",
+          "invariant": "child identity validated",
+          "input": {
+            "parent": {
+              "id": "pet-founder-001",
+              "pedigree": {
+                "lineageId": "lineage-001",
+                "generation": 0,
+                "founderPetId": "pet-founder-001",
+                "parentPetIds": []
+              },
+              "potential": {
+                "resilience": 0.4,
+                "size": 0.5
+              },
+              "lifecycleActions": [
+                {
+                  "op": "endLife",
+                  "reason": "health"
+                }
+              ],
+              "soulbound": true,
+              "affection": 0.8,
+              "care": {
+                "hunger": 0.85
+              },
+              "health": {
+                "neglectHours": 72,
+                "untreatedHours": 12
+              }
+            },
+            "successorId": "  ",
+            "successionSeed": 0,
+            "ordinal": 1
+          },
+          "expected_error": "PetId must not be empty"
+        },
+        {
+          "id": "empty-parent-genome-rejected",
+          "invariant": "genetic advancement needs nonempty parent genome",
+          "input": {
+            "parent": {
+              "id": "pet-founder-001",
+              "pedigree": {
+                "lineageId": "lineage-001",
+                "generation": 0,
+                "founderPetId": "pet-founder-001",
+                "parentPetIds": []
+              },
+              "potential": {},
+              "lifecycleActions": [
+                {
+                  "op": "endLife",
+                  "reason": "health"
+                }
+              ],
+              "soulbound": true,
+              "affection": 0.8,
+              "care": {
+                "hunger": 0.85
+              },
+              "health": {
+                "neglectHours": 72,
+                "untreatedHours": 12
+              }
+            },
+            "successorId": "pet-child-001",
+            "successionSeed": 0,
+            "ordinal": 1
+          },
+          "expected_error": "Genetic potential must contain at least one trait for guaranteed advancement"
+        },
+        {
+          "id": "seed-sum-overflow-rejected",
+          "invariant": "integer seed arithmetic refuses lossy overflow",
+          "input": {
+            "successionSeed": 9007199254740991,
+            "ordinal": 2
+          },
+          "expected_error": "Derived genetic seed exceeds safe integer range"
         }
-      ]
+      ],
+      "adapter": "game/src/domain/succession.gd"
     },
     {
       "id": "soulbound.create",
