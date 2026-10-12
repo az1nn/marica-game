@@ -131,9 +131,7 @@ func _rejection_contract() -> bool:
         {"parent": parent, "id": "   ", "label": "invalid child id"},
     ]
     for rejected in invalid:
-        if SUCCESSION.create_successor(rejected["parent"], rejected["id"], 0, 1).get(
-            "ok", false
-        ):
+        if SUCCESSION.create_successor(rejected["parent"], rejected["id"], 0, 1).get("ok", false):
             return _fail(str(rejected["label"]) + " accepted")
     return true
 
