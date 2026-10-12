@@ -294,15 +294,22 @@ func _run_succession(case_input: Dictionary) -> Dictionary:
     if not prepared.get("ok", false):
         return {"error": prepared.get("error", "")}
     var created: Dictionary = PET.create_composite(
-        parent_data.get("id"), parent_data.get("pedigree"), prepared["lifecycle"],
-        parent_data.get("potential"), parent_data.get("care"), parent_data.get("health"),
-        parent_data.get("soulbound"), parent_data.get("affection")
+        parent_data.get("id"),
+        parent_data.get("pedigree"),
+        prepared["lifecycle"],
+        parent_data.get("potential"),
+        parent_data.get("care"),
+        parent_data.get("health"),
+        parent_data.get("soulbound"),
+        parent_data.get("affection")
     )
     if not created.get("ok", false):
         return {"error": created.get("error", "")}
     var result: Dictionary = SUCCESSION.create_successor(
-        created["pet"], case_input.get("successorId"),
-        case_input.get("successionSeed"), case_input.get("ordinal")
+        created["pet"],
+        case_input.get("successorId"),
+        case_input.get("successionSeed"),
+        case_input.get("ordinal")
     )
     if not result.get("ok", false):
         return {"error": result.get("error", "")}

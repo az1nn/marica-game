@@ -106,13 +106,17 @@ func _rejection_contract() -> bool:
     if parent == null:
         return _fail("ended parent for validation")
     var active: Dictionary = PET.create_composite(
-        "pet-active", {"lineageId": "l", "generation": 0, "founderPetId": "pet-active"},
-        null, {"size": 0.5}
+        "pet-active",
+        {"lineageId": "l", "generation": 0, "founderPetId": "pet-active"},
+        null,
+        {"size": 0.5}
     )
     var shell: Dictionary = PET.create("pet-shell")
     var empty_potential: Dictionary = PET.create_composite(
-        "pet-empty", {"lineageId": "l", "generation": 0, "founderPetId": "pet-empty"},
-        LIFECYCLE.end_life(LIFECYCLE.start(), "health")["lifecycle"], {}
+        "pet-empty",
+        {"lineageId": "l", "generation": 0, "founderPetId": "pet-empty"},
+        LIFECYCLE.end_life(LIFECYCLE.start(), "health")["lifecycle"],
+        {}
     )
     if (
         not active.get("ok", false)
