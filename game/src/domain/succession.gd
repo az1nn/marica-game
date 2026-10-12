@@ -15,10 +15,11 @@ static func derive_genetic_seed(succession_seed: Variant, successor_ordinal: Var
     var ordinal: Dictionary = _integer(successor_ordinal, "Successor ordinal", true)
     if not ordinal.get("ok", false):
         return ordinal
-    var derived: float = float(base["value"]) + float(ordinal["value"]) - 1.0
-    if is_inf(derived) or derived > MAX_SAFE_INTEGER:
+    # Reject before adding: rounding at 2^53 can hide a one-unit overflow.
+    var offset: float = float(ordinal["value"]) - 1.0
+    if float(base["value"]) > MAX_SAFE_INTEGER - offset:
         return {"ok": false, "error": "Derived genetic seed exceeds safe integer range"}
-    return {"ok": true, "seed": int(derived)}
+    return {"ok": true, "seed": int(base["value"]) + int(ordinal["value"]) - 1}
 
 
 static func create_successor(
