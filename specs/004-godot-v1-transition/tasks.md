@@ -45,8 +45,8 @@
 
 ## Phase D — Succession P0
 
-- [x] **G430** Portar avanço genético determinístico do contrato PR #26 (seed inteira finita, rotação lexicográfica, incremento +0,05, fallback cíclico, teto 1, snapshot detached). PR #71: 15 novos casos ACTIVE_PARITY (224 no total), regressão independente e GOOD → BAD → RESTORE; Godot CI / Validate Skills / Roblox CI PASS em PR@fb2b8eb e master@0f9239a. G431 sucessoras continua PENDING_PORT.
-- [ ] **G431** Implementar geração determinística de sucessora usando o contrato de PR #34.
+- [x] **G430** Portar avanço genético determinístico do contrato PR #26 (seed inteira finita, rotação lexicográfica, incremento +0,05, fallback cíclico, teto 1, snapshot detached). PR #71: 15 novos casos ACTIVE_PARITY (224 no total), regressão independente e GOOD → BAD → RESTORE; Godot CI / Validate Skills / Roblox CI PASS em PR@fb2b8eb e master@0f9239a. G431 implementado separadamente no PR #73; G432 duas sucessoras segue pendente.
+- [x] **G431** Geração determinística de **uma** sucessora por chamada (PR #73, legado PR #34): pai terminal obrigatório; seed+ordinal validado; avanço genético G430, mesma lineage/founder, geração+1 e pai direto; juvenile/active, care/health fresh, affection zero, soulbound false; snapshots independentes. **14 casos ACTIVE_PARITY** (238 total), regressão independente, mutation GOOD→BAD→RESTORE, CI Godot/skills/Roblox PASS em PR@1afe3c7d e master@0b116a10. Exatamente duas sucessoras e idempotência permanecem G432/G433.
 - [ ] **G432** Garantir exatamente duas sucessoras por encerramento.
 - [ ] **G433** Tornar end-of-life/sucessão idempotente.
 - [ ] **G434** Preservar pedigree na geração seguinte.
