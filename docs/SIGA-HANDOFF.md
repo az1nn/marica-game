@@ -3,25 +3,25 @@ CAVEMAN HANDOFF v1
 APP: Maricá Game
 WORKSTREAM: SPEC-004 · Phase D Succession P0
 MODE: ADVANCE
-BASE: master@0f9239a35b0ea00f5763e68216e1f2f9ce9bb1bf
-PR: #71 MERGED (exact head fb2b8eb2d3c29f8406fed13408533cde8a8eaad7)
+BASE: master@0b116a10af221643f006096ae4e9105c19d3d1db
+PR: #73 MERGED (exact feature head 1afe3c7d3454f55542cf1c0c8b7d29692dea82d1)
 
 DONE:
-- G430: typed Godot deterministic genetic advancement, modulo seed, lexicographically sorted cyclic trait selection, +0.05 capped gain, full saturation no-op, detached inputs/outputs.
-- +15 executable G430 golden parity cases = 224 ACTIVE_PARITY; 4 harness selftests; G431 two successor-seed fixtures PENDING_PORT.
-- Independent regression, source-linked fixture schema/provenance and P0 cap GOOD → BAD → RESTORE mutation proof.
+- G431 pure `MaricaSuccession.derive_genetic_seed/create_successor`: terminal composite parent, validated seed+ordinal, G430 potential, same lineage/founder and generation+1/direct parent; fresh juvenile care/health, affection 0, unbound.
+- +14 source-linked G431 ACTIVE_PARITY cases = 238 total; 4 harness selftests, zero remaining G431 PENDING_PORT cases.
+- Independent Godot regression and P0 terminal guard GOOD -> BAD -> RESTORE; deterministic/immutable snapshots; representable input seed-overflow coverage.
 
 VERIFY:
-- PR #71 exact head: Godot CI PASS, Validate Skills PASS, Roblox CI PASS; nonrequired Roblox Behavioral SKIPPED.
-- Guarded squash merge master@0f9239a35b0ea00f5763e68216e1f2f9ce9bb1bf; all three master post-merge workflows PASS including G430 mutation and previous domain regression gates.
-- No G431 actual successor, G432 exactly two, G433 idempotence, G440 save, G450 scene or G500 Web export acceptance.
+- Feature PR #73 exact head @1afe3c7d: Godot CI, Validate skills, Roblox CI PASS; nonrequired Roblox Behavioral SKIPPED.
+- Guarded squash merge master@0b116a10; same three required post-merge master checks PASS.
+- No G432 exactly-two, G433 idempotency, G434 extended pedigree, G440 save, G450 gameplay scene or G500 web-export claim.
 
 CONCURRENCY:
-- G430 session claim CLOSED; no overlapping PR at guarded merge.
-- ARTIST accepted concepts remain distinct from production sprites / runtime evidence.
+- G431 session claim CLOSED after guarded merge; no open competing PR when verified.
+- ARTIST approved concepts != Godot sprite/runtime acceptance.
 
 WAIT / BLOCKER:
-- No human gate for G431. Vercel deployment success does not prove Godot HTML5 export or playable Web preview.
+- None for next G432. No human visual gate for pure domain work. Vercel preview is not Godot HTML5 export evidence.
 
 NEXT:
-G431 — implement deterministic single-successor creation from legacy Luau PR #34, explicitly preserving G430 genetic potential semantics and detached pedigree/state; add executable golden parity and independent regression/mutation.
+G432 — compose exactly two deterministic successors from the ended parent using G431 primitive, distinct ordinals/IDs, with independent regression and mutation proof; keep idempotency separately G433.
