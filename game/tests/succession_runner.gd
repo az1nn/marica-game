@@ -124,14 +124,17 @@ func _rejection_contract() -> bool:
         or not empty_potential.get("ok", false)
     ):
         return _fail("rejection setup")
-    if SUCCESSION.create_successor(active["pet"], "child", 0, 1).get("ok", false):
-        return _fail("active parent accepted")
-    if SUCCESSION.create_successor(shell["pet"], "child", 0, 1).get("ok", false):
-        return _fail("isolated shell accepted")
-    if SUCCESSION.create_successor(empty_potential["pet"], "child", 0, 1).get("ok", false):
-        return _fail("empty potential accepted")
-    if SUCCESSION.create_successor(parent, "   ", 0, 1).get("ok", false):
-        return _fail("invalid child id accepted")
+    var invalid: Array = [
+        {"parent": active["pet"], "id": "child", "label": "active parent"},
+        {"parent": shell["pet"], "id": "child", "label": "isolated shell"},
+        {"parent": empty_potential["pet"], "id": "child", "label": "empty potential"},
+        {"parent": parent, "id": "   ", "label": "invalid child id"},
+    ]
+    for rejected in invalid:
+        if SUCCESSION.create_successor(rejected["parent"], rejected["id"], 0, 1).get(
+            "ok", false
+        ):
+            return _fail(str(rejected["label"]) + " accepted")
     return true
 
 
