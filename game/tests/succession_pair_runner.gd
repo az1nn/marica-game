@@ -58,6 +58,12 @@ func _pair_contract() -> bool:
     var replay: Array = repeated["successors"]
     if children.size() != 2 or replay.size() != 2:
         return _fail("expected exactly two successors")
+    return _verify_pair_data(parent, before, ids, children, replay)
+
+
+func _verify_pair_data(
+    parent: MaricaPet, before: Dictionary, ids: Array, children: Array, replay: Array
+) -> bool:
     if children[0] == children[1] or children[0] == replay[0]:
         return _fail("successor instances were shared")
     var first: Dictionary = children[0].to_snapshot()
