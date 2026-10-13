@@ -70,7 +70,8 @@ func _once_only_contract() -> bool:
         return _fail("replay identity, cardinality, or parent mutation")
     ids[0] = "input-mutated"
     replay.clear()
-    pair[0].to_snapshot()["geneticPotential"]["size"] = 0.0
+    var tampered: Dictionary = pair[0].to_snapshot()
+    tampered["geneticPotential"]["size"] = 0.0
     var third: Dictionary = event.trigger_once(parent, ["pet-child-001", "pet-child-002"], 10)
     if (
         not third.get("ok", false)
