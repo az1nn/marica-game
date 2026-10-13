@@ -34,6 +34,6 @@ The isolated source visibly matches the accepted **character identity and overal
 1. ARCH V201/V201a: Godot minimal sprite-import prototype, texture filtering/pixel snapping, alpha-edge check, frame/image scale and responsive reading at intended mobile/desktop zoom.
 2. SCENE: one isolated founder-dog R2 sample scene only after ARCH decision.
 3. LENTE: exact-head runtime captures/A-B; ART independently approves or requests changes.
-4. SIGA: reconciling PR #77 with concurrent changes, CI and ownership. Godot CI failing at G424 is **not** a valid ART pass or automatic ART rejection; keep PR draft until gates green.
+4. SIGA: source/ledger branch reconciled into verified G433 `master` with no changes to Godot tests or V4 binary. At `25656204`, exact-head Godot CI, Validate skills, Roblox CI and Web Preview Contract PASS. Keep PR draft while ARCH V201/V201a, SCENE and LENTE gates remain pending. CI PASS is not an ART runtime pass.
 
 **No runtime image capture, import validation, gameplay integration, animation sheet, release or deployment PASS is claimed.**

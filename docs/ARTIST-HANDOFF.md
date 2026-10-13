@@ -18,8 +18,8 @@ Runtime: Godot V1, single-player/offline-first; gameplay priority Animals → Pl
 2. ARCH: validate SPEC-005 V201/V201a Godot logical scale, pixel grid, filtering, alpha/import pipeline and resource contract via prototype.
 3. SCENE: implement one isolated animal-first Godot visual slice only after source/ARCH checks.
 4. LENTE: capture exact-head mobile/desktop runtime A/B; independent ART review.
-5. SIGA: reconcile ownership and exact-head CI before merge. PR #77 Godot CI failed on the G424 parity step at head `3a2d4009`; do not waive or classify this as a visual failure without proof.
+5. SIGA: the stale golden fixture branch failure at `742a06cb` was resolved by preserving both parents in merge commit `25656204` (G433 `master@c0928893`), without changing tests or art. All required exact-head checks at `25656204` PASS (Godot CI, Validate skills, Roblox CI, Web Preview Contract). **ARTIST PR remains draft for the independent ARCH V201/V201a, SCENE and LENTE gates; CI PASS is not runtime approval.**
 
 Ownership: ARTIST approves visual intent/result; SCENE implements; ARCH proves technical integrity; LENTE validates runtime captures; SIGA owns orchestration and merges.
 
-**Current state:** CONCEPT_ACCEPTED / SOURCE_BINARY_VERSIONED / BASIC_SOURCE_QA_PASS / PIXEL_GRID_UNVERIFIED / ARCH_PENDING / SCENE_PENDING / LENTE_PENDING / CI_RED / NO_RUNTIME_PASS. REJECT remains valid in subsequent gates.
+**Current state:** CONCEPT_ACCEPTED / SOURCE_BINARY_VERSIONED / BASIC_SOURCE_QA_PASS / PIXEL_GRID_UNVERIFIED / ARCH_PENDING / SCENE_PENDING / LENTE_PENDING / CI_PASS_RECONCILED_HEAD_25656204 / PR_DRAFT_PENDING_ARCH_SCENE_LENTE / NO_RUNTIME_PASS. REJECT remains valid in subsequent gates.
