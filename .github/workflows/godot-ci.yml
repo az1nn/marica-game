@@ -873,6 +873,51 @@ jobs:
           git diff --exit-code -- game/src/domain/succession.gd
           echo "MARICA_G434_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
 
+      - name: G435 accelerated 14/21/28-day lifecycle, care, health and succession
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/accelerated_lifecycle_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g435-lifecycle.log"
+          grep -Fq 'MARICA_G435_ACCELERATED_LIFECYCLE_PASS days=14,21,28' "$RUNNER_TEMP/g435-lifecycle.log"
+
+      - name: G435 injected-clock rollback mutation (GOOD > BAD > RESTORE)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp game/src/domain/simulation_time.gd "$RUNNER_TEMP/g435-time-good.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("game/src/domain/simulation_time.gd")
+          source = path.read_text(encoding="utf-8")
+          target = 'var logical_now: float = maxf(raw_now, previous)'
+          assert source.count(target) == 1, "G435 clock clamp contract drifted"
+          path.write_text(
+              source.replace(target, 'var logical_now: float = raw_now'),
+              encoding="utf-8",
+          )
+          print("G435 bad mutant: elapsed time moves backward after injected clock rollback")
+          PY
+          set +e
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/accelerated_lifecycle_runner.gd \
+            > "$RUNNER_TEMP/g435-mutant.log" 2>&1
+          mutant_exit="$?"
+          set -e
+          cp "$RUNNER_TEMP/g435-time-good.gd" game/src/domain/simulation_time.gd
+          if test "$mutant_exit" -eq 0; then
+            echo "G435 bad rollback mutant unexpectedly passed"
+            exit 1
+          fi
+          grep -Fq 'MARICA_G435_FAIL day simulation 14: injected clock rollback' "$RUNNER_TEMP/g435-mutant.log"
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/accelerated_lifecycle_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g435-restore.log"
+          grep -Fq 'MARICA_G435_ACCELERATED_LIFECYCLE_PASS days=14,21,28' "$RUNNER_TEMP/g435-restore.log"
+          git diff --exit-code -- game/src/domain/simulation_time.gd
+          echo "MARICA_G435_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
+
       - name: Upload Godot CI diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -938,4 +983,7 @@ jobs:
             ${{ runner.temp }}/g434-pedigree.log
             ${{ runner.temp }}/g434-mutant.log
             ${{ runner.temp }}/g434-restore.log
+            ${{ runner.temp }}/g435-lifecycle.log
+            ${{ runner.temp }}/g435-mutant.log
+            ${{ runner.temp }}/g435-restore.log
           if-no-files-found: warn
