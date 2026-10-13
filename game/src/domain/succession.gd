@@ -1,8 +1,8 @@
 class_name MaricaSuccession
 extends RefCounted
 
-# G431: one deterministic successor per call. Exactly-two orchestration and
-# idempotency belong to G432/G433, not this stateless domain primitive.
+# G431: single-successor primitive. G432: deterministic exactly-two batch.
+# G433 idempotency and persistence are separate; these functions are stateless.
 const PET = preload("res://src/domain/pet.gd")
 const GENETICS = preload("res://src/domain/genetics.gd")
 const MAX_SAFE_INTEGER: float = 9007199254740991.0
@@ -60,6 +60,33 @@ static func create_successor(
     return PET.create_composite(
         successor_id, pedigree, null, inherited["traits"], null, null, false, 0.0
     )
+
+
+# G432: an all-or-error pair from one ended parent, with ordinals 1 and 2.
+# IDs are supplied by the caller; durable event markers are owned by G433.
+static func create_successors(
+    parent: Variant, successor_ids: Variant, succession_seed: Variant
+) -> Dictionary:
+    if typeof(successor_ids) != TYPE_ARRAY:
+        return {"ok": false, "error": "Exactly two successor IDs are required"}
+    var ids: Array = successor_ids
+    if ids.size() != 2:
+        return {"ok": false, "error": "Exactly two successor IDs are required"}
+    if not (ids[0] is String) or not (ids[1] is String):
+        return {"ok": false, "error": "Successor IDs must be strings"}
+    if ids[0] == ids[1]:
+        return {"ok": false, "error": "Successor IDs must be distinct"}
+    if parent is MaricaPet and (ids[0] == parent.get_id() or ids[1] == parent.get_id()):
+        return {"ok": false, "error": "Successor IDs cannot reuse the parent ID"}
+
+    # Neither a partial batch nor its first child is exposed on a later failure.
+    var first: Dictionary = create_successor(parent, ids[0], succession_seed, 1)
+    if not first.get("ok", false):
+        return first
+    var second: Dictionary = create_successor(parent, ids[1], succession_seed, 2)
+    if not second.get("ok", false):
+        return second
+    return {"ok": true, "successors": [first["pet"], second["pet"]]}
 
 
 static func _integer(value: Variant, label: String, positive: bool) -> Dictionary:
