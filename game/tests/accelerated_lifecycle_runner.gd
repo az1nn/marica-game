@@ -91,31 +91,32 @@ func _tick(pet: MaricaPet, previous: float, day: int) -> Dictionary:
     var sample: Dictionary = observation["observation"]
     if sample["elapsed"] != 24.0 or sample["logicalNow"] != _clock_value:
         return {"ok": false, "error": "non-deterministic 24h tick"}
-    var state: MaricaPet = pet
-    if day == 2:
-        var neglected: Dictionary = state.with_care_state({"hunger": 1.0})
-        if not neglected.get("ok", false):
-            return neglected
-        state = neglected["pet"]
-    if day == 4:
-        var treatment: Dictionary = state.apply_treatment("advanced")
-        if not treatment.get("ok", false) or treatment.get("cost") != 30:
-            return {"ok": false, "error": "illness treatment and cost"}
-        state = treatment["pet"]
-        var fed: Dictionary = state.with_care_state({"hunger": 0.0})
-        if not fed.get("ok", false):
-            return fed
-        state = fed["pet"]
-    var advanced: Dictionary = state.advance_health(sample["elapsed"])
+    var cared: Dictionary = _care_for_day(pet, day)
+    if not cared.get("ok", false):
+        return cared
+    var cared_pet: MaricaPet = cared["pet"]
+    var advanced: Dictionary = cared_pet.advance_health(sample["elapsed"])
     if not advanced.get("ok", false):
         return advanced
     var next_pet: MaricaPet = advanced["pet"]
     var health: Dictionary = next_pet.to_snapshot()["healthState"]
-    if day == 3 and health["status"] != "sick":
-        return {"ok": false, "error": "neglect did not cause sickness"}
-    if day == 4 and health["status"] != "healthy":
-        return {"ok": false, "error": "care and treatment failed to recover"}
+    if (day == 3 and health["status"] != "sick") or (
+        day == 4 and health["status"] != "healthy"
+    ):
+        return {"ok": false, "error": "neglect, sickness or treatment timeline drift"}
     return {"ok": true, "pet": next_pet, "logical": sample["logicalNow"]}
+
+
+func _care_for_day(pet: MaricaPet, day: int) -> Dictionary:
+    if day == 2:
+        return pet.with_care_state({"hunger": 1.0})
+    if day == 4:
+        var treatment: Dictionary = pet.apply_treatment("advanced")
+        if not treatment.get("ok", false) or treatment.get("cost") != 30:
+            return {"ok": false, "error": "illness treatment and cost"}
+        var treated: MaricaPet = treatment["pet"]
+        return treated.with_care_state({"hunger": 0.0})
+    return {"ok": true, "pet": pet}
 
 
 func _advance_stage(pet: MaricaPet, life: MaricaLifecycle, stage: String) -> Dictionary:
