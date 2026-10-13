@@ -251,3 +251,20 @@ PR #73 exact head `1afe3c7d` and post-merge master `0b116a10` passed Godot CI,
 Validate skills and Roblox CI. G431 creates **one** successor per call only;
 G432 exactly-two, G433 idempotency, G440 save/persistence, G450 scenes and
 G500 HTML5 export remain separately gated.
+
+## G432: exactly-two deterministic succession (verified PR #75)
+
+`MaricaSuccession.create_successors(parent, successor_ids, succession_seed)` is a
+pure domain composition of G431. The parent must be an ended composite Pet;
+`successor_ids` must be an Array of **exactly two distinct IDs** (neither the parent ID).
+Ordinals 1 and 2 derive deterministic genetic seeds, so the returned
+`{"ok": true, "successors": [child_1, child_2]}` contains two separate juvenile
+Pets in caller-ID order with advanced genetics and detached snapshots. Invalid
+inputs, including overflow on the second ordinal, return an error rather than
+exposing a partial pair. It does not consume an event or persist idempotency markers.
+
+The independent `tests/succession_pair_runner.gd` covers pair cardinality,
+lineage, deterministic replay, isolation and invalid inputs. The Godot CI gate
+injects a one-child bad mutant, proves this runner fails, restores the original
+source and proves the runner passes again. G431's 238 source-linked parity fixtures
+remain unchanged; G433 owns trigger-level idempotency and G440/G445 persistence.
