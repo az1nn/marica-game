@@ -3,27 +3,28 @@ CAVEMAN HANDOFF v1
 APP: Maricá Game
 WORKSTREAM: SPEC-004 · Phase D Succession P0
 MODE: ADVANCE
-BASE: master@cdc427ae04951ec534bfa5b75126945468183a6a
-PR: #75 MERGED (exact feature head 67334e2fd5829685aa7d661927366880a8331b8d)
+BASE: master@196431e299b91f8e51ce83345080ac6418c17d5b
+PR: #79 MERGED (exact feature head c2a69d4045e4384039125f24d0310342e23d7548)
 
 DONE:
-- G432 creates exactly two deterministic successors per call from an ended composite parent via G431, ordinals 1+2 and two distinct caller IDs; rejects invalid cardinality, parent ID collisions and seed overflow.
-- Each successor has inherited lineage/founder, generation+1 and direct parent, G430 deterministic genetic advancement, juvenile/active state, fresh care/health, zero affection and unbound soulbound.
-- No partial pair result and detached parent, sibling, IDs, snapshots; independent G432 regression and one-child mutant GOOD -> BAD -> RESTORE.
-- G431 golden fixture count remains 238 ACTIVE_PARITY; G432 tests are independent, not source-linked Luau parity additions.
+- G433 uses MaricaSuccessionEvent.trigger_once (pure, in-memory once-only coordinator for ended composite parent); first trigger publishes exactly two successors only after pair success.
+- Identical replay returns the same pair objects without duplicate creation (created=false); conflicting seed, IDs or parent snapshot are rejected; failures leave no marker and can be safely retried.
+- Independent G433 exact-head runner and duplicate-trigger GOOD -> BAD -> RESTORE mutation proof pass. Parent and returned-array snapshot isolation enforced.
+- Earlier G430–G432 remain complete. G433 is session-local only; durable restart/atomic commit belongs to G440/G445/G446, **not** claimed.
 
 VERIFY:
-- Feature PR #75 exact head @67334e2: Godot CI / Validate skills / Roblox CI PASS; nonrequired Roblox Behavioral SKIPPED.
-- Guarded squash merge master@cdc427ae: same three required post-merge workflows PASS.
-- No claims for G433 once-only idempotency/persistent markers, G434 extended pedigree, G435 lifecycle, G440 save, G450 playable scene or G500 web export.
+- PR #79 exact head @c2a69d40: Godot CI, Validate skills, Roblox CI and Web Preview Contract PASS; Roblox Behavioral SKIPPED/nonrequired.
+- Guarded squash merge master@196431e2: Godot CI, Validate skills, Roblox CI and Web Preview Contract PASS.
+- PR #77 ARTIST concept ledger remains draft and unmerged; earlier stale golden fixtures on its branch produced Godot CI FAIL, not a demonstrated ARTIST defect.
 
 CONCURRENCY:
-- G432 feature session claim is CLOSED after guarded merge; no competing PR at merge barrier.
-- ARTIST concepts approved != production Godot sprites/import/runtime acceptance.
-- This closeout is documentation of verified #75; post-closeout docs SHA must be revalidated separately if CI is applicable.
+- G433 feature claim CLOSED. G433 docs closeout is non-overlapping with PR #77 artist-specific docs and art gates.
+- S01-A01 V4 concept accepted by human; PNG binary is still not versioned in master; ARCH V201/V201a, SCENE, LENTE remain gated.
+- Vercel root/health technical static page available after PR #78; playable Godot web export is not yet available.
 
 WAIT / BLOCKER:
-- None for next G433. No human visual gate for pure domain work.
+- No product/human blocker for next pure-domain milestone G434.
+- PR #77 waits on reconciliation of stale branch and its own required visual/source gates; do not merge merely based on visual concept ACCEPT.
 
 NEXT:
-G433 — make end-of-life/succession idempotent under repeated triggers; verify deterministic no-duplicate semantics, fail/retry boundaries and a mutation guard. Durable save/load markers belong to G440/G445 rather than being claimed complete early.
+G434 — preserve and test extended multigeneration pedigree through successors; check ancestor lineage/founder/parent traceability and independent regression/mutation boundary. No save or playable scene claim.
