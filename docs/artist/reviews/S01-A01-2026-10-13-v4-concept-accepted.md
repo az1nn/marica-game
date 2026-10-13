@@ -1,0 +1,18 @@
+# ARTIST — S01-A01 V4 — human ACCEPT (2026-10-13)
+
+**Decision:** ACCEPT — isolated visual concept candidate for the tricolor founder dog. Human explicitly approved S01-A01 V4 in conversation on 2026-10-13.
+
+## Scope and provenance
+- Conversation-local candidates: `S01-A01_CACHORRO_FUNDADOR_V4_PREVIEW.png` and `S01-A01_CACHORRO_FUNDADOR_V4_ISOLADO_CANDIDATO.png`.
+- Their binary assets are **not committed to this repository**. Do not claim GitHub provenance, technical alpha validation, importability, sprite atlas or exact-head runtime evidence.
+- The ACCEPT applies to the **visual appearance of V4**, not the earlier V3 concept sheet (REVISE remains historically valid), not animation, technical quality, Godot import, release or deployment.
+- Preserve S01 V3 approved founder dog composition, earlier approved founder concept, and the accepted 3×3 V1 roster: dog (founder), capybara, chicken; corn, tomato, carrot. No mechanics added.
+
+## Required next gates
+1. ARTIST: obtain/version actual V4 source PNG in repository and inspect alpha edges, silhouette, pixel clusters and visual fidelity against approved reference.
+2. ARCH V201/V201a: independently validate import pipeline, pixel grid, scale, filtering and resource contract, with measured prototype.
+3. SCENE: integrate into an isolated Godot slice only after architecture and asset gates.
+4. LENTE: capture exact-head runtime A/B on relevant viewports; independent visual verification and ART review.
+5. SIGA: check claims, collisions, exact-head CI and handoff before any merge or release. REJECT remains valid at later gates.
+
+**State:** V4_CONCEPT_ACCEPTED; SOURCE_BINARY_NOT_IN_REPO; ARCH_PENDING; SCENE_PENDING; LENTE_PENDING; NO_RUNTIME_PASS.
