@@ -27,9 +27,7 @@ func trigger_once(parent: Variant, successor_ids: Variant, succession_seed: Vari
             return {"ok": false, "error": "Conflicting replay for ended Pet"}
         # Return the original two immutable aggregate objects, never generate another pair.
         # Copy only the caller-facing array; callers cannot alter the internal event record.
-        return {
-            "ok": true, "created": false, "successors": previous["successors"].duplicate()
-        }
+        return {"ok": true, "created": false, "successors": previous["successors"].duplicate()}
 
     # Transaction boundary: no completed marker is published on any failed creation.
     var created: Dictionary = SUCCESSION.create_successors(pet, successor_ids, succession_seed)
