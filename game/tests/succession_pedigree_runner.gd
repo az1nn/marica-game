@@ -68,11 +68,7 @@ func _first_two_generations() -> Dictionary:
     var event: MaricaSuccessionEvent = EVENT.new()
     var g1_result: Dictionary = event.trigger_once(founder, ["dog-g1a", "dog-g1b"], 10)
     var g1: Array = g1_result.get("successors", [])
-    if (
-        not g1_result.get("ok", false)
-        or not g1_result.get("created", false)
-        or g1.size() != 2
-    ):
+    if not g1_result.get("ok", false) or not g1_result.get("created", false) or g1.size() != 2:
         return {"ok": _fail("first generation creation/cardinality")}
 
     var ended_g1a: MaricaPet = _end_pet(g1[0])
