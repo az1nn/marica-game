@@ -68,12 +68,8 @@ func _multigeneration_contract() -> bool:
     if ended_g1a == null or ended_g1b == null:
         return _fail("first generation terminal transitions")
     var g1a_before: Dictionary = ended_g1a.to_snapshot()
-    var g2a_result: Dictionary = event.trigger_once(
-        ended_g1a, ["dog-g2a", "dog-g2b"], 12
-    )
-    var g2b_result: Dictionary = event.trigger_once(
-        ended_g1b, ["dog-g2c", "dog-g2d"], 14
-    )
+    var g2a_result: Dictionary = event.trigger_once(ended_g1a, ["dog-g2a", "dog-g2b"], 12)
+    var g2b_result: Dictionary = event.trigger_once(ended_g1b, ["dog-g2c", "dog-g2d"], 14)
     if not g2a_result.get("ok", false) or not g2b_result.get("ok", false):
         return _fail("second generation creation")
     var g2a: Array = g2a_result["successors"]
@@ -105,12 +101,15 @@ func _multigeneration_contract() -> bool:
     for item in checks:
         var child: MaricaPet = item[0]
         var pedigree: Dictionary = child.to_snapshot()["pedigree"]
-        if pedigree != {
-            "lineageId": "dog-line",
-            "generation": item[1],
-            "founderPetId": "dog-founder",
-            "parentPetIds": [item[2]],
-        }:
+        if (
+            pedigree
+            != {
+                "lineageId": "dog-line",
+                "generation": item[1],
+                "founderPetId": "dog-founder",
+                "parentPetIds": [item[2]],
+            }
+        ):
             return _fail("direct-parent link or founder continuity")
 
     var records: Dictionary = {"dog-founder": original["pedigree"]}
@@ -118,12 +117,9 @@ func _multigeneration_contract() -> bool:
         var snapshot: Dictionary = pet.to_snapshot()
         records[snapshot["id"]] = snapshot["pedigree"]
     if (
-        _trace_to_founder("dog-g3a", records)
-        != ["dog-g3a", "dog-g2a", "dog-g1a", "dog-founder"]
-        or _trace_to_founder("dog-g2c", records)
-        != ["dog-g2c", "dog-g1b", "dog-founder"]
-        or _trace_to_founder("dog-g2b", records)
-        != ["dog-g2b", "dog-g1a", "dog-founder"]
+        _trace_to_founder("dog-g3a", records) != ["dog-g3a", "dog-g2a", "dog-g1a", "dog-founder"]
+        or _trace_to_founder("dog-g2c", records) != ["dog-g2c", "dog-g1b", "dog-founder"]
+        or _trace_to_founder("dog-g2b", records) != ["dog-g2b", "dog-g1a", "dog-founder"]
     ):
         return _fail("multigeneration ancestor trace")
 
