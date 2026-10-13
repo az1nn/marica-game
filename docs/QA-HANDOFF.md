@@ -1,17 +1,17 @@
 # QA HANDOFF
 
-Status: G431 VERIFIED / ADVANCE G432
+Status: G434 VERIFIED / ADVANCE G435
 Authority: SPEC-004 · Godot 4.7.2-stable · offline-first single-player.
 
 Verified:
-- PR #73 exact head `1afe3c7d3454f55542cf1c0c8b7d29692dea82d1`: Godot CI / Validate skills / Roblox CI **PASS**. Roblox Behavioral SKIPPED/nonrequired.
-- Guarded squash merge master@`0b116a10af221643f006096ae4e9105c19d3d1db`: all three required master push workflows **PASS**.
-- 14 G431 source-linked golden cases bring executable parity to **238 ACTIVE_PARITY** plus 4 harness selftests; two previous G431 ordinal fixture cases activated; zero deferred G431 fixture cases.
-- Independent headless successor regression covers deterministic ordinal trait rotation, lineage/founder/generation/direct parent, default juvenile care/health, unbound descendant and zero affection, invalid IDs/parent/seed/ordinal, overflow, repeatability and detached snapshots.
-- G431 terminal guard mutation **GOOD → BAD → RESTORE** proved at PR head. Previously accepted G420–G430 tests/mutation gates remained PASS at PR head and post-merge master.
+- G434 PR #81 exact head `87fdfb651e9f0afd2f21a74ce18a580eaddf6f82`: Godot CI / Validate skills / Roblox CI / Web Preview Contract PASS. Roblox Behavioral SKIPPED (nonrequired).
+- Guarded squash merge master@ `bac5a15e8ab3f241650477aeecd0a915c19886e2`: four applicable push workflows PASS at merge SHA.
+- New independent G434 regression proves successive descendant branches to generation 3 retain lineage, founder, correct immediate parent, immutable snapshots, original founder soulbound, G433 event replay once-only.
+- G434 P0 mutation intentionally replaces intermediate parent with founder in `succession.gd`. GOOD → BAD FAIL with expected `MARICA_G434_FAIL direct-parent link` → RESTORE PASS, with git-clean restore. All G420–G433 existing domain and mutation gates PASS in exact-head Godot CI.
+- Golden catalog remains **238 ACTIVE_PARITY + 4 harness selftests**; G434 is an independent domain proof, not synthetic legacy parity.
 
 Limits:
-- No exactly-two successor orchestration (G432), idempotency (G433), complete 2–4 week simulation, G440+ save/load, scene/visual runtime, LENTE or playable HTML5 export.
-- Golden parity for single-successor primitive is not a claim that the whole generation lifecycle is accepted.
+- Ancestry graph is reconstructable from retained Pet snapshots; no persistence/restart guarantee, global ID registry or transaction durability (G440/G444/G445/G446).
+- No G435 full accelerated 2–4 week journey, G436 comprehensive Gate D GAUNTLET, playable scenes, Vercel Godot Web export or LENTE runtime acceptance.
 
-Next: G432 exactly-two orchestration via distinct successor IDs/ordinals and one terminal parent; execute independent regression and P0 mutation proof, leave idempotency G433.
+Next: G435 accelerated lifecycle journey with injected deterministic clock, care/health transitions, terminal once-only succession, two juvenile descendants and strict no-real-time test boundary.

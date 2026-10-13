@@ -1,23 +1,22 @@
 # GODOT HANDOFF
 
-Status: PRODUCTION / ADVANCE — G433 NEXT
+Status: PRODUCTION / ADVANCE — G435 NEXT
 Authority: Constitution v2.0.0 · SPEC-004 · ADR-0004.
 Runtime: Godot 4.7.2-stable · typed GDScript · single-player/offline-first · GUT v9.7.1 pinned.
 
 Delivered:
-- G410–G416 foundation/harness, G420–G429 pure animal domain and composite Pet, G430 deterministic bounded genetic +0.05.
-- **G431**: `MaricaSuccession.create_successor` pure single successor; verified inheritance, seed/ordinal, terminal parent and detached snapshots.
-- **G432**: `MaricaSuccession.create_successors(parent, successor_ids, succession_seed)` returns **exactly two** juvenile successor Pet objects from one ended composite parent using G431 ordinals 1 and 2. Requires an array of two distinct IDs, forbids reusing the parent ID, rejects invalid parent/seed and second-ordinal overflow; returns all-or-error, not a partial pair. Same lineage/founder, generation +1, direct parent and distinct deterministic genetic advancement; detached children/input/parent.
-- **238 ACTIVE_PARITY** source-linked executable golden fixtures from G420–G431 (unchanged by G432), 4 harness selftests. G432 uses a separate independent regression, not fictitious legacy-Luau parity.
+- G410–G416 foundation/harness, G420–G429 pure animal domain/composite Pet, G430 deterministic +0.05 genetic potential advancement.
+- G431 pure one-successor primitive, G432 exactly-two deterministic batch, G433 in-process idempotent once-only event coordinator.
+- **G434 verified**: isolated `tests/succession_pedigree_runner.gd` exercises founder (gen0) → gen1 pair → generation-2 pairs on both sibling branches → generation-3 pair. Validates immutable lineageId/founderPetId, generation+1, immediate parent per branch, reconstructable founder path through retained snapshots, founder-only soulbound, detached snapshots, replay idempotency.
+- **238 ACTIVE_PARITY** source-linked executable golden cases (G420–G431) plus 4 harness selftests; G432/G433/G434 are independent regression gates, not new source-Luau parity claims.
 
 Verified:
-- G431 feature PR #73 and its post-merge master checks PASS.
-- **G432 PR #75 exact head `67334e2fd5829685aa7d661927366880a8331b8d`**: Godot CI (including targeted two-child runner, G431 regression and GOOD → BAD (one-child mutant) → RESTORE), Validate skills, Roblox CI PASS. Roblox Behavioral SKIPPED/nonrequired.
-- Guarded squash merge **master@`cdc427ae04951ec534bfa5b75126945468183a6a`**; Godot CI / Validate skills / Roblox CI PASS on that exact merge commit.
-- ARTIST approved initial dog/capybara/chicken and milho/tomate/cenoura concepts; not imported/accepted runtime sprites.
+- G434 feature PR #81 exact head `87fdfb651e9f0afd2f21a74ce18a580eaddf6f82`: Godot CI including G434 regression and GOOD → BAD (replace intermediate direct parent with founder) → RESTORE PASS, Validate skills / Roblox CI / Web Preview Contract PASS. Roblox Behavioral SKIPPED/nonrequired.
+- Guarded squash master@ `bac5a15e8ab3f241650477aeecd0a915c19886e2`: Godot CI, Validate skills, Roblox CI, Web Preview Contract PASS.
+- PR #77 ARTIST isolated concept draft not integrated into game scene. Initial 3 animals (dog founder, capybara, chicken) and crops (corn, tomato, carrot) concept scope remains unchanged.
 
 Limits:
-- G432 guarantees the **pair returned by each call**, not once-only triggering on repeated end-of-life events; G433 owns durable idempotency markers/trigger semantics. G434 extended pedigree, G435 accelerated lifecycle, G440 saves, G450 gameplay scenes and G500 HTML5 export remain pending.
-- Vercel preview does not prove Godot HTML5 export or playable-scene acceptance.
+- G434 traces ancestral chain **only when historical snapshots are retained**. No embedded global-ancestor list, persistent snapshot store, cross-restart guarantees, global-ID registry, or automatic world-level end-of-life hook. G440/G444/G445/G446 own those durability boundaries.
+- G435 2–4 week accelerated full lifecycle, G436 full Gate D GAUNTLET, G450 playable scenes, G500 HTML5 export all pending. Vercel root is technical preview only.
 
-Next: **G433 — end-of-life/succession idempotency**: plan and implement event-level once-only marker/registry in pure Godot with deterministic repeated-call/reload tests and mutation proof; coordinate save-schema G440/G445 without falsely claiming persistence before its gate.
+Next: **G435** deterministic accelerated animal journey over 2–4 simulated weeks through care/aging/end-of-life/exactly-two successor transition, without relying on real clock or online dependencies.
