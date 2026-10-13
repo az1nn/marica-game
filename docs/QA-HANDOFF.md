@@ -1,17 +1,17 @@
 # QA HANDOFF
 
-Status: G431 VERIFIED / ADVANCE G432
+Status: G434 VERIFIED / ADVANCE G435
 Authority: SPEC-004 · Godot 4.7.2-stable · offline-first single-player.
 
 Verified:
-- PR #73 exact head `1afe3c7d3454f55542cf1c0c8b7d29692dea82d1`: Godot CI / Validate skills / Roblox CI **PASS**. Roblox Behavioral SKIPPED/nonrequired.
-- Guarded squash merge master@`0b116a10af221643f006096ae4e9105c19d3d1db`: all three required master push workflows **PASS**.
-- 14 G431 source-linked golden cases bring executable parity to **238 ACTIVE_PARITY** plus 4 harness selftests; two previous G431 ordinal fixture cases activated; zero deferred G431 fixture cases.
-- Independent headless successor regression covers deterministic ordinal trait rotation, lineage/founder/generation/direct parent, default juvenile care/health, unbound descendant and zero affection, invalid IDs/parent/seed/ordinal, overflow, repeatability and detached snapshots.
-- G431 terminal guard mutation **GOOD → BAD → RESTORE** proved at PR head. Previously accepted G420–G430 tests/mutation gates remained PASS at PR head and post-merge master.
+- G420–G429 composite Pet/legacy golden parity; G430 deterministic bounded genetics, G431 one successor, G432 two successors and G433 same-session once-only event guard remain covered by independent exact-head Godot steps.
+- PR #81 exact head `87fdfb651e9f0afd2f21a74ce18a580eaddf6f82`: Godot CI, Validate skills, Roblox CI, Web Preview Contract **PASS**.
+- Post-merge master `bac5a15e8ab3f241650477aeecd0a915c19886e2`: all four workflows **PASS**; Godot job #115443615599 explicitly passed G434 founder-chain regression and intermediate-parent mutation GOOD → BAD → RESTORE.
+- G434 asserts branch-isolated G1/G2/G3 pedigree, immediate parent identity, immutable lineage/founder, founder soulbound vs unbound descendants, parent snapshots and repeated same-session triggers.
+- Roblox Behavioral SKIPPED/nonrequired on PR head.
 
 Limits:
-- No exactly-two successor orchestration (G432), idempotency (G433), complete 2–4 week simulation, G440+ save/load, scene/visual runtime, LENTE or playable HTML5 export.
-- Golden parity for single-successor primitive is not a claim that the whole generation lifecycle is accepted.
+- G434 does not assert a 2–4 week complete lifecycle, save/restart durability, scene playback, Vercel Godot playable export or visual ART/LENTE acceptance.
+- G433 in-memory idempotency is **not** restart-safe persistence; do not mark G445/G446 done.
 
-Next: G432 exactly-two orchestration via distinct successor IDs/ordinals and one terminal parent; execute independent regression and P0 mutation proof, leave idempotency G433.
+Next: **G435** accelerated deterministic 2–4 week lifecycle runner using injected clock, care/health transitions and G433 exactly-once successor coordinator; include natural-end, illness/risk boundaries, duplication guards and independent failure/mutation proof. G436 GAUNTLET remains subsequent.
