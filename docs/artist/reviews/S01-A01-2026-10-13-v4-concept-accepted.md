@@ -16,3 +16,7 @@
 5. SIGA: check claims, collisions, exact-head CI and handoff before any merge or release. REJECT remains valid at later gates.
 
 **State:** V4_CONCEPT_ACCEPTED; SOURCE_BINARY_NOT_IN_REPO; ARCH_PENDING; SCENE_PENDING; LENTE_PENDING; NO_RUNTIME_PASS.
+
+
+## Append-only source audit addendum — 2026-10-13
+The preceding provenance statement correctly described the state **at concept ACCEPT**; it is preserved. The human later re-attached the original isolated V4 PNG, which is now versioned at `docs/artist/assets/S01-A01/V4/S01-A01_CACHORRO_FUNDADOR_V4_ISOLADO_CANDIDATO.png` with SHA-256 `b8089122d323de7dc7c235604f752ce2643990a867aceaead60409d700e2aa7e` and Git blob SHA `da7806ebfcb051c8fd32ccdbad4760b7136f97dd`. See `docs/artist/reviews/S01-A01-2026-10-13-v4-source-audit.md` for measured pixel/alpha checks. **This does not promote concept ACCEPT to ARCH/SCENE/LENTE runtime PASS.**
