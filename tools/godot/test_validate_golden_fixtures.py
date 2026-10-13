@@ -28,7 +28,7 @@ class GoldenFixtureSchemaTests(unittest.TestCase):
         pending = next(c for c in fixture["contracts"] if c["id"] == "succession.create_successor")
         pending["status"] = "ACTIVE_PARITY"
         pending["adapter"] = "game/src/domain/pet_id.gd"
-        self.assertTrue(any("not authorized" in e for e in validate(fixture)))
+        self.assertTrue(any("incorrect parity milestone or adapter" in e for e in validate(fixture)))
 
     def test_rejects_wrong_executable_adapter(self):
         fixture = copy.deepcopy(self.catalog)
@@ -126,11 +126,11 @@ class GoldenFixtureSchemaTests(unittest.TestCase):
         contract["cases"][0]["expected"] = {"size": "1"}
         self.assertTrue(any("bounded trait map" in e for e in validate(fixture)))
 
-    def test_requires_g431_successor_pending(self):
+    def test_rejects_g431_wrong_adapter(self):
         fixture = copy.deepcopy(self.catalog)
         contract = next(c for c in fixture["contracts"] if c["id"] == "succession.create_successor")
-        contract["status"] = "ACTIVE_PARITY"
-        self.assertTrue(any("not authorized" in e for e in validate(fixture)))
+        contract["adapter"] = "game/src/domain/pet_id.gd"
+        self.assertTrue(any("incorrect parity" in e for e in validate(fixture)))
 
     def test_rejects_g430_wrong_adapter(self):
         fixture = copy.deepcopy(self.catalog)

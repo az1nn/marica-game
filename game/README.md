@@ -163,7 +163,7 @@ golden cases (including invalid-name, range, type and unknown-trait cases).
 determinism and nonfinite values. The G424 mutation proof changes the
 omitted-factor default from 1 to 0; it must fail golden parity, then pass
 after source restoration. G430 genetic *advancement* was separate from G424 and is now implemented
-and verified in PR #71; G431 successor creation remains PENDING_PORT.
+and verified in PR #71; G431 successor creation is verified separately by PR #73.
 
 ```sh
 godot --headless --path game --script res://tests/genetics_runner.gd
@@ -212,8 +212,8 @@ without exceeding 1. Fully saturated maps remain unchanged. Input maps are
 never mutated.
 
 Fifteen source-linked `genetics.advance_potential` golden cases now execute
-in Godot as `ACTIVE_PARITY` (224 total across the domain); two successor
-seed fixtures remain `G431 PENDING_PORT`. Independent regressions cover
+in Godot as `ACTIVE_PARITY` (224 after G430; 238 after G431); the two successor
+seed fixtures were activated by G431. Independent regressions cover
 repeatability, invalid seeds, saturation and mutation-resistant snapshots.
 CI injects the known-bad advancement-cap inversion, requires fixture failure,
 then restores the original source and reruns to PASS.
@@ -224,5 +224,47 @@ godot --headless --path game --script res://tests/golden_fixture_runner.gd
 ```
 
 PR #71 exact head `fb2b8eb` and master post-merge `0f9239a` passed Godot CI,
-Validate Skills and Roblox CI. No successor creation (G431), persistence
-(G440+), gameplay-scene or Web export (G500+) acceptance is implied.
+Validate Skills and Roblox CI. G431 single-successor was separately accepted in PR #73;
+G432 exactly-two, persistence (G440+), gameplay-scene or Web export (G500+)
+acceptance is not implied.
+
+## G431 — deterministic single-successor creation (verified)
+
+`MaricaSuccession.derive_genetic_seed(seed, ordinal)` and
+`create_successor(parent, successor_id, seed, ordinal)` port the legacy PR #34
+contract into pure typed GDScript. A terminal composite parent is required.
+The single child inherits founder lineage, direct parent and incremented generation;
+G430 advances its potential using the derived seed. Child lifecycle is juvenile/active,
+care and health start fresh, affection starts at 0 and soulbound does not propagate.
+Invalid inputs reject, detached snapshots remain stable and repeat calls are deterministic.
+
+Fourteen G431 golden scenarios run as `ACTIVE_PARITY` (238 domain cases total,
+plus four harness selftests). The independent regression runner and a GOOD → BAD →
+RESTORE mutant on the terminal-parent guard execute in Godot CI at exact SHA.
+
+```sh
+godot --headless --path game --script res://tests/succession_runner.gd
+godot --headless --path game --script res://tests/golden_fixture_runner.gd
+```
+
+PR #73 exact head `1afe3c7d` and post-merge master `0b116a10` passed Godot CI,
+Validate skills and Roblox CI. G431 creates **one** successor per call only;
+G432 exactly-two, G433 idempotency, G440 save/persistence, G450 scenes and
+G500 HTML5 export remain separately gated.
+
+## G432: exactly-two deterministic succession (verified PR #75)
+
+`MaricaSuccession.create_successors(parent, successor_ids, succession_seed)` is a
+pure domain composition of G431. The parent must be an ended composite Pet;
+`successor_ids` must be an Array of **exactly two distinct IDs** (neither the parent ID).
+Ordinals 1 and 2 derive deterministic genetic seeds, so the returned
+`{"ok": true, "successors": [child_1, child_2]}` contains two separate juvenile
+Pets in caller-ID order with advanced genetics and detached snapshots. Invalid
+inputs, including overflow on the second ordinal, return an error rather than
+exposing a partial pair. It does not consume an event or persist idempotency markers.
+
+The independent `tests/succession_pair_runner.gd` covers pair cardinality,
+lineage, deterministic replay, isolation and invalid inputs. The Godot CI gate
+injects a one-child bad mutant, proves this runner fails, restores the original
+source and proves the runner passes again. G431's 238 source-linked parity fixtures
+remain unchanged; G433 owns trigger-level idempotency and G440/G445 persistence.

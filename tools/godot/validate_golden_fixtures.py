@@ -50,6 +50,10 @@ APPROVED_PARITY = {
     "affection.increase": ("G428", "game/src/domain/affection.gd", "src/shared/domain/Affection.luau"),
     "pet.affection": ("G428", "game/src/domain/pet.gd", "src/shared/domain/Pet.luau"),
     "pet.composite": ("G429", "game/src/domain/pet.gd", "src/shared/domain/Pet.luau"),
+    "succession.create_successor": (
+        "G431", "game/src/domain/succession.gd",
+        "docs/migration/ROBLOX-TO-GODOT-CONTRACT-MAP.md"
+    ),
 }
 
 
@@ -417,6 +421,34 @@ def validate(document: Any, root: Path = ROOT) -> list[str]:
                             errors.append(
                                 f"{key}/{case_id}: composite needs canonical full snapshot"
                             )
+                if key == "succession.create_successor":
+                    data = case.get("input")
+                    if not isinstance(data, dict) or "successionSeed" not in data or "ordinal" not in data:
+                        errors.append(f"{key}/{case_id}: succession requires seed and ordinal")
+                    elif set(data) not in [
+                        {"successionSeed", "ordinal"},
+                        {"parent", "successorId", "successionSeed", "ordinal"},
+                    ]:
+                        errors.append(f"{key}/{case_id}: invalid successor input fields")
+                    elif "parent" in data:
+                        parent = data["parent"]
+                        if not isinstance(parent, dict) or not {
+                            "id", "pedigree", "potential", "lifecycleActions"
+                        }.issubset(parent):
+                            errors.append(f"{key}/{case_id}: invalid ended-parent fixture")
+                    if has_expected:
+                        expected = case.get("expected")
+                        if "parent" not in data:
+                            if not isinstance(expected, dict) or set(expected) != {"seed"}:
+                                errors.append(f"{key}/{case_id}: seed fixture requires canonical seed")
+                        else:
+                            fields = {
+                                "id", "pedigree", "lifecycle", "geneticPotential",
+                                "expressedTraits", "careState", "healthState",
+                                "soulbound", "affection",
+                            }
+                            if not isinstance(expected, dict) or set(expected) != fields:
+                                errors.append(f"{key}/{case_id}: successor needs canonical full snapshot")
                 if key == "simulation_time.observe":
                     data = case.get("input")
                     if not isinstance(data, dict) or set(data) != {"lastObservedAt", "clockNow"}:
@@ -433,8 +465,6 @@ def validate(document: Any, root: Path = ROOT) -> list[str]:
 
     if active == 0:
         errors.append("at least one executable harness self-test is required")
-    if pending == 0:
-        errors.append("deferred domain parity cases must remain explicitly visible")
     if verified == 0:
         errors.append("at least one real domain parity fixture is required after G420")
     return errors

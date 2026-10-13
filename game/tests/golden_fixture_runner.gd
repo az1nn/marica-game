@@ -1,6 +1,6 @@
 extends SceneTree
 
-# G416: headless, offline fixture transport. Domain parity remains PENDING_PORT.
+# G416: headless offline fixture transport; full playable V1 parity remains out of scope.
 const CATALOG_PATH: String = "res://tests/fixtures/golden.json"
 const PET_ID = preload("res://src/domain/pet_id.gd")
 const LINEAGE_ID = preload("res://src/domain/lineage_id.gd")
@@ -13,6 +13,7 @@ const HEALTH = preload("res://src/domain/health.gd")
 const SOULBOUND = preload("res://src/domain/soulbound.gd")
 const AFFECTION = preload("res://src/domain/affection.gd")
 const PET = preload("res://src/domain/pet.gd")
+const SUCCESSION = preload("res://src/domain/succession.gd")
 var _fixture_clock_value: Variant = 0
 
 
@@ -51,7 +52,7 @@ func _run_catalog() -> void:
         pending_count += result["pending"]
         verified_count += result["verified"]
 
-    if active_count == 0 or pending_count == 0 or verified_count == 0:
+    if active_count == 0 or verified_count == 0:
         _fail("both harness self-tests and deferred domain fixtures are required")
         return
 
@@ -111,7 +112,8 @@ func _check_contract(contract_value: Variant) -> Dictionary:
                 "affection.create",
                 "affection.increase",
                 "pet.affection",
-                "pet.composite"
+                "pet.composite",
+                "succession.create_successor"
             ]
         )
     ):
@@ -177,6 +179,8 @@ func _verify_domain_cases(identifier: String, cases: Array) -> Dictionary:
         print("MARICA_G428_PET_AFFECTION_PARITY_PASS cases=", cases.size())
     elif identifier == "pet.composite":
         print("MARICA_G429_PET_COMPOSITE_PARITY_PASS cases=", cases.size())
+    elif identifier == "succession.create_successor":
+        print("MARICA_G431_SUCCESSION_PARITY_PASS cases=", cases.size())
     return {"active": 0, "verified": cases.size(), "pending": 0}
 
 
@@ -194,7 +198,17 @@ func _check_domain_case(identifier: String, case_value: Variant) -> bool:
         var error_label: String = identifier
         if identifier == "pet_id.from_string":
             error_label = "PetId"  # Compatibility with the G420 mutation gate.
-        _fail(error_label + " golden mismatch: " + str(fixture.get("id", "unknown")))
+        _fail(
+            (
+                error_label
+                + " golden mismatch: "
+                + str(fixture.get("id", "unknown"))
+                + " actual="
+                + str(actual)
+                + " expected="
+                + str(expected)
+            )
+        )
         return false
     var repeat: Dictionary = _run_domain_operation(identifier, case_input)
     if not _deep_equal(actual, repeat):
@@ -258,6 +272,8 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
         result = AFFECTION.increase(case_input.get("state", null), case_input.get("gain"))
     elif identifier == "pet.composite":
         return _run_pet_composite(case_input)
+    elif identifier == "succession.create_successor":
+        return _run_succession(case_input)
     elif identifier == "pet.affection":
         result = PET.create(
             case_input.get("id", null),
@@ -273,6 +289,42 @@ func _run_domain_operation(identifier: String, case_input: Dictionary) -> Dictio
     if not result.get("ok", false):
         return {"error": result.get("error", "")}
     return _canonical_domain_result(identifier, result)
+
+
+func _run_succession(case_input: Dictionary) -> Dictionary:
+    if not case_input.has("parent"):
+        var derived: Dictionary = SUCCESSION.derive_genetic_seed(
+            case_input.get("successionSeed"), case_input.get("ordinal")
+        )
+        if not derived.get("ok", false):
+            return {"error": derived.get("error", "")}
+        return {"seed": derived["seed"]}
+    var parent_data: Dictionary = case_input["parent"]
+    var prepared: Dictionary = _prepare_pet_lifecycle(parent_data)
+    if not prepared.get("ok", false):
+        return {"error": prepared.get("error", "")}
+    var created: Dictionary = PET.create_composite(
+        parent_data.get("id"),
+        parent_data.get("pedigree"),
+        prepared["lifecycle"],
+        parent_data.get("potential"),
+        parent_data.get("care"),
+        parent_data.get("health"),
+        parent_data.get("soulbound"),
+        parent_data.get("affection")
+    )
+    if not created.get("ok", false):
+        return {"error": created.get("error", "")}
+    var result: Dictionary = SUCCESSION.create_successor(
+        created["pet"],
+        case_input.get("successorId"),
+        case_input.get("successionSeed"),
+        case_input.get("ordinal")
+    )
+    if not result.get("ok", false):
+        return {"error": result.get("error", "")}
+    var child: MaricaPet = result["pet"]
+    return child.to_snapshot()
 
 
 func _prepare_pet_lifecycle(case_input: Dictionary) -> Dictionary:
