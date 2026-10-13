@@ -128,9 +128,7 @@ func _rejection_contract() -> bool:
         SUCCESSION.create_successors(null, ["one", "two"], 0).get("ok", false)
         or SUCCESSION.create_successors(active["pet"], ["one", "two"], 0).get("ok", false)
         or SUCCESSION.create_successors(parent, ["one", "two"], -1).get("ok", false)
-        or SUCCESSION.create_successors(
-            parent, ["one", "two"], 9007199254740991
-        ).get("ok", false)
+        or SUCCESSION.create_successors(parent, ["one", "two"], 9007199254740991).get("ok", false)
     ):
         return _fail("invalid parent or seed accepted")
     return true
