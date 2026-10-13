@@ -3,28 +3,29 @@ CAVEMAN HANDOFF v1
 APP: Maricá Game
 WORKSTREAM: SPEC-004 · Phase D Succession P0
 MODE: ADVANCE
-BASE: master@196431e299b91f8e51ce83345080ac6418c17d5b
-PR: #79 MERGED (exact feature head c2a69d4045e4384039125f24d0310342e23d7548)
+BASE: master@bac5a15e8ab3f241650477aeecd0a915c19886e2
+PR: #81 MERGED (verified feature head 87fdfb651e9f0afd2f21a74ce18a580eaddf6f82)
 
 DONE:
-- G433 uses MaricaSuccessionEvent.trigger_once (pure, in-memory once-only coordinator for ended composite parent); first trigger publishes exactly two successors only after pair success.
-- Identical replay returns the same pair objects without duplicate creation (created=false); conflicting seed, IDs or parent snapshot are rejected; failures leave no marker and can be safely retried.
-- Independent G433 exact-head runner and duplicate-trigger GOOD -> BAD -> RESTORE mutation proof pass. Parent and returned-array snapshot isolation enforced.
-- Earlier G430–G432 remain complete. G433 is session-local only; durable restart/atomic commit belongs to G440/G445/G446, **not** claimed.
+- G434 complete on verified master: independent Godot pedigree chain founder → G1 pair → distinct G2 branches → G3 descendants.
+- Immutable lineage/founder IDs, monotonic generation, immediate parent correctness, reconstructable ancestry, sibling isolation and founder-only soulbound constraints regression-tested.
+- G434 mutated G2+ immediate-parent assignment to founder: GOOD → BAD → RESTORE gate executed and PASS. Same-session replay covered, NOT durable save/restart.
+- G430–G433 remain complete and unchanged; SPEC-004 G435/G436 and persistence G440+ still pending.
 
 VERIFY:
-- PR #79 exact head @c2a69d40: Godot CI, Validate skills, Roblox CI and Web Preview Contract PASS; Roblox Behavioral SKIPPED/nonrequired.
-- Guarded squash merge master@196431e2: Godot CI, Validate skills, Roblox CI and Web Preview Contract PASS.
-- PR #77 ARTIST concept ledger remains draft and unmerged; earlier stale golden fixtures on its branch produced Godot CI FAIL, not a demonstrated ARTIST defect.
+- PR #81 exact-head 87fdfb65: Godot CI / Validate skills / Roblox CI / Web Preview Contract PASS.
+- Post-merge master@bac5a15e: Godot CI #38439948060, Validate skills #38439947823, Roblox CI #38439947765, Web Preview Contract #38439947762 — all PASS.
+- Roblox Behavioral on PR head SKIPPED/nonrequired.
+- Docs-only G434 closeout requires its own exact-head validation before merge; do not reuse G434 feature checks as docs-PR validation.
 
 CONCURRENCY:
-- G433 feature claim CLOSED. G433 docs closeout is non-overlapping with PR #77 artist-specific docs and art gates.
-- S01-A01 V4 concept accepted by human; PNG binary is still not versioned in master; ARCH V201/V201a, SCENE, LENTE remain gated.
-- Vercel root/health technical static page available after PR #78; playable Godot web export is not yet available.
+- G434 feature claim closed by its merged implementation; G434 docs closeout isolated from PR #77.
+- PR #77 S01-A01 V4 concept draft remains OPEN, separate ARTIST-only files; no claim of production/import/LENTE acceptance.
+- Godot V1 remains offline-first/single-player; Vercel root page is technical/static, not playable Godot HTML5 export.
 
 WAIT / BLOCKER:
-- No product/human blocker for next pure-domain milestone G434.
-- PR #77 waits on reconciliation of stale branch and its own required visual/source gates; do not merge merely based on visual concept ACCEPT.
+- No product/human blocker for next domain task G435.
+- ARTIST PR #77 retains ARCH V201/V201a, SCENE R2, LENTE exact-head and ART runtime gates.
 
 NEXT:
-G434 — preserve and test extended multigeneration pedigree through successors; check ancestor lineage/founder/parent traceability and independent regression/mutation boundary. No save or playable scene claim.
+G435 — execute a complete, clock-injected accelerated 2–4 week pet lifecycle with care/health, natural end-of-life, exactly-two automatic successors and bounded replay, using independent Godot regression and measurable failure/mutation evidence. No persistence claim before G440+.
