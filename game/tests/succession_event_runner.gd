@@ -94,9 +94,9 @@ func _replay_conflict_contract(event: MaricaSuccessionEvent, parent: MaricaPet) 
     var modified: Dictionary = parent.with_affection(0.3)
     if (
         not modified.get("ok", false)
-        or event.trigger_once(
-            modified["pet"], ["pet-child-001", "pet-child-002"], 10
-        ).get("ok", false)
+        or event.trigger_once(modified["pet"], ["pet-child-001", "pet-child-002"], 10).get(
+            "ok", false
+        )
         or event.completed_count() != 1
     ):
         return _fail("changed terminal parent was treated as same event")
