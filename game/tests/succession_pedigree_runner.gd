@@ -51,42 +51,86 @@ func _founder() -> MaricaPet:
 
 
 func _multigeneration_contract() -> bool:
+    var first: Dictionary = _first_two_generations()
+    if not first.get("ok", false):
+        return false
+    var extended: Dictionary = _third_generation(first)
+    if not extended.get("ok", false):
+        return false
+    return _verify_family(extended["family"])
+
+
+func _first_two_generations() -> Dictionary:
     var founder: MaricaPet = _founder()
     if founder == null:
-        return _fail("founder setup")
+        return {"ok": _fail("founder setup")}
     var original: Dictionary = founder.to_snapshot()
     var event: MaricaSuccessionEvent = EVENT.new()
     var g1_result: Dictionary = event.trigger_once(founder, ["dog-g1a", "dog-g1b"], 10)
     if not g1_result.get("ok", false) or not g1_result.get("created", false):
-        return _fail("first generation creation")
+        return {"ok": _fail("first generation creation")}
     var g1: Array = g1_result["successors"]
     if g1.size() != 2:
-        return _fail("first generation cardinality")
+        return {"ok": _fail("first generation cardinality")}
 
     var ended_g1a: MaricaPet = _end_pet(g1[0])
     var ended_g1b: MaricaPet = _end_pet(g1[1])
     if ended_g1a == null or ended_g1b == null:
-        return _fail("first generation terminal transitions")
+        return {"ok": _fail("first generation terminal transitions")}
     var g1a_before: Dictionary = ended_g1a.to_snapshot()
     var g2a_result: Dictionary = event.trigger_once(ended_g1a, ["dog-g2a", "dog-g2b"], 12)
     var g2b_result: Dictionary = event.trigger_once(ended_g1b, ["dog-g2c", "dog-g2d"], 14)
     if not g2a_result.get("ok", false) or not g2b_result.get("ok", false):
-        return _fail("second generation creation")
+        return {"ok": _fail("second generation creation")}
     var g2a: Array = g2a_result["successors"]
     var g2b: Array = g2b_result["successors"]
     if g2a.size() != 2 or g2b.size() != 2:
-        return _fail("second generation cardinality")
+        return {"ok": _fail("second generation cardinality")}
+    return {
+        "ok": true,
+        "founder": founder,
+        "original": original,
+        "event": event,
+        "g1": g1,
+        "ended_g1a": ended_g1a,
+        "g1a_before": g1a_before,
+        "g2a": g2a,
+        "g2b": g2b,
+    }
 
+
+func _third_generation(family: Dictionary) -> Dictionary:
+    var g2a: Array = family["g2a"]
     var ended_g2a: MaricaPet = _end_pet(g2a[0])
     if ended_g2a == null:
-        return _fail("second generation terminal transition")
+        return {"ok": _fail("second generation terminal transition")}
     var g2a_before: Dictionary = ended_g2a.to_snapshot()
+    var event: MaricaSuccessionEvent = family["event"]
     var g3_result: Dictionary = event.trigger_once(ended_g2a, ["dog-g3a", "dog-g3b"], 16)
     if not g3_result.get("ok", false):
-        return _fail("third generation creation")
+        return {"ok": _fail("third generation creation")}
     var g3: Array = g3_result["successors"]
     if g3.size() != 2 or event.completed_count() != 4:
-        return _fail("third generation cardinality/event count")
+        return {"ok": _fail("third generation cardinality/event count")}
+    var result: Dictionary = family.duplicate()
+    result["g3"] = g3
+    result["ended_g2a"] = ended_g2a
+    result["g2a_before"] = g2a_before
+    return {"ok": true, "family": result}
+
+
+func _verify_family(family: Dictionary) -> bool:
+    var founder: MaricaPet = family["founder"]
+    var original: Dictionary = family["original"]
+    var event: MaricaSuccessionEvent = family["event"]
+    var g1: Array = family["g1"]
+    var ended_g1a: MaricaPet = family["ended_g1a"]
+    var g1a_before: Dictionary = family["g1a_before"]
+    var g2a: Array = family["g2a"]
+    var g2b: Array = family["g2b"]
+    var ended_g2a: MaricaPet = family["ended_g2a"]
+    var g2a_before: Dictionary = family["g2a_before"]
+    var g3: Array = family["g3"]
 
     var checks: Array = [
         [g1[0], 1, "dog-founder"],
