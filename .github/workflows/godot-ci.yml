@@ -738,6 +738,51 @@ jobs:
           git diff --exit-code -- game/src/domain/succession.gd
           echo "MARICA_G431_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
 
+      - name: G432 exactly-two deterministic successors (independent regression)
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/succession_pair_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g432-pair.log"
+          grep -Fq 'MARICA_G432_EXACTLY_TWO_PASS' "$RUNNER_TEMP/g432-pair.log"
+
+      - name: G432 pair cardinality mutation proof (GOOD > BAD > RESTORE)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp game/src/domain/succession.gd "$RUNNER_TEMP/g432-succession-good.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("game/src/domain/succession.gd")
+          source = path.read_text(encoding="utf-8")
+          target = 'return {"ok": true, "successors": [first["pet"], second["pet"]]}'
+          assert source.count(target) == 1, "G432 pair cardinality contract drifted"
+          path.write_text(
+              source.replace(target, 'return {"ok": true, "successors": [first["pet"]]}'),
+              encoding="utf-8",
+          )
+          print("G432 bad mutant: only one successor returned")
+          PY
+          set +e
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/succession_pair_runner.gd \
+            > "$RUNNER_TEMP/g432-mutant.log" 2>&1
+          mutant_exit="$?"
+          set -e
+          cp "$RUNNER_TEMP/g432-succession-good.gd" game/src/domain/succession.gd
+          if test "$mutant_exit" -eq 0; then
+            echo "G432 mutant unexpectedly passed"
+            exit 1
+          fi
+          grep -Fq 'MARICA_G432_FAIL expected exactly two successors' "$RUNNER_TEMP/g432-mutant.log"
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/succession_pair_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g432-restore.log"
+          grep -Fq 'MARICA_G432_EXACTLY_TWO_PASS' "$RUNNER_TEMP/g432-restore.log"
+          git diff --exit-code -- game/src/domain/succession.gd
+          echo "MARICA_G432_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
+
       - name: Upload Godot CI diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -794,4 +839,7 @@ jobs:
             ${{ runner.temp }}/g431-succession.log
             ${{ runner.temp }}/g431-mutant.log
             ${{ runner.temp }}/g431-restore.log
+            ${{ runner.temp }}/g432-pair.log
+            ${{ runner.temp }}/g432-mutant.log
+            ${{ runner.temp }}/g432-restore.log
           if-no-files-found: warn
