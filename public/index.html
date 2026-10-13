@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#081622">
+  <meta name="description" content="Maricá Game: status técnico da transição da V1 para Godot. Esta página ainda não é uma demonstração jogável.">
+  <title>Maricá Game — Preview técnico</title>
+  <style>
+    :root{color-scheme:dark;--bg:#081622;--panel:#102537;--border:#28516a;--white:#e8f5fc;--muted:#a4bdcd;--green:#36e3b9;--orange:#ffac42;--blue:#5fc6fc}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse 80% 40% at 90% 0%,#173b4b 0%,transparent 70%),var(--bg);color:var(--white);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    a{color:inherit}a:focus-visible{outline:3px solid var(--orange);outline-offset:4px}main,header,footer{max-width:1080px;margin:auto;padding-left:24px;padding-right:24px}
+    header{padding-top:24px;padding-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--border)}
+    .brand{font-weight:900;font-size:24px;letter-spacing:-1px;line-height:1}.brand b{color:var(--orange)}.eyebrow{color:var(--blue);font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+    .header-meta{font-size:13px;color:var(--muted);text-align:right}
+    .hero{padding:72px 0 35px}.flag{display:inline-flex;align-items:center;gap:8px;border:1px solid #396b70;background:#113734;border-radius:100px;padding:6px 13px;color:var(--green);font-weight:750;font-size:13px}
+    .dot{background:currentColor;width:8px;height:8px;display:inline-block;border-radius:50%}
+    h1{font-size:clamp(42px,7.5vw,78px);letter-spacing:-.055em;line-height:1.04;margin:19px 0 18px;max-width:870px}
+    h1 span{color:var(--orange)}.lead{max-width:750px;font-size:19px;color:var(--muted);margin:0}
+    .notice{margin:32px 0 36px;padding:19px 22px;border:1px solid #76603c;border-left:4px solid var(--orange);border-radius:12px;background:#2e281d}
+    .notice strong{color:#ffd18d}.notice p{margin:4px 0 0;color:#d4c8b3}
+    .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:32px 0 15px}
+    h2{font-size:22px;letter-spacing:-.02em;margin:0}.section-head small{font-size:13px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .card{border:1px solid var(--border);border-radius:16px;background:linear-gradient(150deg,#133047,var(--panel));padding:21px;min-height:203px}
+    .number{color:var(--blue);font-size:12px;font-weight:900;letter-spacing:.12em}.card h3{font-size:22px;line-height:1.25;margin:12px 0 10px}.card p{margin:0;color:var(--muted);font-size:15px}
+    .progress{margin:28px 0 0;background:#102333;border:1px solid var(--border);border-radius:16px;padding:20px 22px}
+    .progress-title{font-weight:800;margin-bottom:10px}.steps{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.step{border:1px solid #30485c;border-radius:8px;color:var(--muted);padding:6px 11px;font-size:13px;font-weight:700}.step.done{color:var(--green);border-color:#256658;background:#11372f}.step.next{color:var(--orange);border-color:#856236;background:#3b2f1d}
+    .actions{display:flex;flex-wrap:wrap;gap:13px;margin:28px 0 65px}
+    .button{display:inline-flex;align-items:center;justify-content:center;min-height:45px;border:1px solid #347d8a;border-radius:11px;background:#154b5b;color:#ebffff;padding:10px 17px;text-decoration:none;font-weight:750;transition:background .2s}
+    .button:hover{background:#1a6575}.button.secondary{background:transparent;border-color:var(--border);color:var(--muted)}.button.secondary:hover{background:#142b3c}
+    footer{border-top:1px solid var(--border);padding-top:19px;padding-bottom:40px;color:var(--muted);font-size:13px;display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
+    @media(max-width:720px){header{padding-top:19px}.brand{font-size:20px}.header-meta{font-size:11px}.hero{padding-top:51px}.grid{grid-template-columns:1fr}.card{min-height:0}.lead{font-size:17px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div><div class="brand">MARICÁ <b>GAME</b></div><div class="eyebrow">Animal-first · Godot V1</div></div>
+    <div class="header-meta">PREVIEW TÉCNICO<br>13 OUT 2026</div>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="flag"><span class="dot" aria-hidden="true"></span>Página web publicada</div>
+      <h1 id="page-title">Um novo ciclo de <span>vidas e linhagens.</span></h1>
+      <p class="lead">Maricá Game é um jogo cozy single-player de animais, cultivo e evolução da fazenda. A V1 está sendo construída em Godot com foco inicial no ciclo dos pets.</p>
+    </section>
+    <aside class="notice" aria-label="Estado do preview">
+      <strong>Esta não é uma demonstração jogável.</strong>
+      <p>O endereço web está disponível para acompanhar a implementação. A exportação Godot HTML5 e a primeira cena jogável ainda dependem dos gates de produção, testes e validação visual.</p>
+    </aside>
+    <div class="section-head"><h2>O que já existe no domínio do jogo</h2><small>Snapshot técnico · SPEC-004 · G432</small></div>
+    <div class="grid">
+      <article class="card"><div class="number">01 · ANIMAIS</div><h3>Vida e cuidado</h3><p>Estados de ciclo de vida, genética, saúde, carinho e vínculo já possuem testes independentes no domínio Godot.</p></article>
+      <article class="card"><div class="number">02 · LINHAGEM</div><h3>Duas sucessoras</h3><p>G432 compõe um par determinístico de descendentes, mantendo origem familiar e avanço genético. Idempotência ainda será implementada.</p></article>
+      <article class="card"><div class="number">03 · PRÓXIMOS PASSOS</div><h3>Fazenda jogável</h3><p>Persistência local, cena da fazenda, integração dos animais e exportação web ainda estão no roadmap executável.</p></article>
+    </div>
+    <section class="progress" aria-labelledby="progress-label">
+      <div id="progress-label" class="progress-title">Evolução do ciclo principal</div>
+      <div class="steps"><span class="step done">G430 · Genética</span><span class="step done">G431 · Uma sucessora</span><span class="step done">G432 · Duas sucessoras</span><span class="step next">G433 · Idempotência</span><span class="step">Godot HTML5 · pendente</span></div>
+    </section>
+    <nav class="actions" aria-label="Acompanhar projeto">
+      <a class="button" href="https://github.com/az1nn/marica-game">Ver repositório e roadmap ↗</a>
+      <a class="button secondary" href="https://github.com/az1nn/marica-game/actions">Consultar testes do Godot ↗</a>
+    </nav>
+  </main>
+  <footer><span>MARICÁ GAME · Prévia técnica, sem gameplay renderizado</span><span>Fonte de verdade: SPEC-004 no repositório</span></footer>
+</body>
+</html>
