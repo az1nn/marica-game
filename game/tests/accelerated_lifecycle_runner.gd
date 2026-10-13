@@ -100,9 +100,7 @@ func _tick(pet: MaricaPet, previous: float, day: int) -> Dictionary:
         return advanced
     var next_pet: MaricaPet = advanced["pet"]
     var health: Dictionary = next_pet.to_snapshot()["healthState"]
-    if (day == 3 and health["status"] != "sick") or (
-        day == 4 and health["status"] != "healthy"
-    ):
+    if (day == 3 and health["status"] != "sick") or (day == 4 and health["status"] != "healthy"):
         return {"ok": false, "error": "neglect, sickness or treatment timeline drift"}
     return {"ok": true, "pet": next_pet, "logical": sample["logicalNow"]}
 
