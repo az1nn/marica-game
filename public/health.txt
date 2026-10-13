@@ -1,0 +1,3 @@
+marica-game preview surface OK
+artifact=static-status
+playable-godot-export=NOT_AVAILABLE

@@ -1,0 +1,52 @@
+name: Web Preview Contract
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  static-preview:
+    name: Vercel public output and HTTP root
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Vercel configuration and static output contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from html.parser import HTMLParser
+          from pathlib import Path
+
+          config = json.loads(Path("vercel.json").read_text(encoding="utf-8"))
+          assert config["framework"] is None, "Expected Other/static framework"
+          assert config["outputDirectory"] == "public", "Vercel output dir mismatch"
+          assert config.get("buildCommand") is None, "Preview must not require an unconfigured build"
+          path = Path("public/index.html")
+          assert path.is_file(), "Missing public/index.html — would create Vercel root 404"
+          html = path.read_text(encoding="utf-8")
+          parser = HTMLParser()
+          parser.feed(html)
+          assert "<title>Maricá Game" in html, "Missing HTML title"
+          assert "não é uma demonstração jogável" in html, "Honest preview disclaimer missing"
+          assert "G432" in html, "Status snapshot is missing"
+          assert "playable-godot-export=NOT_AVAILABLE" in Path("public/health.txt").read_text(), "Health status must distinguish technical preview from playable export"
+          print("MARICA_WEB_PREVIEW_OUTPUT_PASS")
+          PY
+      - name: Smoke-test root and health via local HTTP
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory public &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in 1 2 3 4 5; do
+            if curl --fail --silent http://127.0.0.1:8765/ -o /tmp/marica-preview-root.html; then break; fi
+            sleep 1
+          done
+          grep -Fq "Maricá Game — Preview técnico" /tmp/marica-preview-root.html
+          curl --fail --silent http://127.0.0.1:8765/health.txt | grep -Fq 'marica-game preview surface OK'
+          echo "MARICA_WEB_PREVIEW_HTTP_PASS"
