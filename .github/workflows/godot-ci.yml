@@ -828,6 +828,51 @@ jobs:
           git diff --exit-code -- game/src/domain/succession_event.gd
           echo "MARICA_G433_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
 
+      - name: G434 multigeneration pedigree and founder-chain regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/succession_pedigree_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g434-pedigree.log"
+          grep -Fq 'MARICA_G434_MULTIGENERATION_PEDIGREE_PASS' "$RUNNER_TEMP/g434-pedigree.log"
+
+      - name: G434 intermediate-parent lineage mutation proof (GOOD > BAD > RESTORE)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp game/src/domain/succession.gd "$RUNNER_TEMP/g434-succession-good.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("game/src/domain/succession.gd")
+          source = path.read_text(encoding="utf-8")
+          target = '"parentPetIds": [parent_pet.get_id()],'
+          assert source.count(target) == 1, "G434 direct-parent succession contract drifted"
+          path.write_text(
+              source.replace(target, '"parentPetIds": [old_pedigree["founderPetId"]],'),
+              encoding="utf-8",
+          )
+          print("G434 bad mutant: second generation incorrectly records founder as direct parent")
+          PY
+          set +e
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/succession_pedigree_runner.gd \
+            > "$RUNNER_TEMP/g434-mutant.log" 2>&1
+          mutant_exit="$?"
+          set -e
+          cp "$RUNNER_TEMP/g434-succession-good.gd" game/src/domain/succession.gd
+          if test "$mutant_exit" -eq 0; then
+            echo "G434 mutant unexpectedly passed"
+            exit 1
+          fi
+          grep -Fq 'MARICA_G434_FAIL direct-parent link' "$RUNNER_TEMP/g434-mutant.log"
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/succession_pedigree_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g434-restore.log"
+          grep -Fq 'MARICA_G434_MULTIGENERATION_PEDIGREE_PASS' "$RUNNER_TEMP/g434-restore.log"
+          git diff --exit-code -- game/src/domain/succession.gd
+          echo "MARICA_G434_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
+
       - name: Upload Godot CI diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -890,4 +935,7 @@ jobs:
             ${{ runner.temp }}/g433-once.log
             ${{ runner.temp }}/g433-mutant.log
             ${{ runner.temp }}/g433-restore.log
+            ${{ runner.temp }}/g434-pedigree.log
+            ${{ runner.temp }}/g434-mutant.log
+            ${{ runner.temp }}/g434-restore.log
           if-no-files-found: warn
