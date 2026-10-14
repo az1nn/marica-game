@@ -41,7 +41,7 @@ func save(candidate: Variant, expected_revision: int, clock: Callable) -> Dictio
     var checked: Dictionary = VALIDATOR.validate(candidate)
     if not checked.get("ok", false):
         return checked
-    var current: Dictionary = load()
+    var current: Dictionary = self.load()
     if not current.get("ok", false):
         return current
     var found: bool = current.get("found", false)
@@ -55,9 +55,7 @@ func save(candidate: Variant, expected_revision: int, clock: Callable) -> Dictio
     if not found and next["revision"] != 0:
         return _fail("New save must begin at revision zero")
     var prior: float = (
-        float(current["snapshot"]["last_observed_at"])
-        if found
-        else float(next["last_observed_at"])
+        float(current["snapshot"]["last_observed_at"]) if found else float(next["last_observed_at"])
     )
     var observation: Dictionary = TIME.observe(clock, prior)
     if not observation.get("ok", false):
@@ -111,13 +109,13 @@ static func _unique_json_keys(raw: String) -> bool:
             var current: Dictionary = frames.back()
             if current["object"]:
                 current["expect_key"] = true
-        elif letter == "\"":
+        elif letter == '"':
             var start: int = i
             i += 1
             while i < raw.length():
                 if raw.substr(i, 1) == "\\":
                     i += 2
-                elif raw.substr(i, 1) == "\"":
+                elif raw.substr(i, 1) == '"':
                     break
                 else:
                     i += 1
