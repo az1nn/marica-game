@@ -5,7 +5,7 @@ Owner: SIGA → ARCH/GODOT + QA adversarial
 Opened: 2026-10-14 14:47 America/Sao_Paulo
 Base: master@69c57653d0e8fc5495c4bd3eb932cfc88401776c
 Branch: godot/g441-local-save-store-20261014
-Status: ACTIVE
+Status: CLOSED — verified PR #96 merged into master@4f58a825
 
 Scope:
 - game/src/adapters/local/save_store.gd (new; no changes to domain)
