@@ -8,8 +8,7 @@ const MAX_SAFE_INTEGER: int = 9007199254740991
 
 static func validate(snapshot: Variant) -> Dictionary:
     if not _fields(
-        snapshot,
-        ["schema_version", "revision", "last_observed_at", "pets", "succession_events"]
+        snapshot, ["schema_version", "revision", "last_observed_at", "pets", "succession_events"]
     ):
         return _fail("Save v1 envelope is invalid")
     var document: Dictionary = snapshot
@@ -110,8 +109,15 @@ static func _pet(value: Variant) -> bool:
     if not _fields(
         value,
         [
-            "id", "soulbound", "affection", "pedigree", "lifecycle", "geneticPotential",
-            "expressedTraits", "careState", "healthState"
+            "id",
+            "soulbound",
+            "affection",
+            "pedigree",
+            "lifecycle",
+            "geneticPotential",
+            "expressedTraits",
+            "careState",
+            "healthState"
         ]
     ):
         return false
