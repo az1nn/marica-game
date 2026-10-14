@@ -55,12 +55,12 @@
         "status": "active"
       },
       "geneticPotential": {
-        "resilience": 0.45,
-        "speed": 0.3
+        "resilience": 0.4,
+        "speed": 0.35
       },
       "expressedTraits": {
-        "resilience": 0.45,
-        "speed": 0.3
+        "resilience": 0.4,
+        "speed": 0.35
       },
       "careState": {
         "hunger": 0,
