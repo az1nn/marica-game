@@ -134,7 +134,9 @@ func _valid_complex_fixtures(store: MaricaLocalSaveStore) -> bool:
         if not loaded.get("ok", false) or not loaded.get("found", false):
             print("MARICA_G441_DIAGNOSTIC fixture=" + name + " load=" + str(loaded))
             return false
-        if loaded["snapshot"] != outcome["snapshot"]:
+        # Godot JSON normalizes integer wire values into integral floats when parsing.
+        var wire_expected: Variant = JSON.parse_string(JSON.stringify(outcome["snapshot"]))
+        if loaded["snapshot"] != wire_expected:
             print("MARICA_G441_DIAGNOSTIC fixture=" + name + " mismatched_roundtrip")
             return false
     return true
