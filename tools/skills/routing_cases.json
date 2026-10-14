@@ -185,5 +185,53 @@
       "action": "CAPABILITY_BLOCKED",
       "owner": "siga"
     }
+  },
+  {
+    "name": "generic QA review replaces GAUNTLET",
+    "request": {
+      "intent": "review",
+      "roadmap_ready": true,
+      "task_id": "O703"
+    },
+    "expect": {
+      "action": "DISPATCH",
+      "owner": "qa"
+    }
+  },
+  {
+    "name": "release remains SIGA authority",
+    "request": {
+      "intent": "release",
+      "roadmap_ready": true,
+      "task_id": "O708"
+    },
+    "expect": {
+      "action": "RECONCILE_AND_SELECT",
+      "owner": "siga"
+    }
+  },
+  {
+    "name": "3JS retired route fails closed",
+    "request": {
+      "intent": "3js",
+      "roadmap_ready": true,
+      "task_id": "O704"
+    },
+    "expect": {
+      "action": "TASK_SPEC_REQUIRED",
+      "owner": "siga"
+    }
+  },
+  {
+    "name": "Roblox retired route fails closed",
+    "request": {
+      "intent": "roblox",
+      "roadmap_ready": true,
+      "task_id": "O704"
+    },
+    "expect": {
+      "action": "TASK_SPEC_REQUIRED",
+      "owner": "siga"
+    }
   }
 ]

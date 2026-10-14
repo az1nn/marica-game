@@ -48,7 +48,7 @@ LENTE does not directly implement broad fixes. Route:
 - intended style/concept -> ARTIST;
 - visual materialization -> CENA;
 - Godot V1 runtime/camera/input -> SIGA request to GODOT/ARCH;
-- Roblox migration/future-port-only issues -> SIGA request to ROBLOX;
+- Roblox migration evidence -> SIGA historical reference only, not V1 production;
 - narrative uncertainty -> LORE;
 - product/task changes -> SIGA request to DESIGN or Spec Kit update;
 - architecture/render issues -> SIGA request to ARCH;
@@ -119,8 +119,8 @@ Do not pretend an unimplemented target exists just to complete the checklist.
 For each fresh scene, inspect:
 
 - visual style consistency;
-- low-poly readability;
-- pixel-texture consistency;
+- pixel art 2.5D readability at gameplay distance;
+- pixel-grid, palette and nearest-neighbor consistency;
 - camera/framing;
 - pet silhouette and emotional readability;
 - interaction targets;

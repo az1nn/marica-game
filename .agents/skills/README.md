@@ -1,30 +1,18 @@
-# Maricá Game — local skills
+# Maricá Game — 10 active skills (SPEC-007)
 
-Canonical repository: `az1nn/marica-game`. The only session opener is **SIGA**, including `SIGA code`, `SIGA architecture`, `SIGA design`, `SIGA artist`, `SIGA scene`, `SIGA review`, `SIGA qa`, `SIGA spec`.
+Canonical repo: az1nn/marica-game. SIGA is the ONLY session opener and decision controller.
 
 ```text
-SIGA — single-entry orchestrator, roadmap admission, conflicts, merge
-├── DESIGN — mechanics, systems, economy, progression
-├── LORE — narrative canon
-├── ARCH — architecture, APIs, persistence, performance, technical review
-├── GODOT — canonical Godot V1 engine/runtime
-├── ARTIST — visual direction and independent human visual gate
-├── CENA (SCENE alias) — pixel-art sprites, scenes, materialization
-├── LENTE — visual observation and exact-head A/B evidence
-├── QA — deterministic and integration quality
-├── GAUNTLET — independent bounded review / regression hunt
-├── ROBLOX — migration reference/future port (not V1 runtime)
-├── 3JS — noncanonical prototype/reference
-├── siga-concurrency — claim and collision safety
-└── RELATORIO — mandatory final read-only dashboard
+SIGA — spec/task gate, dispatch, concurrency barrier, merge and next action
+├── DESIGN — game rules, systems and progression
+├── LORE — canon and narrative
+├── ARCH — architecture and technical integrity
+├── GODOT — offline-first Godot V1 implementation
+├── ARTIST — pixel art 2.5D visual direction / independent acceptance
+├── CENA — assets/scenes materialization
+├── LENTE — exact-head rendered evidence
+├── QA — objective testing + independent adversarial critic
+└── RELATORIO — terminal interactive report / inline image fallback
 ```
 
-**No committed Spec Kit + task => no implementation, art production, code review verdict or merge.** SIGA creates/repairs spec/plan/tasks in a governance-only commit first, then performs a new task admission/claim. Direct standalone specialist names are compatibility aliases that request a SIGA session, not independent authorities.
-
-**Dispatch:** `IDENTITY -> RECONCILE -> SPEC_GATE -> CLASSIFY -> DEPENDENCY_RESOLVE -> ROUTE -> CLAIM -> EXECUTE -> VERIFY -> MERGE/WATCH -> HANDOFF -> RELATORIO`. Specialists execute bounded work and return to SIGA with evidence, missing dependency, next owner and acceptance status; no direct peer recursion.
-
-**Visual example:** concept ACCEPT -> ARCH/GODOT measured import -> CENA/SCENE playable slice -> LENTE exact-head A/B -> ARTIST runtime verdict. A blocked visual gate does not lock unrelated ready roadmap tasks. Prevent starvation by inspecting all active specs/PRs and tracking skipped ready specialist lanes.
-
-Approved artistic target: **full pixel art 2.5D** in `specs/005-pixel-art-v2-migration/`; historical low-poly text is not active guidance. Godot offline-first/animal-first remain canonical.
-
-See `docs/SKILL-TREE.md`, `tools/skills/skill_tree.json`, `tools/skills/routing_cases.json`. Validate with `python tools/skills/validate.py`.
+Archive-only references: 3JS, ROBLOX, GAUNTLET, siga-concurrency. Their evidence remains versioned but their dispatch edges are removed. SIGA owns mandatory collision barriers; QA owns independent critic, mutation proof and regression hunting. Review code -> ARCH then QA; review visual -> LENTE then ARTIST; release -> SIGA. No direct peer recursion. No committed Spec Kit + task = no mutation or authoritative verdict. Always verify exact SHA; preserve approved art versus runtime gates and respect artist PR #77 ownership. See docs/SKILL-TREE.md and docs/relatorio/INTERACTIVE-UI.md.

@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "repository": "az1nn/marica-game",
   "orchestrator": "siga",
   "returns_to": "siga",
@@ -12,10 +12,6 @@
     "cena",
     "lente",
     "qa",
-    "gauntlet",
-    "roblox",
-    "3js",
-    "siga-concurrency",
     "relatorio"
   ],
   "edges": [
@@ -53,22 +49,6 @@
     },
     {
       "from": "siga",
-      "to": "gauntlet"
-    },
-    {
-      "from": "siga",
-      "to": "roblox"
-    },
-    {
-      "from": "siga",
-      "to": "3js"
-    },
-    {
-      "from": "siga",
-      "to": "siga-concurrency"
-    },
-    {
-      "from": "siga",
       "to": "relatorio"
     }
   ],
@@ -82,9 +62,9 @@
     "lore": "lore",
     "qa": "qa",
     "inspect": "lente",
-    "release": "godot",
+    "release": "siga",
     "spec": "siga",
-    "review": "gauntlet",
+    "review": "qa",
     "review-code": "arch",
     "review-visual": "lente",
     "auto": "siga"
@@ -92,8 +72,7 @@
   "review_paths": {
     "code": [
       "arch",
-      "qa",
-      "gauntlet"
+      "qa"
     ],
     "visual": [
       "lente",
@@ -111,6 +90,12 @@
     "bootstrap_only_commit": true,
     "anti_starvation_runs": 2,
     "peer_direct_calls": false,
-    "concept_is_runtime_acceptance": false
+    "concept_is_runtime_acceptance": false,
+    "gauntlet_is_qa_mode": true,
+    "concurrency_is_siga_barrier": true,
+    "archived_lanes": [
+      "roblox",
+      "3js"
+    ]
   }
 }

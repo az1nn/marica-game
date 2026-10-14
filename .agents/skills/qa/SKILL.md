@@ -180,3 +180,7 @@ Gates: <commands/results>
 Failure: <none or classified failure>
 Next: <single next QA action>
 ~~~
+
+## Adversarial QA mode (GAUNTLET migration, SPEC-007)
+
+SIGA routes `review` to QA. For material P0/high-risk changes, freeze exact baseline and candidate SHAs and scoped criteria. Execute objective gates, then an independently isolated **fresh critic**, then GOOD→BAD MUTANT→RESTORE proof for measurable invariants and a separate regression hunt against accepted adjacent contracts. Record critic_isolated and return REGRESSIONS: NONE or bounded reproducible findings. Never merge a mutant. If the runner cannot execute the invariant, return BLOCKED. Use LENTE for real visual evidence and ARTIST for artistic acceptance. Stop on PASS, FAIL with evidence, HUMAN_REQUIRED, missing capability, repeated blocker without new strategy, or two bounded rounds without measurable progress. QA does not merge or select unrelated work. Historical .agents/skills/gauntlet/, docs/gauntlet/, tools/gauntlet/ remain archived read-only.
