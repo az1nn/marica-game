@@ -128,11 +128,14 @@ func _valid_complex_fixtures(store: MaricaLocalSaveStore) -> bool:
         fixture["revision"] = 0
         var outcome: Dictionary = store.save(fixture, -1, Callable(self, "_now"))
         if not outcome.get("ok", false):
+            print("MARICA_G441_DIAGNOSTIC fixture=" + name + " save=" + str(outcome))
             return false
         var loaded: Dictionary = store.load()
         if not loaded.get("ok", false) or not loaded.get("found", false):
+            print("MARICA_G441_DIAGNOSTIC fixture=" + name + " load=" + str(loaded))
             return false
         if loaded["snapshot"] != outcome["snapshot"]:
+            print("MARICA_G441_DIAGNOSTIC fixture=" + name + " mismatched_roundtrip")
             return false
     return true
 
