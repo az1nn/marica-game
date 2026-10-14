@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "revision": 2,
+  "last_observed_at": 1791983600,
+  "pets": {
+    "pet-founder-001": {
+      "id": "pet-founder-001",
+      "soulbound": true,
+      "affection": 0.8,
+      "pedigree": {
+        "lineageId": "lineage-001",
+        "generation": 0,
+        "founderPetId": "pet-founder-001",
+        "parentPetIds": []
+      },
+      "lifecycle": {
+        "stage": "senior",
+        "status": "ended",
+        "endReason": "natural"
+      },
+      "geneticPotential": {
+        "resilience": 0.4,
+        "speed": 0.3
+      },
+      "expressedTraits": {
+        "resilience": 0.4,
+        "speed": 0.3
+      },
+      "careState": {
+        "hunger": 0,
+        "hygiene": 1,
+        "affection": 1,
+        "energy": 1
+      },
+      "healthState": {
+        "status": "healthy",
+        "neglectHours": 0,
+        "untreatedHours": 0
+      }
+    },
+    "pet-child-001": {
+      "id": "pet-child-001",
+      "soulbound": false,
+      "affection": 0,
+      "pedigree": {
+        "lineageId": "lineage-001",
+        "generation": 1,
+        "founderPetId": "pet-founder-001",
+        "parentPetIds": [
+          "pet-founder-001"
+        ]
+      },
+      "lifecycle": {
+        "stage": "juvenile",
+        "status": "active"
+      },
+      "geneticPotential": {
+        "resilience": 0.4,
+        "speed": 0.35
+      },
+      "expressedTraits": {
+        "resilience": 0.4,
+        "speed": 0.35
+      },
+      "careState": {
+        "hunger": 0,
+        "hygiene": 1,
+        "affection": 1,
+        "energy": 1
+      },
+      "healthState": {
+        "status": "healthy",
+        "neglectHours": 0,
+        "untreatedHours": 0
+      }
+    },
+    "pet-child-002": {
+      "id": "pet-child-002",
+      "soulbound": false,
+      "affection": 0,
+      "pedigree": {
+        "lineageId": "lineage-001",
+        "generation": 1,
+        "founderPetId": "pet-founder-001",
+        "parentPetIds": [
+          "pet-founder-001"
+        ]
+      },
+      "lifecycle": {
+        "stage": "juvenile",
+        "status": "active"
+      },
+      "geneticPotential": {
+        "resilience": 0.45,
+        "speed": 0.3
+      },
+      "expressedTraits": {
+        "resilience": 0.45,
+        "speed": 0.3
+      },
+      "careState": {
+        "hunger": 0,
+        "hygiene": 1,
+        "affection": 1,
+        "energy": 1
+      },
+      "healthState": {
+        "status": "healthy",
+        "neglectHours": 0,
+        "untreatedHours": 0
+      }
+    }
+  },
+  "succession_events": {
+    "pet-founder-001": {
+      "parent_snapshot": {
+        "id": "pet-founder-001",
+        "soulbound": true,
+        "affection": 0.8,
+        "pedigree": {
+          "lineageId": "lineage-001",
+          "generation": 0,
+          "founderPetId": "pet-founder-001",
+          "parentPetIds": []
+        },
+        "lifecycle": {
+          "stage": "senior",
+          "status": "ended",
+          "endReason": "natural"
+        },
+        "geneticPotential": {
+          "resilience": 0.4,
+          "speed": 0.3
+        },
+        "expressedTraits": {
+          "resilience": 0.4,
+          "speed": 0.3
+        },
+        "careState": {
+          "hunger": 0,
+          "hygiene": 1,
+          "affection": 1,
+          "energy": 1
+        },
+        "healthState": {
+          "status": "healthy",
+          "neglectHours": 0,
+          "untreatedHours": 0
+        }
+      },
+      "successor_ids": [
+        "pet-child-001",
+        "pet-child-002"
+      ],
+      "succession_seed": 9
+    }
+  }
+}
