@@ -19,3 +19,13 @@ Limits:
 - Issue #86: saturated genetic potential still needs DESIGN/ARCH decision; do not certify universal advancement.
 
 Next: SPEC-004 **G441** implement local versioned SaveStore behind an application/adapter boundary with fail-closed load on unknown versions, injected clock and revision integrity, without changing the pure domain.
+
+
+## Latest verification — G441 (2026-10-14)
+
+- PR #96 exact head `42018f778d81405d08bb5b438103b2c2bf19f490`: G441 Local SaveStore, Godot CI, G440 Save Schema, ARCH V201 Source Import, Validate skills, Roblox CI and Web Preview Contract PASS. Optional Roblox Behavioral SKIPPED.
+- Guarded squash merged to `master@4f58a8251a4e9ccfd4c89d9a370b913081ccecbd`; post-merge Godot CI/skills/Roblox/Web Preview PASS.
+- Typed `MaricaLocalSaveStore`: versioned local JSON file I/O, fail-closed schema, malformed/duplicate JSON key rejection, optimistic revision, monotonic injected simulation time. Independent QA runner and stale-revision GOOD-BAD-RESTORE proof PASS.
+- Important boundary: writes are **not atomic or backed up**. G442 must implement crash-safe temp/swap/backup and recovery; G443 migration, G444 hydration, G445 durable replay, G446/G447 offline restart/catch-up remain pending.
+- No visual/runtime art gate is implied for ARTIST PR #77 or V201 screenshot PR #97. Genetics saturation issue #86 remains open.
+- NEXT: SPEC-004 G442 atomic save + backup/recovery.
