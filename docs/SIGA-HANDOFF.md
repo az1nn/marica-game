@@ -48,3 +48,15 @@ Gate evidence: PR head 41b4355464d2931148da05188193204d72d36046: Validate skills
 Concurrency: PR #77 ARTIST draft remains separate; claims on original SPEC-007 closed by this closeout. Master task G441 is next animal-first persistence work; V201/V201a ARTIST runtime prerequisites remain open.
 Terminal: Render interactive RELATORIO from freshly re-read GitHub state with default HEAD and branch/PR SHA separated. In clients without controls use one native inline image; never download-only.
 Next: SIGA select independently ready SPEC-004 G441 local SaveStore or V201 visual dependency after ownership/gate checks.
+
+
+## SIGA latest — G441 merged, next G442 (2026-10-14)
+
+MODE: ADVANCE
+REPO: az1nn/marica-game master@4f58a8251a4e9ccfd4c89d9a370b913081ccecbd
+PR: #96 MERGED after exact-head tests at 42018f778d81405d08bb5b438103b2c2bf19f490
+DONE: G441 typed Godot SaveStore for local versioned JSON, strict v1 validation, duplicate key rejection, optimistic revision compare, rollback-clamped injected time and deterministic headless QA/mutation proof.
+GATES: G441 SaveStore, Godot CI, G440 Schema, ARCH V201, Validate skills, Roblox CI, Web Preview Contract PASS on exact PR head; master post-merge Godot/skills/Roblox/Web Preview PASS. This closeout PR still has separate exact-head gates.
+CONCURRENCY: Visual PRs #77 and #97 remain draft and do not intersect G441 changed paths. G441 claim CLOSED.
+BOUNDARY: G441 direct file write is not crash-safe; do not mark G442 atomic/backup or G443-G447 integration as complete. Issue #86 genetic saturation remains unresolved.
+NEXT: SPEC-004 G442 — implement crash-safe temp-file replacement, backup/recovery and fault-injection QA without changing pure domain.
