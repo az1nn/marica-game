@@ -9,3 +9,5 @@ Status: ACTIVE
 Scope: game/tests/v201_capture_runner.gd; .github/workflows/v201-visual-evidence.yml; docs/arch/V201-CAPTURE-HARNESS.md; this claim. No ARTIST asset or production scene edits.
 Guard: Claim first; re-read master, PR heads and claims; no overlapping files; exact-head CI; no merge on missing executable render evidence. Preserve source image blob and handoffs. Separate G441 PR #96 and ARTIST PR #77 remain their owners.
 No acceptance: rendering evidence/probe never proves artist approval, mobile device performance, full V201 or V201a closure.
+
+Reconciled after G441 PR #96 merged: master@4f58a8251a4e9ccfd4c89d9a370b913081ccecbd. All six G441 added files copied byte-for-byte into V201 candidate; no V201 task/art changes. V201 checks from old SHA are GATE_STALE and MUST rerun on reconciled SHA. Concurrent ARTIST PR #77 untouched.
