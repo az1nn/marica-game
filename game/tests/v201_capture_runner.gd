@@ -121,7 +121,7 @@ func _capture_one(config: Dictionary) -> Dictionary:
     var informative: int = 0
     for y in range(4, size.y, 48):
         for x in range(4, size.x, 48):
-            if image.get_pixel(x, y).distance_to(baseline) > 0.06:
+            if image.get_pixel(x, y) != baseline:
                 informative += 1
     if informative < 8:
         viewport.queue_free()
@@ -131,14 +131,15 @@ func _capture_one(config: Dictionary) -> Dictionary:
         viewport.queue_free()
         return {"ok": false, "error": "PNG save failed: " + name}
 
+    var sampling: String = "nearest"
+    if config["filter"] == CanvasItem.TEXTURE_FILTER_LINEAR:
+        sampling = "linear"
     var result: Dictionary = {
         "name": name,
         "file": name + ".png",
         "viewport": [size.x, size.y],
         "scale": config["scale"],
-        "sampling": (
-            "nearest" if config["filter"] == CanvasItem.TEXTURE_FILTER_NEAREST else "linear"
-        ),
+        "sampling": sampling,
         "informative_grid_samples": informative,
         "art_acceptance": "NOT_EVALUATED",
         "mobile_device_verified": false
