@@ -7,6 +7,6 @@
 - [x] **O604** Add machine-readable skill graph and routing examples; document SCENE/CENA and REVIEW mappings.
 - [x] **O605** Extend validator with missing-owner, invalid-edge, stale-baseline, spec-gate and graph regression checks.
 - [x] **O606** Prove deterministic cases (artist blocked by ARCH, no-roadmap bootstrap, review routing, REVISE, ready parallel lanes); validator PASS.
-- [ ] **O607** Verify exact-head GitHub CI, guarded PR merge (only after gates), reconcile active claims, handoff and RELATORIO.
+- [x] **O607** Verify exact-head GitHub CI, guarded PR merge (only after gates), reconcile active claims, handoff and RELATORIO.
 
 Sequence: O601–O606 may be a single reviewed skill-system change after O600; O607 is a separate verification/closeout gate.
