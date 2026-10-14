@@ -918,6 +918,48 @@ jobs:
           git diff --exit-code -- game/src/domain/simulation_time.gd
           echo "MARICA_G435_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
 
+      - name: G436 independent Phase D holistic GAUNTLET
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/gauntlet_phase_d_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g436-gauntlet.log"
+          grep -Fq 'MARICA_G436_PHASE_D_GAUNTLET_PASS' "$RUNNER_TEMP/g436-gauntlet.log"
+
+      - name: G436 cross-contract care-expression mutation (GOOD > BAD > RESTORE)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp game/src/domain/care.gd "$RUNNER_TEMP/g436-care-good.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("game/src/domain/care.gd")
+          original = path.read_text(encoding="utf-8")
+          target = 'factors[trait_name] = quality_result["quality"]'
+          assert original.count(target) == 1, "G436 care/expression invariant drifted"
+          path.write_text(original.replace(target, 'factors[trait_name] = 1.0'), encoding="utf-8")
+          print("G436 bad mutant: neglect no longer changes expressed genetic traits")
+          PY
+          set +e
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/gauntlet_phase_d_runner.gd \
+            > "$RUNNER_TEMP/g436-mutant.log" 2>&1
+          mutant_exit="$?"
+          set -e
+          cp "$RUNNER_TEMP/g436-care-good.gd" game/src/domain/care.gd
+          if test "$mutant_exit" -eq 0; then
+            echo "G436 care/expression mutant unexpectedly passed"
+            exit 1
+          fi
+          grep -Fq 'MARICA_G436_FAIL care expression coupling' "$RUNNER_TEMP/g436-mutant.log"
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/gauntlet_phase_d_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g436-restore.log"
+          grep -Fq 'MARICA_G436_PHASE_D_GAUNTLET_PASS' "$RUNNER_TEMP/g436-restore.log"
+          git diff --exit-code -- game/src/domain/care.gd
+          echo "MARICA_G436_MUTATION_PROOF_PASS good=pass bad=fail restore=pass"
+
       - name: Upload Godot CI diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -986,4 +1028,7 @@ jobs:
             ${{ runner.temp }}/g435-lifecycle.log
             ${{ runner.temp }}/g435-mutant.log
             ${{ runner.temp }}/g435-restore.log
+            ${{ runner.temp }}/g436-gauntlet.log
+            ${{ runner.temp }}/g436-mutant.log
+            ${{ runner.temp }}/g436-restore.log
           if-no-files-found: warn
