@@ -39,9 +39,11 @@ func _run_cases() -> bool:
         return false
     var loaded: Dictionary = store.load()
     if not _check(
-        loaded.get("ok", false)
-        and loaded.get("found", false)
-        and loaded["snapshot"]["last_observed_at"] == 1000.0,
+        (
+            loaded.get("ok", false)
+            and loaded.get("found", false)
+            and loaded["snapshot"]["last_observed_at"] == 1000.0
+        ),
         "first disk load"
     ):
         return false
@@ -52,9 +54,11 @@ func _run_cases() -> bool:
     _clock_value = 500.0
     var update: Dictionary = store.save(first["snapshot"], 0, Callable(self, "_now"))
     if not _check(
-        update.get("ok", false)
-        and update["revision"] == 1
-        and update["snapshot"]["last_observed_at"] == 1000.0,
+        (
+            update.get("ok", false)
+            and update["revision"] == 1
+            and update["snapshot"]["last_observed_at"] == 1000.0
+        ),
         "logical time monotonicity"
     ):
         return false
@@ -99,9 +103,7 @@ func _reject_invalid_and_corrupt(store: MaricaLocalSaveStore) -> bool:
         return false
     if store.save(original["snapshot"], 1, Callable(self, "_now")).get("ok", false):
         return false
-    var source: String = FileAccess.get_file_as_string(
-        "res://tests/fixtures/save_v1_founder.json"
-    )
+    var source: String = FileAccess.get_file_as_string("res://tests/fixtures/save_v1_founder.json")
     var duplicated: String = source.replace(
         '"affection": 0.25', '"affection": 0.25, "affection": 0.25'
     )
