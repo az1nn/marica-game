@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "repository": "az1nn/marica-game",
+  "orchestrator": "siga",
+  "returns_to": "siga",
+  "specialists": [
+    "design",
+    "lore",
+    "arch",
+    "godot",
+    "artist",
+    "cena",
+    "lente",
+    "qa",
+    "gauntlet",
+    "roblox",
+    "3js",
+    "siga-concurrency",
+    "relatorio"
+  ],
+  "edges": [
+    {
+      "from": "siga",
+      "to": "design"
+    },
+    {
+      "from": "siga",
+      "to": "lore"
+    },
+    {
+      "from": "siga",
+      "to": "arch"
+    },
+    {
+      "from": "siga",
+      "to": "godot"
+    },
+    {
+      "from": "siga",
+      "to": "artist"
+    },
+    {
+      "from": "siga",
+      "to": "cena"
+    },
+    {
+      "from": "siga",
+      "to": "lente"
+    },
+    {
+      "from": "siga",
+      "to": "qa"
+    },
+    {
+      "from": "siga",
+      "to": "gauntlet"
+    },
+    {
+      "from": "siga",
+      "to": "roblox"
+    },
+    {
+      "from": "siga",
+      "to": "3js"
+    },
+    {
+      "from": "siga",
+      "to": "siga-concurrency"
+    },
+    {
+      "from": "siga",
+      "to": "relatorio"
+    }
+  ],
+  "aliases": {
+    "scene": "cena",
+    "artist": "artist",
+    "architecture": "arch",
+    "arch": "arch",
+    "design": "design",
+    "code": "godot",
+    "lore": "lore",
+    "qa": "qa",
+    "inspect": "lente",
+    "release": "godot",
+    "spec": "siga",
+    "review": "gauntlet",
+    "review-code": "arch",
+    "review-visual": "lente",
+    "auto": "siga"
+  },
+  "review_paths": {
+    "code": [
+      "arch",
+      "qa",
+      "gauntlet"
+    ],
+    "visual": [
+      "lente",
+      "artist"
+    ],
+    "gameplay": [
+      "design"
+    ],
+    "narrative": [
+      "lore"
+    ]
+  },
+  "rules": {
+    "strict_spec_kit": true,
+    "bootstrap_only_commit": true,
+    "anti_starvation_runs": 2,
+    "peer_direct_calls": false,
+    "concept_is_runtime_acceptance": false
+  }
+}
