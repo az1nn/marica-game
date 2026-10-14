@@ -56,6 +56,7 @@ func _integrity_cases() -> bool:
         return false
     return _check(_reject_corrupt_store(), "G442 future save fails closed")
 
+
 func _identity(name: String) -> bool:
     var original: Dictionary = _fixture(name)
     var result: Dictionary = MIGRATION.migrate(original)
