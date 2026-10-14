@@ -10,3 +10,9 @@
 8. Abrir PR; reconciliar concorrência novamente; merge com SHA guard apenas após gates verdes; RELATORIO final.
 
 Rollback: reverter commit da refatoração, mantendo SPEC-007 e trilha de auditoria.
+
+## Extensão: entrega GPT UI interativa
+1. Criar manifesto JSON versionado com schema, campos de origem, exact SHA e estados de gate, separado de desenho/layout.
+2. Adaptar RELATORIO e SIGA para preferir apresentação interativa nativa quando disponível, preservando imagem inline como fallback; não usar links de download como substituto.
+3. Criar roteiro/artefato de demonstração do painel em UI, sem presumir que um arquivo estático executa DIL/AppBlock.
+4. Validar JSON, snapshot stale, missing/unverified, filtros, deep-links, ordem canônica, dispositivos estreitos, acessibilidade e zero ações mutáveis.
