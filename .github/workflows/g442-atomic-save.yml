@@ -53,9 +53,9 @@ jobs:
           from pathlib import Path
           p = Path("game/src/adapters/local/save_store.gd")
           source = p.read_text()
-          target = 'if previous.get("found", false):'
+          target = 'if not previous.get("found", false):'
           assert source.count(target) == 1, "G442 backup guard drifted"
-          p.write_text(source.replace(target, 'if false and previous.get("found", false):'))
+          p.write_text(source.replace(target, 'if true or not previous.get("found", false):'))
           print("G442 BAD mutant disables backup rotation")
           PY
           set +e

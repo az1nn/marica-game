@@ -50,6 +50,7 @@ func _missing_or_incomplete() -> Dictionary:
         return _fail("Interrupted first save found; incomplete staging is not a profile")
     return {"ok": true, "found": false}
 
+
 func _read_validated(path: String) -> Dictionary:
     if not FileAccess.file_exists(path):
         return {"ok": true, "found": false}
@@ -149,6 +150,7 @@ func _backup_before_replace(previous: Dictionary) -> Dictionary:
     if _interrupted("after_backup"):
         return _fail("Simulated interruption after backup; primary preserved")
     return {"ok": true}
+
 
 func _restore_backup(document: Dictionary) -> Dictionary:
     var staged: Dictionary = _stage_document(_restore_path(), document)

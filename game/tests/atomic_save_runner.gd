@@ -59,9 +59,8 @@ func _historical_fixture_cases(store: MaricaLocalSaveStore) -> bool:
     if not _check(_fixture_roundtrip(store, "save_v1_founder.json"), "founder backup"):
         return false
     _cleanup()
-    return _check(
-        _fixture_roundtrip(store, "save_v1_succession.json"), "succession ledger backup"
-    )
+    return _check(_fixture_roundtrip(store, "save_v1_succession.json"), "succession ledger backup")
+
 
 func _interrupted_initial_save() -> bool:
     var interrupted: MaricaLocalSaveStore = STORE.new(PATH, Callable(self, "_after_temp"))
