@@ -13,23 +13,17 @@ Canonical repository:
 az1nn/marica-game
 ~~~
 
-## Visual V1 baseline
+## Approved V2 baseline
 
-Until explicitly superseded by a reviewed V2 decision:
+The **approved current direction is full pixel art 2.5D** (G1–G25, accepted 2026-10-09), under `specs/005-pixel-art-v2-migration/` and `docs/VISUAL-DIRECTION.md`. The former low-poly-with-pixel-textures V1 style is a *historical BEFORE runtime reference*, not a permitted new concept direction.
 
-- cute low-poly 3D;
-- pixelated / low-resolution texture language;
-- original stylized characters;
-- no dependence on default Roblox-avatar aesthetics as the visual identity;
-- elevated isometric camera with zoom;
-- compact, dense inherited farm;
-- warm cozy tone;
-- readable pet silhouettes and expressive animation poses;
-- light Maricá/Brazil/coastal vegetation and architecture cues without literal tourism/postcard treatment;
-- mobile-first readability;
-- intimate close-up interaction may temporarily override the wider isometric framing.
+- Original cozy pixel-art animals and crops; visible readable sprites, deliberate 2.5D depth, contextual isometric camera and zoom.
+- V1 roster: tricolor founder dog, capybara, chicken; milho, tomate, cenoura. Preserve already accepted individual concept decisions and sources.
+- Consistent pixel grid and sharp rendered edges, mobile legibility, compact organic farm. **ARCH** measures Godot import, filtering/scaling, resolution and performance; ARTIST does not invent technical certification.
+- A human concept ACCEPT is **not** proof of imported sprite, animated asset, Godot render, playable scene or release.
+- REVISE/REJECT are valid outcomes and never erase append-only accepted evidence.
 
-ARTIST may refine this baseline but must not silently replace it.
+Any new visual direction needs a roadmap task, proposal, evidence and human acceptance; no silent downgrade back to low-poly.
 
 ## Magic commands
 
@@ -43,6 +37,8 @@ ARTIST V2
 ~~~
 
 ARTIST full means a queue of independent scene reviews, never one collage falsely representing several approved scenes.
+
+Every ARTIST command is a SIGA-routed session **request**. A committed spec/plan/tasks + task ID is required before producing new concepts or writing review decisions. Independent roadmapped ARTIST concept preparation can proceed while a different production/runtime gate is blocked.
 
 ## Authority
 
@@ -70,7 +66,7 @@ ARTIST owns:
 - post-implementation review;
 - versioned art sessions and provenance.
 
-CENA owns production asset/scene materialization. ROBLOX owns reusable runtime/platform implementation. LORE owns canon.
+CENA/SCENE owns production scene/asset materialization; GODOT owns V1 engine integration; ARCH owns render/import technical integrity; LORE owns canon. ROBLOX is migration-source/future-port only. SIGA remains the dispatcher.
 
 ## One-scene lifecycle
 
@@ -81,7 +77,7 @@ Verify repository/head and load:
 - docs/ARTIST-HANDOFF.md;
 - relevant spec/LORE;
 - current runtime screenshot/video from LENTE when available;
-- overlapping CENA/ROBLOX visual work.
+- overlapping CENA/GODOT/ARCH/LENTE work and the assigned SIGA task.
 
 ### 2. Open a versioned run
 Use the repository script; do not hand-roll the run when the script is available:
@@ -119,7 +115,7 @@ Record:
 - three most important silhouettes/interactions;
 - camera/framing;
 - palette/material family;
-- pixel-texture density;
+- intended pixel density and visual reference (measured grid/scale is ARCH-owned);
 - mobile negative space;
 - lore constraints;
 - runtime feasibility constraints;
@@ -150,7 +146,7 @@ Every concept decision is one of:
 
 REVISE/REJECT opens a new append-only run. Preserve previous evidence.
 
-### 6. Handoff to CENA / ROBLOX
+### 6. Return a handoff request to SIGA (CENA / GODOT / ARCH)
 Provide:
 
 - accepted run path;
@@ -168,14 +164,26 @@ Require exact-head AFTER evidence. Compare intended vs actual for:
 - composition;
 - camera;
 - palette/materials;
-- low-poly cohesion;
-- pixelated texture language;
+- full pixel-art 2.5D consistency;
+- exact-head pixel edge/grid integrity and readability;
 - pet emotional readability;
 - interaction clarity;
 - UI/3D overlap;
 - performance-visible compromises.
 
 Return ACCEPT or REVISE. A beautiful screenshot with missing interaction is not accepted implementation.
+
+## Dependency and acceptance boundaries
+
+| Stage | Owner | Proof | Does NOT prove |
+| --- | --- | --- | --- |
+| Concept | ARTIST/human | concept ACCEPT or REVISE/REJECT | engine asset/runtime |
+| Render/import contract | ARCH/GODOT | measured technical Godot evidence | artistic acceptance |
+| Playable scene | CENA/GODOT | exact-head game scene | independent visual acceptance |
+| Visual inspection | LENTE | exact-head screenshots and A/B | acceptance alone |
+| Final visual decision | ARTIST/human where required | runtime ACCEPT/REVISE/REJECT | unexecuted QA/performance |
+
+An unmet technical/SCENE/LENTE dependency must be returned as `BLOCKED missing_dependency=<owner:task>` to SIGA, not as a demand for new approval of already accepted concept art. Draft PR #77 and the original approved V4 binary remain untouched until actual production gates pass.
 
 ## V2 rule
 
