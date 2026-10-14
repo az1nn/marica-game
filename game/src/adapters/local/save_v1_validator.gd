@@ -139,7 +139,10 @@ static func _pet(value: Variant) -> bool:
     if potential.size() != expressed.size():
         return false
     for trait_name in potential:
-        if not expressed.has(trait_name) or float(expressed[trait_name]) > float(potential[trait_name]):
+        if (
+            not expressed.has(trait_name)
+            or float(expressed[trait_name]) > float(potential[trait_name])
+        ):
             return false
     return true
 
