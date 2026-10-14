@@ -31,3 +31,7 @@ The dedicated `G441 Local SaveStore` workflow uses pinned Godot 4.7.2-stable on 
 **Merge gate:** no merge on authored tests alone. Wait for exact-head G441 Local SaveStore + Godot CI + Validate skills + other required checks; reconcile open claims/PRs and master. G441 completion and handoff persisted **after** code merge in a separate checked closeout PR.
 
 **Next:** G442 atomic save + backup/recovery. Do not expose G441 direct writer as a safe player save API until G442.
+
+## Historical G441 limitation superseded by G442 (2026-10-14)
+
+This file records the original G441 direct writer at its historical completion. PR #101 / G442, merged at master@e90173f3bb8c720101cdbe9511b3970f0f30b41d, replaced direct writes with staged verification, previous-version backup and guarded recovery. See game/docs/G442-ATOMIC-SAVE.md for current behavior and remaining cross-platform power-loss limits. G443–G447 are still pending.

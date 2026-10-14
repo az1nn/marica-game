@@ -34,3 +34,12 @@ G442 — atomic local save + backup/recovery; use G441 guarded adapter as baseli
 Classification: ADVANCE for bounded V201 screenshot instrumentation, WATCH for full V201/V201a art/runtime contract. PR #97 merged at `master@10670f712e2b8862f05d6daef3d155cb4f004389` with eight exact-feature-head workflows green (candidate ae973848) and independent LENTE/ARCH visual acceptance still open. G441 SaveStore and closeout completed separately; G442 is the next P0 persistence task. ARTIST draft PR #77 remains isolated. Source images are GitHub Actions artifacts for [V201 render run 38613081336](https://github.com/az1nn/marica-game/actions/runs/38613081336), not a native/mobile release proof.
 
 No claims of V201/V201a, V203 or V205 completion. Claim for technical capture closed in its own PR; post-closeout CI must target that new SHA. Next SIGA safely picks G442 as the P0 animal-first task or the first independent V201 technical dependency without overlapping active claims.
+
+## SIGA G442 verified merge and handoff (2026-10-14)
+
+STATE: ADVANCE. PR #101 guarded merge master@e90173f3bb8c720101cdbe9511b3970f0f30b41d.
+DONE: G442 stages and verifies local JSON, rotates previous valid primary to backup, promotes primary by rename, recovers only verified backup with explicit recovered flag. No silent founder creation from incomplete/corrupt files.
+VERIFY: PR head 29543918db2ed3afb12f61dc561225275deb95e6 — G442 Atomic Save 12 scenarios and QA mutation GOOD/BAD/RESTORE, G441 SaveStore, G440 Schema, Godot CI, Validate skills, ARCH V201, Web Preview, Roblox CI PASS. Roblox Behavioral SKIPPED. No false claim of master post-merge CI.
+CONCURRENCY: G442 claim closed in separate documentation PR; ARTIST PR #77 untouched, disjoint ownership. V201/V201a artist gates remain separate.
+LIMIT: platform/physical fsync and power loss, true multiprocess CAS, G443 migration, G444 hydration, G445 event replay, G446 restart, G447 offline return are not certified. Vercel build-rate limit unrelated to gameplay/save test.
+NEXT: G443 schema_version migration harness after new live SIGA reconciliation.
