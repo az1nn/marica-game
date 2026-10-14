@@ -1,26 +1,20 @@
-# Maricá Game — SIGA single-entry call graph
+# SIGA 10-node skill graph — SPEC-007
 
-This is a **protocol**, not evidence that a separate automated agent runtime executed.
+This is a deterministic routing **protocol**, not evidence of autonomous peer agent execution.
 
 ```text
-                         SIGA
-      [SPEC_GATE / ownership / routing / merge]
-      |    |      |      |       |       |
-    DESIGN LORE   ARCH   GODOT  ARTIST   CENA (SCENE)
-      |    |      |      |       |       |
-      +----+------+------+-...--+-------+
-                         |
-                     return SIGA
-       Others dispatched by SIGA: QA, GAUNTLET,
-        LENTE, ROBLOX, 3JS, siga-concurrency
-                         |
-                     RELATORIO (terminal)
+                SIGA (sole controller)
+       Spec Kit + task -> claim -> dispatch
+           |           |           |
+   DESIGN  LORE  ARCH  GODOT  ARTIST
+   CENA   LENTE QA    RELATORIO
+         | returned result to SIGA |
+  SIGA exact-head VERIFY -> guarded MERGE/WATCH
+         -> RELATORIO terminal
 ```
 
-Allowed graph edges: SIGA -> one selected specialist; specialist -> SIGA **return result**, never a recursive peer call. Task/spec selection, concurrency and acceptance authority never leave SIGA.
+Only SIGA -> exactly one specialist dispatch edges; return result goes to SIGA, never direct recursion. Concurrency (snapshot, claim, post-claim barrier, optimistic write, exact-head, guarded merge) is internal to SIGA. Independent adversarial critic, mutation proof and regression hunting are QA mode. Historical 3JS, ROBLOX, GAUNTLET and siga-concurrency contracts remain archived/read-only, never as production V1 lanes.
 
-**Example ARTIST blocked:** approved V4 founder-dog source remains concept ACCEPT, not runtime. SIGA must find first missing runnable dependency in SPEC-005: ARCH/GODOT V201/V201a -> CENA/SCENE V203 -> LENTE V205 -> ARTIST runtime decision. If ARCH is unavailable, record CAPABILITY_BLOCKED and progress an unrelated ready Spec Kit task where safe. Do not repeatedly ask ARTIST for the already-approved concept.
+Review: code -> ARCH/QA; visual -> LENTE/ARTIST; narrative -> LORE; gameplay -> DESIGN; release -> SIGA. Missing Spec Kit/task stops all mutation, even reporting changes. Artist concept ACCEPT is not runtime PASS: ARCH/GODOT V201/V201a -> CENA/GODOT V203 -> LENTE V205 -> ARTIST independent runtime decision. No low-poly; V1 targets approved full pixel art 2.5D. Anti-starvation remains two skipped runnable sessions when safe.
 
-**REVIEW routing:** architecture/code: ARCH, QA/GAUNTLET as needed; gameplay: DESIGN; narrative: LORE; visuals: LENTE then ARTIST. No authoritative review verdict without a task and scope.
-
-**No roadmap:** commit governance-only spec/plan/tasks first, then reconcile the committed task before implementation. A concept, source file, generated image, runtime artifact, exact-head evidence and human visual verdict are different acceptance stages. Reject/revise are valid outcomes.
+RELATORIO terminal prefers interactive native UI (Resumo/Tarefas/Gates/Grafo/Evidências) with immutable exact-head snapshot, else one inline image; VISUAL_BLOCKED is explicit when unavailable. Read docs/relatorio/INTERACTIVE-UI.md.

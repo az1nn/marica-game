@@ -1,3 +1,9 @@
+# Archived legacy skill: gauntlet
+
+> SPEC-007 historical contract; not active. Current orchestration, concurrence and QA gates remain mandatory.
+
+---
+
 ---
 name: gauntlet
 description: Run bounded adversarial quality loops for Maricá Game: baseline, independent criticism, mutation proof, regression hunting and exact-head evidence under SIGA authority.

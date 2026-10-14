@@ -13,19 +13,15 @@ from dispatch import decide, roadmap_tasks
 
 REQUIRED_SKILLS = (
     "siga",
-    "siga-concurrency",
     "design",
     "arch",
     "lore",
     "artist",
     "cena",
-    "roblox",
     "qa",
-    "gauntlet",
     "lente",
     "relatorio",
     "godot",
-    "3js",
 )
 
 REQUIRED_DOCS = (
@@ -67,20 +63,20 @@ SIGA_REQUIRED_MARKERS = (
     "## MERGE / WATCH",
     "## PERSIST",
     "## CONTINUE",
-    ".agents/skills/siga-concurrency/SKILL.md",
+    "docs/SIGA-CONCURRENCY.md",
     "## Dispatch decision contract",
     "tools/skills/skill_tree.json",
     "No task mutation without a committed Spec Kit roadmap",
     "python tools/skills/validate.py",
-    ".agents/skills/gauntlet/SKILL.md",
-    "native inline image surface",
+    ".agents/skills/qa/SKILL.md",
+    "interactive native UI surface",
     "VISUAL_BLOCKED",
 )
 
 RELATORIO_REQUIRED_MARKERS = (
     "## Inline delivery contract",
-    "## Native inline rendering path",
-    "native inline image surface",
+    "## Interactive delivery path",
+    "interactive native UI surface",
     "VISUAL_BLOCKED",
     "download-only",
     "### Composition QA gate",
@@ -148,6 +144,8 @@ def validate_skill_graph(root: Path, errors: list[str]) -> int:
     if graph.get("orchestrator") != "siga" or graph.get("returns_to") != "siga":
         errors.append("SIGA must be the single orchestrator/return controller")
     rules = graph.get("rules", {})
+    if rules.get("gauntlet_is_qa_mode") is not True or rules.get("concurrency_is_siga_barrier") is not True:
+        errors.append("mandatory QA adversarial and SIGA concurrency rules missing")
     if (rules.get("strict_spec_kit") is not True
             or rules.get("bootstrap_only_commit") is not True
             or rules.get("peer_direct_calls") is not False
@@ -171,6 +169,10 @@ def validate_skill_graph(root: Path, errors: list[str]) -> int:
         errors.append("SCENE/CENA or ARCH alias missing")
     if graph.get("review_paths", {}).get("visual") != ["lente", "artist"]:
         errors.append("visual review must route LENTE then ARTIST")
+    if graph.get("review_paths", {}).get("code") != ["arch", "qa"]:
+        errors.append("code review must route ARCH then QA")
+    if aliases.get("review") != "qa" or aliases.get("release") != "siga":
+        errors.append("review and release routes must respect QA/SIGA authority")
 
     spec_dir = root / "specs/006-single-entry-skill-orchestration"
     if not all((spec_dir / name).is_file() for name in ("spec.md", "plan.md", "tasks.md")):
@@ -221,6 +223,11 @@ def main() -> int:
     root = Path(args.root).resolve()
 
     errors: list[str] = []
+
+    discovered = {item.parent.name for item in (root / ".agents" / "skills").glob("*/SKILL.md")}
+    if discovered != set(REQUIRED_SKILLS):
+        errors.append("active skill discovery must match exactly ten approved nodes: "
+                      + str(sorted(discovered)))
 
     for skill in REQUIRED_SKILLS:
         path = root / ".agents" / "skills" / skill / "SKILL.md"
@@ -274,6 +281,12 @@ def main() -> int:
                 errors.append(f"RELATORIO delivery marker missing: {marker}")
 
     routing_count = validate_skill_graph(root, errors)
+    import subprocess
+    report_tests = subprocess.run([sys.executable, "-m", "unittest", "discover", "-s",
+                                   str(root / "tools" / "relatorio"), "-p", "test_*.py"],
+                                  cwd=root, text=True, capture_output=True)
+    if report_tests.returncode:
+        errors.append("interactive report tests failed: " + report_tests.stderr[-1200:])
     validate_visual_v2_authority(root, errors)
 
     if errors:
@@ -284,9 +297,10 @@ def main() -> int:
 
     print("SKILLS VALIDATION: PASS")
     print(f"- repository lock: {CANONICAL_REPO}")
-    print(f"- skills: {len(REQUIRED_SKILLS)}")
+    print(f"- skills: {len(REQUIRED_SKILLS)} (SIGA plus nine specialists)")
     print(f"- support docs: {len(REQUIRED_DOCS)}")
-    print(f"- GAUNTLET files: {len(GAUNTLET_REQUIRED_FILES)}")
+    print(f"- historical GAUNTLET evidence files: {len(GAUNTLET_REQUIRED_FILES)}")
+    print("- interactive report contract tests: PASS")
     print("- SIGA flow markers: PASS")
     print("- RELATORIO native-inline markers: PASS")
     print("- cross-repository authority scan: PASS")

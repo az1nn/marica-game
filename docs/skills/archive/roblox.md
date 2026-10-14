@@ -1,3 +1,9 @@
+# Archived legacy skill: roblox
+
+> SPEC-007 historical contract; not active. Current orchestration, concurrence and QA gates remain mandatory.
+
+---
+
 ---
 name: roblox
 description: Maintain Maricá Game's legacy Roblox migration source and future-port lane without taking V1 production ownership.

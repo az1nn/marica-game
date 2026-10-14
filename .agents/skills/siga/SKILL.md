@@ -42,7 +42,7 @@ Repository evidence always wins over remembered state.
 
 - `SIGA` — select one safe next unit from **all** active specs and in-flight claims/PRs.
 - `SIGA code|architecture|design|lore|artist|scene|review|qa|inspect|release|spec` — scoped intent, not authorization to mutate.
-- `SIGA review visual` -> LENTE then ARTIST; `SIGA review code` -> ARCH then QA/GAUNTLET as applicable.
+- `SIGA review visual` -> LENTE then ARTIST; `SIGA review code` -> ARCH then QA adversarial mode as applicable.
 - Direct `ARTIST` / `ARCH` / `CENA` / `DESIGN` and other specialist commands are **compatibility requests to open SIGA sessions**, never authority for independent, unroadmapped execution.
 
 A run with no executable roadmap must first commit a governance-only Spec Kit, not write code or produce art. SIGA is not a status-only command when progress is safe.
@@ -126,14 +126,11 @@ SIGA selects the task and retains orchestration authority. Route implementation 
 - **LORE** — narrative canon, characters, places, tone and CÂNONE / RUMOR / ABERTO.
 - **ARTIST** — intended visual direction, concepts and human visual acceptance.
 - **CENA (SCENE alias)** — production visual materialization, scene composition, assets, lighting, integration and provenance.
-- **ROBLOX** — legacy migration source / future-port lane under ADR-0004; no V1 production ownership.
 - **QA** — automated gates, deterministic domain tests, integration/E2E, persistence, performance and regression.
-- **GAUNTLET** — bounded adversarial quality loop for applicable high-risk/P0 changes; baseline, fresh criticism, mutation proof and regression hunting under SIGA authority.
+- **QA adversarial mode** — independent critique, objective baseline, mutation proof and regression hunting for P0/high-risk work.
 - **LENTE** — exact-head screenshot/video/object evidence and visual critique.
 - **RELATORIO** — mandatory terminal read-only reporter for every SIGA invocation; it re-reconciles live state and renders the canonical visual dashboard.
 - **GODOT** — canonical V1 production runtime under Constitution v2.0.0 / SPEC-004 / ADR-0004.
-- **3JS** — reference/prototype lane unless a ratified repository-local ADR/spec assigns production scope.
-- **siga-concurrency** — mandatory mutation/merge safety helper.
 
 SIGA never delegates:
 
@@ -163,20 +160,16 @@ SIGA explicitly schedules the next owner; a return arrow is not a recursive call
 2. If a task is WATCH/BLOCKED, resolve the **first actionable missing prerequisite** and dispatch its owner. For the accepted founder-dog V4 concept: ARCH/GODOT render/import contract (SPEC-005 V201/V201a), CENA/GODOT sample (V203), LENTE exact-head A/B (V205), then ARTIST independent runtime verdict. Do not re-ask for accepted concept approval.
 3. Mark unmeasurable/tool-missing gates CAPABILITY_BLOCKED and true human visual/product decisions HUMAN_REQUIRED. A blocked runtime gate does not prohibit a separate, collision-safe roadmapped concept/audit/architecture task.
 4. Record ready lanes skipped in the handoff. If a ready, safe high-value specialist lane has been skipped across **two** bounded runs, dispatch it before another optional task unless P0 strict priority, sequential dependency or semantic overlap forbids it.
-5. Review is a scoped task: code/structure -> ARCH, QA/GAUNTLET; gameplay -> DESIGN; canon -> LORE; visuals -> LENTE then ARTIST. A read-only inspection without a task cannot become an authoritative acceptance verdict.
+5. Review is a scoped task: code/structure -> ARCH, QA adversarial mode; gameplay -> DESIGN; canon -> LORE; visuals -> LENTE then ARTIST. A read-only inspection without a task cannot become an authoritative acceptance verdict.
 6. **Concept ACCEPT != Godot sprite/import != playable SCENE != LENTE exact-head proof != ARCH technical PASS != ARTIST runtime acceptance.** REVISE and REJECT are valid end states. Never use one as proof of another.
 
 Dispatch may require multiple bounded SIGA units. Never claim that writing the routing instructions physically executed a specialist.
 
 ### CONCURRENCY BARRIER
 
-Before any mutation, load:
+SIGA owns this process internally. Consult docs/SIGA-CONCURRENCY.md (legacy helper remains archived as historical evidence). Mandatory sequence: snapshot -> claim -> post-claim barrier -> mutate -> re-read -> exact-head verify -> guarded merge.
 
-~~~text
-.agents/skills/siga-concurrency/SKILL.md
-~~~
-
-Then capture and reconcile at minimum:
+Capture and reconcile at minimum:
 
 - default-branch HEAD;
 - intended working-branch HEAD;
@@ -195,6 +188,7 @@ For substantive mutation:
 5. mutate only when CLEAR or PARALLEL_SAFE, or after explicit RECONCILE;
 6. use optimistic file/head guards;
 7. never use force overwrite as normal conflict handling.
+8. Recheck claims, PR heads, branch/base HEAD, blobs, semantic overlaps and exact-head checks before each write batch and merge. Classify CLEAR, PARALLEL_SAFE, RECONCILE, COLLISION, SUPERSEDED or GATE_STALE. Close claims after completion.
 
 Read-only inspection does not require a claim.
 
@@ -273,19 +267,13 @@ validated_sha != current_head -> GATE_STALE
 
 Green evidence from a previous SHA is not merge evidence.
 
-### GAUNTLET adversarial gate
+### QA adversarial gate
 
-When the active spec requires adversarial verification, or when a new/materially changed measurable P0 invariant is being accepted, load:
-
-~~~text
-.agents/skills/gauntlet/SKILL.md
-~~~
-
-GAUNTLET is subordinate to SIGA. It does not select roadmap work or merge.
+When the spec requires adversarial verification or a changed P0 invariant, route QA in adversarial mode. Preserve independent builder/critic isolation and historical GAUNTLET evidence. Load .agents/skills/qa/SKILL.md; QA never selects roadmap work or merges.
 
 The quality loop should establish baseline, objective gates, fresh criticism, mutation proof when measurable, and a separate regression hunt.
 
-If required behavioral execution is unavailable, GAUNTLET/QA must return BLOCKED rather than treating authored-but-unexecuted assertions as PASS. SIGA may advance collision-safe infrastructure needed to unblock that evidence, but may not fabricate the missing gate.
+If required behavioral execution is unavailable, QA must return BLOCKED rather than treating authored-but-unexecuted assertions as PASS. SIGA may advance collision-safe infrastructure needed to unblock that evidence, but may not fabricate the missing gate.
 
 ### Protocol self-check
 
@@ -346,47 +334,10 @@ Do not recursively invent unbounded work. The repository roadmap remains the sco
 
 ## RELATORIO — mandatory terminal stage
 
-Every SIGA invocation, including ADVANCE, RESUME, WATCH and BLOCKED, must finish by loading:
+Every SIGA session ends by loading .agents/skills/relatorio/SKILL.md and reconstructing fresh live evidence after the last mutation/merge. This is nonoptional.
 
-~~~text
-.agents/skills/relatorio/SKILL.md
-~~~
+Default is an **interactive native UI surface** when the ChatGPT client supports interactive controls: Resumo, Tarefas, Gates, Grafo and Evidências, with filters, drill-down, source links and copy, over an immutable, versioned factual snapshot. It is a read-only report; never claim a static mockup as a live interface. Contract: tools/relatorio/report_contract.py and docs/relatorio/INTERACTIVE-UI.md.
 
-and executing RELATORIO against the **fresh resulting live repository state**.
+If interactive controls are unavailable, render exactly one canonical dashboard via a native inline image surface. Never substitute a file/download-only link. If neither native UI nor native inline image surface is available, explicitly report VISUAL_BLOCKED alongside factual state. Text-only report is an explicit user preference.
 
-This is not optional presentation polish. RELATORIO is part of the SIGA lifecycle.
-
-Required terminal behavior:
-
-1. finish all applicable execution, verification, merge/watch and persistence work;
-2. re-read the live default branch, open PRs, claims, executable tasks, relevant handoff and exact-head gates;
-3. invoke RELATORIO using those fresh facts;
-4. render exactly one canonical **Visual Mode** dashboard by default;
-5. deliver that dashboard through a **native inline image surface** that appears directly in the conversation;
-6. never substitute a sandbox/file path, Markdown download link, or download-only attachment for the inline visual;
-7. run RELATORIO composition QA before emitting the image and discard any rejected/intermediate render;
-8. if the native inline image surface is unavailable, mark the terminal visual stage VISUAL_BLOCKED instead of claiming success;
-9. only use text-only RELATORIO when the user explicitly requests text/no image;
-10. never let an earlier SIGA recap substitute for RELATORIO;
-11. never render the report from pre-merge/pre-persist state when newer repository state exists;
-12. never emit another repository's image, even transiently, during the Maricá Game SIGA terminal stage.
-
-A SIGA invocation is not complete until the RELATORIO stage has been attempted.
-
-If visual rendering capability is unavailable, RELATORIO must still reconstruct live state and explicitly report that the visual artifact could not be rendered; it must not silently downgrade to an ordinary SIGA text recap.
-
-### Terminal text recap
-
-A compact textual recap may accompany the image when useful:
-
-~~~text
-SIGA <RESUME|WATCH|ADVANCE|BLOCKED> — <task/milestone>
-Repo: <branch>/<short-sha> | PR: <#n/state or none>
-Done: <material progress from this invocation>
-Gates: <required exact-head gates>
-Wait: <real pending gate or none>
-Blocker: <actionable blocker or none>
-Next: <single next action>
-~~~
-
-The canonical RELATORIO artifact remains the terminal output of SIGA. Live repository state remains authoritative.
+Re-read exact default HEAD, PR heads, claims, executable tasks, exact-head CI, relevant visual evidence, phase progress, blockers/wait and single next action. Mark MISSING/STALE/UNVERIFIED when needed. User interaction must not mutate a GitHub repository, alter source truth, or mark missing gates PASS. Preserve keyboard and mobile accessibility and the canonical report topics.
