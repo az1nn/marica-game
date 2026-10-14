@@ -39,3 +39,12 @@ DONE: SPEC-007 O700–O707 and O709–O710; 10 active discovered skills, 16 advi
 CONCURRENCY: PR #77 ARTIST DRAFT remains untouched. PR #91 G440 merged and incorporated through a two-parent reconciliation; no shared target paths with PR #93.
 WAIT: O708 protected merge after fresh exact-head green and expected-head guard.
 NEXT: Verify current PR #93 head and all required workflows, then mark Ready and guarded squash merge. Reconcile resulting master, close claim and deliver one interactive RELATORIO from live source.
+
+## Latest SIGA — SPEC-007 verified merge and terminal report
+
+State: ADVANCE after PR #93 merged on master@a02560e67216f46e7d6f7b79aafb42c8fb0411bc.
+SPEC-007: 10 discoverable skills, 16 routing cases, QA adversarial mode, SIGA internal concurrency, archived legacy contracts, RELATORIO native interactive and inline-image fallback. O700–O710 checked after protected merge.
+Gate evidence: PR head 41b4355464d2931148da05188193204d72d36046: Validate skills, Godot CI, Web Preview, ARCH Source Import, G440 Save Schema and Roblox CI PASS; Roblox Behavioral SKIPPED/nonrequired. This is NOT post-merge master CI evidence.
+Concurrency: PR #77 ARTIST draft remains separate; claims on original SPEC-007 closed by this closeout. Master task G441 is next animal-first persistence work; V201/V201a ARTIST runtime prerequisites remain open.
+Terminal: Render interactive RELATORIO from freshly re-read GitHub state with default HEAD and branch/PR SHA separated. In clients without controls use one native inline image; never download-only.
+Next: SIGA select independently ready SPEC-004 G441 local SaveStore or V201 visual dependency after ownership/gate checks.
