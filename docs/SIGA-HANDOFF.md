@@ -43,3 +43,12 @@ VERIFY: PR head 29543918db2ed3afb12f61dc561225275deb95e6 — G442 Atomic Save 12
 CONCURRENCY: G442 claim closed in separate documentation PR; ARTIST PR #77 untouched, disjoint ownership. V201/V201a artist gates remain separate.
 LIMIT: platform/physical fsync and power loss, true multiprocess CAS, G443 migration, G444 hydration, G445 event replay, G446 restart, G447 offline return are not certified. Vercel build-rate limit unrelated to gameplay/save test.
 NEXT: G443 schema_version migration harness after new live SIGA reconciliation.
+
+## SIGA G443 — migration harness verified merge / handoff (2026-10-14)
+
+STATE: ADVANCE after protected PR #103 merge master@445a32084b1ad73f4ef5d814f9d20ebef3691324.
+DONE: schema_version admission harness ratifies v1 identity only, validates complete v1 records, returns detached documents, rejects unknown legacy/future versions without inventing migrations, preserves G442 SaveStore and backups.
+VERIFY: PR head dbcaeea6d69098b9945126fd6654af2614cf5dd4: G443 Save Migration (12 cases, QA GOOD/BAD/RESTORE), G442 Atomic Save, G441 SaveStore, G440 Schema, Godot CI, Validate skills, ARCH V201, Web Preview Contract, Roblox CI PASS. Roblox Behavioral SKIPPED. No post-merge master CI claimed.
+CONCURRENCY: dedicated claim closed by separate docs PR; ARTIST #77 untouched. Historical G440–G442 preserved.
+LIMIT: No approved v0/v2 schema or real cross-version conversion; no G444 pet hydration, G445 durable event replay, G446 restart or G447 offline catch-up.
+NEXT: G444 persist animals/pedigree/care/health/affection/lifecycle after fresh claims/guards.
