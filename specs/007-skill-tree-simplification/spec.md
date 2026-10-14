@@ -13,3 +13,6 @@ Godot offline-first, animal→planta→fazenda; Roblox é fonte histórica; Thre
 
 ## Acceptance
 Grafo com 9 especialistas distintos, 9 arestas SIGA→owner, aliases sem destinos órfãos; testes de roteamento atualizados; validadores e documentação consistentes; CI Godot/skills/web sem regressão. Nenhum merge sem evidência exact-head e verificação de PR #77.
+
+## RELATORIO interativo — extensão aprovada em 2026-10-14
+Preservar o dashboard visual canônico e sua ordem factual, oferecendo painel interativo nativo no ChatGPT quando o cliente suportar controles. Interações locais: abas Resumo/Tarefas/Gates/Grafo/Evidências, filtros de tarefa/status, drill-down por PR/gate, links de fonte e ações de copiar. Deve renderizar informação verificável, não navegar ou mutar o repositório automaticamente. Snapshot imutável com repo, branch, exact HEAD e timestamp verificado; toda interação deve identificar evidência ausente, stale ou unknown. Fallback: imagem inline única; se nenhum renderer visual estiver disponível, VISUAL_BLOCKED explícito. Evitar HTML arbitrário sem superfície confiável e nunca afirmar que AppBlock está ativo onde não está. Não perder acessibilidade mobile, nem a aparência/semântica do relatório canônico.
