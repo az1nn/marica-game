@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/arch_probes/S01_A01_v4_original.png" id="1_v4"]
+
+[node name="ArchV201FounderProbe" type="Node2D"]
+y_sort_enabled = true
+
+[node name="FounderSprite" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("1_v4")
+offset = Vector2(0, -182)
