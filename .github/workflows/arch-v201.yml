@@ -1,0 +1,118 @@
+name: ARCH V201 Source Import
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  founder-import:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Guard SHA and original artist binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          python3 - <<'PY'
+          from hashlib import sha256
+          from pathlib import Path
+          import struct
+
+          path = Path("game/assets/arch_probes/S01_A01_v4_original.png")
+          data = path.read_bytes()
+          assert len(data) == 174947, "Source binary length drifted"
+          assert sha256(data).hexdigest() == (
+              "b8089122d323de7dc7c235604f752ce2643990a867aceaead60409d700e2aa7e"
+          ), "Approved visual source changed"
+          assert data[:8] == b"\x89PNG\r\n\x1a\n", "Not a PNG"
+          assert struct.unpack(">II", data[16:24]) == (344, 378), "Wrong source dimensions"
+          print("MARICA_ARCH_V201_SOURCE_PASS source=unchanged 344x378 sha256=pinned")
+          PY
+
+      - name: Download and pin Godot editor
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --retry-all-errors \
+            --output "$RUNNER_TEMP/godot.zip" \
+            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+
+      - name: Godot 4.7.2 import and parse isolated scene
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          "$GODOT" --headless --editor --path game --import --quit 2>&1 | tee "$RUNNER_TEMP/arch-v201-import.log"
+          "$GODOT" --headless --editor --path game --quit 2>&1 | tee "$RUNNER_TEMP/arch-v201-parse.log"
+
+      - name: Verify image SHA, alpha, importer and sprite configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          timeout 45s "$GODOT" --headless --path game \
+            --script res://tests/arch_v201_import_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/arch-v201-good.log"
+          grep -Fq 'MARICA_ARCH_V201_IMPORT_PASS' "$RUNNER_TEMP/arch-v201-good.log"
+          grep -Fq 'runtime_capture=NOT_RUN' "$RUNNER_TEMP/arch-v201-good.log"
+
+      - name: Mutation gate (linear filtering must be caught, then restored)
+        shell: bash
+        run: |
+          set -euo pipefail
+          SCENE="game/scenes/arch_v201_founder_probe.tscn"
+          cp "$SCENE" "$RUNNER_TEMP/arch-v201-original.tscn"
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("game/scenes/arch_v201_founder_probe.tscn")
+          source = path.read_text(encoding="utf-8")
+          assert source.count("texture_filter = 1") == 1
+          path.write_text(source.replace("texture_filter = 1", "texture_filter = 2"), encoding="utf-8")
+          print("ARCH mutant: nearest was changed to linear")
+          PY
+          set +e
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/arch_v201_import_runner.gd \
+            > "$RUNNER_TEMP/arch-v201-mutant.log" 2>&1
+          mutant_exit="$?"
+          set -e
+          cp "$RUNNER_TEMP/arch-v201-original.tscn" "$SCENE"
+          if test "$mutant_exit" -eq 0; then
+            echo "ARCH mutant was not detected"
+            exit 1
+          fi
+          grep -Fq 'MARICA_ARCH_V201_FAIL nearest filter must be explicit' \
+            "$RUNNER_TEMP/arch-v201-mutant.log"
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/arch_v201_import_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/arch-v201-restored.log"
+          grep -Fq 'MARICA_ARCH_V201_IMPORT_PASS' "$RUNNER_TEMP/arch-v201-restored.log"
+          git diff --exit-code -- "$SCENE"
+          echo "MARICA_ARCH_V201_MUTATION_PASS good=pass bad=fail restore=pass"
+
+      - name: Upload import proof (not a screenshot)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: arch-v201-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          path: |
+            ${{ runner.temp }}/arch-v201-import.log
+            ${{ runner.temp }}/arch-v201-parse.log
+            ${{ runner.temp }}/arch-v201-good.log
+            ${{ runner.temp }}/arch-v201-mutant.log
+            ${{ runner.temp }}/arch-v201-restored.log
