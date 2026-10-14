@@ -204,7 +204,7 @@ def validate_visual_v2_authority(root: Path, errors: list[str]) -> None:
         text = artist.read_text(encoding="utf-8")
         for marker in ("## Approved V2 baseline", "full pixel art 2.5D",
                        "specs/005-pixel-art-v2-migration/",
-                       "Concept ACCEPT", "LENTE", "ARCH"):
+                       "concept ACCEPT", "LENTE", "ARCH"):
             if marker not in text:
                 errors.append(f"ARTIST current direction/gates marker missing: {marker}")
     if cena.is_file():
