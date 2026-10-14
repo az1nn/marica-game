@@ -1,0 +1,189 @@
+[
+  {
+    "name": "missing roadmap forces governance-only bootstrap",
+    "request": {
+      "intent": "artist",
+      "roadmap_ready": false,
+      "task_id": "V201"
+    },
+    "expect": {
+      "action": "BOOTSTRAP_SPEC",
+      "owner": "siga"
+    }
+  },
+  {
+    "name": "no spec task forbids review execution",
+    "request": {
+      "intent": "review-code",
+      "roadmap_ready": true
+    },
+    "expect": {
+      "action": "TASK_SPEC_REQUIRED",
+      "owner": "siga"
+    }
+  },
+  {
+    "name": "accepted concept waits on ARCH import, not ARTIST",
+    "request": {
+      "intent": "artist",
+      "roadmap_ready": true,
+      "task_id": "V205",
+      "dependencies": [
+        {
+          "owner": "arch",
+          "task": "V201",
+          "state": "PENDING"
+        }
+      ]
+    },
+    "expect": {
+      "action": "ROUTE_DEPENDENCY",
+      "owner": "arch"
+    }
+  },
+  {
+    "name": "visual review routes first to LENTE",
+    "request": {
+      "intent": "review-visual",
+      "roadmap_ready": true,
+      "task_id": "V205"
+    },
+    "expect": {
+      "action": "DISPATCH",
+      "owner": "lente"
+    }
+  },
+  {
+    "name": "architecture/code review routes to ARCH",
+    "request": {
+      "intent": "review-code",
+      "roadmap_ready": true,
+      "task_id": "O605"
+    },
+    "expect": {
+      "action": "DISPATCH",
+      "owner": "arch"
+    }
+  },
+  {
+    "name": "scene alias means CENA not an absent SCENE skill",
+    "request": {
+      "intent": "scene",
+      "roadmap_ready": true,
+      "task_id": "V203"
+    },
+    "expect": {
+      "action": "DISPATCH",
+      "owner": "cena"
+    }
+  },
+  {
+    "name": "artist revision can run without an engine gate",
+    "request": {
+      "intent": "artist",
+      "roadmap_ready": true,
+      "task_id": "V202",
+      "state": "REVISE"
+    },
+    "expect": {
+      "action": "DISPATCH",
+      "owner": "artist"
+    }
+  },
+  {
+    "name": "ready artist lane not starved by an optional Godot unit",
+    "request": {
+      "intent": "auto",
+      "roadmap_ready": true,
+      "task_id": "G440",
+      "ready_lanes": [
+        {
+          "owner": "artist",
+          "task_id": "V202",
+          "missed_runs": 2,
+          "safe": true,
+          "priority": 10
+        }
+      ]
+    },
+    "expect": {
+      "action": "DISPATCH_READY_LANE",
+      "owner": "artist"
+    }
+  },
+  {
+    "name": "strict P0 dependency keeps planned priority",
+    "request": {
+      "intent": "code",
+      "roadmap_ready": true,
+      "task_id": "G440",
+      "strict_p0_dependency": true,
+      "ready_lanes": [
+        {
+          "owner": "artist",
+          "task_id": "V202",
+          "missed_runs": 3,
+          "safe": true
+        }
+      ]
+    },
+    "expect": {
+      "action": "DISPATCH",
+      "owner": "godot"
+    }
+  },
+  {
+    "name": "human gate is real only after machine prerequisites",
+    "request": {
+      "intent": "artist",
+      "roadmap_ready": true,
+      "task_id": "V205",
+      "human_gate": true
+    },
+    "expect": {
+      "action": "HUMAN_REQUIRED",
+      "owner": "siga"
+    }
+  },
+  {
+    "name": "human waiting but independent ready ARCH lane can progress",
+    "request": {
+      "intent": "artist",
+      "roadmap_ready": true,
+      "task_id": "V205",
+      "human_gate": true,
+      "ready_lanes": [
+        {
+          "owner": "arch",
+          "task_id": "V201a",
+          "missed_runs": 3,
+          "safe": true
+        }
+      ]
+    },
+    "expect": {
+      "action": "DISPATCH_READY_LANE",
+      "owner": "arch"
+    }
+  },
+  {
+    "name": "unavailable measurement is capability not human gate",
+    "request": {
+      "intent": "artist",
+      "roadmap_ready": true,
+      "task_id": "V205",
+      "dependencies": [
+        {
+          "owner": "",
+          "task": "runtime capture",
+          "actionable": false,
+          "kind": "tool"
+        }
+      ]
+    },
+    "expect": {
+      "action": "CAPABILITY_BLOCKED",
+      "owner": "siga"
+    }
+  }
+]
