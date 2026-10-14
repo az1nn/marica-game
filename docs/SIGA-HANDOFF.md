@@ -1,30 +1,29 @@
 CAVEMAN HANDOFF v1
 
 APP: Maricá Game
-WORKSTREAM: SPEC-004 · Phase D P0 → Phase E Offline Persistence
+WORKSTREAM: SPEC-006 single-entry SIGA / skill tree governance
 MODE: ADVANCE
-BASE: master@e8b29a5dacb6b7d6f3a7e7e50eda490ac9e5ab96
-PR: #85 MERGED (feature head 180b37fc7aff43daebf095d448a35d94f3a83349)
+BASE: master@09abe57c9a8db2d01d64ce58b525809f05c13817
+PR: #89 MERGED (head 42d91381f664e83e3f29c1408e960a06bb46e3a8; merged 09abe57c9a8db2d01d64ce58b525809f05c13817)
 
 DONE:
-- G436 independent holistic Godot runner composes founder Soulbound → care/expression → recovery → aging → natural terminal → 2 deterministic successors → generation-2 direct-parent pedigree.
-- Cross-contract care/expression mutation GOOD→BAD→RESTORE PASS. No production domain code changed.
-- Bounded Phase D GAUNTLET report + machine-readable manifest in docs/gauntlet/G436-PHASE-D-2026-10-14.{md,json}.
-- No tested Phase D regression observed; important all-traits-at-1.0 saturation edge tracked as issue #86, NOT claimed universally resolved.
+- SPEC-006 O600–O607: Spec Kit bootstrap was committed before any changes to skills; SG single-entry plus absolute task admission, explicit dependency routing/anti-starvation, ARCH/DESIGN owner skills and SCENE/CENA alias.
+- ARTIST/CENA/LENTE/LORE/QA aligned with approved full pixel art 2.5D and Godot V1; concept acceptance cannot certify runtime.
+- Deterministic advisory dispatcher / acyclic skill graph / 12 routing fixtures and validator. No actual autonomous peer-agent runtime is implied.
+- No gameplay/asset edits and no overlap with visual PR #77.
 
 VERIFY:
-- PR #85 exact HEAD 180b37fc and guarded master@e8b29a5d: Godot CI, Validate skills, Roblox CI and Web Preview Contract PASS at both. Roblox Behavioral skipped/nonrequired.
-- Documentation closeout PR requires its own exact-head CI and guarded merge.
+- PR #89 exact head 42d91381: Validate skills PASS, Godot CI PASS, Roblox CI PASS, Web Preview Contract PASS; Roblox Behavioral SKIPPED/nonrequired.
+- Guarded squash merged into master@09abe57c9a8db2d01d64ce58b525809f05c13817.
+- This closeout-only document update requires its own exact-head CI before merge. Do not reuse PR #89 green evidence as a new SHA's gate.
 
 CONCURRENCY:
-- PR #77 ARTIST V4 remains separate draft; no merge without ARCH/SCENE/LENTE/ART runtime acceptance.
-- Issue #86 DESIGN/ARCH owns saturation rule; no silent constitution change.
+- PR #77 ARTIST V4 is still DRAFT; separate ARCH V201/V201a, SCENE V203, LENTE V205 and ARTIST runtime approvals required; NO_RUNTIME_PASS.
+- SPEC-004 G440 remains ready for independent offline-save design. Issue #86 DESIGN/ARCH genetic saturation unresolved; do not certify universal progression.
 
-LIMITS:
-- Tests use bounded deterministic unsaturated fixtures; no production aging scheduler, offline save/restart, V1 playable scene, artwork runtime acceptance or universal progression at cap.
-
-WAIT / BLOCKER:
-- No gate blocking independent G440 save schema design. Issue #86 must be resolved before universal genetic progress is certified for release.
+BLOCKERS:
+- None for the next ARCH render/import prototype under SPEC-005 or for independent G440.
+- Capability/tool evidence for a real runtime ARTIST certification has not been demonstrated.
 
 NEXT:
-G440 — define offline local save schema v1 (version, migration and immutable lineage/event data boundaries) before implementing persistence.
+SPEC-005 V201 — SIGA dispatch ARCH + GODOT measured pixel-art 2.5D import/render prototype against approved founder-dog V4 source, without touching or merging PR #77. Keep G440 as a ready parallel animal-first task.
