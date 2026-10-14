@@ -1,0 +1,273 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/az1nn/marica-game/blob/master/game/docs/save-schema-v1.schema.json",
+  "title": "Maricá Game offline animal save envelope v1 — SPEC-004 G440",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "revision",
+    "last_observed_at",
+    "pets",
+    "succession_events"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "last_observed_at": {
+      "type": "number",
+      "minimum": 0
+    },
+    "pets": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/identifier"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/pet"
+      }
+    },
+    "succession_events": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/identifier"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/successionEvent"
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "\\S",
+      "minLength": 1
+    },
+    "unitValue": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "traits": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/identifier"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/unitValue"
+      }
+    },
+    "pedigree": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lineageId",
+        "generation",
+        "founderPetId",
+        "parentPetIds"
+      ],
+      "properties": {
+        "lineageId": {
+          "$ref": "#/$defs/identifier"
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "founderPetId": {
+          "$ref": "#/$defs/identifier"
+        },
+        "parentPetIds": {
+          "type": "array",
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage",
+        "status"
+      ],
+      "properties": {
+        "stage": {
+          "enum": [
+            "juvenile",
+            "adult",
+            "senior"
+          ]
+        },
+        "status": {
+          "enum": [
+            "active",
+            "ended"
+          ]
+        },
+        "endReason": {
+          "enum": [
+            "natural",
+            "health"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ended"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "endReason"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "endReason"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "care": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hunger",
+        "hygiene",
+        "affection",
+        "energy"
+      ],
+      "properties": {
+        "hunger": {
+          "$ref": "#/$defs/unitValue"
+        },
+        "hygiene": {
+          "$ref": "#/$defs/unitValue"
+        },
+        "affection": {
+          "$ref": "#/$defs/unitValue"
+        },
+        "energy": {
+          "$ref": "#/$defs/unitValue"
+        }
+      }
+    },
+    "health": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "neglectHours",
+        "untreatedHours"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "healthy",
+            "neglected",
+            "sick",
+            "critical"
+          ]
+        },
+        "neglectHours": {
+          "type": "number",
+          "minimum": 0
+        },
+        "untreatedHours": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "pet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "soulbound",
+        "affection",
+        "pedigree",
+        "lifecycle",
+        "geneticPotential",
+        "expressedTraits",
+        "careState",
+        "healthState"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "soulbound": {
+          "type": "boolean"
+        },
+        "affection": {
+          "$ref": "#/$defs/unitValue"
+        },
+        "pedigree": {
+          "$ref": "#/$defs/pedigree"
+        },
+        "lifecycle": {
+          "$ref": "#/$defs/lifecycle"
+        },
+        "geneticPotential": {
+          "$ref": "#/$defs/traits"
+        },
+        "expressedTraits": {
+          "$ref": "#/$defs/traits"
+        },
+        "careState": {
+          "$ref": "#/$defs/care"
+        },
+        "healthState": {
+          "$ref": "#/$defs/health"
+        }
+      }
+    },
+    "successionEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "parent_snapshot",
+        "successor_ids",
+        "succession_seed"
+      ],
+      "properties": {
+        "parent_snapshot": {
+          "$ref": "#/$defs/pet"
+        },
+        "successor_ids": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "succession_seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      }
+    }
+  }
+}
