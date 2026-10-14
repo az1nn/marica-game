@@ -15,7 +15,7 @@ func _verify() -> void:
     var bytes: PackedByteArray = FileAccess.get_file_as_bytes(PNG_PATH)
     if not _check(bytes.size() == 174947, "source PNG byte length drifted"):
         return
-    if not _check(bytes.sha256_text() == SOURCE_SHA256, "source PNG hash drifted"):
+    if not _check(FileAccess.get_sha256(PNG_PATH) == SOURCE_SHA256, "source PNG hash drifted"):
         return
 
     var image: Image = Image.new()
@@ -69,8 +69,7 @@ func _verify() -> void:
     if not _check(sprite.texture.get_size() == Vector2(344, 378), "import texture size"):
         return
     if not _check(
-        sprite.get_rect() == Rect2(-172, -371, 344, 378),
-        "expected local rect and feet origin"
+        sprite.get_rect() == Rect2(-172, -371, 344, 378), "expected local rect and feet origin"
     ):
         return
 
@@ -85,11 +84,14 @@ func _verify() -> void:
         return
 
     print(
-        "MARICA_ARCH_V201_IMPORT_PASS source_sha256=", SOURCE_SHA256,
+        "MARICA_ARCH_V201_IMPORT_PASS source_sha256=",
+        SOURCE_SHA256,
         " rgba=344x378 alpha=48609/81423/0",
         " nearest=true ysort=true foot_anchor=true",
-        " candidate_390w_half_scale_width=", mobile_half,
-        " candidate_1280w_full_scale_width=", desktop_full,
+        " candidate_390w_half_scale_width=",
+        mobile_half,
+        " candidate_1280w_full_scale_width=",
+        desktop_full,
         " runtime_capture=NOT_RUN"
     )
     quit(0)
