@@ -58,7 +58,7 @@
 ## Phase E — Offline Persistence
 
 - [x] **G440** Definir schema v1 do save local (PR #91): envelope JSON Schema 2020-12 fechado (`schema_version`, `revision`, `last_observed_at`, snapshots de pets históricos e ledger de sucessão) + 3 fixtures, verificador cross-record e 9 corrupções intencionais. PR exact-head `0242aba5` com G440 Save Schema / Godot CI / ARCH V201 / Validate skills / Roblox CI / Web Preview Contract PASS; merge guardado em `master@dfc98d33`. **Só contrato/validação de fixtures:** SaveStore, atomicidade, migrations, hidratação, replay após restart e teste offline G441–G447 permanecem pendentes.
-- [ ] **G441** Implementar SaveStore local versionado.
+- [x] **G441** Implementar SaveStore local versionado (PR #96): `MaricaLocalSaveStore` em `game/src/adapters/local` com JSON v1 estrito, `load()` fail-closed/missing distinto, `save(snapshot, expected_revision, clock)` com revisão otimista e clamp de tempo G423; G440 snapshots, pedigree e ledger verificados por validador nativo; duplicate JSON keys rejeitadas. Testes headless + mutante stale revision GOOD→BAD→RESTORE, CI exact-head `42018f7` PASS (G441, Godot, G440, ARCH V201, skills, Roblox, preview), squash merge `master@4f58a82`, pós-merge Godot/skills/Roblox/Web Preview PASS. **G442 atomicidade/backup, G443 migração, G444 hidratação real, G445 replay após restart e G446/G447 E2E continuam PENDING.**
 - [ ] **G442** Implementar atomic save + backup/recovery.
 - [ ] **G443** Implementar migration harness por schema_version.
 - [ ] **G444** Persistir animals/pedigree/care/health/affection/lifecycle.
