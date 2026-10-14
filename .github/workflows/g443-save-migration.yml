@@ -1,0 +1,82 @@
+name: G443 Save Migration
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  migration:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Verify SHA and pinned engine
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          curl --fail --location --retry 3 --retry-all-errors \
+            -o "$RUNNER_TEMP/godot.zip" \
+            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+
+      - name: G443 actual migration test
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          timeout 45s "$GODOT" --headless --editor --path game --import --quit 2>&1 | tee "$RUNNER_TEMP/g443-import.log"
+          timeout 45s "$GODOT" --headless --path game --script res://tests/save_migration_runner.gd 2>&1 | tee "$RUNNER_TEMP/g443-good.log"
+          grep -Fq 'MARICA_G443_MIGRATION_PASS scenarios=12' "$RUNNER_TEMP/g443-good.log"
+
+      - name: QA adversarial future-version acceptance mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE=game/src/adapters/local/save_migration.gd
+          cp "$SOURCE" "$RUNNER_TEMP/g443-original.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("game/src/adapters/local/save_migration.gd")
+          original = p.read_text()
+          target = 'if version["schema_version"] != CURRENT_VERSION:'
+          assert original.count(target) == 1
+          p.write_text(original.replace(target, 'if false and version["schema_version"] != CURRENT_VERSION:'))
+          PY
+          set +e
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path game --script res://tests/save_migration_runner.gd > "$RUNNER_TEMP/g443-bad.log" 2>&1
+          BAD_CODE="$?"
+          set -e
+          cp "$RUNNER_TEMP/g443-original.gd" "$SOURCE"
+          if test "$BAD_CODE" -eq 0; then
+            echo "G443 mutation escaped"
+            exit 1
+          fi
+          grep -Fq 'MARICA_G443_FAIL unapproved legacy v0' "$RUNNER_TEMP/g443-bad.log"
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path game --script res://tests/save_migration_runner.gd 2>&1 | tee "$RUNNER_TEMP/g443-restored.log"
+          grep -Fq 'MARICA_G443_MIGRATION_PASS scenarios=12' "$RUNNER_TEMP/g443-restored.log"
+          git diff --exit-code -- "$SOURCE"
+          echo 'MARICA_G443_MUTATION_PASS good=pass bad=fail restore=pass'
+
+      - name: Upload exact-head proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g443-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            ${{ runner.temp }}/g443-import.log
+            ${{ runner.temp }}/g443-good.log
+            ${{ runner.temp }}/g443-bad.log
+            ${{ runner.temp }}/g443-restored.log
+          if-no-files-found: ignore
