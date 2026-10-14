@@ -3,28 +3,23 @@ CAVEMAN HANDOFF v1
 APP: Maricá Game
 WORKSTREAM: SPEC-004 · Phase D Succession P0
 MODE: ADVANCE
-BASE: master@196431e299b91f8e51ce83345080ac6418c17d5b
-PR: #79 MERGED (exact feature head c2a69d4045e4384039125f24d0310342e23d7548)
+BASE: master@d019443e2d1e8a1e2711f9d9fda3463bb6390b62
+PR: #83 MERGED (feature head e87b1124efa19fb3e0bda5418e678f0f444fe745)
 
 DONE:
-- G433 uses MaricaSuccessionEvent.trigger_once (pure, in-memory once-only coordinator for ended composite parent); first trigger publishes exactly two successors only after pair success.
-- Identical replay returns the same pair objects without duplicate creation (created=false); conflicting seed, IDs or parent snapshot are rejected; failures leave no marker and can be safely retried.
-- Independent G433 exact-head runner and duplicate-trigger GOOD -> BAD -> RESTORE mutation proof pass. Parent and returned-array snapshot isolation enforced.
-- Earlier G430–G432 remain complete. G433 is session-local only; durable restart/atomic commit belongs to G440/G445/G446, **not** claimed.
+- G435 runner tests full deterministic 14/21/28-day accelerated animal journey using injected clock, care, sickness, paid treatment/recovery, juvenile→adult→senior, natural/health terminal, exactly two successors and once-only session replay.
+- G435 rollback/duplicate clock sample safe; GOOD→BAD→RESTORE clock mutation PASS; G430–G434 retained, 238 legacy golden parity cases unchanged.
+- Test age checkpoints are fixture choices only; NOT production aging scheduler, offline persistence or playable web export.
 
 VERIFY:
-- PR #79 exact head @c2a69d40: Godot CI, Validate skills, Roblox CI and Web Preview Contract PASS; Roblox Behavioral SKIPPED/nonrequired.
-- Guarded squash merge master@196431e2: Godot CI, Validate skills, Roblox CI and Web Preview Contract PASS.
-- PR #77 ARTIST concept ledger remains draft and unmerged; earlier stale golden fixtures on its branch produced Godot CI FAIL, not a demonstrated ARTIST defect.
+- PR #83 exact-head e87b1124efa19fb3e0bda5418e678f0f444fe745 and guarded master@d019443e2d1e8a1e2711f9d9fda3463bb6390b62: Godot CI, Validate skills, Roblox CI and Web Preview Contract PASS. Independent G435 scenario and rollback GOOD→BAD→RESTORE PASS.
+- Documentation closeout itself requires fresh exact-head CI on its own PR and master after merge.
 
 CONCURRENCY:
-- G433 feature claim CLOSED. G433 docs closeout is non-overlapping with PR #77 artist-specific docs and art gates.
-- S01-A01 V4 concept accepted by human; PNG binary is still not versioned in master; ARCH V201/V201a, SCENE, LENTE remain gated.
-- Vercel root/health technical static page available after PR #78; playable Godot web export is not yet available.
+- #83 feature merged and claim closed in docs; PR #77 ARTIST V4 remains separate draft pending ARCH V201/V201a, SCENE and LENTE/ART runtime approval.
 
 WAIT / BLOCKER:
-- No product/human blocker for next pure-domain milestone G434.
-- PR #77 waits on reconciliation of stale branch and its own required visual/source gates; do not merge merely based on visual concept ACCEPT.
+- No human blocker for G436; local save and durable successor markers remain G440–G446. Vercel technical preview is not gameplay.
 
 NEXT:
-G434 — preserve and test extended multigeneration pedigree through successors; check ancestor lineage/founder/parent traceability and independent regression/mutation boundary. No save or playable scene claim.
+G436 — bounded holistic P0 GAUNTLET and mutation/regrression assessment of founder→care→aging→end-of-life→two successors before Phase D Gate D decision.
