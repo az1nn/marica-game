@@ -20,20 +20,32 @@ func _run() -> void:
 
 
 func _test_all() -> bool:
+    if not _check(_identity_cases(), "v1 identity group"):
+        return false
+    if not _check(_version_cases(), "version admission group"):
+        return false
+    return _check(_integrity_cases(), "integrity and G442 interoperability group")
+
+
+func _identity_cases() -> bool:
     if not _check(_identity("save_v1_minimal.json"), "minimal v1 identity"):
         return false
     if not _check(_identity("save_v1_founder.json"), "founder v1 identity"):
         return false
-    if not _check(_identity("save_v1_succession.json"), "succession v1 identity"):
-        return false
+    return _check(_identity("save_v1_succession.json"), "succession v1 identity")
+
+
+func _version_cases() -> bool:
     if not _check(_reject_version(0), "unapproved legacy v0"):
         return false
     if not _check(_reject_version(2), "unknown future v2"):
         return false
     if not _check(_reject_version(9999), "unapproved high version"):
         return false
-    if not _check(_bad_version_values(), "missing/invalid version"):
-        return false
+    return _check(_bad_version_values(), "missing/invalid version")
+
+
+func _integrity_cases() -> bool:
     if not _check(_bad_payload(), "invalid v1 payload"):
         return false
     if not _check(_no_mutation(), "detached input"):
@@ -43,7 +55,6 @@ func _test_all() -> bool:
     if not _check(_store_preserved(), "G442 primary/backup compatibility"):
         return false
     return _check(_reject_corrupt_store(), "G442 future save fails closed")
-
 
 func _identity(name: String) -> bool:
     var original: Dictionary = _fixture(name)
