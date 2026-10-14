@@ -51,7 +51,9 @@ func _prepare_document(candidate: Variant, expected_revision: int, clock: Callab
     var current: Dictionary = self.load()
     if not current.get("ok", false):
         return current
-    var revision_check: Dictionary = _verify_revision(checked["document"], current, expected_revision)
+    var revision_check: Dictionary = _verify_revision(
+        checked["document"], current, expected_revision
+    )
     if not revision_check.get("ok", false):
         return revision_check
     var next: Dictionary = checked["document"]
@@ -77,7 +79,9 @@ func _verify_revision(
     if not found and document["revision"] != 0:
         return _fail("New save must begin at revision zero")
     var prior: float = (
-        float(current["snapshot"]["last_observed_at"]) if found else float(document["last_observed_at"])
+        float(current["snapshot"]["last_observed_at"])
+        if found
+        else float(document["last_observed_at"])
     )
     return {"ok": true, "prior": prior}
 
