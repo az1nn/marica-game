@@ -138,8 +138,8 @@ static func _pet(value: Variant) -> bool:
     var expressed: Dictionary = pet["expressedTraits"]
     if potential.size() != expressed.size():
         return false
-    for trait in potential:
-        if not expressed.has(trait) or float(expressed[trait]) > float(potential[trait]):
+    for trait_name in potential:
+        if not expressed.has(trait_name) or float(expressed[trait_name]) > float(potential[trait_name]):
             return false
     return true
 
@@ -207,8 +207,8 @@ static func _traits(value: Variant) -> bool:
     if typeof(value) != TYPE_DICTIONARY:
         return false
     var traits: Dictionary = value
-    for trait in traits:
-        if not _identifier(trait) or not _unit(traits[trait]):
+    for trait_name in traits:
+        if not _identifier(trait_name) or not _unit(traits[trait_name]):
             return false
     return true
 
