@@ -27,3 +27,11 @@ BLOCKERS:
 
 NEXT:
 SPEC-005 V201 — SIGA dispatch ARCH + GODOT measured pixel-art 2.5D import/render prototype against approved founder-dog V4 source, without touching or merging PR #77. Keep G440 as a ready parallel animal-first task.
+
+
+## Subsequent SIGA verified handoff — ARCH V201 import probe (2026-10-14)
+
+- PR #88 technical-only source-import probe **MERGED** at `master@45d89c6bb1f028a4682be9540c87bea8c701184b`, verified exact-head and post-merge green workflows. No gameplay or main scene changes.
+- SPEC-005 V201/V201a remain **OPEN** for measured render/mobile budgets and ART/SCENE/LENTE evidence. PR #77 concept/provenance remains **DRAFT**, separate from this merge.
+- Next visual dependency: SCENE/LENTE real exact-head capture of S01-A01 on contrasting backgrounds and viewport/zoom matrix, then ART/ARCH review. SPEC-004 G440 remains independent P0. Do not treat CI as human artistic approval.
+- Report: [SIGA V201 closeout](reports/siga/2026-10-14-arch-v201-import-probe-merged.md).

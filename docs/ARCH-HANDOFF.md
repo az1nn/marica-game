@@ -10,3 +10,14 @@ Risks: 37,780 opaque RGB colors and hard alpha with nonzero transparent RGB; nee
 Concurrence: ARTIST draft PR #77 remains separate/unmerged; original art concept ACCEPT applies only to source; SPEC-004 gameplay G440 priority stays unaffected.
 Status: ARCH_SOURCE_IMPORT_VERIFIED / R1_PROTOTYPE_COMPLETE / MOBILE_PERF_AND_RENDER_CONTRACT_OPEN / PR_DRAFT. R1 V201/V201a remain unchecked globally.
 Next: SCENE/LENTE real Godot output at representative mobile/desktop dimensions and contrast backgrounds, then independent ART/ARCH quality and performance decision; no premature V201/V201a closure or runtime ACCEPT.
+
+
+## Follow-up — PR #88 technically merged (2026-10-14)
+
+- SIGA applied a user-authorized **scoped, non-production-only** merge of [PR #88](https://github.com/az1nn/marica-game/pull/88) after reconciling branch to SPEC-006 and exact-head checks. Guarded squash commit: `45d89c6bb1f028a4682be9540c87bea8c701184b`.
+- Post-merge `master@45d89c6bb1f028a4682be9540c87bea8c701184b`: Godot CI [PASS](https://github.com/az1nn/marica-game/actions/runs/38599316902), Validate skills [PASS](https://github.com/az1nn/marica-game/actions/runs/38599316918), Roblox CI [PASS](https://github.com/az1nn/marica-game/actions/runs/38599317461), Web Preview Contract [PASS](https://github.com/az1nn/marica-game/actions/runs/38599317367).
+- The canonical original V4 PNG blob `da7806ebfcb051c8fd32ccdbad4760b7136f97dd` remains unchanged in the ARCH-only `game/assets/arch_probes/` **test copy**. It is not the production sprite resource or final art distribution license approval.
+- **Remaining gates:** SPEC-005 V201/V201a are explicitly **unchecked**; logical resolution, integer zoom, pixel-grid/palette, atlas/licensing, browser/mobile frame budget and visible alpha-edge tests still need independent real Godot evidence. SCENE/LENTE capture plus ART result must precede runtime acceptance. [ARTIST PR #77](https://github.com/az1nn/marica-game/pull/77) remains draft and unmerged.
+- No main-scene, animal-domain state, persistence, V1 release, or web deployment behavior changed. Full V201/V201a acceptance, V202–V205, and final production art are **not** implied by this merge.
+
+Next actionable SPEC-005 owner: **LENTE/SCENE**, once an actual rendered scene/capture environment is available; ARCH then evaluates pixel scaling and frame budgets. Keep G440 as a parallel, noncolliding core gameplay task.
