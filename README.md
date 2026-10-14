@@ -40,7 +40,9 @@ O núcleo do Maricá Game é o vínculo com animais que vivem, evoluem, deixam d
 specs/
   001-animal-core/          # product contract / historical Roblox delivery
   003-agentic-quality-loop/
-  004-godot-v1-transition/ # active executable roadmap
+  004-godot-v1-transition/ # active gameplay roadmap
+  005-pixel-art-v2-migration/ # approved pixel-art visual roadmap
+  006-single-entry-skill-orchestration/ # SIGA routing protocol
 ```
 
 ## Próximo marco
@@ -56,10 +58,12 @@ Após o núcleo animal, a ordem da V1 é plantas → estrutura da fazenda → pr
 
 O projeto usa skills locais versionadas, derivadas do padrão consolidado no `growing-rio`:
 
-- **SIGA** — orquestra continuação, concorrência, gates e merge.
+- **SIGA** — único comando de abertura de sessões, gate Spec Kit, delegação, concorrência e merge.
+- **DESIGN** — regras, gameplay, sistemas, economia e progressão.
+- **ARCH** — arquitetura, APIs, persistência, performance e code review.
 - **LORE** — cânone narrativo.
 - **ARTIST** — direção visual e aprovação.
-- **CENA** — materialização de cenas/assets.
+- **CENA (SCENE)** — materialização de sprites/cenas/assets.
 - **ROBLOX** — migration source / future-port lane.
 - **QA** — gates automatizados.
 - **LENTE** — evidência visual versionada.
@@ -67,7 +71,9 @@ O projeto usa skills locais versionadas, derivadas do padrão consolidado no `gr
 - **GODOT** — runtime canônico de produção da V1.
 - **3JS** — lane de referência/portabilidade.
 
-Catálogo: `.agents/skills/README.md`.
+Catálogo: `.agents/skills/README.md` e `docs/SKILL-TREE.md`.
+
+**Regra:** sem Spec Kit completo e task ID, SIGA primeiro commita apenas o roadmap; nenhuma implementação/review/asset é tocada.
 
 Validação mínima:
 

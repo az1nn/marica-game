@@ -1,6 +1,6 @@
 ---
 name: lente
-description: Capture and inspect exact-head Maricá Game visual states, scenes and objects; produce versioned multimodal evidence and route concrete findings to ARTIST/CENA/ROBLOX/LORE/SIGA.
+description: Capture and inspect exact-head Maricá Game visual states, scenes and objects; produce versioned multimodal evidence and route concrete findings to ARTIST/CENA/GODOT/ARCH/LORE/SIGA.
 ---
 
 # LENTE — Maricá Game visual feedback loop
@@ -47,9 +47,11 @@ LENTE does not directly implement broad fixes. Route:
 
 - intended style/concept -> ARTIST;
 - visual materialization -> CENA;
-- Roblox runtime/camera/input -> ROBLOX;
+- Godot V1 runtime/camera/input -> SIGA request to GODOT/ARCH;
+- Roblox migration/future-port-only issues -> SIGA request to ROBLOX;
 - narrative uncertainty -> LORE;
-- product/architecture/task changes -> SIGA;
+- product/task changes -> SIGA request to DESIGN or Spec Kit update;
+- architecture/render issues -> SIGA request to ARCH;
 - measurable regression automation -> QA.
 
 ## Versioned run
@@ -98,7 +100,7 @@ Unknown metadata must be marked unknown, not invented.
 
 Build the capture inventory from live repository/runtime state, not from a static list.
 
-For SPEC-001, early targets should eventually include:
+For SPEC-004/SPEC-005 Godot work, prioritize animal-first runtime targets; SPEC-001 remains historical reference. Target examples:
 
 - inherited farm overview;
 - founder pet interaction;
