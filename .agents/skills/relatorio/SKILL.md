@@ -1,6 +1,6 @@
 ---
 name: relatorio
-description: Generate the canonical Maricá Game repository status report from live evidence, using one stable visual dashboard pattern and the same factual topics every time.
+description: Generate canonical factual Maricá Game reports from live evidence, preferring native interactive GPT UI with one-image inline fallback.
 ---
 
 # RELATORIO — canonical Maricá Game status dashboard
@@ -13,7 +13,7 @@ Canonical repository:
 az1nn/marica-game
 ~~~
 
-Its job is to reconstruct current repository truth and render it in a stable, recognizable report format. **Visual Mode is the default output**; Text Mode is used only when the user explicitly requests text/no image. The factual topics, ordering and classification rules remain the same.
+Its job is to reconstruct current repository truth and render it in a stable, recognizable report format. **Interactive Mode is preferred when available**; **Visual Mode** is the one-image fallback. Text Mode is only by explicit user request. The factual topics, ordering and classification rules remain the same.
 
 RELATORIO never selects new roadmap work, mutates repository state, merges, creates tasks or changes labels. SIGA acts; RELATORIO reports.
 
@@ -42,39 +42,32 @@ Treat these as RELATORIO requests:
 - `relatório visual`
 - requests from SIGA to render the final repository state
 
-Use **Visual Mode by default**, including for standalone `relatorio` / `relatório` and for every invocation coming from SIGA.
+Use **Interactive Mode by default** when supported, or Visual Mode as fallback, including all SIGA terminal calls.
 
 Use **Text Mode only when the user explicitly requests textual output, no image, or equivalent wording**.
 
 
 ## Inline delivery contract
 
-Visual Mode must be delivered as an **inline-rendered image in the conversation**, not merely as a download link or file path.
+Interactive Mode is the **default when a supported native chat UI surface exists**. Render actual bound controls in the conversation: Resumo, Tarefas, Gates, Grafo, Evidências, filters, drill-down, source links and copy. Controls affect only local presentation; no mutation, auto-fetch or implied live updates. If the host cannot render a working interactive surface, use Visual Mode with exactly **one inline image**. A file path, sandbox download or static HTML mockup is never a substitute for inline visual delivery.
 
-Required behavior:
+## Interactive delivery path
 
-- render exactly one final RELATORIO image per invocation;
-- present that image inline in the assistant response;
-- a download link may exist only as a secondary convenience, never as the primary or sole visual delivery;
-- do not emit draft/intermediate report images to the user;
-- if a generated image is rejected during QA, discard it and render a replacement before responding;
-- never expose a stale or cross-project image while producing the Maricá Game report.
+1. Reconcile the exact default HEAD, branch/PR heads, claims, active task, phase, checks and accepted evidence after SIGA's last mutation.
+2. Build and validate a versioned, immutable source manifest against `tools/relatorio/report_contract.py`, retaining URLs, SHA and unknowns. Preserve canonical ten report topics, with progressive disclosure by tab.
+3. Prefer an **interactive native UI surface** when host support is available. Use native segmented-control/tab navigation, status/search filters, source links, explicit copy action, responsive widths and keyboard-operable elements. The snapshot must remain immutable; user controls never write to GitHub or change acceptance state.
+4. If no interactivity, render exactly one final dashboard image using a native inline image surface and perform composition QA. If no native image either, report **VISUAL_BLOCKED** explicitly without a false delivery claim or download-only substitute.
+5. Only use Text Mode on explicit request. Do not claim a standalone HTML preview or static source file has been rendered as a ChatGPT interactive experience.
+6. For any PASS gate, exact validated SHA and canonical source URL must match. Missing, stale, queued, running and unverified checks stay visibly non-PASS. Include one and only one next action.
 
-## Native inline rendering path
+### Interactive layout and accessibility
 
-Visual Mode has a strict delivery path.
-
-Preferred order:
-
-1. build a compact factual render manifest from reconciled repository state;
-2. render the final dashboard through a **native inline image surface** that appears directly in the conversation;
-3. only treat the report as delivered after that inline visual is emitted.
-
-A generic generated file, sandbox path, Markdown download link, or attachment that requires the user to open/download it is **not** a valid RELATORIO visual delivery.
-
-Do not use a file-generation surface as the terminal RELATORIO renderer unless the client surface is known to render the produced bitmap inline automatically.
-
-If no native inline image surface is available, classify the visual stage as **VISUAL_BLOCKED** and say so explicitly. Do not claim RELATORIO complete and do not substitute a download-only artifact.
+- **Resumo:** status, branch/default HEAD, latest verified unit, blocker/wait and next task.
+- **Tarefas:** canonical phase order with status filter/search; scope/owner/source drill-down.
+- **Gates:** exact-head status, missing evidence, workflow source, PR candidate SHA.
+- **Grafo:** 10 active nodes; dependency path and ownership. No implicit recursive peer calls.
+- **Evidências:** claim, relevant PRs, LENTE/runtime provenance and source citations.
+- Maintain 44px-class touch affordances where possible, readable labels, semantic text status beyond color and keyboard navigation. On narrow screens prefer tabs and stacked rows to tiny fonts. Never let interactive drill-down invent checks, metrics or visual acceptance.
 
 ### Render manifest
 
@@ -203,7 +196,7 @@ Visual Mode includes one compact decorative scene panel.
 
 Direction:
 
-- cute low-poly / pixel-textured feel;
+- approved full pixel art 2.5D, crisp nearest-neighbor edges;
 - coastal Maricá/Brazil cues;
 - farm + pet/animal emphasis;
 - warm daylight/cozy tone;
@@ -249,7 +242,7 @@ Always show the required evidence for the exact relevant SHA.
 Default rows when applicable:
 
 - Validate skills;
-- Roblox CI;
+- Godot CI;
 - Open PRs;
 - active/closed claim.
 
@@ -300,9 +293,9 @@ Always show:
 Fonte: live repository state • az1nn/marica-game • <branch>@<short-sha>
 ~~~
 
-## Visual Mode — default design contract
+## Visual Mode — fallback design contract
 
-This is the default visual style for Maricá Game reports.
+This is the canonical fallback visual style for Maricá Game reports. Native interactive UI preserves its hierarchy and order.
 
 ### Canvas
 
@@ -450,7 +443,7 @@ SIGA
 -> RELATORIO
 ~~~
 
-When called by SIGA, RELATORIO must re-read the resulting live repository state after SIGA's mutations/merge/persistence and render **Visual Mode by default**. A SIGA text recap never satisfies this requirement by itself.
+When called by SIGA, RELATORIO must re-read resulting live state after mutations/merge/persistence and render **Interactive Mode when supported**, otherwise Visual Mode inline fallback. A SIGA text recap never satisfies this requirement by itself.
 
 RELATORIO can also be invoked directly as a standalone read-only command.
 

@@ -62,6 +62,17 @@ def validate(snapshot):
         source(ev.get("url"), "evidence.url")
     return snapshot
 
+def choose_surface(interactive_available=False, image_available=False, explicit_text=False):
+    """Never mistake downloaded or static HTML for a delivered native report."""
+    if explicit_text:
+        return "TEXT"
+    if interactive_available:
+        return "INTERACTIVE"
+    if image_available:
+        return "VISUAL"
+    return "VISUAL_BLOCKED"
+
+
 def tasks_filtered(snapshot, status="ALL", search=""):
     validate(snapshot)
     if status != "ALL" and status not in TASK_STATES:

@@ -1,5 +1,5 @@
 import unittest
-from report_contract import tasks_filtered, validate
+from report_contract import choose_surface, tasks_filtered, validate
 
 SRC = "https://github.com/az1nn/marica-game/blob/master/specs/007-skill-tree-simplification/tasks.md"
 HEAD = "a" * 40
@@ -33,6 +33,11 @@ class InteractiveReportContractTest(unittest.TestCase):
     def test_filter_search(self):
         self.assertEqual([x["id"] for x in tasks_filtered(snapshot(),"ACTIVE","interactive")],["O709"])
         self.assertEqual(tasks_filtered(snapshot(),"DONE"),[])
+    def test_native_surface_and_fallback(self):
+        self.assertEqual(choose_surface(True, True), "INTERACTIVE")
+        self.assertEqual(choose_surface(False, True), "VISUAL")
+        self.assertEqual(choose_surface(False, False), "VISUAL_BLOCKED")
+        self.assertEqual(choose_surface(True, True, True), "TEXT")
     def test_source_lock(self):
         x=snapshot();x["tasks"][0]["source_url"]="https://example.org"
         with self.assertRaises(ValueError): validate(x)
