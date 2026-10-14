@@ -4,13 +4,18 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
 
+from dispatch import decide, roadmap_tasks
+
 REQUIRED_SKILLS = (
     "siga",
     "siga-concurrency",
+    "design",
+    "arch",
     "lore",
     "artist",
     "cena",
@@ -34,6 +39,7 @@ REQUIRED_DOCS = (
     "docs/VISUAL-DIRECTION.md",
     "docs/lore/CANON.md",
     "docs/SIGA-CONCURRENCY.md",
+    "docs/SKILL-TREE.md",
 )
 
 GAUNTLET_REQUIRED_FILES = (
@@ -52,6 +58,7 @@ SIGA_REQUIRED_MARKERS = (
     "## Repository identity lock",
     "## Mandatory lifecycle",
     "### RECONCILE",
+    "### SPEC_GATE",
     "### CLASSIFY",
     "### ROUTE",
     "### CONCURRENCY BARRIER",
@@ -61,6 +68,9 @@ SIGA_REQUIRED_MARKERS = (
     "## PERSIST",
     "## CONTINUE",
     ".agents/skills/siga-concurrency/SKILL.md",
+    "## Dispatch decision contract",
+    "tools/skills/skill_tree.json",
+    "No task mutation without a committed Spec Kit roadmap",
     "python tools/skills/validate.py",
     ".agents/skills/gauntlet/SKILL.md",
     "native inline image surface",
@@ -110,6 +120,99 @@ def validate_repository_references(path: Path, text: str, errors: list[str], roo
                 f"{path.relative_to(root)} -> {reference}"
             )
 
+
+
+def validate_skill_graph(root: Path, errors: list[str]) -> int:
+    """Guard against missing authorities, recursive/peer calls and routing regressions."""
+    config_file = root / "tools/skills/skill_tree.json"
+    cases_file = root / "tools/skills/routing_cases.json"
+    dispatcher_file = root / "tools/skills/dispatch.py"
+    for path in (config_file, cases_file, dispatcher_file):
+        if not path.is_file():
+            errors.append(f"missing dispatch artifact: {path.relative_to(root)}")
+    if not config_file.is_file() or not cases_file.is_file():
+        return 0
+    try:
+        graph = json.loads(config_file.read_text(encoding="utf-8"))
+        cases = json.loads(cases_file.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, UnicodeError) as exc:
+        errors.append(f"invalid skill dispatch JSON: {exc}")
+        return 0
+
+    expected = set(REQUIRED_SKILLS) - {"siga"}
+    actual = graph.get("specialists", [])
+    if len(actual) != len(set(actual)) or set(actual) != expected:
+        errors.append("skill graph specialists must match REQUIRED_SKILLS, no duplicates")
+    if graph.get("repository") != CANONICAL_REPO:
+        errors.append("skill graph repository lock mismatch")
+    if graph.get("orchestrator") != "siga" or graph.get("returns_to") != "siga":
+        errors.append("SIGA must be the single orchestrator/return controller")
+    rules = graph.get("rules", {})
+    if (rules.get("strict_spec_kit") is not True
+            or rules.get("bootstrap_only_commit") is not True
+            or rules.get("peer_direct_calls") is not False
+            or rules.get("concept_is_runtime_acceptance") is not False
+            or rules.get("anti_starvation_runs") != 2):
+        errors.append("skill graph must encode strict Spec Kit and separated visual gates")
+
+    edges = graph.get("edges", [])
+    if (not isinstance(edges, list)
+            or any(edge.get("from") != "siga" or edge.get("to") not in expected
+                   for edge in edges if isinstance(edge, dict))
+            or any(not isinstance(edge, dict) for edge in edges)
+            or len(edges) != len(expected)
+            or {edge.get("to") for edge in edges if isinstance(edge, dict)} != expected):
+        errors.append("only acyclic SIGA -> registered specialist dispatch edges allowed")
+    aliases = graph.get("aliases", {})
+    for alias, target in aliases.items():
+        if target not in set(REQUIRED_SKILLS):
+            errors.append(f"alias {alias} references missing skill {target}")
+    if aliases.get("scene") != "cena" or aliases.get("architecture") != "arch":
+        errors.append("SCENE/CENA or ARCH alias missing")
+    if graph.get("review_paths", {}).get("visual") != ["lente", "artist"]:
+        errors.append("visual review must route LENTE then ARTIST")
+
+    spec_dir = root / "specs/006-single-entry-skill-orchestration"
+    if not all((spec_dir / name).is_file() for name in ("spec.md", "plan.md", "tasks.md")):
+        errors.append("SPEC-006 incomplete: no implementation is admitted")
+    elif "O601" not in (spec_dir / "tasks.md").read_text(encoding="utf-8"):
+        errors.append("SPEC-006 task trace missing")
+    if not roadmap_tasks(root):
+        errors.append("no executable Spec Kit task found in repository")
+
+    total = 0
+    for scenario in cases if isinstance(cases, list) else []:
+        total += 1
+        try:
+            got = decide(scenario["request"], graph)
+            wanted = scenario["expect"]
+            for field in ("action", "owner"):
+                if got.get(field) != wanted[field]:
+                    errors.append(f"routing scenario {scenario.get('name', total)}: "
+                                  f"{field} expected {wanted[field]}, got {got.get(field)}")
+        except (ValueError, KeyError, TypeError, AttributeError) as exc:
+            errors.append(f"routing scenario {scenario.get('name', total)} failed: {exc}")
+    if total < 8:
+        errors.append("routing regression fixtures insufficient")
+    return total
+
+
+def validate_visual_v2_authority(root: Path, errors: list[str]) -> None:
+    artist = root / ".agents/skills/artist/SKILL.md"
+    cena = root / ".agents/skills/cena/SKILL.md"
+    if artist.is_file():
+        text = artist.read_text(encoding="utf-8")
+        for marker in ("## Approved V2 baseline", "full pixel art 2.5D",
+                       "specs/005-pixel-art-v2-migration/",
+                       "Concept ACCEPT", "LENTE", "ARCH"):
+            if marker not in text:
+                errors.append(f"ARTIST current direction/gates marker missing: {marker}")
+    if cena.is_file():
+        text = cena.read_text(encoding="utf-8")
+        for marker in ("## Approved visual baseline", "full pixel art 2.5D",
+                       "Godot V1", "SIGA"):
+            if marker not in text:
+                errors.append(f"CENA current direction/routing marker missing: {marker}")
 
 def main() -> int:
     parser = argparse.ArgumentParser()
@@ -170,6 +273,9 @@ def main() -> int:
             if marker not in relatorio_text:
                 errors.append(f"RELATORIO delivery marker missing: {marker}")
 
+    routing_count = validate_skill_graph(root, errors)
+    validate_visual_v2_authority(root, errors)
+
     if errors:
         print("SKILLS VALIDATION: FAIL")
         for error in errors:
@@ -185,6 +291,8 @@ def main() -> int:
     print("- RELATORIO native-inline markers: PASS")
     print("- cross-repository authority scan: PASS")
     print("- hard-coded SIGA task IDs: none")
+    print(f"- routing fixtures: {routing_count} PASS")
+    print("- single entry, Spec Kit admission and visual V2 markers: PASS")
     return 0
 
 
