@@ -9,3 +9,6 @@
 - [ ] **O706** Corrigir direção visual obsoleta e referências entre skills.
 - [ ] **O707** Validar exact-head, CI, cobertura de routing, visual gates e concorrência.
 - [ ] **O708** Merge protegido, verificar master e emitir RELATORIO.
+
+- [ ] **O709** Evoluir RELATORIO com manifesto factual e dashboard interativo do ChatGPT (abas, filtros, drill-down, fonte, fallback visual e acessibilidade).
+- [ ] **O710** Validar cenários de fidelidade do painel, exato-head e fallback sem degradar entrega anterior.
