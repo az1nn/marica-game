@@ -4,7 +4,7 @@ Task: SPEC-004 G440 (define offline local save schema v1)
 Owner: ARCH/GODOT session GPT-6, 2026-10-14 13:28 America/Sao_Paulo
 Base: master@8585f3635c170aa52b03b611e44243b94d511b05
 Branch: arch/g440-save-schema-v1-20261014
-Status: ACTIVE — schema contract work, verification pending
+Status: CLOSED — G440 schema/test scope verified and PR #91 squash-merged; documentation closeout CI pending
 
 Scope:
 - `game/docs/save-schema-v1.md` normative G440 persistence envelope and cross-record invariants
@@ -21,3 +21,9 @@ Concurrency:
 - Issue #86 genetics saturation is unresolved; no claim of universal advancement.
 
 Guardrails: G441–G447 implementation, migration, atomic commit, runtime load and cross-session replay tests remain NOT DONE. Do not mark G440 complete until exact-head CI + independent schema checks. Claim will be closed after guarded merge.
+
+## Closed evidence
+- PR #91 verified final head `0242aba5a6eb4d5b714c9a2a0f60a0d180c67300` with G440 Save Schema, Godot, ARCH, Validate skills, Roblox CI and Web Preview Contract PASS; optional Roblox Behavioral SKIPPED.
+- Guarded squash merge `master@dfc98d337ff49a05c0ab017c2371a75160f0f5da`.
+- Two concurrent master updates (#88 ARCH source probe and #92 ARCH documentation) were reconciled by explicit two-parent commits, using disjoint file-tree entries and expected-head guards.
+- Scope complete; G441 requires a new claim. The closeout-only docs commit must receive its own exact-head CI.
