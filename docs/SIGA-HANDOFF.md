@@ -28,3 +28,14 @@ BLOCKERS:
 
 NEXT:
 SPEC-004 **G441** — SIGA dispatch ARCH/GODOT to implement a narrow local versioned SaveStore against the G440 document, fail closed on unsupported schema and protect revision/time semantics, while preserving G442 atomic-write ownership.
+
+## Current SIGA handoff — SPEC-007 skill simplification + interactive RELATORIO (2026-10-14)
+
+MODE: RESUME / MERGE_GATE
+BASE: master@896635c30ff97a5bdfe7e263d7b44d4f99f16035
+BRANCH: refactor/spec-007-skill-tree-10 / PR #93
+VERIFIED: candidate 797da17912257fd2b2c4aee1ad7bc7ce95ee17c3 — Validate skills, Godot CI, Web Preview Contract, ARCH V201 Source Import, G440 Save Schema, Roblox CI PASS; Roblox Behavioral SKIPPED/nonrequired. This is previous exact-head evidence, and MUST be rerun against any new commit.
+DONE: SPEC-007 O700–O707 and O709–O710; 10 active discovered skills, 16 advisory routing cases, four archival contracts, SIGA concurrency and QA adversarial mode, reporter manifest/native interactive protocol and fallback tests.
+CONCURRENCY: PR #77 ARTIST DRAFT remains untouched. PR #91 G440 merged and incorporated through a two-parent reconciliation; no shared target paths with PR #93.
+WAIT: O708 protected merge after fresh exact-head green and expected-head guard.
+NEXT: Verify current PR #93 head and all required workflows, then mark Ready and guarded squash merge. Reconcile resulting master, close claim and deliver one interactive RELATORIO from live source.

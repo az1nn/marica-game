@@ -7,8 +7,8 @@
 - [x] **O704** Desativar dispatch 3JS/ROBLOX, preservar documentação e fixtures históricas.
 - [x] **O705** Atualizar grafo, aliases, dispatcher, cenários e validador para exatamente 10 nós.
 - [x] **O706** Corrigir direção visual obsoleta e referências entre skills.
-- [ ] **O707** Validar exact-head, CI, cobertura de routing, visual gates e concorrência.
+- [x] **O707** Validar exact-head, CI, cobertura de routing, visual gates e concorrência.
 - [ ] **O708** Merge protegido, verificar master e emitir RELATORIO.
 
 - [x] **O709** Evoluir RELATORIO com manifesto factual e dashboard interativo do ChatGPT (abas, filtros, drill-down, fonte, fallback visual e acessibilidade).
-- [ ] **O710** Validar cenários de fidelidade do painel, exato-head e fallback sem degradar entrega anterior.
+- [x] **O710** Validar cenários de fidelidade do painel, exato-head e fallback sem degradar entrega anterior.
