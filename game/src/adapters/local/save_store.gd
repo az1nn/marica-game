@@ -1,31 +1,67 @@
 class_name MaricaLocalSaveStore
 extends RefCounted
 
-# SPEC-004 G441: direct local JSON I/O behind an adapter, NOT G442 atomic durability.
+# SPEC-004 G442: staged atomic local saves, verified backups and fail-closed recovery.
 const TIME = preload("res://src/domain/simulation_time.gd")
 const VALIDATOR = preload("res://src/adapters/local/save_v1_validator.gd")
 const MAX_SAFE_INTEGER: int = 9007199254740991
 
 var _path: String
+var _fault: Callable
 
 
-func _init(path: String = "user://marica-save-v1.json") -> void:
+func _init(path: String = "user://marica-save-v1.json", fault: Callable = Callable()) -> void:
     _path = path
+    _fault = fault
 
 
 func load() -> Dictionary:
     if not _safe_path():
         return _fail("Save path must be a flat user:// file")
-    if not FileAccess.file_exists(_path):
+    var primary: Dictionary = _read_validated(_path)
+    if primary.get("ok", false) and primary.get("found", false):
+        return primary
+    return _recover_or_reject(primary)
+
+
+func _recover_or_reject(primary: Dictionary) -> Dictionary:
+    # Orphan tmp is never a committed save; backup must pass strict G440 validation.
+    var backup: Dictionary = _read_validated(_backup_path())
+    if backup.get("ok", false) and backup.get("found", false):
+        var restored: Dictionary = _restore_backup(backup["snapshot"])
+        if not restored.get("ok", false):
+            return restored
+        return {
+            "ok": true,
+            "found": true,
+            "recovered": true,
+            "recovery_source": "verified_backup",
+            "snapshot": backup["snapshot"].duplicate(true)
+        }
+    if not primary.get("ok", false):
+        return _fail("Primary save invalid; no verified backup exists")
+    if not backup.get("ok", false):
+        return _fail("Backup save invalid; new profile creation is unsafe")
+    return _missing_or_incomplete()
+
+
+func _missing_or_incomplete() -> Dictionary:
+    if FileAccess.file_exists(_staging_path()) or FileAccess.file_exists(_restore_path()):
+        return _fail("Interrupted first save found; incomplete staging is not a profile")
+    return {"ok": true, "found": false}
+
+
+func _read_validated(path: String) -> Dictionary:
+    if not FileAccess.file_exists(path):
         return {"ok": true, "found": false}
-    var file: FileAccess = FileAccess.open(_path, FileAccess.READ)
+    var file: FileAccess = FileAccess.open(path, FileAccess.READ)
     if file == null:
-        return _fail("Save cannot be read")
+        return _fail("Save cannot be read: " + path)
     var raw: String = file.get_as_text()
     file.close()
     var parsed: JSON = JSON.new()
     if parsed.parse(raw) != OK or not _unique_json_keys(raw):
-        return _fail("Save JSON is invalid or contains duplicate object keys")
+        return _fail("Save JSON is invalid or has duplicate object keys")
     var validated: Dictionary = VALIDATOR.validate(parsed.data)
     if not validated.get("ok", false):
         return _fail(str(validated.get("error", "Save schema is invalid")))
@@ -33,7 +69,7 @@ func load() -> Dictionary:
 
 
 func save(candidate: Variant, expected_revision: int, clock: Callable) -> Dictionary:
-    # Not crash-atomic: G442 will provide temp/replace/backup semantics.
+    # G442: staging/backup promotion; G446+ owns process-restart stress tests.
     if not _safe_path():
         return _fail("Save path must be a flat user:// file")
     if expected_revision < -1 or expected_revision >= MAX_SAFE_INTEGER:
@@ -87,16 +123,92 @@ func _verify_revision(
 
 
 func _write_document(document: Dictionary) -> Dictionary:
-    var output: FileAccess = FileAccess.open(_path, FileAccess.WRITE)
-    if output == null:
-        return _fail("Save cannot be opened for writing")
-    output.store_string(JSON.stringify(document))
-    output.flush()
-    var write_error: Error = output.get_error()
-    output.close()
-    if write_error != OK:
-        return _fail("Save write failed; durability is not guaranteed")
+    var previous: Dictionary = _read_validated(_path)
+    if not previous.get("ok", false):
+        return _fail("Refuse overwrite of invalid primary")
+    var staged: Dictionary = _stage_document(_staging_path(), document)
+    if not staged.get("ok", false):
+        return staged
+    if _interrupted("after_temp"):
+        return _fail("Simulated interruption after temp flush; primary preserved")
+    var backup: Dictionary = _backup_before_replace(previous)
+    if not backup.get("ok", false):
+        return backup
+    if not _promote(_staging_path(), _path):
+        return _fail("Atomic primary replacement failed; previous save retained")
     return {"ok": true, "revision": document["revision"], "snapshot": document.duplicate(true)}
+
+
+func _backup_before_replace(previous: Dictionary) -> Dictionary:
+    if not previous.get("found", false):
+        return {"ok": true}
+    var staged: Dictionary = _stage_document(_backup_staging_path(), previous["snapshot"])
+    if not staged.get("ok", false):
+        return staged
+    if not _promote(_backup_staging_path(), _backup_path()):
+        return _fail("Cannot publish verified backup; primary preserved")
+    if _interrupted("after_backup"):
+        return _fail("Simulated interruption after backup; primary preserved")
+    return {"ok": true}
+
+
+func _restore_backup(document: Dictionary) -> Dictionary:
+    var staged: Dictionary = _stage_document(_restore_path(), document)
+    if not staged.get("ok", false):
+        return _fail("Verified backup exists but restoration staging failed")
+    if not _promote(_restore_path(), _path):
+        return _fail("Verified backup exists but primary restoration failed")
+    return {"ok": true}
+
+
+func _stage_document(path: String, document: Dictionary) -> Dictionary:
+    var stream: FileAccess = FileAccess.open(path, FileAccess.WRITE)
+    if stream == null:
+        return _fail("Cannot open local staging path")
+    stream.store_string(JSON.stringify(document))
+    stream.flush()
+    var error: Error = stream.get_error()
+    stream.close()
+    if error != OK:
+        return _fail("Staging write failed")
+    var reread: Dictionary = _read_validated(path)
+    if not reread.get("ok", false) or not reread.get("found", false):
+        return _fail("Staged save failed schema verification")
+    if FileAccess.get_file_as_string(path) != JSON.stringify(document):
+        return _fail("Staged JSON bytes differ from candidate")
+    return {"ok": true}
+
+
+func _promote(source: String, destination: String) -> bool:
+    # Filesystem rename is atomic when supported by the target platform.
+    # Never unlink a valid destination to work around a failed rename.
+    return (
+        DirAccess.rename_absolute(
+            ProjectSettings.globalize_path(source), ProjectSettings.globalize_path(destination)
+        )
+        == OK
+    )
+
+
+func _backup_path() -> String:
+    return _path + ".bak"
+
+
+func _staging_path() -> String:
+    return _path + ".tmp"
+
+
+func _backup_staging_path() -> String:
+    return _path + ".bak.tmp"
+
+
+func _restore_path() -> String:
+    return _path + ".restore.tmp"
+
+
+func _interrupted(stage: String) -> bool:
+    # Injected only by deterministic QA tests, not by normal gameplay.
+    return _fault.is_valid() and _fault.call(stage) == true
 
 
 func _safe_path() -> bool:

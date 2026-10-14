@@ -1,0 +1,90 @@
+name: G442 Atomic Save
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  atomic-save:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Verify SHA and pinned engine
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          curl --fail --location --retry 3 --retry-all-errors \
+            -o "$RUNNER_TEMP/godot.zip" \
+            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+
+      - name: G442 actual atomic/backup/recovery test
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          timeout 45s "$GODOT" --headless --editor --path game --import --quit 2>&1 \
+            | tee "$RUNNER_TEMP/g442-import.log"
+          timeout 45s "$GODOT" --headless --path game \
+            --script res://tests/atomic_save_runner.gd 2>&1 \
+            | tee "$RUNNER_TEMP/g442-good.log"
+          grep -Fq 'MARICA_G442_ATOMIC_SAVE_PASS scenarios=12' "$RUNNER_TEMP/g442-good.log"
+
+      - name: QA adversarial backup-rotation mutation GOOD-BAD-RESTORE
+        shell: bash
+        run: |
+          set -euo pipefail
+          STORE=game/src/adapters/local/save_store.gd
+          cp "$STORE" "$RUNNER_TEMP/g442-good-source.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("game/src/adapters/local/save_store.gd")
+          source = p.read_text()
+          target = 'if not previous.get("found", false):'
+          assert source.count(target) == 1, "G442 backup guard drifted"
+          p.write_text(source.replace(target, 'if true or not previous.get("found", false):'))
+          print("G442 BAD mutant disables backup rotation")
+          PY
+          set +e
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/atomic_save_runner.gd \
+            > "$RUNNER_TEMP/g442-bad.log" 2>&1
+          BAD_CODE="$?"
+          set -e
+          cp "$RUNNER_TEMP/g442-good-source.gd" "$STORE"
+          if test "$BAD_CODE" -eq 0; then
+            echo "G442 mutation escaped"
+            exit 1
+          fi
+          grep -Fq 'MARICA_G442_FAIL backup previous revision' "$RUNNER_TEMP/g442-bad.log"
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/atomic_save_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g442-restored.log"
+          grep -Fq 'MARICA_G442_ATOMIC_SAVE_PASS scenarios=12' "$RUNNER_TEMP/g442-restored.log"
+          git diff --exit-code -- "$STORE"
+          echo "MARICA_G442_MUTATION_PASS good=pass bad=fail restore=pass"
+
+      - name: Attach proof to exact commit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g442-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          path: |
+            ${{ runner.temp }}/g442-import.log
+            ${{ runner.temp }}/g442-good.log
+            ${{ runner.temp }}/g442-bad.log
+            ${{ runner.temp }}/g442-restored.log
