@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "demo": true,
+  "repository": "az1nn/marica-game",
+  "branch": "refactor/spec-007-skill-tree-10",
+  "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "classification": "RESUME",
+  "next_action": "DEMO ONLY — verify live source",
+  "source_url": "https://github.com/az1nn/marica-game/blob/master/specs/007-skill-tree-simplification/tasks.md",
+  "tasks": [
+    {
+      "id": "O709",
+      "title": "Demo: interactive report",
+      "phase": "SPEC-007",
+      "status": "ACTIVE",
+      "owner": "RELATORIO",
+      "source_url": "https://github.com/az1nn/marica-game/blob/master/specs/007-skill-tree-simplification/tasks.md"
+    },
+    {
+      "id": "O710",
+      "title": "Demo: test fallback",
+      "phase": "SPEC-007",
+      "status": "PENDING",
+      "owner": "QA",
+      "source_url": "https://github.com/az1nn/marica-game/blob/master/specs/007-skill-tree-simplification/tasks.md"
+    }
+  ],
+  "gates": [
+    {
+      "name": "Validate skills",
+      "status": "MISSING"
+    },
+    {
+      "name": "Godot CI",
+      "status": "UNVERIFIED"
+    }
+  ],
+  "prs": [
+    {
+      "number": 93,
+      "title": "Demo PR",
+      "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "url": "https://github.com/az1nn/marica-game/pull/93"
+    }
+  ],
+  "evidence": [
+    {
+      "label": "SPEC-007",
+      "url": "https://github.com/az1nn/marica-game/blob/master/specs/007-skill-tree-simplification/spec.md"
+    }
+  ]
+}
