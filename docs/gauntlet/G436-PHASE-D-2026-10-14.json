@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "repository": "az1nn/marica-game",
+  "target": {
+    "task": "SPEC-004 G436 - Phase D P0 GAUNTLET (bounded deterministic animal loop)",
+    "baseline_sha": "6d98f9a549ab93a5c7e1beeffb4ad5494f82dc17",
+    "candidate_sha": "180b37fc7aff43daebf095d448a35d94f3a83349"
+  },
+  "gates": {
+    "validated_sha": "180b37fc7aff43daebf095d448a35d94f3a83349",
+    "results": [
+      {
+        "name": "Godot CI (G420-G436, including G436 GOOD-BAD-RESTORE)",
+        "status": "PASS"
+      },
+      {
+        "name": "Validate skills",
+        "status": "PASS"
+      },
+      {
+        "name": "Roblox CI (legacy non-blocking)",
+        "status": "PASS"
+      },
+      {
+        "name": "Web Preview Contract (not gameplay)",
+        "status": "PASS"
+      },
+      {
+        "name": "Roblox Behavioral (legacy optional)",
+        "status": "SKIP"
+      }
+    ]
+  },
+  "critic": {
+    "context_isolated": true,
+    "findings": [
+      "Separate G436 inspection of previously merged G420-G435 implementation; fresh independent cross-contract runner, not a copy of G435 fixtures.",
+      "Observed source-level saturation exception: if every legal genetic trait equals 1.0, advance_potential returns unchanged capped traits. Universal genetic-advance semantics require DESIGN/ARCH clarification in issue #86; no present positive-fitness scenario silently claims coverage of this edge.",
+      "End-of-life is manually driven with injected fixture time. Neither automatic production scheduling nor save/restart is proved in Phase D."
+    ]
+  },
+  "mutation": {
+    "required": true,
+    "status": "PROVED",
+    "good_pass": true,
+    "mutant_fail": true,
+    "restore_pass": true
+  },
+  "regressions": {
+    "status": "NONE",
+    "items": [
+      "No regression observed for the bounded G420-G435 deterministic test/mutation suite at PR #85 exact HEAD and post-merge master.",
+      "No production domain source changed in PR #85; ARTIST PR #77 remains separate."
+    ]
+  },
+  "rounds": 1,
+  "decision": "PASS",
+  "limits": [
+    "Pass is scoped to currently executable unsaturated Phase D fixtures; not a universal guarantee at fully saturated 1.0 potential.",
+    "Phase E save/restart and runtime scheduler are not accepted.",
+    "Issue #86 tracks unresolved saturated-potential semantics."
+  ],
+  "next": "G440 - define offline local save schema v1 while retaining #86 for DESIGN/ARCH decision before claiming universal genetic advance."
+}

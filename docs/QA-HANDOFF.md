@@ -1,15 +1,16 @@
 # QA HANDOFF
 
-Status: G435 VERIFIED / ADVANCE G436
+Status: G436 BOUNDED GAUNTLET VERIFIED / ADVANCE G440
 Authority: SPEC-004 · Godot 4.7.2-stable · offline-first single-player.
 
 Verified:
-- PR #83 exact-head e87b1124efa19fb3e0bda5418e678f0f444fe745 and guarded master@d019443e2d1e8a1e2711f9d9fda3463bb6390b62: Godot CI, Validate skills, Roblox CI and Web Preview Contract PASS. Independent G435 scenario and rollback GOOD→BAD→RESTORE PASS.
-- G435 headless integration runner covers 14/21/28 fixture days, injected clock observation/rollback, care→sickness→paid treatment→recovery, juvenile/adult/senior transitions, natural end and health terminal, exactly two juvenile successors and G433 once-only replay in process.
-- G435 BAD mutant removes logical-time max clamp; runner fails and restored runner passes. All prior G420–G434 CI steps remain PASS. Golden catalog 238 ACTIVE_PARITY unchanged.
+- PR #85 exact HEAD `180b37fc7aff43daebf095d448a35d94f3a83349` and guarded master `e8b29a5dacb6b7d6f3a7e7e50eda490ac9e5ab96`: Godot CI, Validate skills, Roblox CI and Web Preview Contract PASS.
+- G436 standalone critic of care/genetic expression, founder Soulbound, stage ordering/natural terminal, deterministic exactly-two succession, idempotent same-process replay, genetic progress in unsaturated fixture, and generation-2 direct-parent pedigree.
+- BAD mutant replaces care quality multiplier with 1.0; precise G436 diagnostic fails, original restored and headless PASS. G420–G435 pre-existing regression/mutation suite retained; 238 source-Luau golden parity cases unchanged.
+- Machine readable GAUNTLET manifest and narrative: `docs/gauntlet/G436-PHASE-D-2026-10-14.{json,md}`.
 
-Limits:
-- Fixtures do not establish production aging scheduler or final lifespan checkpoints; no save/restart, scene runtime, online, visual acceptance or playable export.
-- Durable replay remains G440/G445/G446; G436 holistic P0 GAUNTLET remains pending.
+Open limitations / risks:
+- Issue #86: all traits at allowed cap 1.0 cannot satisfy literal strict genetic advance under existing source algorithm; static counterexample, not yet an executed failing saturated fixture. DESIGN/ARCH must ratify policy and QA must add boundary proof.
+- G436 does not prove save/restart or durable event markers (G440–G446), automatic age scheduler, scenes, player-facing visuals or full web export. Roblox Behavioral SKIPPED/nonrequired for Godot V1.
 
-Next: G436 — independent GAUNTLET, phase-level regression hunt and mutation audit before Phase D Gate D.
+Next: G440 schema review: versioned save/load, pet snapshot, pedigree, event marker, clock and migration boundaries. No claim of persistence test until G446/G447.
