@@ -47,9 +47,7 @@ func _scenarios() -> bool:
     if not _check(_fixture_roundtrip(store, "save_v1_founder.json"), "founder backup"):
         return false
     _cleanup()
-    return _check(
-        _fixture_roundtrip(store, "save_v1_succession.json"), "succession ledger backup"
-    )
+    return _check(_fixture_roundtrip(store, "save_v1_succession.json"), "succession ledger backup")
 
 
 func _interrupted_initial_save() -> bool:
@@ -199,9 +197,7 @@ func _fixture_roundtrip(store: MaricaLocalSaveStore, fixture_name: String) -> bo
 
 
 func _fixture(filename: String) -> Dictionary:
-    return JSON.parse_string(
-        FileAccess.get_file_as_string("res://tests/fixtures/" + filename)
-    )
+    return JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/" + filename))
 
 
 func _clock() -> Callable:

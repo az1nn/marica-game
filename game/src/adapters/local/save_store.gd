@@ -60,6 +60,7 @@ func _read_validated(path: String) -> Dictionary:
         return _fail(str(validated.get("error", "Save schema is invalid")))
     return {"ok": true, "found": true, "snapshot": validated["document"]}
 
+
 func save(candidate: Variant, expected_revision: int, clock: Callable) -> Dictionary:
     # G442: staging/backup promotion; G446+ owns process-restart stress tests.
     if not _safe_path():
@@ -125,9 +126,7 @@ func _write_document(document: Dictionary) -> Dictionary:
         return _fail("Simulated interruption after temp flush; primary preserved")
 
     if previous.get("found", false):
-        var backup_stage: Dictionary = _stage_document(
-            _backup_staging_path(), previous["snapshot"]
-        )
+        var backup_stage: Dictionary = _stage_document(_backup_staging_path(), previous["snapshot"])
         if not backup_stage.get("ok", false):
             return backup_stage
         if not _promote(_backup_staging_path(), _backup_path()):
@@ -137,11 +136,7 @@ func _write_document(document: Dictionary) -> Dictionary:
 
     if not _promote(_staging_path(), _path):
         return _fail("Atomic primary replacement failed; previous save retained")
-    return {
-        "ok": true,
-        "revision": document["revision"],
-        "snapshot": document.duplicate(true)
-    }
+    return {"ok": true, "revision": document["revision"], "snapshot": document.duplicate(true)}
 
 
 func _restore_backup(document: Dictionary) -> Dictionary:
@@ -166,8 +161,8 @@ func _stage_document(path: String, document: Dictionary) -> Dictionary:
     var reread: Dictionary = _read_validated(path)
     if not reread.get("ok", false) or not reread.get("found", false):
         return _fail("Staged save failed schema verification")
-    if reread["snapshot"] != document:
-        return _fail("Staged save differs from candidate")
+    if FileAccess.get_file_as_string(path) != JSON.stringify(document):
+        return _fail("Staged JSON bytes differ from candidate")
     return {"ok": true}
 
 
@@ -201,6 +196,7 @@ func _restore_path() -> String:
 func _interrupted(stage: String) -> bool:
     # Injected only by deterministic QA tests, not by normal gameplay.
     return _fault.is_valid() and _fault.call(stage) == true
+
 
 func _safe_path() -> bool:
     if not _path.begins_with("user://"):
