@@ -1,0 +1,147 @@
+extends SceneTree
+
+# SPEC-005 V201: technical render evidence, never ARTIST acceptance.
+const SOURCE = preload("res://assets/arch_probes/S01_A01_v4_original.png")
+var _out_dir: String = ""
+
+
+func _initialize() -> void:
+    call_deferred("_capture")
+
+
+func _capture() -> void:
+    _out_dir = OS.get_environment("V201_CAPTURE_DIR")
+    if not _out_dir.begins_with("/"):
+        push_error("V201 output directory must be an absolute path")
+        quit(1)
+        return
+    if DirAccess.make_dir_recursive_absolute(_out_dir) != OK:
+        push_error("V201 output directory unavailable")
+        quit(1)
+        return
+
+    var configs: Array[Dictionary] = [
+        {
+            "name": "mobile-dark-nearest",
+            "size": Vector2i(432, 768),
+            "scale": 1.0,
+            "filter": CanvasItem.TEXTURE_FILTER_NEAREST,
+            "background": Color("#14242b")
+        },
+        {
+            "name": "mobile-light-nearest",
+            "size": Vector2i(432, 768),
+            "scale": 1.0,
+            "filter": CanvasItem.TEXTURE_FILTER_NEAREST,
+            "background": Color("#eee0c4")
+        },
+        {
+            "name": "desktop-dark-nearest",
+            "size": Vector2i(1280, 960),
+            "scale": 2.0,
+            "filter": CanvasItem.TEXTURE_FILTER_NEAREST,
+            "background": Color("#14242b")
+        },
+        {
+            "name": "desktop-dark-linear-control",
+            "size": Vector2i(1280, 960),
+            "scale": 2.0,
+            "filter": CanvasItem.TEXTURE_FILTER_LINEAR,
+            "background": Color("#14242b")
+        }
+    ]
+    var evidence: Array[Dictionary] = []
+    for config in configs:
+        var captured: Dictionary = await _capture_one(config)
+        if not captured.get("ok", false):
+            push_error(str(captured.get("error", "V201 capture failed")))
+            quit(1)
+            return
+        evidence.append(captured["evidence"])
+
+    var report: Dictionary = {
+        "schema_version": 1,
+        "repository": "az1nn/marica-game",
+        "task": "SPEC-005 V201",
+        "status": "TECHNICAL_PROBE_ONLY",
+        "source_asset": "res://assets/arch_probes/S01_A01_v4_original.png",
+        "source_git_blob": "da7806ebfcb051c8fd32ccdbad4760b7136f97dd",
+        "head_sha": OS.get_environment("V201_HEAD_SHA"),
+        "godot_version": Engine.get_version_info().get("string", "unknown"),
+        "renderer": "gl_compatibility under Xvfb/Mesa",
+        "no_art_approval": true,
+        "captures": evidence
+    }
+    var manifest: FileAccess = FileAccess.open(
+        _out_dir.path_join("manifest.json"), FileAccess.WRITE
+    )
+    if manifest == null:
+        push_error("V201 manifest cannot be written")
+        quit(1)
+        return
+    manifest.store_string(JSON.stringify(report, "  ") + "\n")
+    manifest.close()
+    print("MARICA_V201_RENDER_CAPTURE_PASS images=%d status=UNREVIEWED" % evidence.size())
+    quit(0)
+
+
+func _capture_one(config: Dictionary) -> Dictionary:
+    var size: Vector2i = config["size"]
+    var name: String = config["name"]
+    var viewport: SubViewport = SubViewport.new()
+    viewport.name = "V201_" + name
+    viewport.size = size
+    viewport.disable_3d = true
+    viewport.transparent_bg = false
+    viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+    root.add_child(viewport)
+
+    var backdrop: ColorRect = ColorRect.new()
+    backdrop.color = config["background"]
+    backdrop.size = Vector2(size)
+    backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    viewport.add_child(backdrop)
+
+    var founder: Sprite2D = Sprite2D.new()
+    founder.name = "FounderProbe"
+    founder.texture = SOURCE
+    founder.texture_filter = config["filter"]
+    founder.scale = Vector2.ONE * float(config["scale"])
+    founder.position = Vector2(size) * 0.5
+    backdrop.add_child(founder)
+
+    await RenderingServer.frame_post_draw
+    await RenderingServer.frame_post_draw
+    var image: Image = viewport.get_texture().get_image()
+    if image.is_empty() or image.get_width() != size.x or image.get_height() != size.y:
+        viewport.queue_free()
+        return {"ok": false, "error": "No GPU frame: " + name}
+
+    var baseline: Color = image.get_pixel(4, 4)
+    var informative: int = 0
+    for y in range(4, size.y, 48):
+        for x in range(4, size.x, 48):
+            if image.get_pixel(x, y).distance_to(baseline) > 0.06:
+                informative += 1
+    if informative < 8:
+        viewport.queue_free()
+        return {"ok": false, "error": "Empty/flat render: " + name}
+
+    if image.save_png(_out_dir.path_join(name + ".png")) != OK:
+        viewport.queue_free()
+        return {"ok": false, "error": "PNG save failed: " + name}
+
+    var result: Dictionary = {
+        "name": name,
+        "file": name + ".png",
+        "viewport": [size.x, size.y],
+        "scale": config["scale"],
+        "sampling": (
+            "nearest" if config["filter"] == CanvasItem.TEXTURE_FILTER_NEAREST else "linear"
+        ),
+        "informative_grid_samples": informative,
+        "art_acceptance": "NOT_EVALUATED",
+        "mobile_device_verified": false
+    }
+    viewport.queue_free()
+    return {"ok": true, "evidence": result}

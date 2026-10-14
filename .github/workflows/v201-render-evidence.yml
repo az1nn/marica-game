@@ -1,0 +1,89 @@
+name: V201 Render Evidence
+
+on:
+  pull_request:
+    paths:
+      - 'game/tests/v201_capture_runner.gd'
+      - '.github/workflows/v201-render-evidence.yml'
+      - 'docs/arch/V201-CAPTURE-HARNESS.md'
+      - 'game/assets/arch_probes/S01_A01_v4_original.png'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Verify source and head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          test "$(git hash-object game/assets/arch_probes/S01_A01_v4_original.png)" = "da7806ebfcb051c8fd32ccdbad4760b7136f97dd"
+
+      - name: Install pinned Godot and Xvfb
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri libgl1
+          curl --fail --location --retry 3 --retry-all-errors \
+            -o "$RUNNER_TEMP/godot.zip" \
+            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+
+      - name: Import and render exact-head evidence
+        shell: bash
+        env:
+          V201_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          export V201_CAPTURE_DIR="$RUNNER_TEMP/v201-captures"
+          mkdir -p "$V201_CAPTURE_DIR"
+          "$GODOT" --headless --editor --path game --import --quit \
+            2>&1 | tee "$RUNNER_TEMP/v201-import.log"
+          xvfb-run -a -s "-screen 0 1600x1100x24" \
+            "$GODOT" --rendering-driver opengl3 --rendering-method gl_compatibility \
+            --path game --script res://tests/v201_capture_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/v201-render.log"
+          grep -Fq "MARICA_V201_RENDER_CAPTURE_PASS images=4 status=UNREVIEWED" "$RUNNER_TEMP/v201-render.log"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          root = Path(os.environ["V201_CAPTURE_DIR"])
+          data = json.loads((root / "manifest.json").read_text())
+          assert data["status"] == "TECHNICAL_PROBE_ONLY"
+          assert data["no_art_approval"] is True
+          assert data["head_sha"] == os.environ["V201_HEAD_SHA"]
+          assert len(data["captures"]) == 4
+          for c in data["captures"]:
+              assert (root / c["file"]).stat().st_size > 2048
+              assert c["art_acceptance"] == "NOT_EVALUATED"
+          print("MARICA_V201_MANIFEST_PASS")
+          PY
+
+      - name: Upload exact-head PNG evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v201-render-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          path: |
+            ${{ runner.temp }}/v201-captures/*.png
+            ${{ runner.temp }}/v201-captures/manifest.json
+            ${{ runner.temp }}/v201-import.log
+            ${{ runner.temp }}/v201-render.log
