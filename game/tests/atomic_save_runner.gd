@@ -21,6 +21,14 @@ func _run() -> void:
 
 func _scenarios() -> bool:
     var store: MaricaLocalSaveStore = STORE.new(PATH)
+    if not _check(_bootstrap_cases(store), "bootstrap/interruption group"):
+        return false
+    if not _check(_recovery_cases(store), "recovery/fail-closed group"):
+        return false
+    return _check(_historical_fixture_cases(store), "founder/succession group")
+
+
+func _bootstrap_cases(store: MaricaLocalSaveStore) -> bool:
     if not _check(_interrupted_initial_save(), "interrupted first write fail closed"):
         return false
     _cleanup()
@@ -28,8 +36,10 @@ func _scenarios() -> bool:
         return false
     if not _check(_backup_rotation(store), "backup previous revision"):
         return false
-    if not _check(_interrupted_existing(store), "interruptions preserve primary"):
-        return false
+    return _check(_interrupted_existing(store), "interruptions preserve primary")
+
+
+func _recovery_cases(store: MaricaLocalSaveStore) -> bool:
     if not _check(_valid_new_commit(store), "next commit rotates backup"):
         return false
     if not _check(_corrupt_primary_recovers(store), "verified backup recovery"):
@@ -41,14 +51,17 @@ func _scenarios() -> bool:
     if not _check(_both_invalid_reject(store), "double corruption fails closed"):
         return false
     _cleanup()
-    if not _check(_orphan_staging_fails(store), "uncommitted temp is never a save"):
-        return false
+    return _check(_orphan_staging_fails(store), "uncommitted temp is never a save")
+
+
+func _historical_fixture_cases(store: MaricaLocalSaveStore) -> bool:
     _cleanup()
     if not _check(_fixture_roundtrip(store, "save_v1_founder.json"), "founder backup"):
         return false
     _cleanup()
-    return _check(_fixture_roundtrip(store, "save_v1_succession.json"), "succession ledger backup")
-
+    return _check(
+        _fixture_roundtrip(store, "save_v1_succession.json"), "succession ledger backup"
+    )
 
 func _interrupted_initial_save() -> bool:
     var interrupted: MaricaLocalSaveStore = STORE.new(PATH, Callable(self, "_after_temp"))
@@ -180,11 +193,12 @@ func _fixture_roundtrip(store: MaricaLocalSaveStore, fixture_name: String) -> bo
     var first: Dictionary = store.save(doc, -1, _clock())
     if not first.get("ok", false):
         return false
+    var normalized_prior: Dictionary = store.load()["snapshot"]
     var second: Dictionary = store.save(first["snapshot"], 0, _clock())
     if not second.get("ok", false):
         return false
     var backup: Dictionary = STORE.new(PATH + ".bak").load()
-    if not backup.get("ok", false) or backup["snapshot"] != first["snapshot"]:
+    if not backup.get("ok", false) or backup["snapshot"] != normalized_prior:
         return false
     if not _overwrite(PATH, '{"not":"a save"}'):
         return false
@@ -192,7 +206,7 @@ func _fixture_roundtrip(store: MaricaLocalSaveStore, fixture_name: String) -> bo
     return (
         recovered.get("ok", false)
         and recovered.get("recovered", false)
-        and recovered["snapshot"] == first["snapshot"]
+        and recovered["snapshot"] == normalized_prior
     )
 
 

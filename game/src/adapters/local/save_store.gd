@@ -21,13 +21,16 @@ func load() -> Dictionary:
     var primary: Dictionary = _read_validated(_path)
     if primary.get("ok", false) and primary.get("found", false):
         return primary
+    return _recover_or_reject(primary)
 
-    # Only a fully validated backup may be promoted. No tmp is ever a save.
+
+func _recover_or_reject(primary: Dictionary) -> Dictionary:
+    # Orphan tmp is never a committed save; backup must pass strict G440 validation.
     var backup: Dictionary = _read_validated(_backup_path())
     if backup.get("ok", false) and backup.get("found", false):
-        var recovered: Dictionary = _restore_backup(backup["snapshot"])
-        if not recovered.get("ok", false):
-            return recovered
+        var restored: Dictionary = _restore_backup(backup["snapshot"])
+        if not restored.get("ok", false):
+            return restored
         return {
             "ok": true,
             "found": true,
@@ -39,10 +42,13 @@ func load() -> Dictionary:
         return _fail("Primary save invalid; no verified backup exists")
     if not backup.get("ok", false):
         return _fail("Backup save invalid; new profile creation is unsafe")
+    return _missing_or_incomplete()
+
+
+func _missing_or_incomplete() -> Dictionary:
     if FileAccess.file_exists(_staging_path()) or FileAccess.file_exists(_restore_path()):
         return _fail("Interrupted first save found; incomplete staging is not a profile")
     return {"ok": true, "found": false}
-
 
 func _read_validated(path: String) -> Dictionary:
     if not FileAccess.file_exists(path):
@@ -124,20 +130,25 @@ func _write_document(document: Dictionary) -> Dictionary:
         return staged
     if _interrupted("after_temp"):
         return _fail("Simulated interruption after temp flush; primary preserved")
-
-    if previous.get("found", false):
-        var backup_stage: Dictionary = _stage_document(_backup_staging_path(), previous["snapshot"])
-        if not backup_stage.get("ok", false):
-            return backup_stage
-        if not _promote(_backup_staging_path(), _backup_path()):
-            return _fail("Cannot publish verified backup; primary preserved")
-        if _interrupted("after_backup"):
-            return _fail("Simulated interruption after backup; primary preserved")
-
+    var backup: Dictionary = _backup_before_replace(previous)
+    if not backup.get("ok", false):
+        return backup
     if not _promote(_staging_path(), _path):
         return _fail("Atomic primary replacement failed; previous save retained")
     return {"ok": true, "revision": document["revision"], "snapshot": document.duplicate(true)}
 
+
+func _backup_before_replace(previous: Dictionary) -> Dictionary:
+    if not previous.get("found", false):
+        return {"ok": true}
+    var staged: Dictionary = _stage_document(_backup_staging_path(), previous["snapshot"])
+    if not staged.get("ok", false):
+        return staged
+    if not _promote(_backup_staging_path(), _backup_path()):
+        return _fail("Cannot publish verified backup; primary preserved")
+    if _interrupted("after_backup"):
+        return _fail("Simulated interruption after backup; primary preserved")
+    return {"ok": true}
 
 func _restore_backup(document: Dictionary) -> Dictionary:
     var staged: Dictionary = _stage_document(_restore_path(), document)
