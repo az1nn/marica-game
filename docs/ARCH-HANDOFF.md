@@ -21,3 +21,11 @@ Next: SCENE/LENTE real Godot output at representative mobile/desktop dimensions 
 - No main-scene, animal-domain state, persistence, V1 release, or web deployment behavior changed. Full V201/V201a acceptance, V202–V205, and final production art are **not** implied by this merge.
 
 Next actionable SPEC-005 owner: **LENTE/SCENE**, once an actual rendered scene/capture environment is available; ARCH then evaluates pixel scaling and frame budgets. Keep G440 as a parallel, noncolliding core gameplay task.
+
+## V201 actual Godot render evidence — technical-only merge (2026-10-14)
+
+- PR [#97](https://github.com/az1nn/marica-game/pull/97) was guarded-squash merged as `master@10670f712e2b8862f05d6daef3d155cb4f004389` after an exact-head PASS on `ae973848b9d6e6becbdcc1162294080a1204a034`: V201 Render Evidence, Godot CI, G441 Local SaveStore, G440 Save Schema, ARCH V201 Source Import, Validate skills, Web Preview Contract and Roblox CI. Roblox Behavioral was SKIPPED/nonrequired.
+- [V201 Render Evidence run #38613081336](https://github.com/az1nn/marica-game/actions/runs/38613081336) generates four actual Godot 4.7.2 software OpenGL captures: mobile-sized 432×768 near/contrast light and dark, desktop 1280×960 2× nearest and 2× linear negative control. Manifest pinned to feature SHA and immutable original V4 blob da7806ebfcb051c8fd32ccdbad4760b7136f97dd.
+- Independent local inspection of original artifact PNGs found 84,761 1280×960 pixels with RGB channel difference above 3 when comparing nearest and linear; this is a **filter sensitivity observation**, not a preference verdict or mobile performance claim. Source files unchanged.
+- SPEC-005 V201/V201a remain **OPEN**: integer scale policy, atlas/licensing, scene camera/layers, browser/mobile real-device frame budget and independent ARTIST/LENTE acceptance are not proven by simulated Xvfb viewport captures. Prototype is not the playable pet scene V203/V205.
+- ARTIST PR #77 remains draft/untouched. Next: ARCH/LENTE/SCENE inspect exact current head and production-relevant player scene/viewports, then document measured thresholds and independent artistic decision when applicable.
