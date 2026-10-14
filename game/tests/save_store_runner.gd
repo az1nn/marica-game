@@ -104,11 +104,12 @@ func _reject_invalid_and_corrupt(store: MaricaLocalSaveStore) -> bool:
 
 
 func _reject_malformed(store: MaricaLocalSaveStore, original: Dictionary) -> bool:
-    var bad: FileAccess = FileAccess.open(SUFFIX, FileAccess.WRITE)
-    if bad == null:
-        return false
-    bad.store_string('{"schema_version":1,"schema_version":1}')
-    bad.close()
+    for corrupt_path in [SUFFIX, SUFFIX + ".bak"]:
+        var bad: FileAccess = FileAccess.open(corrupt_path, FileAccess.WRITE)
+        if bad == null:
+            return false
+        bad.store_string('{"schema_version":1,"schema_version":1}')
+        bad.close()
     if store.load().get("ok", false):
         return false
     return not store.save(original["snapshot"], 1, Callable(self, "_now")).get("ok", false)
@@ -163,8 +164,10 @@ func _fixture(name: String) -> Dictionary:
 
 
 func _remove_file() -> void:
-    if FileAccess.file_exists(SUFFIX):
-        DirAccess.remove_absolute(ProjectSettings.globalize_path(SUFFIX))
+    for suffix in ["", ".bak", ".tmp", ".bak.tmp", ".restore.tmp"]:
+        var target: String = SUFFIX + suffix
+        if FileAccess.file_exists(target):
+            DirAccess.remove_absolute(ProjectSettings.globalize_path(target))
 
 
 func _check(condition: bool, label: String) -> bool:
