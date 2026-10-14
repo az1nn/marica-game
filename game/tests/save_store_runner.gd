@@ -35,6 +35,8 @@ func _run_cases() -> bool:
     var empty: Dictionary = _fixture("save_v1_minimal.json")
     _clock_value = 1000.0
     var first: Dictionary = store.save(empty, -1, Callable(self, "_now"))
+    if not first.get("ok", false):
+        print("MARICA_G441_DIAGNOSTIC first_write=" + str(first))
     if not _check(first.get("ok", false) and first.get("revision") == 0, "first write"):
         return false
     var loaded: Dictionary = store.load()
