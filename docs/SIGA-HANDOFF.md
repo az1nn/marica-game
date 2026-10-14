@@ -1,25 +1,30 @@
 CAVEMAN HANDOFF v1
 
 APP: Maricá Game
-WORKSTREAM: SPEC-004 · Phase D Succession P0
+WORKSTREAM: SPEC-004 · Phase D P0 → Phase E Offline Persistence
 MODE: ADVANCE
-BASE: master@d019443e2d1e8a1e2711f9d9fda3463bb6390b62
-PR: #83 MERGED (feature head e87b1124efa19fb3e0bda5418e678f0f444fe745)
+BASE: master@e8b29a5dacb6b7d6f3a7e7e50eda490ac9e5ab96
+PR: #85 MERGED (feature head 180b37fc7aff43daebf095d448a35d94f3a83349)
 
 DONE:
-- G435 runner tests full deterministic 14/21/28-day accelerated animal journey using injected clock, care, sickness, paid treatment/recovery, juvenile→adult→senior, natural/health terminal, exactly two successors and once-only session replay.
-- G435 rollback/duplicate clock sample safe; GOOD→BAD→RESTORE clock mutation PASS; G430–G434 retained, 238 legacy golden parity cases unchanged.
-- Test age checkpoints are fixture choices only; NOT production aging scheduler, offline persistence or playable web export.
+- G436 independent holistic Godot runner composes founder Soulbound → care/expression → recovery → aging → natural terminal → 2 deterministic successors → generation-2 direct-parent pedigree.
+- Cross-contract care/expression mutation GOOD→BAD→RESTORE PASS. No production domain code changed.
+- Bounded Phase D GAUNTLET report + machine-readable manifest in docs/gauntlet/G436-PHASE-D-2026-10-14.{md,json}.
+- No tested Phase D regression observed; important all-traits-at-1.0 saturation edge tracked as issue #86, NOT claimed universally resolved.
 
 VERIFY:
-- PR #83 exact-head e87b1124efa19fb3e0bda5418e678f0f444fe745 and guarded master@d019443e2d1e8a1e2711f9d9fda3463bb6390b62: Godot CI, Validate skills, Roblox CI and Web Preview Contract PASS. Independent G435 scenario and rollback GOOD→BAD→RESTORE PASS.
-- Documentation closeout itself requires fresh exact-head CI on its own PR and master after merge.
+- PR #85 exact HEAD 180b37fc and guarded master@e8b29a5d: Godot CI, Validate skills, Roblox CI and Web Preview Contract PASS at both. Roblox Behavioral skipped/nonrequired.
+- Documentation closeout PR requires its own exact-head CI and guarded merge.
 
 CONCURRENCY:
-- #83 feature merged and claim closed in docs; PR #77 ARTIST V4 remains separate draft pending ARCH V201/V201a, SCENE and LENTE/ART runtime approval.
+- PR #77 ARTIST V4 remains separate draft; no merge without ARCH/SCENE/LENTE/ART runtime acceptance.
+- Issue #86 DESIGN/ARCH owns saturation rule; no silent constitution change.
+
+LIMITS:
+- Tests use bounded deterministic unsaturated fixtures; no production aging scheduler, offline save/restart, V1 playable scene, artwork runtime acceptance or universal progression at cap.
 
 WAIT / BLOCKER:
-- No human blocker for G436; local save and durable successor markers remain G440–G446. Vercel technical preview is not gameplay.
+- No gate blocking independent G440 save schema design. Issue #86 must be resolved before universal genetic progress is certified for release.
 
 NEXT:
-G436 — bounded holistic P0 GAUNTLET and mutation/regrression assessment of founder→care→aging→end-of-life→two successors before Phase D Gate D decision.
+G440 — define offline local save schema v1 (version, migration and immutable lineage/event data boundaries) before implementing persistence.
