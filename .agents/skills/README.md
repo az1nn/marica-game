@@ -1,53 +1,30 @@
 # Maricá Game — local skills
 
-Repository-local operating system for:
+Canonical repository: `az1nn/marica-game`. The only session opener is **SIGA**, including `SIGA code`, `SIGA architecture`, `SIGA design`, `SIGA artist`, `SIGA scene`, `SIGA review`, `SIGA qa`, `SIGA spec`.
 
-~~~text
-az1nn/marica-game
-~~~
+```text
+SIGA — single-entry orchestrator, roadmap admission, conflicts, merge
+├── DESIGN — mechanics, systems, economy, progression
+├── LORE — narrative canon
+├── ARCH — architecture, APIs, persistence, performance, technical review
+├── GODOT — canonical Godot V1 engine/runtime
+├── ARTIST — visual direction and independent human visual gate
+├── CENA (SCENE alias) — pixel-art sprites, scenes, materialization
+├── LENTE — visual observation and exact-head A/B evidence
+├── QA — deterministic and integration quality
+├── GAUNTLET — independent bounded review / regression hunt
+├── ROBLOX — migration reference/future port (not V1 runtime)
+├── 3JS — noncanonical prototype/reference
+├── siga-concurrency — claim and collision safety
+└── RELATORIO — mandatory final read-only dashboard
+```
 
-No other repository is an authority for Maricá Game task state, handoffs, claims, CI evidence or skill orchestration.
+**No committed Spec Kit + task => no implementation, art production, code review verdict or merge.** SIGA creates/repairs spec/plan/tasks in a governance-only commit first, then performs a new task admission/claim. Direct standalone specialist names are compatibility aliases that request a SIGA session, not independent authorities.
 
-## Master
+**Dispatch:** `IDENTITY -> RECONCILE -> SPEC_GATE -> CLASSIFY -> DEPENDENCY_RESOLVE -> ROUTE -> CLAIM -> EXECUTE -> VERIFY -> MERGE/WATCH -> HANDOFF -> RELATORIO`. Specialists execute bounded work and return to SIGA with evidence, missing dependency, next owner and acceptance status; no direct peer recursion.
 
-- SIGA — continuation, task selection, routing, delivery, exact-head verification, merge and persistence.
-- siga-concurrency — concurrent-session collision protection for every mutating wave.
+**Visual example:** concept ACCEPT -> ARCH/GODOT measured import -> CENA/SCENE playable slice -> LENTE exact-head A/B -> ARTIST runtime verdict. A blocked visual gate does not lock unrelated ready roadmap tasks. Prevent starvation by inspecting all active specs/PRs and tracking skipped ready specialist lanes.
 
-## Product / creative
+Approved artistic target: **full pixel art 2.5D** in `specs/005-pixel-art-v2-migration/`; historical low-poly text is not active guidance. Godot offline-first/animal-first remain canonical.
 
-- LORE — narrative canon.
-- ARTIST — visual direction and human visual acceptance.
-- CENA — production visual materialization.
-- LENTE — exact-head visual evidence and critique.
-
-## Engineering
-
-- ROBLOX — migration-source/future-port specialist; not V1 production under ADR-0004.
-- QA — automated quality gates.
-- GAUNTLET — bounded adversarial quality loop: baseline, fresh critic, mutation proof and regression hunter under SIGA.
-- GODOT — canonical V1 production runtime specialist under Constitution v2.0.0 / SPEC-004 / ADR-0004.
-- 3JS — reference/prototype renderer lane unless explicitly activated by a newer local ADR/spec.
-
-## Observability
-
-- RELATORIO — compact read-only repository status.
-
-## Default routing
-
-~~~text
-Siga
- -> identity lock
- -> reconcile live repo/spec/claims/PRs/CI
- -> classify RESUME/WATCH/ADVANCE/BLOCKED
- -> select task from live repository state
- -> route smallest owning specialist
- -> concurrency barrier before mutation
- -> execute bounded work
- -> exact-head QA / rendered evidence
- -> GAUNTLET for applicable high-risk/P0 acceptance
- -> guarded merge or WATCH
- -> persist handoff + one next action
- -> mandatory RELATORIO from fresh resulting state
-~~~
-
-Task IDs and "next task" state do not belong in this README or in the SIGA skill. They are derived from live specs/tasks, PRs, claims and handoffs on each invocation.
+See `docs/SKILL-TREE.md`, `tools/skills/skill_tree.json`, `tools/skills/routing_cases.json`. Validate with `python tools/skills/validate.py`.

@@ -26,24 +26,15 @@ LIVE RUNTIME EVIDENCE
 
 CENA does not invent product rules or canon to make a scene easier.
 
-## Current visual baseline
+## Approved visual baseline
 
-Until explicitly superseded:
+The target is **full pixel art 2.5D** under SPEC-005/G1–G25, not low-poly forms with pixelated textures. Use accepted ARTIST concepts and measured ARCH pixel-grid/Godot import decisions. Existing low-poly runtime visuals are historical BEFORE evidence, not the new art directive.
 
-- original stylized characters, not default Roblox-avatar aesthetics as the visual identity;
-- cute low-poly forms;
-- pixelated / low-resolution texture language;
-- elevated isometric camera with zoom as the prototype baseline;
-- compact, dense farm;
-- warm readable silhouettes and strong object hierarchy;
-- light Maricá/Brazil/coastal references without literal postcard reconstruction;
-- intimate pet interactions may move the camera closer;
-- city center, veterinarian, market, seeds/food and lake are world anchors;
-- mobile readability and interaction clarity outrank decorative density.
+Godot V1 is canonical, offline-first under SPEC-004/ADR-0004. Pixel sprites/tiles, stylized depth, isometric/contextual zoom, mobile sharpness and animal-first readability are required; never equate a mockup with a running Godot asset.
 
 ## Magic command
 
-Standalone CENA reconciles visual state and advances the smallest coherent player-visible gap.
+Standalone CENA/SCENE requests a SIGA-routed roadmapped visual slice; no independent task selection or unplanned materialization.
 
 Useful scoped forms:
 
@@ -71,7 +62,7 @@ CENA may own:
 - runtime placement/integration tightly coupled to the visual slice;
 - visual acceptance evidence.
 
-CENA routes reusable runtime/platform systems to ROBLOX; narrative uncertainty to LORE; art-direction changes/concepts to ARTIST; automated gates to QA.
+CENA returns requests to SIGA, which routes reusable runtime/platform systems to GODOT, structural decisions to ARCH, narrative uncertainty to LORE, style changes to ARTIST and automated gates to QA/LENTE. Never recurse directly into peer specialists.
 
 ## Start protocol
 
@@ -92,7 +83,7 @@ Read the smallest sufficient set:
 Prefer:
 
 1. broken/empty player-visible scene;
-2. active SPEC-001 slice scene needed for the next task;
+2. active SPEC-004/SPEC-005 Godot animal-first scene supported by an executable task;
 3. placeholder that blocks interaction/readability;
 4. reusable visual asset required by already-defined scenes;
 5. polish only after structural gaps are closed.
@@ -110,7 +101,7 @@ Choose explicitly:
 Concept imagery is not a runtime asset and must never be reported as implemented.
 
 ### 5. Materialize
-Keep assets modular and reusable. Preserve source files when practical so assets are portable outside Roblox.
+Keep assets modular and reusable. Preserve source files when practical so assets are portable outside Godot.
 
 For every external/generated asset, record at minimum:
 
@@ -124,16 +115,15 @@ For every external/generated asset, record at minimum:
 Never copy another game's distinctive assets or directly imitate a living artist's signature style.
 
 ### 6. Integrate
-For Roblox production scenes:
 
-- maintain server/client authority boundaries;
-- do not hide gameplay state inside visual scripts;
-- keep hit targets/touch targets readable;
-- verify camera and UI on target mobile aspect ratios;
-- preserve performance budgets;
-- prefer reusable prefabs/models/modules over duplicated scene logic.
+For Godot V1 production scenes:
+- keep the deterministic gameplay domain independent of SceneTree visual scripts;
+- use ARTIST-approved source and measured ARCH import/alpha/filter/scale contract;
+- test touch targets, camera framing, UI, sprite legibility and real web/mobile performance;
+- prefer modular Godot Scenes/Resources and typed interfaces over duplicated layout;
+- record exact-head provenance and screenshots after rendering.
 
-If implementation becomes a reusable platform/runtime subsystem, hand it to ROBLOX.
+Return a request to SIGA for any reusable GODOT or ARCH work. Roblox is not a production target for V1.
 
 ### 7. Validate
 Applicable evidence:
@@ -171,12 +161,12 @@ If a scene needs an undefined narrative fact, keep it ABERTO and route to LORE. 
 
 Until live state supersedes them:
 
-1. compact inherited farm blockout;
-2. founder pet readable interaction zone;
-3. care/feed/treatment interaction anchors;
-4. simple town center + veterinarian access;
-5. crop/food support spaces;
-6. visual age/health/care feedback tied to SPEC-001.
+1. founder pet pixel-art animal prototype after ARCH V201/V201a;
+2. playable pet scene with care/health/status clarity and LENTE evidence;
+3. three V1 crops after animal R2 visual gate;
+4. compact inherited farm structures after plants;
+5. town/veterinarian only when later Spec Kit tasks allow;
+6. full visual behavior traceable to SPEC-004/SPEC-005.
 
 Do not polish secondary world content ahead of the animal-core delivery order.
 

@@ -1,6 +1,6 @@
 ---
 name: qa
-description: Own Maricá Game automated quality gates across deterministic domain logic, Roblox runtime integration, persistence, multiplayer, visual regression and performance.
+description: Own Maricá Game automated quality gates across deterministic domain logic, Godot V1 runtime integration, persistence, legacy Roblox parity, visual regression and performance.
 ---
 
 # QA — Maricá Game automated quality specialist
@@ -49,7 +49,7 @@ Verify:
 - migration/version handling when introduced;
 - ownership/economic transaction failure cases.
 
-### L3 — Roblox server/client integration
+### L3 — Godot V1 runtime/integration; Roblox migration parity only
 Verify:
 - server authority;
 - malformed/unauthorized remote requests;
@@ -153,9 +153,9 @@ For coupled Animal Core changes, consider lifecycle, care, health, affection, ge
 
 When SIGA routes an applicable task through GAUNTLET, QA supplies measurable gate and mutation evidence but does not make the final merge decision.
 
-## SPEC-001 release gates
+## Active V1 release gates
 
-QA should map tests directly to G001-G006 and the invariant list in SPEC-001.
+QA maps Godot V1 tests to SPEC-004 and visual checks to SPEC-005; SPEC-001 G001-G006 is historical migration evidence, not active V1 deployment authority.
 
 A release gate is not complete because a unit suite passes if the gate also requires runtime/manual evidence.
 

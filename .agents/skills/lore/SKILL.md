@@ -53,7 +53,7 @@ Unless superseded by repository decisions:
 - the town center, veterinarian, market and farm are player-facing world anchors;
 - tone is cozy, respectful and legible to a broad audience.
 
-These anchors must remain consistent with the constitution and SPEC-001.
+These anchors must remain consistent with the constitution and active SPEC-004/SPEC-005; SPEC-001 is historical migration context.
 
 ## Scope owned by LORE
 
@@ -110,8 +110,8 @@ Route those through SIGA and the owning specialist.
 ### ARTIST / CENA
 LORE defines what a place/object/character means. ARTIST/CENA decide how approved meaning is expressed visually.
 
-### ROBLOX
-LORE may specify dialogue/content IDs and state dependencies, but runtime code must consume canon rather than invent it.
+### GODOT / ARCH / DESIGN
+LORE may specify dialogue/content IDs and state dependencies, but GODOT must consume canon rather than invent it. ARCH owns structural interfaces; DESIGN owns gameplay mechanics. A DOMAIN_CONFLICT returns to SIGA; no peer call or silent override. Roblox is historical/future-port only.
 
 ### QA
 Critical narrative gates can be encoded as content/schema checks when a spec requires them.
