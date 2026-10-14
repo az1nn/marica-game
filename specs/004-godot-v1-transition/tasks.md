@@ -57,7 +57,7 @@
 
 ## Phase E — Offline Persistence
 
-- [ ] **G440** Definir schema v1 do save local.
+- [x] **G440** Definir schema v1 do save local (PR #91): envelope JSON Schema 2020-12 fechado (`schema_version`, `revision`, `last_observed_at`, snapshots de pets históricos e ledger de sucessão) + 3 fixtures, verificador cross-record e 9 corrupções intencionais. PR exact-head `0242aba5` com G440 Save Schema / Godot CI / ARCH V201 / Validate skills / Roblox CI / Web Preview Contract PASS; merge guardado em `master@dfc98d33`. **Só contrato/validação de fixtures:** SaveStore, atomicidade, migrations, hidratação, replay após restart e teste offline G441–G447 permanecem pendentes.
 - [ ] **G441** Implementar SaveStore local versionado.
 - [ ] **G442** Implementar atomic save + backup/recovery.
 - [ ] **G443** Implementar migration harness por schema_version.
