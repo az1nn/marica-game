@@ -8,6 +8,7 @@ def snapshot():
     return {
         "schema_version": 1, "repository": "az1nn/marica-game",
         "branch": "refactor/spec-007-skill-tree-10", "head_sha": HEAD,
+        "default_branch": "master", "default_head_sha": "b" * 40,
         "classification": "RESUME", "next_action": "Demo only, verify live state",
         "source_url": SRC, "demo": True,
         "tasks": [{"id": "O709", "title": "Interactive report", "status": "ACTIVE", "source_url": SRC},
@@ -21,6 +22,9 @@ def snapshot():
 class InteractiveReportContractTest(unittest.TestCase):
     def test_valid_demo(self):
         self.assertEqual(validate(snapshot())["repository"], "az1nn/marica-game")
+    def test_missing_base_head_forbidden(self):
+        x = snapshot(); x.pop("default_head_sha")
+        with self.assertRaises(ValueError): validate(x)
     def test_cross_repo_forbidden(self):
         x = snapshot(); x["repository"] = "az1nn/growing-rio"
         with self.assertRaises(ValueError): validate(x)

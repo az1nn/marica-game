@@ -29,6 +29,9 @@ def validate(snapshot):
     if not isinstance(snapshot.get("branch"), str) or not snapshot["branch"]:
         raise ValueError("missing branch")
     exact_sha(snapshot.get("head_sha"), "head_sha")
+    if snapshot.get("default_branch") != "master":
+        raise ValueError("unknown default branch")
+    exact_sha(snapshot.get("default_head_sha"), "default_head_sha")
     if not isinstance(snapshot.get("next_action"), str) or not snapshot["next_action"].strip():
         raise ValueError("exactly one next_action required")
     source(snapshot.get("source_url"), "source_url")

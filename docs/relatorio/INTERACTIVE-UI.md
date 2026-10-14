@@ -22,3 +22,6 @@ Mobile-first, keyboard-operable controls, tap-friendly inputs and status text ra
 - python tools/skills/validate.py
 
 The demo deliberately contains a fake SHA and DEMO flag; never represent it as current live state. To visualize interactively inside ChatGPT, author native controls from the fresh validated manifest.
+
+## Branch/PR state separation
+Always display default_branch@default_head_sha separately from branch@head_sha. Gate PASS is valid only if its verified SHA matches the candidate head_sha; after merge obtain a fresh snapshot for the resulting master SHA. A synthetic DEMO snapshot is never source truth.

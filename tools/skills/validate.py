@@ -224,6 +224,11 @@ def main() -> int:
 
     errors: list[str] = []
 
+    discovered = {item.parent.name for item in (root / ".agents" / "skills").glob("*/SKILL.md")}
+    if discovered != set(REQUIRED_SKILLS):
+        errors.append("active skill discovery must match exactly ten approved nodes: "
+                      + str(sorted(discovered)))
+
     for skill in REQUIRED_SKILLS:
         path = root / ".agents" / "skills" / skill / "SKILL.md"
         if not path.is_file():

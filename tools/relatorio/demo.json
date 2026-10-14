@@ -48,5 +48,7 @@
       "label": "SPEC-007",
       "url": "https://github.com/az1nn/marica-game/blob/master/specs/007-skill-tree-simplification/spec.md"
     }
-  ]
+  ],
+  "default_branch": "master",
+  "default_head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
 }
