@@ -1,0 +1,90 @@
+name: G441 Local SaveStore
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  local-save:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Guard SHA
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+
+      - name: Install pinned Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --retry-all-errors \
+            -o "$RUNNER_TEMP/godot.zip" \
+            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+
+      - name: Import and execute SaveStore runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          "$GODOT" --headless --editor --path game --import --quit 2>&1 | tee "$RUNNER_TEMP/g441-import.log"
+          timeout 45s "$GODOT" --headless --path game \
+            --script res://tests/save_store_runner.gd 2>&1 | tee "$RUNNER_TEMP/g441-good.log"
+          grep -Fq "MARICA_G441_SAVE_STORE_PASS scenarios=10" "$RUNNER_TEMP/g441-good.log"
+
+      - name: QA adversarial optimistic-revision mutation GOOD-BAD-RESTORE
+        shell: bash
+        run: |
+          set -euo pipefail
+          STORE=game/src/adapters/local/save_store.gd
+          cp "$STORE" "$RUNNER_TEMP/g441-original.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("game/src/adapters/local/save_store.gd")
+          s = p.read_text()
+          target = 'if found and expected_revision != int(current["snapshot"]["revision"]):'
+          assert s.count(target) == 1, "revision compare target drifted"
+          p.write_text(s.replace(target, 'if false and expected_revision != int(current["snapshot"]["revision"]):'))
+          print("G441 bad mutant: stale expected revision is accepted")
+          PY
+          set +e
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/save_store_runner.gd \
+            > "$RUNNER_TEMP/g441-mutant.log" 2>&1
+          code="$?"
+          set -e
+          cp "$RUNNER_TEMP/g441-original.gd" "$STORE"
+          if test "$code" -eq 0; then
+            echo "G441 bad mutant escaped"
+            exit 1
+          fi
+          grep -Fq "MARICA_G441_FAIL stale expected revision" "$RUNNER_TEMP/g441-mutant.log"
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --path game --script res://tests/save_store_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/g441-restored.log"
+          grep -Fq "MARICA_G441_SAVE_STORE_PASS" "$RUNNER_TEMP/g441-restored.log"
+          git diff --exit-code -- "$STORE"
+          echo "MARICA_G441_MUTATION_PASS good=pass bad=fail restored=pass"
+
+      - name: Upload proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g441-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          path: |
+            ${{ runner.temp }}/g441-import.log
+            ${{ runner.temp }}/g441-good.log
+            ${{ runner.temp }}/g441-mutant.log
+            ${{ runner.temp }}/g441-restored.log
