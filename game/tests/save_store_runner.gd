@@ -47,6 +47,8 @@ func _initial_roundtrip(store: MaricaLocalSaveStore) -> bool:
         return false
     _clock_value = 1000.0
     var first: Dictionary = store.save(_fixture("save_v1_minimal.json"), -1, Callable(self, "_now"))
+    if not first.get("ok", false):
+        push_error("MARICA_G441_FIRST_WRITE_ERROR " + str(first))
     if not _check(first.get("ok", false) and first.get("revision") == 0, "first write"):
         return false
     var loaded: Dictionary = store.load()

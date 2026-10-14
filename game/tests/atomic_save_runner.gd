@@ -65,6 +65,8 @@ func _interrupted_initial_save() -> bool:
 
 func _initial_commit(store: MaricaLocalSaveStore) -> bool:
     var first: Dictionary = store.save(_fixture("save_v1_minimal.json"), -1, _clock())
+    if not first.get("ok", false):
+        push_error("MARICA_G442_FIRST_WRITE_ERROR " + str(first))
     if not first.get("ok", false) or first.get("revision", -1) != 0:
         return false
     var loaded: Dictionary = store.load()
