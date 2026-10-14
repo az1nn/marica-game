@@ -22,6 +22,19 @@ func _run() -> void:
 
 func _run_cases() -> bool:
     var store: MaricaLocalSaveStore = STORE.new(SUFFIX)
+    if not _check(_initial_roundtrip(store), "initial round-trip"):
+        return false
+    if not _check(_revision_checks(store), "revision and logical time"):
+        return false
+    if not _check(_reject_invalid_and_corrupt(store), "corrupt save fail-closed"):
+        return false
+    _remove_file()
+    if not _check(_valid_complex_fixtures(store), "complex founder/succession snapshots"):
+        return false
+    return _check(not STORE.new("res://outside.json").load().get("ok", false), "safe path")
+
+
+func _initial_roundtrip(store: MaricaLocalSaveStore) -> bool:
     var absent: Dictionary = store.load()
     if not _check(absent.get("ok", false) and not absent.get("found", true), "absent"):
         return false
@@ -32,11 +45,8 @@ func _run_cases() -> bool:
         "missing profile revision"
     ):
         return false
-    var empty: Dictionary = _fixture("save_v1_minimal.json")
     _clock_value = 1000.0
-    var first: Dictionary = store.save(empty, -1, Callable(self, "_now"))
-    if not first.get("ok", false):
-        print("MARICA_G441_DIAGNOSTIC first_write=" + str(first))
+    var first: Dictionary = store.save(_fixture("save_v1_minimal.json"), -1, Callable(self, "_now"))
     if not _check(first.get("ok", false) and first.get("revision") == 0, "first write"):
         return false
     var loaded: Dictionary = store.load()
@@ -51,10 +61,13 @@ func _run_cases() -> bool:
         return false
     var detached: Dictionary = loaded["snapshot"]
     detached["pets"]["bad"] = {"id": "bad"}
-    if not _check(store.load()["snapshot"]["pets"].is_empty(), "detached load"):
-        return false
+    return _check(store.load()["snapshot"]["pets"].is_empty(), "detached load")
+
+
+func _revision_checks(store: MaricaLocalSaveStore) -> bool:
+    var initial: Dictionary = store.load()["snapshot"]
     _clock_value = 500.0
-    var update: Dictionary = store.save(first["snapshot"], 0, Callable(self, "_now"))
+    var update: Dictionary = store.save(initial, 0, Callable(self, "_now"))
     if not _check(
         (
             update.get("ok", false)
@@ -65,27 +78,18 @@ func _run_cases() -> bool:
     ):
         return false
     if not _check(
-        not store.save(first["snapshot"], 0, Callable(self, "_now")).get("ok", false),
+        not store.save(initial, 0, Callable(self, "_now")).get("ok", false),
         "stale expected revision"
     ):
         return false
     if not _check(store.load()["snapshot"]["revision"] == 1, "stale write unchanged"):
         return false
-    if not _check(
+    return _check(
         not store.save(_fixture("save_v1_minimal.json"), -1, Callable(self, "_now")).get(
             "ok", false
         ),
         "no silent overwrite of existing save"
-    ):
-        return false
-    if not _check(_reject_invalid_and_corrupt(store), "corrupt save fail-closed"):
-        return false
-    _remove_file()
-    if not _check(_valid_complex_fixtures(store), "complex founder/succession snapshots"):
-        return false
-    if not _check(not STORE.new("res://outside.json").load().get("ok", false), "safe path"):
-        return false
-    return true
+    )
 
 
 func _reject_invalid_and_corrupt(store: MaricaLocalSaveStore) -> bool:
@@ -96,6 +100,10 @@ func _reject_invalid_and_corrupt(store: MaricaLocalSaveStore) -> bool:
         return false
     if store.load()["snapshot"]["schema_version"] != 1:
         return false
+    return _reject_malformed(store, original) and _reject_duplicate(store)
+
+
+func _reject_malformed(store: MaricaLocalSaveStore, original: Dictionary) -> bool:
     var bad: FileAccess = FileAccess.open(SUFFIX, FileAccess.WRITE)
     if bad == null:
         return false
@@ -103,8 +111,10 @@ func _reject_invalid_and_corrupt(store: MaricaLocalSaveStore) -> bool:
     bad.close()
     if store.load().get("ok", false):
         return false
-    if store.save(original["snapshot"], 1, Callable(self, "_now")).get("ok", false):
-        return false
+    return not store.save(original["snapshot"], 1, Callable(self, "_now")).get("ok", false)
+
+
+func _reject_duplicate(store: MaricaLocalSaveStore) -> bool:
     var source: String = FileAccess.get_file_as_string("res://tests/fixtures/save_v1_founder.json")
     var duplicated: String = source.replace(
         '"affection": 0.25', '"affection": 0.25, "affection": 0.25'
