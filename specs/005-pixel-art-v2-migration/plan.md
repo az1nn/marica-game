@@ -1,6 +1,6 @@
 # SPEC-005 — Plan (Godot ARTIST V2)
 
-**Status:** PLAN ACCEPTED AS ENGINEERING ROADMAP; EXECUTION NOT STARTED
+**Status:** R0 COMPLETE; V201/V201a R1 IN PROGRESS — ARCH source-import probe merged as non-production evidence; runtime/render gates pending
 **Source:** approved G1–G25, SPEC-004/Godot, `docs/VISUAL-DIRECTION.md`
 
 ## Architecture
@@ -29,3 +29,9 @@ Keep domain state and logic independent of scene or rendering choices. Use Godot
 ## Rollback
 
 Keep V1 assets/scenes available until V2 vertical slices pass. No irreversible deletion; a rejected slice falls back to the current runtime implementation without changing save/domain schemas.
+
+
+## Execution evidence — 2026-10-14
+
+- PR [#88](https://github.com/az1nn/marica-game/pull/88) merged the **non-production Godot original PNG import diagnostic**, at `master@45d89c6bb1f028a4682be9540c87bea8c701184b`, after exact-head and post-merge checks green. It demonstrates native image load, source hash/alpha/sprite filter/pivot and filtering-mutant detection, **not** device presentation/performance acceptance.
+- **Do not mark V201 or V201a checked** until measured mobile/web/browser rendering, atlas/licensing policy, camera and budget criteria are satisfied. R2 animal SCENE/LENTE/ART independent gates remain pending, and PR #77 stays draft.
