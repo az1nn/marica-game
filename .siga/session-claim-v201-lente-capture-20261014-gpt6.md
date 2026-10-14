@@ -11,3 +11,5 @@ Guard: Claim first; re-read master, PR heads and claims; no overlapping files; e
 No acceptance: rendering evidence/probe never proves artist approval, mobile device performance, full V201 or V201a closure.
 
 Reconciled after G441 PR #96 merged: master@4f58a8251a4e9ccfd4c89d9a370b913081ccecbd. All six G441 added files copied byte-for-byte into V201 candidate; no V201 task/art changes. V201 checks from old SHA are GATE_STALE and MUST rerun on reconciled SHA. Concurrent ARTIST PR #77 untouched.
+
+Reconciled second master advance: G441 docs closeout #98 at master@3c38507d24392fcd631544b3b455e7402f464acb. No V201 conflicts. This changes candidate SHA, invalidating older CI evidence until checks run on the new head.

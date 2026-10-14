@@ -1,16 +1,18 @@
 # QA HANDOFF
 
-Status: G436 BOUNDED GAUNTLET VERIFIED / ADVANCE G440
+Status: G441 VERIFIED / ADVANCE G442
 Authority: SPEC-004 · Godot 4.7.2-stable · offline-first single-player.
 
 Verified:
-- PR #85 exact HEAD `180b37fc7aff43daebf095d448a35d94f3a83349` and guarded master `e8b29a5dacb6b7d6f3a7e7e50eda490ac9e5ab96`: Godot CI, Validate skills, Roblox CI and Web Preview Contract PASS.
-- G436 standalone critic of care/genetic expression, founder Soulbound, stage ordering/natural terminal, deterministic exactly-two succession, idempotent same-process replay, genetic progress in unsaturated fixture, and generation-2 direct-parent pedigree.
-- BAD mutant replaces care quality multiplier with 1.0; precise G436 diagnostic fails, original restored and headless PASS. G420–G435 pre-existing regression/mutation suite retained; 238 source-Luau golden parity cases unchanged.
-- Machine readable GAUNTLET manifest and narrative: `docs/gauntlet/G436-PHASE-D-2026-10-14.{json,md}`.
+- G441 PR #96 feature head `42018f778d81405d08bb5b438103b2c2bf19f490`: G441 Local SaveStore / G440 Save Schema / Godot CI / ARCH V201 Source Import / Validate skills / Roblox CI / Web Preview Contract PASS.
+- Post-merge master `4f58a8251a4e9ccfd4c89d9a370b913081ccecbd`: Godot CI, Validate skills, Roblox CI and Web Preview Contract PASS.
+- Independent SaveStore headless runner proves strict v1 load/save, valid minimal/founder/succession fixtures, revision/collision guards, clock rollback monotonicity, invalid/duplicate JSON rejection and snapshot isolation.
+- Mutant removes stale-revision prevention: BAD must fail; restored original passes, without a production mutant commit.
+- Existing G420–G436 and G440 checks remain protected. Roblox Behavioral SKIPPED/nonrequired for Godot V1.
 
-Open limitations / risks:
-- Issue #86: all traits at allowed cap 1.0 cannot satisfy literal strict genetic advance under existing source algorithm; static counterexample, not yet an executed failing saturated fixture. DESIGN/ARCH must ratify policy and QA must add boundary proof.
-- G436 does not prove save/restart or durable event markers (G440–G446), automatic age scheduler, scenes, player-facing visuals or full web export. Roblox Behavioral SKIPPED/nonrequired for Godot V1.
+Not certified:
+- Disk write is not crash-atomic; no previous-good backup or power-loss recovery (G442).
+- No schema migration, Pet instance hydration, persisted once-only marker replay, process restart save/load or offline catch-up guarantee (G443–G447).
+- Issue #86 saturated genetic advancement and ART/LENTE runtime visuals remain separate gates.
 
-Next: G440 schema review: versioned save/load, pet snapshot, pedigree, event marker, clock and migration boundaries. No claim of persistence test until G446/G447.
+Next: **G442** exact-head backup/recovery and interruption/corruption proof, preserving the G441 revision and v1 wire schema contracts.
