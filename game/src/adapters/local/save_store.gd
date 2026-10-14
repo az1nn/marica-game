@@ -38,43 +38,61 @@ func save(candidate: Variant, expected_revision: int, clock: Callable) -> Dictio
         return _fail("Save path must be a flat user:// file")
     if expected_revision < -1 or expected_revision >= MAX_SAFE_INTEGER:
         return _fail("Expected revision is invalid")
+    var prepared: Dictionary = _prepare_document(candidate, expected_revision, clock)
+    if not prepared.get("ok", false):
+        return prepared
+    return _write_document(prepared["document"])
+
+
+func _prepare_document(candidate: Variant, expected_revision: int, clock: Callable) -> Dictionary:
     var checked: Dictionary = VALIDATOR.validate(candidate)
     if not checked.get("ok", false):
         return checked
     var current: Dictionary = self.load()
     if not current.get("ok", false):
         return current
+    var revision_check: Dictionary = _verify_revision(checked["document"], current, expected_revision)
+    if not revision_check.get("ok", false):
+        return revision_check
+    var next: Dictionary = checked["document"]
+    var prior: float = revision_check["prior"]
+    var observed: Dictionary = TIME.observe(clock, prior)
+    if not observed.get("ok", false):
+        return observed
+    next["revision"] = expected_revision + 1
+    next["last_observed_at"] = observed["observation"]["logicalNow"]
+    return VALIDATOR.validate(next)
+
+
+func _verify_revision(
+    document: Dictionary, current: Dictionary, expected_revision: int
+) -> Dictionary:
     var found: bool = current.get("found", false)
     if found and expected_revision != int(current["snapshot"]["revision"]):
         return _fail("Stale save revision")
     if not found and expected_revision != -1:
         return _fail("Missing save requires new-profile revision")
-    var next: Dictionary = checked["document"]
-    if found and next["revision"] != expected_revision:
+    if found and document["revision"] != expected_revision:
         return _fail("Candidate revision differs from stored revision")
-    if not found and next["revision"] != 0:
+    if not found and document["revision"] != 0:
         return _fail("New save must begin at revision zero")
     var prior: float = (
-        float(current["snapshot"]["last_observed_at"]) if found else float(next["last_observed_at"])
+        float(current["snapshot"]["last_observed_at"]) if found else float(document["last_observed_at"])
     )
-    var observation: Dictionary = TIME.observe(clock, prior)
-    if not observation.get("ok", false):
-        return observation
-    next["revision"] = expected_revision + 1
-    next["last_observed_at"] = observation["observation"]["logicalNow"]
-    var revalidated: Dictionary = VALIDATOR.validate(next)
-    if not revalidated.get("ok", false):
-        return revalidated
+    return {"ok": true, "prior": prior}
+
+
+func _write_document(document: Dictionary) -> Dictionary:
     var output: FileAccess = FileAccess.open(_path, FileAccess.WRITE)
     if output == null:
         return _fail("Save cannot be opened for writing")
-    output.store_string(JSON.stringify(next))
+    output.store_string(JSON.stringify(document))
     output.flush()
     var write_error: Error = output.get_error()
     output.close()
     if write_error != OK:
         return _fail("Save write failed; durability is not guaranteed")
-    return {"ok": true, "revision": next["revision"], "snapshot": next.duplicate(true)}
+    return {"ok": true, "revision": document["revision"], "snapshot": document.duplicate(true)}
 
 
 func _safe_path() -> bool:
