@@ -33,6 +33,14 @@ jobs:
           unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
           chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
 
+      - name: Compile strict validator and adapter directly
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          timeout 45s "$GODOT" --headless --path game --check-only --script res://src/adapters/local/save_v1_validator.gd
+          timeout 45s "$GODOT" --headless --path game --check-only --script res://src/adapters/local/save_store.gd
+
       - name: Import and execute SaveStore runner
         shell: bash
         run: |
