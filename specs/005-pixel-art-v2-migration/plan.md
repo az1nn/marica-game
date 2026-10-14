@@ -35,3 +35,7 @@ Keep V1 assets/scenes available until V2 vertical slices pass. No irreversible d
 
 - PR [#88](https://github.com/az1nn/marica-game/pull/88) merged the **non-production Godot original PNG import diagnostic**, at `master@45d89c6bb1f028a4682be9540c87bea8c701184b`, after exact-head and post-merge checks green. It demonstrates native image load, source hash/alpha/sprite filter/pivot and filtering-mutant detection, **not** device presentation/performance acceptance.
 - **Do not mark V201 or V201a checked** until measured mobile/web/browser rendering, atlas/licensing policy, camera and budget criteria are satisfied. R2 animal SCENE/LENTE/ART independent gates remain pending, and PR #77 stays draft.
+
+## Technical evidence update — V201 capture runner (2026-10-14)
+
+A distinct non-production capture lane was merged in [PR #97](https://github.com/az1nn/marica-game/pull/97), creating PNG evidence and an exact-head manifest from actual Godot 4.7.2 Xvfb/Mesa rendering. Four software-generated viewport/reference captures prove that frame pixels can be produced and nearest-vs-linear filter conditions visibly differ; [workflow run 38613081336](https://github.com/az1nn/marica-game/actions/runs/38613081336) reports PASS. **No technical architecture decision is finalized** by these captures: real mobile/web budgets, camera/tile scaling, atlas/license and the artist/runtime acceptance chain are all unresolved. Keep V201/V201a unchecked.

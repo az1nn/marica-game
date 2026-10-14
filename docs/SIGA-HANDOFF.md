@@ -28,3 +28,9 @@ BOUNDARIES:
 
 NEXT:
 G442 — atomic local save + backup/recovery; use G441 guarded adapter as baseline, add crash/corruption recovery evidence, preserve v1 wire schema and revision semantics.
+
+## SIGA parallel lane — V201 render evidence completed (2026-10-14)
+
+Classification: ADVANCE for bounded V201 screenshot instrumentation, WATCH for full V201/V201a art/runtime contract. PR #97 merged at `master@10670f712e2b8862f05d6daef3d155cb4f004389` with eight exact-feature-head workflows green (candidate ae973848) and independent LENTE/ARCH visual acceptance still open. G441 SaveStore and closeout completed separately; G442 is the next P0 persistence task. ARTIST draft PR #77 remains isolated. Source images are GitHub Actions artifacts for [V201 render run 38613081336](https://github.com/az1nn/marica-game/actions/runs/38613081336), not a native/mobile release proof.
+
+No claims of V201/V201a, V203 or V205 completion. Claim for technical capture closed in its own PR; post-closeout CI must target that new SHA. Next SIGA safely picks G442 as the P0 animal-first task or the first independent V201 technical dependency without overlapping active claims.
