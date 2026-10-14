@@ -1,0 +1,42 @@
+name: G440 Save Schema
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  schema-v1:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Guard exact commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+
+      - name: Install schema verifier
+        run: python3 -m pip install --disable-pip-version-check jsonschema==4.26.0
+
+      - name: Validate v1 contract and negative fixtures
+        run: |
+          set -euo pipefail
+          python3 tools/godot/validate_save_schema_v1.py | tee "$RUNNER_TEMP/g440-schema.log"
+          grep -Fq "MARICA_G440_SCHEMA_PASS samples=3 negative=9" "$RUNNER_TEMP/g440-schema.log"
+
+      - name: Upload proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g440-schema-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          path: ${{ runner.temp }}/g440-schema.log

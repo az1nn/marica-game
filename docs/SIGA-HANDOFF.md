@@ -1,29 +1,30 @@
 CAVEMAN HANDOFF v1
 
 APP: Maricá Game
-WORKSTREAM: SPEC-006 single-entry SIGA / skill tree governance
+WORKSTREAM: SPEC-004 / G440 offline save schema
 MODE: ADVANCE
-BASE: master@09abe57c9a8db2d01d64ce58b525809f05c13817
-PR: #89 MERGED (head 42d91381f664e83e3f29c1408e960a06bb46e3a8; merged 09abe57c9a8db2d01d64ce58b525809f05c13817)
+BASE: master@dfc98d337ff49a05c0ab017c2371a75160f0f5da
+PR: #91 MERGED (exact candidate head 0242aba5a6eb4d5b714c9a2a0f60a0d180c67300)
 
 DONE:
-- SPEC-006 O600–O607: Spec Kit bootstrap was committed before any changes to skills; SG single-entry plus absolute task admission, explicit dependency routing/anti-starvation, ARCH/DESIGN owner skills and SCENE/CENA alias.
-- ARTIST/CENA/LENTE/LORE/QA aligned with approved full pixel art 2.5D and Godot V1; concept acceptance cannot certify runtime.
-- Deterministic advisory dispatcher / acyclic skill graph / 12 routing fixtures and validator. No actual autonomous peer-agent runtime is implied.
-- No gameplay/asset edits and no overlap with visual PR #77.
+- SPEC-004 G440 versioned offline-animal save contract, 3 fixtures, cross-record deterministic validator and 9 negative corruption checks.
+- Independent merged ARCH V201 technical import probe PR #88 reconciled twice during concurrent master advances without overwriting code/assets. Its ART/SCENE/LENTE/mobile performance gates still OPEN.
+- Original founder dog V4 ARTIST draft PR #77 untouched.
+- SPEC-007 draft PR #93 for skill-tree reduction is a separate governance lane, not authority to skip SPEC-004.
 
 VERIFY:
-- PR #89 exact head 42d91381: Validate skills PASS, Godot CI PASS, Roblox CI PASS, Web Preview Contract PASS; Roblox Behavioral SKIPPED/nonrequired.
-- Guarded squash merged into master@09abe57c9a8db2d01d64ce58b525809f05c13817.
-- This closeout-only document update requires its own exact-head CI before merge. Do not reuse PR #89 green evidence as a new SHA's gate.
+- G440 PR #91 final exact HEAD 0242aba5: G440 Save Schema PASS, Godot CI PASS, ARCH V201 Source Import PASS, Validate skills PASS, Roblox CI PASS, Web Preview Contract PASS, Roblox Behavioral SKIPPED/nonrequired.
+- Guarded squash merge master@dfc98d337ff49a05c0ab017c2371a75160f0f5da.
+- Documentation closeout branch must pass its own exact-head CI before guarded merge. Do not reuse PR #91 checks as a new SHA gate.
 
 CONCURRENCY:
-- PR #77 ARTIST V4 is still DRAFT; separate ARCH V201/V201a, SCENE V203, LENTE V205 and ARTIST runtime approvals required; NO_RUNTIME_PASS.
-- SPEC-004 G440 remains ready for independent offline-save design. Issue #86 DESIGN/ARCH genetic saturation unresolved; do not certify universal progression.
+- #77 ARTIST draft and #93 SPEC-007 governance draft have disjoint active ownership from G440/G441; no art acceptance by inference.
+- G440 claim closes with verified implementation and documentation closeout; G441 requires a new independent claim and post-claim barrier.
 
 BLOCKERS:
-- None for the next ARCH render/import prototype under SPEC-005 or for independent G440.
-- Capability/tool evidence for a real runtime ARTIST certification has not been demonstrated.
+- None for G441 local adapter design.
+- G440 is schema-only; G441–G447 persistence, migration, restart replay and offline retention remain not implemented.
+- Issue #86 DES/ARCH saturation decision unresolved for release; not a blocker to save architecture.
 
 NEXT:
-SPEC-005 V201 — SIGA dispatch ARCH + GODOT measured pixel-art 2.5D import/render prototype against approved founder-dog V4 source, without touching or merging PR #77. Keep G440 as a ready parallel animal-first task.
+SPEC-004 **G441** — SIGA dispatch ARCH/GODOT to implement a narrow local versioned SaveStore against the G440 document, fail closed on unsupported schema and protect revision/time semantics, while preserving G442 atomic-write ownership.

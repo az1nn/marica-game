@@ -22,3 +22,8 @@ Guards: post-claim live-state barrier; no auto-merge; exact-head checks; report 
 - Required checks on implementation SHA `5de62093615e9b2a548912644bfff31c1896e9c3`: ARCH V201 Source Import PASS (38576899725), Godot CI PASS (38576899710), Validate skills PASS, Roblox CI PASS, Web Preview Contract PASS; behavioral optional SKIPPED. GOOD→BAD→RESTORE linear sampler mutation detected.
 - This claim no longer reserves code paths or blocks G440. Remaining SCENE/LENTE/ART mobile pixel-quality and ARCH performance/image-policy gates explicitly **not** accepted.
 - No merge or release; this documentation-only closeout commit requires fresh exact-head CI and optimistic recheck.
+
+
+## Post-merge closeout (2026-10-14)
+
+Status: CLOSED_MERGED — bounded ARCH test instrument completed via PR #88, master `45d89c6bb1f028a4682be9540c87bea8c701184b`. No active file ownership; V201/V201a production gates remain OPEN. Post-merge checks Godot CI, Validate skills, Roblox CI and Web Preview Contract PASS. Separate docs-only closeout has its own CI/merge gate; prior PASS is not reused for newer SHA.
