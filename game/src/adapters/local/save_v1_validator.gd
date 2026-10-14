@@ -12,7 +12,7 @@ static func validate(snapshot: Variant) -> Dictionary:
     ):
         return _fail("Save v1 envelope is invalid")
     var document: Dictionary = snapshot
-    if typeof(document["schema_version"]) != TYPE_INT or document["schema_version"] != 1:
+    if not _integer(document["schema_version"]) or document["schema_version"] != 1:
         return _fail("Unsupported schema_version")
     if not _integer(document["revision"]) or not _numeric(document["last_observed_at"]):
         return _fail("Save revision or clock is invalid")
@@ -231,7 +231,17 @@ static func _identifier(value: Variant) -> bool:
 
 
 static func _integer(value: Variant) -> bool:
-    return typeof(value) == TYPE_INT and value >= 0 and value <= MAX_SAFE_INTEGER
+    # Godot JSON.parse represents JSON integer literals as integral TYPE_FLOAT.
+    if typeof(value) != TYPE_INT and typeof(value) != TYPE_FLOAT:
+        return false
+    var number: float = float(value)
+    return (
+        not is_nan(number)
+        and not is_inf(number)
+        and number >= 0.0
+        and number <= float(MAX_SAFE_INTEGER)
+        and floorf(number) == number
+    )
 
 
 static func _unit(value: Variant) -> bool:
