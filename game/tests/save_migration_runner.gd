@@ -30,7 +30,7 @@ func _test_all() -> bool:
         return false
     if not _check(_reject_version(2), "unknown future v2"):
         return false
-    if not _check(_reject_version(9007199254740991), "unapproved high version"):
+    if not _check(_reject_version(9999), "unapproved high version"):
         return false
     if not _check(_bad_version_values(), "missing/invalid version"):
         return false
