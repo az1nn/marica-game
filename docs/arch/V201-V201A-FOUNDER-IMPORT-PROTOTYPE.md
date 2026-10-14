@@ -1,6 +1,6 @@
 # ARCH V201 / V201a — S01-A01 Founder V4 technical probe
 
-**Decision status:** IMPLEMENTED PROTOTYPE; Godot CI / ARCH-specific check and device-level LENTE pending until exact-head evidence exists. NOT a production sprite, ART accept, R2 scene, final sprite grid policy, performance certification, web export, or mobile verification.
+**Decision status:** SOURCE_IMPORT_VERIFIED (bounded Godot 4.7.2 headless proof); real mobile/Desktop rendering, LENTE capture and visual/performance acceptance remain pending. NOT a production sprite, ART accept, R2 scene, final sprite grid policy, performance certification, web export, or mobile verification.
 
 ## Source and rights
 
@@ -22,6 +22,14 @@ The standalone Godot 4.7.2 `game/tests/arch_v201_import_runner.gd` measures:
 
 The dedicated `.github/workflows/arch-v201.yml` runs exact-head import/parse and isolated assertions, plus nearest→linear mutant to show the instrumentation detects a real filtering regression (GOOD→BAD→RESTORE). Logs are artifacts; **headless assertions are not screenshot evidence**. General Godot CI remains separate and required.
 
+## Exact-head verification — 2026-10-14
+
+- **Implementation head:** `5de62093615e9b2a548912644bfff31c1896e9c3` (asset SHA kept byte-for-byte).
+- **ARCH V201 Source Import:** [run #38576899725](https://github.com/az1nn/marica-game/actions/runs/38576899725) **PASS** — original PNG bytes/dimensions, importer, alpha pixel counts/foot pivot, nearest filter and GOOD→BAD(linear)→RESTORE proof.
+- **Godot CI:** [run #38576899710](https://github.com/az1nn/marica-game/actions/runs/38576899710) **PASS** — existing Godot domain regression suite plus new runner style/type rules, at the same commit.
+- **Validate skills**, **Roblox CI**, **Web Preview Contract:** PASS at the same implementation commit; Roblox Behavioral SKIPPED/nonrequired.
+- All these checks prove native headless import/scene configuration only. They **do not** establish visual output fidelity, actual FPS, player UX or device-level suitability. A following documentation-only commit requires its own fresh exact-head workflow results before merge.
+
 ## Decisions deliberately left open
 
 | Subject | Interim architecture | Production acceptance |
@@ -42,4 +50,4 @@ The dedicated `.github/workflows/arch-v201.yml` runs exact-head import/parse and
 3. LENTE independently captures real Godot output (not concept images, not a headless log). ART performs ACCEPT/REVISE on image and interaction readability.
 4. Do not close V201/V201a globally on this evidence; mobile performance and final import/atlas policy remain measured gates. Avoid merge until SIGA coordinates dependency on PR #77 approved source and checks exact head.
 
-**State: ARCH_PROTOTYPE_IMPLEMENTED / IMPORT_PROOF_PENDING / ART_LENTE_NOT_RUN / V201_V201a_NOT_CLOSED.**
+**State: ARCH_SOURCE_IMPORT_VERIFIED / MUTATION_PASS / ART_LENTE_NOT_RUN / PERFORMANCE_NOT_MEASURED / V201_V201a_NOT_CLOSED.**
