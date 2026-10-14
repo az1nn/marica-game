@@ -27,4 +27,4 @@ snapshot -> claim -> post-claim barrier -> mutate -> re-read -> exact-head verif
 - CI belongs to a commit SHA;
 - merge must use the current expected head when supported.
 
-See .agents/skills/siga-concurrency/SKILL.md for the executable protocol.
+See docs/skills/archive/siga-concurrency.md (historical); current barrier lives in SIGA for the executable protocol.

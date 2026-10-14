@@ -1,3 +1,9 @@
+# Archived legacy skill: 3js
+
+> SPEC-007 historical contract; not active. Current orchestration, concurrence and QA gates remain mandatory.
+
+---
+
 ---
 name: 3js
 description: Maintain a reference/prototype Three.js lane for Maricá Game. Production use requires an explicit newer architecture decision.

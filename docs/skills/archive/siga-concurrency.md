@@ -1,3 +1,9 @@
+# Archived legacy skill: siga-concurrency
+
+> SPEC-007 historical contract; not active. Current orchestration, concurrence and QA gates remain mandatory.
+
+---
+
 ---
 name: siga-concurrency
 description: Protect Maricá Game from concurrent-session collisions using live snapshots, repository-visible claims, overlap scans, optimistic writes, exact-head gates and guarded merges.
