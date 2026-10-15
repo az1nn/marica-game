@@ -1,6 +1,6 @@
 # SIGA G451 — SPEC-004 Camera
 
-Status: ACTIVE
+Status: CLOSED — feature PR #120 protected merge, closeout in this documentation PR
 Owner: GODOT/CENA G451 single writer
 Base: master@5193b8002f63270be4fa52c49cbf6f455349aa63
 Branch: godot/g451-isometric-camera-20261015

@@ -95,3 +95,11 @@ LIMITS: Only offline elapsed observation and persistence, not applying offline e
 STATE: ADVANCE. Feature PR #117 exact HEAD 479b6d95379e0e82623e8da15208b65469f6ce9f verified 14 applicable workflows PASS (G440–G447, G450, Godot CI, Validate skills, ARCH V201, Web Preview, Roblox CI), Roblox Behavioral skipped. Guarded merge master@656ea45dc80a3f4791af6d1ffb0fb6591a059a02.
 DONE: standalone 12×10 farm Node2D scene with cross-shaped path (21 cells), planting plot (9), structure placeholder (9), deterministic layout contract, headless scene boot, mutation GOOD→BAD→RESTORE on path continuity. Existing smoke bootstrap retained; G440–G447, ARTIST PRs and visual approvals untouched.
 LIMITS: Geometry is temporary debug color scaffold, not approved ARTIST sprites or V201 production validation; no G451 camera, G452 pets, UI or playable Gate F claim. Next G451 isometric/elevated camera zoom with separate claim and visual gates.
+
+## SIGA G451 — elevated/isometric farm camera (2026-10-15)
+
+STATE: ADVANCE after guarded G451 feature PR #120 merge master@`90855cf6c6a669d836f090fe8f13c35568e09f53`.
+DONE: optional `FarmIsoView` composes unchanged 12×10 G450 farm scene through a deterministic 2.5D diamond projection; Camera2D centers the farm with viewport-fit, bounded [0.5,2.0] zoom, wheel and magnify inputs. Does not replace `smoke.tscn`, touch animal/persistence or create approved art.
+VERIFY: PR #120 HEAD `631d91bc0b495a6f0e3862543acc6c17ad55be0b` — G451, G450, Godot CI, G440–G447, Validate skills, ARCH V201, Web Preview and Roblox CI PASS. Independent G451 runner and zoom-clamp GOOD→BAD→RESTORE proof PASS. Nonrequired Roblox Behavioral skipped. No claim of device visual approval or production Game View.
+CONCURRENCY: isolated G451 claim closed by this separate docs change; ARTIST #77/#109 do not overlap; G450 farm source and G440–G447 retained.
+NEXT: G452 — integrate founding pet in bounded Godot runtime slice, preserving founder identity, Soulbound, G451 camera and independent ARTIST/CENA/LENTE acceptance gates.
