@@ -35,6 +35,7 @@ func _existing() -> bool:
     var first: Dictionary = _trigger()
     var second: Dictionary = _trigger()
     var doc: Dictionary = STORE.new(PATH).load()["snapshot"]
+    print("G445_DIAG existing first=", first, " second=", second, " rev=", doc["revision"])
     return (
         first.get("ok", false)
         and not first["created"]
