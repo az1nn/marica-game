@@ -1,0 +1,3 @@
+# G450 Compact Farm Base
+
+A standalone 12×10 tile Godot Node2D farm scene with ground, cross-shaped traversable paths, 3×3 planting placeholder and 3×3 future structure placeholder. Runtime-generated colored geometry is strictly technical scaffolding, not approved ARTIST production sprites. Scene `res://scenes/farm_base.tscn` remains opt-in; `smoke.tscn` remains bootstrap until G451–G458 gameplay and camera integration. No pets, inventory, save mutation, or visual approval is implied. Deterministic validation checks path continuity, zone sizes, illegal tiles, scene boot, and GOOD→BAD→RESTORE mutation of path connectivity.
