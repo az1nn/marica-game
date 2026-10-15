@@ -69,3 +69,11 @@ VERIFY: exact feature PR HEAD eacc033ba5227c84e147888fe7d821351401e812 — G444,
 CONCURRENCY: reconciled intervening ARTIST PET-ALT-001 merges without changing visual gates. PR #77 still draft, no overlapping files. Claim CLOSED in this docs PR.
 LIMIT: G445 durable event replay, G446 process restart/clock rollback, G447 offline elapsed and gameplay/visual ARTIST/LENTE remain pending. G444 test runner is an isolated adapter proof, not a playable Godot scene.
 NEXT: G445 persist durable idempotency markers of succession, only after new ownership/claims/master reconciliation.
+
+## SIGA G445 — durable succession marker closeout (2026-10-14)
+
+STATE: ADVANCE. Feature PR #110 exact-head ef0f5807bfadd2b47c19d38e8ee7ebaabca024f7 verified 11 applicable PASS checks (G445, G444, G443, G442, G441, G440, Godot CI, Validate skills, ARCH V201, Web Preview, Roblox CI), Roblox Behavioral SKIPPED. Protected merge master@cb87ada6ad4cf6bd770063098c46669e1beff5ab.
+DONE: Persist pair + frozen parent marker atomically via G442; replay saved pair with created=false and unchanged revision, fail-closed conflicting seed/IDs, missing/corrupt marker, duplicate IDs and invalid clock. QA GOOD/BAD/RESTORE and 12 cases.
+CONCURRENCY: isolated claim released in docs closeout; ARTIST PR #77 no file overlap or visual gate changes. G440–G444 unchanged.
+LIMIT: G446 cross-process restart and clock rollback, G447 offline catch-up, production scene and ARTIST runtime not certified.
+NEXT: G446 save/load roundtrip and clock rollback with independent process harness.
