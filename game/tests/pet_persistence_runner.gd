@@ -23,6 +23,12 @@ func _scenarios() -> bool:
     var empty: Dictionary = _fixture("save_v1_minimal.json")
     var founder: Dictionary = _fixture("save_v1_founder.json")
     var succession: Dictionary = _fixture("save_v1_succession.json")
+    if not _check(_positive_cases(empty, founder, succession), "positive hydration"):
+        return false
+    return _check(_negative_cases(founder), "invalid snapshots fail closed")
+
+
+func _positive_cases(empty: Dictionary, founder: Dictionary, succession: Dictionary) -> bool:
     if not _check(_roundtrip(empty, 0), "empty v1"):
         return false
     if not _check(_roundtrip(founder, 1), "founder soulbound"):
@@ -31,6 +37,12 @@ func _scenarios() -> bool:
         return false
     if not _check(_detached(succession), "detached hydrate"):
         return false
+    if not _check(_reject_expression(founder), "expressed traits preserved"):
+        return false
+    return _check(_disk_roundtrip(succession), "G442 persisted roundtrip")
+
+
+func _negative_cases(founder: Dictionary) -> bool:
     if not _check(_reject_bad(founder), "invalid v1 rejected"):
         return false
     if not _check(_reject_future(founder), "unknown schema rejected"):
@@ -41,12 +53,7 @@ func _scenarios() -> bool:
         return false
     if not _check(_reject_bond(founder), "soulbound invariant rejected"):
         return false
-    if not _check(_reject_health(founder), "health drift rejected"):
-        return false
-    if not _check(_reject_expression(founder), "expressed traits preserved"):
-        return false
-    return _check(_disk_roundtrip(succession), "G442 persisted roundtrip")
-
+    return _check(_reject_health(founder), "health drift rejected")
 
 func _roundtrip(document: Dictionary, count: int) -> bool:
     var hydrated: Dictionary = ADAPTER.hydrate(document)
