@@ -55,6 +55,7 @@ func _negative_cases(founder: Dictionary) -> bool:
         return false
     return _check(_reject_health(founder), "health drift rejected")
 
+
 func _roundtrip(document: Dictionary, count: int) -> bool:
     var hydrated: Dictionary = ADAPTER.hydrate(document)
     if not hydrated.get("ok", false):
