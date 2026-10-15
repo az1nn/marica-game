@@ -1,0 +1,79 @@
+name: G447 Offline Return
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-return:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Install pinned Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          curl --fail --location --retry 3 --retry-all-errors -o "$RUNNER_TEMP/godot.zip" "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+      - name: Import project
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --headless --editor --path game --import --quit > "$RUNNER_TEMP/g447-import.log" 2>&1
+      - name: GOOD - deterministic hours and days across fresh processes
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          for phase in bootstrap hours replay days rollback future invalid; do
+            timeout 45s "$GODOT" --headless --path game --script res://tests/offline_return_runner.gd -- "$phase" 2>&1 | tee "$RUNNER_TEMP/g447-good-$phase.log"
+            grep -Fq "MARICA_G447_PHASE_PASS $phase" "$RUNNER_TEMP/g447-good-$phase.log"
+          done
+      - name: GOOD-BAD-RESTORE elapsed-time mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          SOURCE=game/src/adapters/local/offline_return.gd
+          cp "$SOURCE" "$RUNNER_TEMP/g447-good.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("game/src/adapters/local/offline_return.gd")
+          s=p.read_text()
+          target='var elapsed: float = observed["observation"]["elapsed"]'
+          assert s.count(target)==1
+          p.write_text(s.replace(target,'var elapsed: float = 0.0'))
+          PY
+          timeout 45s "$GODOT" --headless --path game --script res://tests/offline_return_runner.gd -- bootstrap > "$RUNNER_TEMP/g447-bad-bootstrap.log" 2>&1
+          set +e
+          timeout 45s "$GODOT" --headless --path game --script res://tests/offline_return_runner.gd -- hours > "$RUNNER_TEMP/g447-bad-hours.log" 2>&1
+          BAD_CODE="$?"
+          set -e
+          cp "$RUNNER_TEMP/g447-good.gd" "$SOURCE"
+          test "$BAD_CODE" -ne 0
+          grep -Eq 'MARICA_G447_FAIL|SCRIPT ERROR' "$RUNNER_TEMP/g447-bad-hours.log"
+          for phase in bootstrap hours replay days rollback future invalid; do
+            timeout 45s "$GODOT" --headless --path game --script res://tests/offline_return_runner.gd -- "$phase" 2>&1 | tee "$RUNNER_TEMP/g447-restored-$phase.log"
+            grep -Fq "MARICA_G447_PHASE_PASS $phase" "$RUNNER_TEMP/g447-restored-$phase.log"
+          done
+          git diff --exit-code -- "$SOURCE"
+          echo 'MARICA_G447_MUTATION_PASS good=pass bad=fail restore=pass'
+      - name: Upload offline evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g447-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          path: ${{ runner.temp }}/g447-*.log
