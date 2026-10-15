@@ -69,3 +69,29 @@ VERIFY: exact feature PR HEAD eacc033ba5227c84e147888fe7d821351401e812 — G444,
 CONCURRENCY: reconciled intervening ARTIST PET-ALT-001 merges without changing visual gates. PR #77 still draft, no overlapping files. Claim CLOSED in this docs PR.
 LIMIT: G445 durable event replay, G446 process restart/clock rollback, G447 offline elapsed and gameplay/visual ARTIST/LENTE remain pending. G444 test runner is an isolated adapter proof, not a playable Godot scene.
 NEXT: G445 persist durable idempotency markers of succession, only after new ownership/claims/master reconciliation.
+
+## SIGA G445 — durable succession marker closeout (2026-10-14)
+
+STATE: ADVANCE. Feature PR #110 exact-head ef0f5807bfadd2b47c19d38e8ee7ebaabca024f7 verified 11 applicable PASS checks (G445, G444, G443, G442, G441, G440, Godot CI, Validate skills, ARCH V201, Web Preview, Roblox CI), Roblox Behavioral SKIPPED. Protected merge master@cb87ada6ad4cf6bd770063098c46669e1beff5ab.
+DONE: Persist pair + frozen parent marker atomically via G442; replay saved pair with created=false and unchanged revision, fail-closed conflicting seed/IDs, missing/corrupt marker, duplicate IDs and invalid clock. QA GOOD/BAD/RESTORE and 12 cases.
+CONCURRENCY: isolated claim released in docs closeout; ARTIST PR #77 no file overlap or visual gate changes. G440–G444 unchanged.
+LIMIT: G446 cross-process restart and clock rollback, G447 offline catch-up, production scene and ARTIST runtime not certified.
+NEXT: G446 save/load roundtrip and clock rollback with independent process harness.
+
+## SIGA G446 — process restart + rollback (2026-10-15)
+
+STATE: ADVANCE. Feature PR #112 exact HEAD 57d045a47c366b1ccc8420ab3f5cc74f4bdcdb39 verified 12 applicable workflows PASS: G446/G445/G444/G443/G442/G441/G440, Godot CI, Validate skills, ARCH V201, Web Preview Contract, Roblox CI; Roblox Behavioral skipped. Guarded merge master@2266ee23b90442d4a61bcadd20af6d1b10813cda.
+DONE: Six fresh Godot OS processes share one disk profile and prove save/load hydration, idempotent two-child marker replay, forward timestamp, backward-clock clamp, stale revision rejection, verified backup recovery and corrupt ledger fail closed. Independent GOOD→BAD→RESTORE clock mutation detected. Existing G440–G445 source untouched; ARTIST concurrent work untouched.
+LIMITS: No full production scene close/reopen UX or G447 elapsed hours/days offline certification; filesystem power-loss guarantees not asserted. Next: G447 offline catch-up.
+
+## SIGA G447 — offline elapsed return (2026-10-15)
+
+STATE: ADVANCE. Feature PR #115 exact HEAD 7a6c16657277492261f24201ca0202305d93f0d0 verified 13 applicable workflows PASS (G440–G447, Godot CI, Validate skills, ARCH V201, Web Preview, Roblox CI), Roblox Behavioral skipped. Guarded merge master@c866395378f25952f650a2472d2d0b465954cca2.
+DONE: seven independent Godot processes test 3h, same-time replay, 4d, rollback, forward observation, invalid clocks, hydrated pet snapshots and succession ledger preservation. GOOD→BAD→RESTORE elapsed-zero mutant detected. G440–G446 and ARTIST unchanged.
+LIMITS: Only offline elapsed observation and persistence, not applying offline elapsed to hunger, health, lifecycle, crops or scene/UI. No fsync/power loss or concurrent multi-process transaction claim. Next work: Phase F G450 farm slice and subsequent gameplay integration, subject to roadmap priority and ARTIST gates.
+
+## SIGA G450 — compact farm base (2026-10-15)
+
+STATE: ADVANCE. Feature PR #117 exact HEAD 479b6d95379e0e82623e8da15208b65469f6ce9f verified 14 applicable workflows PASS (G440–G447, G450, Godot CI, Validate skills, ARCH V201, Web Preview, Roblox CI), Roblox Behavioral skipped. Guarded merge master@656ea45dc80a3f4791af6d1ffb0fb6591a059a02.
+DONE: standalone 12×10 farm Node2D scene with cross-shaped path (21 cells), planting plot (9), structure placeholder (9), deterministic layout contract, headless scene boot, mutation GOOD→BAD→RESTORE on path continuity. Existing smoke bootstrap retained; G440–G447, ARTIST PRs and visual approvals untouched.
+LIMITS: Geometry is temporary debug color scaffold, not approved ARTIST sprites or V201 production validation; no G451 camera, G452 pets, UI or playable Gate F claim. Next G451 isometric/elevated camera zoom with separate claim and visual gates.
