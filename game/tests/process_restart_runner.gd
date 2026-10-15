@@ -52,11 +52,13 @@ func _bootstrap() -> bool:
     doc["revision"] = 0
     var initial: Dictionary = STORE.new(PATH).save(doc, -1, _clock(BASE_TIME))
     if not initial.get("ok", false):
+        print("G446_DIAG initial=", initial)
         return false
     var created: Dictionary = SUCCESSION.trigger(
         STORE.new(PATH), PARENT, IDS, SEED, _clock(BASE_TIME)
     )
     if not created.get("ok", false) or not created["created"]:
+        print("G446_DIAG created=", created)
         return false
     return _snapshot_is(1, BASE_TIME, true)
 
@@ -148,6 +150,7 @@ func _snapshot_is(revision: int, timestamp: float, has_marker: bool) -> bool:
     var doc: Dictionary = loaded["snapshot"]
     var restored: Dictionary = PETS.hydrate(doc)
     if not restored.get("ok", false):
+        print("G446_DIAG hydration=", restored)
         return false
     if (
         doc["revision"] != revision
@@ -156,6 +159,7 @@ func _snapshot_is(revision: int, timestamp: float, has_marker: bool) -> bool:
         or doc["succession_events"].has(PARENT) != has_marker
     ):
         return false
+    print("G446_DIAG state revision=", doc["revision"], " timestamp=", doc["last_observed_at"], " pets=", doc["pets"].size())
     var marker: Dictionary = doc["succession_events"][PARENT]
     if marker["successor_ids"] != IDS or marker["succession_seed"] != SEED:
         return false
