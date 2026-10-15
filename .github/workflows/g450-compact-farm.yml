@@ -1,0 +1,74 @@
+name: G450 Compact Farm
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compact-farm:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Install pinned Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          curl --fail --location --retry 3 --retry-all-errors -o "$RUNNER_TEMP/godot.zip" "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+      - name: Import project
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --headless --editor --path game --import --quit > "$RUNNER_TEMP/g450-import.log" 2>&1
+      - name: GOOD - compact farm scene geometry
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          timeout 45s "$GODOT" --headless --path game --script res://tests/compact_farm_runner.gd 2>&1 | tee "$RUNNER_TEMP/g450-good.log"
+          grep -Fq "MARICA_G450_PASS ground=63 plots=9 path=15" "$RUNNER_TEMP/g450-good.log"
+      - name: QA GOOD-BAD-RESTORE plot cardinality
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          SOURCE=game/src/presentation/compact_farm_layout.gd
+          cp "$SOURCE" "$RUNNER_TEMP/g450-good.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("game/src/presentation/compact_farm_layout.gd")
+          s=p.read_text()
+          target="x >= 3 and x <= 5 and y >= 2 and y <= 4"
+          assert s.count(target)==1
+          p.write_text(s.replace(target,"x >= 3 and x <= 4 and y >= 2 and y <= 4"))
+          PY
+          set +e
+          timeout 45s "$GODOT" --headless --path game --script res://tests/compact_farm_runner.gd > "$RUNNER_TEMP/g450-bad.log" 2>&1
+          BAD_CODE="$?"
+          set -e
+          cp "$RUNNER_TEMP/g450-good.gd" "$SOURCE"
+          test "$BAD_CODE" -ne 0
+          grep -Eq 'MARICA_G450_FAIL|SCRIPT ERROR' "$RUNNER_TEMP/g450-bad.log"
+          timeout 45s "$GODOT" --headless --path game --script res://tests/compact_farm_runner.gd 2>&1 | tee "$RUNNER_TEMP/g450-restored.log"
+          grep -Fq "MARICA_G450_PASS" "$RUNNER_TEMP/g450-restored.log"
+          git diff --exit-code -- "$SOURCE"
+          echo 'MARICA_G450_MUTATION_PASS good=pass bad=fail restore=pass'
+      - name: Upload geometry evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g450-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          path: ${{ runner.temp }}/g450-*.log
