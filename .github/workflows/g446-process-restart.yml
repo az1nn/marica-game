@@ -38,8 +38,9 @@ jobs:
           set -euo pipefail
           GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
           mkdir -p "$RUNNER_TEMP/g446-user"
+          export XDG_DATA_HOME="$RUNNER_TEMP/g446-user"
           for phase in seed reopen rollback verify recover recovered; do
-            timeout 45s "$GODOT" --headless --path game --user-data-dir "$RUNNER_TEMP/g446-user" --script res://tests/process_restart_runner.gd -- "$phase" 2>&1 | tee "$RUNNER_TEMP/g446-$phase.log"
+            timeout 45s "$GODOT" --headless --path game --script res://tests/process_restart_runner.gd -- "$phase" 2>&1 | tee "$RUNNER_TEMP/g446-$phase.log"
             grep -Fq "MARICA_G446_PASS phase=$phase" "$RUNNER_TEMP/g446-$phase.log"
           done
           echo "MARICA_G446_RESTART_PASS phases=6"
@@ -58,8 +59,9 @@ jobs:
           p.write_text(s.replace(target, "var logical_now: float = raw_now"))
           PY
           GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          export XDG_DATA_HOME="$RUNNER_TEMP/g446-user"
           set +e
-          timeout 45s "$GODOT" --headless --path game --user-data-dir "$RUNNER_TEMP/g446-user" --script res://tests/process_restart_runner.gd -- rollback > "$RUNNER_TEMP/g446-bad.log" 2>&1
+          timeout 45s "$GODOT" --headless --path game --script res://tests/process_restart_runner.gd -- rollback > "$RUNNER_TEMP/g446-bad.log" 2>&1
           BAD_CODE="$?"
           set -e
           cp "$RUNNER_TEMP/g446-good.gd" "$SOURCE"
@@ -68,7 +70,7 @@ jobs:
             exit 1
           fi
           grep -Eq 'MARICA_G446_FAIL|SCRIPT ERROR|Invalid access' "$RUNNER_TEMP/g446-bad.log"
-          timeout 45s "$GODOT" --headless --path game --user-data-dir "$RUNNER_TEMP/g446-user" --script res://tests/process_restart_runner.gd -- recovered 2>&1 | tee "$RUNNER_TEMP/g446-restored.log"
+          timeout 45s "$GODOT" --headless --path game --script res://tests/process_restart_runner.gd -- recovered 2>&1 | tee "$RUNNER_TEMP/g446-restored.log"
           grep -Fq 'MARICA_G446_PASS phase=recovered' "$RUNNER_TEMP/g446-restored.log"
           git diff --exit-code -- "$SOURCE"
           echo "MARICA_G446_MUTATION_PASS good=pass bad=fail restore=pass"
