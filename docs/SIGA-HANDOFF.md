@@ -52,3 +52,11 @@ VERIFY: PR head dbcaeea6d69098b9945126fd6654af2614cf5dd4: G443 Save Migration (1
 CONCURRENCY: dedicated claim closed by separate docs PR; ARTIST #77 untouched. Historical G440–G442 preserved.
 LIMIT: No approved v0/v2 schema or real cross-version conversion; no G444 pet hydration, G445 durable event replay, G446 restart or G447 offline catch-up.
 NEXT: G444 persist animals/pedigree/care/health/affection/lifecycle after fresh claims/guards.
+
+## SIGA — PET-ALT-001 isolated capybara concept V1 accepted (2026-10-14)
+
+STATE: ADVANCE for bounded SPEC-005/V202 ARTIST concept-evidence precursor; V202 production sprite set remains unchecked.
+DONE: Human ACCEPT of PET-ALT-001 isolated V1 recorded append-only, preserving prior approved 2026-10-09 concept board and two 2026-10-14 rejected cat/collage candidates. PR #105 protected squash merged at `master@2bda4979f9610f660522a9288b01f7cab35f31f5` with approved review file; SIGA claim closure is tracked in a separate docs closeout.
+VERIFY: exact PR #105 head `3d52222c47e821a80eb353604fa2e59c44b422da` has Godot CI, Validate skills, Roblox CI, Web Preview Contract, ARCH V201 Source Import, G440/G441/G442/G443 PASS; Roblox Behavioral SKIPPED/nonrequired. Approved concept is **not** verified Godot sprite, runtime, ARCH filter/grid, SCENE scene, LENTE A/B or exported build. No post-merge master CI asserted.
+CONCURRENCY: #77 founder V4 remains draft and untouched. Separate G444 ARCH/GODOT work continues in PR #106; this closeout does not touch pet/save files, SPEC-004 tasks or other active claims. Claim `.siga/session-claim-pet-alt-001-concept-20261014-gpt6.md` closed by independent PR with its own exact-head CI.
+NEXT: SIGA reconcile and resume already-owned SPEC-004 G444 through PR #106 (without duplicating its claim); keep ARTIST PET-ALT-001 materialization gated behind separate provenance/ARCH/SCENE/LENTE review.
