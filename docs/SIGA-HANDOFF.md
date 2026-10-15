@@ -89,3 +89,9 @@ LIMITS: No full production scene close/reopen UX or G447 elapsed hours/days offl
 STATE: ADVANCE. Feature PR #115 exact HEAD 7a6c16657277492261f24201ca0202305d93f0d0 verified 13 applicable workflows PASS (G440–G447, Godot CI, Validate skills, ARCH V201, Web Preview, Roblox CI), Roblox Behavioral skipped. Guarded merge master@c866395378f25952f650a2472d2d0b465954cca2.
 DONE: seven independent Godot processes test 3h, same-time replay, 4d, rollback, forward observation, invalid clocks, hydrated pet snapshots and succession ledger preservation. GOOD→BAD→RESTORE elapsed-zero mutant detected. G440–G446 and ARTIST unchanged.
 LIMITS: Only offline elapsed observation and persistence, not applying offline elapsed to hunger, health, lifecycle, crops or scene/UI. No fsync/power loss or concurrent multi-process transaction claim. Next work: Phase F G450 farm slice and subsequent gameplay integration, subject to roadmap priority and ARTIST gates.
+
+## SIGA G450 — compact farm base (2026-10-15)
+
+STATE: ADVANCE. Feature PR #117 exact HEAD 479b6d95379e0e82623e8da15208b65469f6ce9f verified 14 applicable workflows PASS (G440–G447, G450, Godot CI, Validate skills, ARCH V201, Web Preview, Roblox CI), Roblox Behavioral skipped. Guarded merge master@656ea45dc80a3f4791af6d1ffb0fb6591a059a02.
+DONE: standalone 12×10 farm Node2D scene with cross-shaped path (21 cells), planting plot (9), structure placeholder (9), deterministic layout contract, headless scene boot, mutation GOOD→BAD→RESTORE on path continuity. Existing smoke bootstrap retained; G440–G447, ARTIST PRs and visual approvals untouched.
+LIMITS: Geometry is temporary debug color scaffold, not approved ARTIST sprites or V201 production validation; no G451 camera, G452 pets, UI or playable Gate F claim. Next G451 isometric/elevated camera zoom with separate claim and visual gates.

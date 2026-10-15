@@ -90,7 +90,7 @@ Do not mark these implementation checks complete based on illustrative previews 
 
 **Visual companion:** SPEC-005 ARTIST V2 full pixel art 2.5D approved on 2026-10-09. Its visual tasks V201–V211 are a gated accompaniment to G450–G458; they do **not** mark these existing tasks complete or preempt G425–G449.
 
-- [ ] **G450** Criar fazenda compacta base.
+- [x] **G450** Criar fazenda compacta base (PR #117): cena Godot `res://scenes/farm_base.tscn` opt-in, grade 12×10 com 21 células de caminhos conectados, 9 células de plantio e 9 de estrutura placeholder, layout espacial validado e Node2D headless inicializado. GOOD→BAD→RESTORE muta cruzamento `or`→`and` e detecta perda de caminhos; 14 checks aplicáveis PASS no HEAD exato `479b6d95379e0e82623e8da15208b65469f6ce9f`, merge protegido master@`656ea45dc80a3f4791af6d1ffb0fb6591a059a02`. Sem alterar bootstrap smoke, G440–G447 ou ARTIST; G451 câmera, G452 pet, G458 visual gate continuam abertos.
 - [ ] **G451** Implementar câmera isométrica/elevada com zoom.
 - [ ] **G452** Integrar pet fundador ao runtime Godot.
 - [ ] **G453** Criar HUD mínimo de fase/saúde/cuidado.
