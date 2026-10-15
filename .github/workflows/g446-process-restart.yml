@@ -1,0 +1,81 @@
+name: G446 Process Restart
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  process-restart:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Verify exact HEAD and pinned Godot
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          curl --fail --location --retry 3 --retry-all-errors -o "$RUNNER_TEMP/godot.zip" "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+      - name: Import exact-head Godot project
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --headless --editor --path game --import --quit > "$RUNNER_TEMP/g446-import.log" 2>&1
+      - name: G446 GOOD six independent processes
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          mkdir -p "$RUNNER_TEMP/g446-user"
+          for phase in seed reopen rollback verify recover recovered; do
+            timeout 45s "$GODOT" --headless --path game --user-data-dir "$RUNNER_TEMP/g446-user" --script res://tests/process_restart_runner.gd -- "$phase" 2>&1 | tee "$RUNNER_TEMP/g446-$phase.log"
+            grep -Fq "MARICA_G446_PASS phase=$phase" "$RUNNER_TEMP/g446-$phase.log"
+          done
+          echo "MARICA_G446_RESTART_PASS phases=6"
+      - name: QA GOOD-BAD-RESTORE rollback mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE=game/src/domain/simulation_time.gd
+          cp "$SOURCE" "$RUNNER_TEMP/g446-good.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("game/src/domain/simulation_time.gd")
+          s = p.read_text()
+          target = "var logical_now: float = maxf(raw_now, previous)"
+          assert s.count(target) == 1
+          p.write_text(s.replace(target, "var logical_now: float = raw_now"))
+          PY
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          set +e
+          timeout 45s "$GODOT" --headless --path game --user-data-dir "$RUNNER_TEMP/g446-user" --script res://tests/process_restart_runner.gd -- rollback > "$RUNNER_TEMP/g446-bad.log" 2>&1
+          BAD_CODE="$?"
+          set -e
+          cp "$RUNNER_TEMP/g446-good.gd" "$SOURCE"
+          if test "$BAD_CODE" -eq 0; then
+            echo "G446 clock rollback mutant escaped"
+            exit 1
+          fi
+          grep -Eq 'MARICA_G446_FAIL|SCRIPT ERROR|Invalid access' "$RUNNER_TEMP/g446-bad.log"
+          timeout 45s "$GODOT" --headless --path game --user-data-dir "$RUNNER_TEMP/g446-user" --script res://tests/process_restart_runner.gd -- recovered 2>&1 | tee "$RUNNER_TEMP/g446-restored.log"
+          grep -Fq 'MARICA_G446_PASS phase=recovered' "$RUNNER_TEMP/g446-restored.log"
+          git diff --exit-code -- "$SOURCE"
+          echo "MARICA_G446_MUTATION_PASS good=pass bad=fail restore=pass"
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g446-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          path: ${{ runner.temp }}/g446-*.log
