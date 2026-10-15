@@ -161,7 +161,8 @@ func _backup() -> bool:
     if not _seed(_fixture()):
         return false
     var store: MaricaLocalSaveStore = STORE.new(PATH)
-    var saved: Dictionary = store.save(_fixture(), 0, _clock())
+    var current: Dictionary = store.load()["snapshot"]
+    var saved: Dictionary = store.save(current, 0, _clock())
     if not saved.get("ok", false):
         return false
     var file: FileAccess = FileAccess.open(PATH, FileAccess.WRITE)
