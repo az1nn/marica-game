@@ -73,4 +73,4 @@ jobs:
           name: g444-${{ github.event.pull_request.head.sha || github.sha }}
           if-no-files-found: ignore
           path: |
-            ${{ runner.temp }} /g444-*.log
+            ${{ runner.temp }}/g444-*.log

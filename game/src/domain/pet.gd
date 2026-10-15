@@ -312,4 +312,4 @@ static func from_snapshot(snapshot: Dictionary) -> Dictionary:
 
 
 static func _same_wire(left: Dictionary, right: Dictionary) -> bool:
-    return JSON.stringify(left) == JSON.stringify(right)
+    return JSON.parse_string(JSON.stringify(left)) == JSON.parse_string(JSON.stringify(right))
