@@ -22,15 +22,15 @@ func _run() -> void:
         "bootstrap":
             ok = _bootstrap()
         "hours":
-            ok = _advance(START + 3.0 * HOUR, 3.0 * HOUR, 1, 2)
+            ok = _advance(START + 3.0 * HOUR, 3.0 * HOUR, 0, 1)
         "replay":
-            ok = _advance(START + 3.0 * HOUR, 0.0, 2, 2)
+            ok = _advance(START + 3.0 * HOUR, 0.0, 1, 1)
         "days":
-            ok = _advance(START + 3.0 * HOUR + 4.0 * DAY, 4.0 * DAY, 2, 3)
+            ok = _advance(START + 3.0 * HOUR + 4.0 * DAY, 4.0 * DAY, 1, 2)
         "rollback":
-            ok = _advance(START, 0.0, 3, 3)
+            ok = _advance(START, 0.0, 2, 2)
         "future":
-            ok = _advance(START + 3.0 * HOUR + 4.0 * DAY + HOUR, HOUR, 3, 4)
+            ok = _advance(START + 3.0 * HOUR + 4.0 * DAY + HOUR, HOUR, 2, 3)
         "invalid":
             ok = _invalid()
         "cleanup":
@@ -68,7 +68,7 @@ func _advance(now: float, expected_elapsed: float, before: int, after: int) -> b
 
 
 func _invalid() -> bool:
-    if not _check(4, _timestamp_for_revision(4)):
+    if not _check(3, _timestamp_for_revision(3)):
         return false
     var bad_clock: Dictionary = OFFLINE.resume(STORE.new(PATH), func() -> float: return -1.0)
     if bad_clock.get("ok", false):
@@ -85,7 +85,7 @@ func _invalid() -> bool:
         STORE.new(PATH), _clock(_timestamp_for_revision(4))
     )
     return replay.get("ok", false) and replay["elapsed_seconds"] == 0.0 and _check(
-        4, _timestamp_for_revision(4)
+        3, _timestamp_for_revision(3)
     )
 
 
@@ -93,9 +93,9 @@ func _timestamp_for_revision(revision: int) -> float:
     match revision:
         0:
             return START
-        1, 2:
+        1:
             return START + 3.0 * HOUR
-        3:
+        2:
             return START + 3.0 * HOUR + 4.0 * DAY
         _:
             return START + 4.0 * HOUR + 4.0 * DAY
