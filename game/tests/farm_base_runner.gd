@@ -46,9 +46,9 @@ func _verify() -> bool:
     var expected: bool = (
         ready
         and farm is Node2D
-        and bounds.size == Vector2(
-            LAYOUT.GRID_WIDTH * LAYOUT.TILE_SIZE,
-            LAYOUT.GRID_HEIGHT * LAYOUT.TILE_SIZE
+        and (
+            bounds.size
+            == Vector2(LAYOUT.GRID_WIDTH * LAYOUT.TILE_SIZE, LAYOUT.GRID_HEIGHT * LAYOUT.TILE_SIZE)
         )
     )
     farm.queue_free()

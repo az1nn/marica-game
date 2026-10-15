@@ -36,8 +36,7 @@ func _draw() -> void:
                 LAYOUT.STRUCTURE:
                     color = STRUCTURE_COLOR
             var rect: Rect2 = Rect2(
-                Vector2(x, y) * float(LAYOUT.TILE_SIZE),
-                Vector2.ONE * float(LAYOUT.TILE_SIZE)
+                Vector2(x, y) * float(LAYOUT.TILE_SIZE), Vector2.ONE * float(LAYOUT.TILE_SIZE)
             )
             draw_rect(rect, color)
             draw_rect(rect, Color(0.1, 0.15, 0.12, 0.25), false, 1.0)
