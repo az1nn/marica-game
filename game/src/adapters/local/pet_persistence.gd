@@ -44,6 +44,18 @@ static func serialize(pets: Variant, previous: Variant) -> Dictionary:
             return {"ok": false, "error": "Pet ID or composite state mismatch"}
         snapshots[pet_id] = pet.to_snapshot()
     document["pets"] = snapshots
+    # G440 requires the frozen parent marker to match the persisted parent exactly.
+    # Compare canonical JSON values before normalization; never repair a mismatch.
+    var events: Dictionary = document["succession_events"]
+    for parent_id in events:
+        var marker: Dictionary = events[parent_id]
+        if not snapshots.has(parent_id):
+            return {"ok": false, "error": "Succession parent missing"}
+        var frozen: Variant = JSON.parse_string(JSON.stringify(marker["parent_snapshot"]))
+        var current: Variant = JSON.parse_string(JSON.stringify(snapshots[parent_id]))
+        if frozen != current:
+            return {"ok": false, "error": "Frozen parent differs from persisted aggregate"}
+        marker["parent_snapshot"] = snapshots[parent_id].duplicate(true)
     var checked: Dictionary = VALIDATOR.validate(document)
     if not checked.get("ok", false):
         return checked
