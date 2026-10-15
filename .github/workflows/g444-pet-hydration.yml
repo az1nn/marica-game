@@ -47,10 +47,10 @@ jobs:
           from pathlib import Path
           p = Path("game/src/adapters/local/pet_persistence.gd")
           source = p.read_text()
-          target = 'if not admitted.get("ok", false):'
-          assert source.count(target) == 2
-          p.write_text(source.replace(target, 'if false and not admitted.get("ok", false):', 1))
-          print("G444 BAD: bypass version guard")
+          target = 'snapshots[pet_id] = pet.to_snapshot()'
+          assert source.count(target) == 1
+          p.write_text(source.replace(target, 'snapshots[pet_id] = {"id": pet_id}'))
+          print("G444 BAD: silently drop persisted Pet state")
           PY
           set +e
           timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path game --script res://tests/pet_persistence_runner.gd > "$RUNNER_TEMP/g444-bad.log" 2>&1
