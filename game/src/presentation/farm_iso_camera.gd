@@ -14,9 +14,7 @@ const ISO_Y: Vector2 = Vector2(-0.7071067812, 0.3535533906)
 func _ready() -> void:
     _world.transform = Transform2D(ISO_X, ISO_Y, Vector2.ZERO)
     var midpoint: Vector2 = (
-        Vector2(float(LAYOUT.GRID_WIDTH), float(LAYOUT.GRID_HEIGHT))
-        * float(LAYOUT.TILE_SIZE)
-        * 0.5
+        Vector2(float(LAYOUT.GRID_WIDTH), float(LAYOUT.GRID_HEIGHT)) * float(LAYOUT.TILE_SIZE) * 0.5
     )
     position = _world.transform * midpoint
     set_zoom_level(fit_zoom_for_size(get_viewport_rect().size))
@@ -30,14 +28,10 @@ static func fit_zoom_for_size(viewport_size: Vector2) -> float:
     if viewport_size.x <= 0.0 or viewport_size.y <= 0.0:
         return ZOOM_MIN
     var projected_width: float = (
-        float(LAYOUT.GRID_WIDTH + LAYOUT.GRID_HEIGHT)
-        * float(LAYOUT.TILE_SIZE)
-        * absf(ISO_X.x)
+        float(LAYOUT.GRID_WIDTH + LAYOUT.GRID_HEIGHT) * float(LAYOUT.TILE_SIZE) * absf(ISO_X.x)
     )
     var projected_height: float = (
-        float(LAYOUT.GRID_WIDTH + LAYOUT.GRID_HEIGHT)
-        * float(LAYOUT.TILE_SIZE)
-        * absf(ISO_X.y)
+        float(LAYOUT.GRID_WIDTH + LAYOUT.GRID_HEIGHT) * float(LAYOUT.TILE_SIZE) * absf(ISO_X.y)
     )
     return clampf(
         minf(0.9 * viewport_size.x / projected_width, 0.9 * viewport_size.y / projected_height),

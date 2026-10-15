@@ -34,9 +34,7 @@ func _verify() -> bool:
     if world.transform.y.distance_to(CAMERA.ISO_Y) > 0.0001:
         return false
     var midpoint: Vector2 = (
-        Vector2(float(LAYOUT.GRID_WIDTH), float(LAYOUT.GRID_HEIGHT))
-        * float(LAYOUT.TILE_SIZE)
-        * 0.5
+        Vector2(float(LAYOUT.GRID_WIDTH), float(LAYOUT.GRID_HEIGHT)) * float(LAYOUT.TILE_SIZE) * 0.5
     )
     if camera.position.distance_to(world.transform * midpoint) > 0.0001:
         return false
