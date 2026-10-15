@@ -275,3 +275,39 @@ func to_snapshot() -> Dictionary:
         snapshot["careState"] = _care.to_snapshot()
         snapshot["healthState"] = _health.to_snapshot()
     return snapshot
+
+
+# G444: restore a validated v1 composite without recalculating historical expression.
+# The application adapter validates the entire envelope before invoking this method.
+static func from_snapshot(snapshot: Dictionary) -> Dictionary:
+    var family: Dictionary = PEDIGREE.create(snapshot["pedigree"])
+    if not family.get("ok", false):
+        return family
+    var care: Dictionary = CARE.create(snapshot["careState"])
+    if not care.get("ok", false):
+        return care
+    var health: Dictionary = HEALTH.create(snapshot["healthState"])
+    if not health.get("ok", false):
+        return health
+    var created: Dictionary = create(snapshot["id"], snapshot["soulbound"], snapshot["affection"])
+    if not created.get("ok", false):
+        return created
+    var state: Dictionary = snapshot["lifecycle"]
+    var life: MaricaLifecycle = LIFECYCLE.new(
+        state["stage"], state["status"], state.get("endReason", "")
+    )
+    var pet: MaricaPet = created["pet"]
+    pet._composite = true
+    pet._pedigree = family["pedigree"]
+    pet._lifecycle = life
+    pet._potential = snapshot["geneticPotential"].duplicate(true)
+    pet._expressed = snapshot["expressedTraits"].duplicate(true)
+    pet._care = care["care"]
+    pet._health = health["health"]
+    if not _same_wire(pet.to_snapshot(), snapshot):
+        return {"ok": false, "error": "Pet domain state differs from persisted snapshot"}
+    return {"ok": true, "pet": pet}
+
+
+static func _same_wire(left: Dictionary, right: Dictionary) -> bool:
+    return JSON.parse_string(JSON.stringify(left)) == JSON.parse_string(JSON.stringify(right))

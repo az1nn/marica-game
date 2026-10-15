@@ -1,0 +1,76 @@
+name: G444 Pet Hydration
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pet-hydration:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Verify exact HEAD and pinned Godot
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          curl --fail --location --retry 3 --retry-all-errors \
+            -o "$RUNNER_TEMP/godot.zip" \
+            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+      - name: Run G444 hydration and disk roundtrip
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          timeout 45s "$GODOT" --headless --editor --path game --import --quit 2>&1 | tee "$RUNNER_TEMP/g444-import.log"
+          timeout 45s "$GODOT" --headless --path game --script res://tests/pet_persistence_runner.gd 2>&1 | tee "$RUNNER_TEMP/g444-good.log"
+          grep -Fq 'MARICA_G444_PET_HYDRATION_PASS scenarios=12' "$RUNNER_TEMP/g444-good.log"
+      - name: QA mutation GOOD-BAD-RESTORE
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE=game/src/adapters/local/pet_persistence.gd
+          cp "$SOURCE" "$RUNNER_TEMP/g444-good.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("game/src/adapters/local/pet_persistence.gd")
+          source = p.read_text()
+          target = 'snapshots[pet_id] = pet.to_snapshot()'
+          assert source.count(target) == 1
+          p.write_text(source.replace(target, 'snapshots[pet_id] = {"id": pet_id}'))
+          print("G444 BAD: silently drop persisted Pet state")
+          PY
+          set +e
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path game --script res://tests/pet_persistence_runner.gd > "$RUNNER_TEMP/g444-bad.log" 2>&1
+          BAD_CODE="$?"
+          set -e
+          cp "$RUNNER_TEMP/g444-good.gd" "$SOURCE"
+          if test "$BAD_CODE" -eq 0; then
+            echo "G444 mutant escaped"
+            exit 1
+          fi
+          grep -Eq 'MARICA_G444_FAIL|SCRIPT ERROR|Invalid access' "$RUNNER_TEMP/g444-bad.log"
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path game --script res://tests/pet_persistence_runner.gd 2>&1 | tee "$RUNNER_TEMP/g444-restored.log"
+          grep -Fq 'MARICA_G444_PET_HYDRATION_PASS scenarios=12' "$RUNNER_TEMP/g444-restored.log"
+          git diff --exit-code -- "$SOURCE"
+          echo 'MARICA_G444_MUTATION_PASS good=pass bad=fail restore=pass'
+      - name: Upload proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g444-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          path: |
+            ${{ runner.temp }}/g444-*.log
