@@ -93,6 +93,7 @@ func _negative_create() -> bool:
         return false
     return _check(_stale(), "revision guard")
 
+
 func _conflict(ids: Array, seed: int) -> bool:
     _cleanup()
     if not _seed(_fixture()):
