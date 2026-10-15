@@ -73,19 +73,17 @@ func _invalid() -> bool:
     var bad_clock: Dictionary = OFFLINE.resume(STORE.new(PATH), func() -> float: return -1.0)
     if bad_clock.get("ok", false):
         return false
-    var invalid_clock: Dictionary = OFFLINE.resume(
-        STORE.new(PATH), func() -> float: return NAN
-    )
+    var invalid_clock: Dictionary = OFFLINE.resume(STORE.new(PATH), func() -> float: return NAN)
     if invalid_clock.get("ok", false):
         return false
     var no_clock: Dictionary = OFFLINE.resume(STORE.new(PATH), Callable())
     if no_clock.get("ok", false):
         return false
-    var replay: Dictionary = OFFLINE.resume(
-        STORE.new(PATH), _clock(_timestamp_for_revision(4))
-    )
-    return replay.get("ok", false) and replay["elapsed_seconds"] == 0.0 and _check(
-        3, _timestamp_for_revision(3)
+    var replay: Dictionary = OFFLINE.resume(STORE.new(PATH), _clock(_timestamp_for_revision(3)))
+    return (
+        replay.get("ok", false)
+        and replay["elapsed_seconds"] == 0.0
+        and _check(3, _timestamp_for_revision(3))
     )
 
 
