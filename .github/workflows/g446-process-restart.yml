@@ -60,6 +60,7 @@ jobs:
           PY
           GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
           export XDG_DATA_HOME="$RUNNER_TEMP/g446-user"
+          timeout 45s "$GODOT" --headless --path game --script res://tests/process_restart_runner.gd -- seed > "$RUNNER_TEMP/g446-mutant-seed.log" 2>&1
           set +e
           timeout 45s "$GODOT" --headless --path game --script res://tests/process_restart_runner.gd -- rollback > "$RUNNER_TEMP/g446-bad.log" 2>&1
           BAD_CODE="$?"
@@ -70,8 +71,9 @@ jobs:
             exit 1
           fi
           grep -Eq 'MARICA_G446_FAIL|SCRIPT ERROR|Invalid access' "$RUNNER_TEMP/g446-bad.log"
-          timeout 45s "$GODOT" --headless --path game --script res://tests/process_restart_runner.gd -- recovered 2>&1 | tee "$RUNNER_TEMP/g446-restored.log"
-          grep -Fq 'MARICA_G446_PASS phase=recovered' "$RUNNER_TEMP/g446-restored.log"
+          timeout 45s "$GODOT" --headless --path game --script res://tests/process_restart_runner.gd -- seed > "$RUNNER_TEMP/g446-restore-seed.log" 2>&1
+          timeout 45s "$GODOT" --headless --path game --script res://tests/process_restart_runner.gd -- rollback 2>&1 | tee "$RUNNER_TEMP/g446-restored.log"
+          grep -Fq 'MARICA_G446_PASS phase=rollback' "$RUNNER_TEMP/g446-restored.log"
           git diff --exit-code -- "$SOURCE"
           echo "MARICA_G446_MUTATION_PASS good=pass bad=fail restore=pass"
       - name: Upload diagnostics
