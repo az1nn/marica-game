@@ -60,3 +60,12 @@ DONE: Human ACCEPT of PET-ALT-001 isolated V1 recorded append-only, preserving p
 VERIFY: exact PR #105 head `3d52222c47e821a80eb353604fa2e59c44b422da` has Godot CI, Validate skills, Roblox CI, Web Preview Contract, ARCH V201 Source Import, G440/G441/G442/G443 PASS; Roblox Behavioral SKIPPED/nonrequired. Approved concept is **not** verified Godot sprite, runtime, ARCH filter/grid, SCENE scene, LENTE A/B or exported build. No post-merge master CI asserted.
 CONCURRENCY: #77 founder V4 remains draft and untouched. Separate G444 ARCH/GODOT work continues in PR #106; this closeout does not touch pet/save files, SPEC-004 tasks or other active claims. Claim `.siga/session-claim-pet-alt-001-concept-20261014-gpt6.md` closed by independent PR with its own exact-head CI.
 NEXT: SIGA reconcile and resume already-owned SPEC-004 G444 through PR #106 (without duplicating its claim); keep ARTIST PET-ALT-001 materialization gated behind separate provenance/ARCH/SCENE/LENTE review.
+
+## SIGA G444 — verified Pet persistence handoff (2026-10-14)
+
+STATE: ADVANCE after protected feature PR #106 merge to master@802bd53314ce6974340445d4c0d9b1cb22529e20.
+DONE: G444 typed MaricaPet hydration/serialization for complete v1 envelope, archived ancestors, pedigree, care/health/affection/lifecycle, historical expressed traits, soulbound and ledger retention. G440 cross-record checks, G443 version admission and G442 local disk roundtrip. 12 tests and QA mutation GOOD/BAD/RESTORE.
+VERIFY: exact feature PR HEAD eacc033ba5227c84e147888fe7d821351401e812 — G444, G443, G442, G441, G440, Godot CI, Validate skills, ARCH V201, Web Preview, Roblox CI PASS. Roblox Behavioral SKIPPED. Not equivalent to independent post-merge master CI.
+CONCURRENCY: reconciled intervening ARTIST PET-ALT-001 merges without changing visual gates. PR #77 still draft, no overlapping files. Claim CLOSED in this docs PR.
+LIMIT: G445 durable event replay, G446 process restart/clock rollback, G447 offline elapsed and gameplay/visual ARTIST/LENTE remain pending. G444 test runner is an isolated adapter proof, not a playable Godot scene.
+NEXT: G445 persist durable idempotency markers of succession, only after new ownership/claims/master reconciliation.
