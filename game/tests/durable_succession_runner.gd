@@ -65,6 +65,12 @@ func _new() -> bool:
 
 
 func _negative() -> bool:
+    if not _check(_negative_replay(), "conflict and corruption guards"):
+        return false
+    return _check(_negative_create(), "new marker creation guards")
+
+
+func _negative_replay() -> bool:
     if not _check(_conflict(IDS, 10), "seed conflict"):
         return false
     if not _check(_conflict(["other-a", "other-b"], SEED), "IDs conflict"):
@@ -75,16 +81,17 @@ func _negative() -> bool:
         return false
     if not _check(_corrupt_marker(), "corrupt marker"):
         return false
+    return _check(_backup(), "backup replay")
+
+
+func _negative_create() -> bool:
     if not _check(_duplicate_id(), "duplicate child"):
         return false
     if not _check(_invalid_ids(), "invalid cardinality"):
         return false
     if not _check(_bad_clock(), "clock rejection"):
         return false
-    if not _check(_stale(), "revision guard"):
-        return false
-    return _check(_backup(), "backup replay")
-
+    return _check(_stale(), "revision guard")
 
 func _conflict(ids: Array, seed: int) -> bool:
     _cleanup()
