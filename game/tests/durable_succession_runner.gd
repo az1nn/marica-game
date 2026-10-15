@@ -35,7 +35,6 @@ func _existing() -> bool:
     var first: Dictionary = _trigger()
     var second: Dictionary = _trigger()
     var doc: Dictionary = STORE.new(PATH).load()["snapshot"]
-    print("G445_DIAG existing first=", first, " second=", second, " rev=", doc["revision"])
     return (
         first.get("ok", false)
         and not first["created"]
@@ -141,7 +140,10 @@ func _bad_clock() -> bool:
     var result: Dictionary = ADAPTER.trigger(
         STORE.new(PATH), PARENT, IDS, SEED, func() -> float: return -1.0
     )
-    return not result.get("ok", false) and STORE.new(PATH).load()["snapshot"]["succession_events"].is_empty()
+    return (
+        not result.get("ok", false)
+        and STORE.new(PATH).load()["snapshot"]["succession_events"].is_empty()
+    )
 
 
 func _stale() -> bool:
@@ -150,10 +152,7 @@ func _stale() -> bool:
         return false
     var store: MaricaLocalSaveStore = STORE.new(PATH)
     var current: Dictionary = store.load()["snapshot"]
-    return (
-        not store.save(current, 99, _clock()).get("ok", false)
-        and _trigger().get("ok", false)
-    )
+    return not store.save(current, 99, _clock()).get("ok", false) and _trigger().get("ok", false)
 
 
 func _backup() -> bool:
@@ -201,7 +200,9 @@ func _ids(pets: Array) -> Array:
 
 
 func _fixture() -> Dictionary:
-    return JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/save_v1_succession.json"))
+    return JSON.parse_string(
+        FileAccess.get_file_as_string("res://tests/fixtures/save_v1_succession.json")
+    )
 
 
 func _cleanup() -> void:

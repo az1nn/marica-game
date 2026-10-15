@@ -5,7 +5,9 @@ const PETS = preload("res://src/adapters/local/pet_persistence.gd")
 const SUCCESSION = preload("res://src/domain/succession.gd")
 
 
-static func trigger(store: MaricaLocalSaveStore, parent_id: Variant, ids: Variant, seed: Variant, clock: Callable) -> Dictionary:
+static func trigger(
+    store: MaricaLocalSaveStore, parent_id: Variant, ids: Variant, seed: Variant, clock: Callable
+) -> Dictionary:
     var loaded: Dictionary = store.load()
     if not loaded.get("ok", false):
         return loaded
@@ -29,7 +31,10 @@ static func _replay(doc: Dictionary, parent: MaricaPet, ids: Variant, seed: Vari
         typeof(ids) != TYPE_ARRAY
         or marker["successor_ids"] != ids
         or marker["succession_seed"] != seed
-        or JSON.parse_string(JSON.stringify(marker["parent_snapshot"])) != JSON.parse_string(JSON.stringify(parent.to_snapshot()))
+        or (
+            JSON.parse_string(JSON.stringify(marker["parent_snapshot"]))
+            != JSON.parse_string(JSON.stringify(parent.to_snapshot()))
+        )
     ):
         return {"ok": false, "error": "Conflicting durable replay"}
     var restored: Dictionary = PETS.hydrate(doc)
@@ -73,6 +78,8 @@ static func _create(
     if not saved.get("ok", false):
         return saved
     return {
-        "ok": true, "created": true, "successors": pair.duplicate(),
+        "ok": true,
+        "created": true,
+        "successors": pair.duplicate(),
         "revision": saved["snapshot"]["revision"]
     }
