@@ -77,3 +77,9 @@ DONE: Persist pair + frozen parent marker atomically via G442; replay saved pair
 CONCURRENCY: isolated claim released in docs closeout; ARTIST PR #77 no file overlap or visual gate changes. G440–G444 unchanged.
 LIMIT: G446 cross-process restart and clock rollback, G447 offline catch-up, production scene and ARTIST runtime not certified.
 NEXT: G446 save/load roundtrip and clock rollback with independent process harness.
+
+## SIGA G446 — process restart + rollback (2026-10-15)
+
+STATE: ADVANCE. Feature PR #112 exact HEAD 57d045a47c366b1ccc8420ab3f5cc74f4bdcdb39 verified 12 applicable workflows PASS: G446/G445/G444/G443/G442/G441/G440, Godot CI, Validate skills, ARCH V201, Web Preview Contract, Roblox CI; Roblox Behavioral skipped. Guarded merge master@2266ee23b90442d4a61bcadd20af6d1b10813cda.
+DONE: Six fresh Godot OS processes share one disk profile and prove save/load hydration, idempotent two-child marker replay, forward timestamp, backward-clock clamp, stale revision rejection, verified backup recovery and corrupt ledger fail closed. Independent GOOD→BAD→RESTORE clock mutation detected. Existing G440–G445 source untouched; ARTIST concurrent work untouched.
+LIMITS: No full production scene close/reopen UX or G447 elapsed hours/days offline certification; filesystem power-loss guarantees not asserted. Next: G447 offline catch-up.
