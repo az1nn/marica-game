@@ -83,3 +83,9 @@ NEXT: G446 save/load roundtrip and clock rollback with independent process harne
 STATE: ADVANCE. Feature PR #112 exact HEAD 57d045a47c366b1ccc8420ab3f5cc74f4bdcdb39 verified 12 applicable workflows PASS: G446/G445/G444/G443/G442/G441/G440, Godot CI, Validate skills, ARCH V201, Web Preview Contract, Roblox CI; Roblox Behavioral skipped. Guarded merge master@2266ee23b90442d4a61bcadd20af6d1b10813cda.
 DONE: Six fresh Godot OS processes share one disk profile and prove save/load hydration, idempotent two-child marker replay, forward timestamp, backward-clock clamp, stale revision rejection, verified backup recovery and corrupt ledger fail closed. Independent GOOD→BAD→RESTORE clock mutation detected. Existing G440–G445 source untouched; ARTIST concurrent work untouched.
 LIMITS: No full production scene close/reopen UX or G447 elapsed hours/days offline certification; filesystem power-loss guarantees not asserted. Next: G447 offline catch-up.
+
+## SIGA G447 — offline elapsed return (2026-10-15)
+
+STATE: ADVANCE. Feature PR #115 exact HEAD 7a6c16657277492261f24201ca0202305d93f0d0 verified 13 applicable workflows PASS (G440–G447, Godot CI, Validate skills, ARCH V201, Web Preview, Roblox CI), Roblox Behavioral skipped. Guarded merge master@c866395378f25952f650a2472d2d0b465954cca2.
+DONE: seven independent Godot processes test 3h, same-time replay, 4d, rollback, forward observation, invalid clocks, hydrated pet snapshots and succession ledger preservation. GOOD→BAD→RESTORE elapsed-zero mutant detected. G440–G446 and ARTIST unchanged.
+LIMITS: Only offline elapsed observation and persistence, not applying offline elapsed to hunger, health, lifecycle, crops or scene/UI. No fsync/power loss or concurrent multi-process transaction claim. Next work: Phase F G450 farm slice and subsequent gameplay integration, subject to roadmap priority and ARTIST gates.
