@@ -37,4 +37,8 @@ func _draw_cell(cell: Vector2i, fill: Color) -> void:
         ]
     )
     draw_colored_polygon(points, fill)
-    draw_polyline(PackedVector2Array([points[0], points[1], points[2], points[3], points[0]]), Color(0.12, 0.19, 0.13), 1.0)
+    draw_polyline(
+        PackedVector2Array([points[0], points[1], points[2], points[3], points[0]]),
+        Color(0.12, 0.19, 0.13),
+        1.0
+    )
