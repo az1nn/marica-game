@@ -289,9 +289,7 @@ static func from_snapshot(snapshot: Dictionary) -> Dictionary:
     var health: Dictionary = HEALTH.create(snapshot["healthState"])
     if not health.get("ok", false):
         return health
-    var created: Dictionary = create(
-        snapshot["id"], snapshot["soulbound"], snapshot["affection"]
-    )
+    var created: Dictionary = create(snapshot["id"], snapshot["soulbound"], snapshot["affection"])
     if not created.get("ok", false):
         return created
     var state: Dictionary = snapshot["lifecycle"]
