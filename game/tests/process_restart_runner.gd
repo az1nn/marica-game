@@ -164,10 +164,13 @@ func _snapshot_is(revision: int, timestamp: float, has_marker: bool) -> bool:
     if marker["successor_ids"] != IDS or marker["succession_seed"] != SEED:
         return false
     for pet_id in doc["pets"]:
-        if restored["pets"][pet_id].to_snapshot() != doc["pets"][pet_id]:
-            # JSON numeric decoding may normalize integers to floats.
-            if JSON.stringify(restored["pets"][pet_id].to_snapshot()) != JSON.stringify(doc["pets"][pet_id]):
-                return false
+        var actual: Variant = JSON.parse_string(
+            JSON.stringify(restored["pets"][pet_id].to_snapshot())
+        )
+        var expected: Variant = JSON.parse_string(JSON.stringify(doc["pets"][pet_id]))
+        if actual != expected:
+            print("G446_DIAG mismatch pet=", pet_id, " actual=", actual, " expected=", expected)
+            return false
     return true
 
 
