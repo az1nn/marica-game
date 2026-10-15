@@ -9,7 +9,7 @@ func _initialize() -> void:
 
 
 func _run() -> void:
-    var passed: bool = _verify()
+    var passed: bool = await _verify()
     if passed:
         print("MARICA_G450_PASS")
     else:
