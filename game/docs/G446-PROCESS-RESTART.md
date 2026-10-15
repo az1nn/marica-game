@@ -1,0 +1,3 @@
+# G446 — Process Restart / Clock Rollback
+
+Independent headless Godot OS invocations share one user:// file. Bootstrap creates a verified profile and exactly two durable successors; restart loads typed G444 aggregates and replays G445 marker without new children; forward observation increments revision; rollback clamps logical clock to persisted high-watermark (elapsed=0) without resetting succession; subsequent restart verifies monotonicity, stale-revision rejection, backup recovery and corrupt ledger fail-closed. GOOD→BAD→RESTORE mutates G423 logicalNow=max(raw,previous) to raw; rollback process must fail, restore must pass. G447 hours/days offline simulation and production lifecycle integration remain unproven. No fsync/power-loss claim.
