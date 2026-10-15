@@ -22,13 +22,12 @@ func _verify() -> bool:
     var result: Dictionary = LAYOUT.validate(layout)
     if not result.get("ok", false):
         return false
-    if layout["width"] * layout["height"] != 120:
-        return false
-    if result["counts"][LAYOUT.PATH] != 21:
-        return false
-    if result["counts"][LAYOUT.PLOT] != 9:
-        return false
-    if result["counts"][LAYOUT.STRUCTURE] != 9:
+    if (
+        layout["width"] * layout["height"] != 120
+        or result["counts"][LAYOUT.PATH] != 21
+        or result["counts"][LAYOUT.PLOT] != 9
+        or result["counts"][LAYOUT.STRUCTURE] != 9
+    ):
         return false
     var changed: Dictionary = layout.duplicate(true)
     changed["tiles"][5][3] = LAYOUT.GROUND
