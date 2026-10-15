@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/farm_base.tscn" id="1_farm"]
+[ext_resource type="Script" path="res://src/presentation/farm_iso_camera.gd" id="2_camera"]
+
+[node name="FarmIsoView" type="Node2D"]
+
+[node name="IsometricWorld" type="Node2D" parent="."]
+
+[node name="FarmBase" parent="IsometricWorld" instance=ExtResource("1_farm")]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+script = ExtResource("2_camera")
