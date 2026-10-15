@@ -50,10 +50,20 @@ func _scenarios() -> bool:
 
 func _roundtrip(document: Dictionary, count: int) -> bool:
     var hydrated: Dictionary = ADAPTER.hydrate(document)
-    if not hydrated.get("ok", false) or hydrated["pets"].size() != count:
+    if not hydrated.get("ok", false):
+        print("MARICA_G444_DIAGNOSTIC hydrate=", hydrated)
+        return false
+    if hydrated["pets"].size() != count:
+        print("MARICA_G444_DIAGNOSTIC count=", hydrated["pets"].size(), " expected=", count)
         return false
     var encoded: Dictionary = ADAPTER.serialize(hydrated["pets"], document)
-    return encoded.get("ok", false) and _wire(encoded["document"]) == _wire(document)
+    if not encoded.get("ok", false):
+        print("MARICA_G444_DIAGNOSTIC serialize=", encoded)
+        return false
+    if _wire(encoded["document"]) != _wire(document):
+        print("MARICA_G444_DIAGNOSTIC wire mismatch")
+        return false
+    return true
 
 
 func _detached(document: Dictionary) -> bool:
