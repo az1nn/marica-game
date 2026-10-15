@@ -29,7 +29,7 @@ static func _replay(doc: Dictionary, parent: MaricaPet, ids: Variant, seed: Vari
         typeof(ids) != TYPE_ARRAY
         or marker["successor_ids"] != ids
         or marker["succession_seed"] != seed
-        or marker["parent_snapshot"] != parent.to_snapshot()
+        or JSON.parse_string(JSON.stringify(marker["parent_snapshot"])) != JSON.parse_string(JSON.stringify(parent.to_snapshot()))
     ):
         return {"ok": false, "error": "Conflicting durable replay"}
     var restored: Dictionary = PETS.hydrate(doc)
