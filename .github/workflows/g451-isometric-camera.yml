@@ -1,0 +1,74 @@
+name: G451 Isometric Camera
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  isometric-camera:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Install pinned Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          curl --fail --location --retry 3 --retry-all-errors -o "$RUNNER_TEMP/godot.zip" "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+      - name: Import exact-head Godot project
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --headless --editor --path game --import --quit > "$RUNNER_TEMP/g451-import.log" 2>&1
+      - name: G451 GOOD projected camera and zoom
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          timeout 45s "$GODOT" --headless --path game --script res://tests/farm_iso_camera_runner.gd 2>&1 | tee "$RUNNER_TEMP/g451-good.log"
+          grep -Fq MARICA_G451_CAMERA_PASS "$RUNNER_TEMP/g451-good.log"
+      - name: G451 GOOD-BAD-RESTORE zoom clamp mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          SOURCE=game/src/presentation/farm_iso_camera.gd
+          cp "$SOURCE" "$RUNNER_TEMP/g451-source-good.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("game/src/presentation/farm_iso_camera.gd")
+          s=p.read_text()
+          target="var limited: float = clampf(value, ZOOM_MIN, ZOOM_MAX)"
+          assert s.count(target)==1
+          p.write_text(s.replace(target, "var limited: float = maxf(value, ZOOM_MIN)"))
+          PY
+          set +e
+          timeout 45s "$GODOT" --headless --path game --script res://tests/farm_iso_camera_runner.gd > "$RUNNER_TEMP/g451-bad.log" 2>&1
+          BAD_CODE="$?"
+          set -e
+          cp "$RUNNER_TEMP/g451-source-good.gd" "$SOURCE"
+          test "$BAD_CODE" -ne 0
+          grep -Eq 'MARICA_G451_CAMERA_FAIL|SCRIPT ERROR' "$RUNNER_TEMP/g451-bad.log"
+          timeout 45s "$GODOT" --headless --path game --script res://tests/farm_iso_camera_runner.gd 2>&1 | tee "$RUNNER_TEMP/g451-restored.log"
+          grep -Fq MARICA_G451_CAMERA_PASS "$RUNNER_TEMP/g451-restored.log"
+          git diff --exit-code -- "$SOURCE"
+          echo 'MARICA_G451_MUTATION_PASS good=pass bad=fail restore=pass'
+      - name: Upload G451 proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g451-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          path: ${{ runner.temp }}/g451-*.log
