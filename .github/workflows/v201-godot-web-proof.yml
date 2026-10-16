@@ -72,7 +72,11 @@ jobs:
           source = p.read_text(encoding="utf-8")
           target = 'run/main_scene="res://scenes/smoke.tscn"'
           assert source.count(target) == 1
-          p.write_text(source.replace(target, 'run/main_scene="res://scenes/arch_v201_web_probe.tscn"'))
+          p.write_text(
+              source.replace(target, 'run/main_scene="res://scenes/arch_v201_web_probe.tscn"')
+              + '\n[rendering]\nrenderer/rendering_method="gl_compatibility"\n'
+              + 'renderer/rendering_method.mobile="gl_compatibility"\n'
+          )
           PY
           cat > game/export_presets.cfg <<'EOF'
           [preset.0]
@@ -105,7 +109,9 @@ jobs:
           EOF
           mkdir -p "$RUNNER_TEMP/v201-godot-web"
           timeout 90s "$GODOT" --headless --editor --path game --import --quit 2>&1 | tee "$RUNNER_TEMP/v201-web-import.log"
-          timeout 180s "$GODOT" --headless --path game --export-release Web             "$RUNNER_TEMP/v201-godot-web/index.html" 2>&1 | tee "$RUNNER_TEMP/v201-web-export.log"
+          echo 'Installed Godot web templates:'
+          find "$HOME/.local/share/godot/export_templates/4.7.2.stable" -maxdepth 1 -type f -printf '%f %s bytes\n' | head -20
+          timeout 180s "$GODOT" --verbose --headless --path game --export-release Web "$RUNNER_TEMP/v201-godot-web/index.html" 2>&1 | tee "$RUNNER_TEMP/v201-web-export.log"
           test -s "$RUNNER_TEMP/v201-godot-web/index.html"
           find "$RUNNER_TEMP/v201-godot-web" -maxdepth 1 -type f -name '*.wasm' | grep -q .
           find "$RUNNER_TEMP/v201-godot-web" -maxdepth 1 -type f -name '*.pck' | grep -q .
