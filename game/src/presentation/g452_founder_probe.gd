@@ -80,5 +80,6 @@ func _render_diagnostic(founder_id: String) -> Dictionary:
     _founder = sprite
     return {"ok": true, "founder_id": founder_id, "soulbound": true, "visual_gate": "OPEN"}
 
+
 func get_founder_diagnostic() -> Sprite2D:
     return _founder
