@@ -103,3 +103,11 @@ DONE: optional `FarmIsoView` composes unchanged 12×10 G450 farm scene through a
 VERIFY: PR #120 HEAD `631d91bc0b495a6f0e3862543acc6c17ad55be0b` — G451, G450, Godot CI, G440–G447, Validate skills, ARCH V201, Web Preview and Roblox CI PASS. Independent G451 runner and zoom-clamp GOOD→BAD→RESTORE proof PASS. Nonrequired Roblox Behavioral skipped. No claim of device visual approval or production Game View.
 CONCURRENCY: isolated G451 claim closed by this separate docs change; ARTIST #77/#109 do not overlap; G450 farm source and G440–G447 retained.
 NEXT: G452 — integrate founding pet in bounded Godot runtime slice, preserving founder identity, Soulbound, G451 camera and independent ARTIST/CENA/LENTE acceptance gates.
+
+## SIGA — G452 founder diagnostic draft (2026-10-15)
+
+CLASSIFICATION: WATCH. Canonical `az1nn/marica-game`; master reference `bbfc4a24`. Current dedicated PR [#125](https://github.com/az1nn/marica-game/pull/125) is **draft**. Bounded technical implementation is complete (opt-in `g452_founder_probe.tscn`, strict saved soulbound G0 hydration, isometric position, no default game/persistence modifications), but **G452 full scene and V201/V201a gates remain OPEN**. Prior technical HEAD `f4c371b7`: 17 SUCCESS/1 optional SKIPPED; new docs commits require new exact-head verification. Active G452 source claim released; any future write must re-claim.
+
+CONCURRENCY: ARTIST #77 and ARCH #123/#124 are independent draft owners; no modification of PNG or other branches. No production merge or human runtime acceptance. The diagnostic uses an unchanged approved V4 concept via the test-copy PNG and does not certify distribution rights or final pixel-grid settings.
+
+NEXT SINGLE ACTION: **SIGA -> ARCH V201/V201a** complete real web/mobile measurement and frozen import/atlas/pixel-scale constraints, then dispatch independent CENA/LENTE/ARTIST review of S01-A01 V4. Do not merge #125/#77 or mark G452/visual tasks complete prematurely. G453 waits for compatible runtime boundaries.
