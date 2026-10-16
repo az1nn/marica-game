@@ -118,8 +118,7 @@ func _capture() -> void:
         "godot_version": Engine.get_version_info().get("string", "unknown"),
         "renderer": "gl_compatibility under Xvfb/Mesa",
         "no_art_approval": true,
-        "measurement_scope":
-        "Xvfb/Mesa wall-clock observation only; not mobile FPS, browser performance or a budget pass",
+        "measurement_scope": "Xvfb/Mesa 2-frame wall time; not mobile FPS or device/browser budget",
         "filter_comparisons": comparisons,
         "captures": evidence
     }
