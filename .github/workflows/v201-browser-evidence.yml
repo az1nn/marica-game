@@ -1,0 +1,118 @@
+name: V201 Browser Evidence (Proxy Only)
+
+on:
+  pull_request:
+    paths:
+      - 'tools/arch/v201_browser_profile.py'
+      - 'tools/arch/v201_browser_probe.html'
+      - '.github/workflows/v201-browser-evidence.yml'
+      - 'docs/arch/V201-V201A-BROWSER-DEVICE-GATES.md'
+      - 'game/assets/arch_probes/S01_A01_v4_original.png'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chrome-browser-proxy:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 14
+    steps:
+      - name: Checkout exact feature HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Guard exact commit and original PNG blob
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          test "$(git hash-object game/assets/arch_probes/S01_A01_v4_original.png)" = "da7806ebfcb051c8fd32ccdbad4760b7136f97dd"
+          sha256sum game/assets/arch_probes/S01_A01_v4_original.png
+          echo 'b8089122d323de7dc7c235604f752ce2643990a867aceaead60409d700e2aa7e  game/assets/arch_probes/S01_A01_v4_original.png' | sha256sum --check
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Pin and report browser/toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check "playwright==1.55.0"
+          command -v google-chrome
+          google-chrome --version
+          python3 -m py_compile tools/arch/v201_browser_profile.py
+
+      - name: Browser GOOD — real hosted Chrome with explicit mobile emulation
+        shell: bash
+        env:
+          EXACT_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/v201-browser"
+          python3 tools/arch/v201_browser_profile.py             --output "$RUNNER_TEMP/v201-browser" --head-sha "$EXACT_HEAD"             2>&1 | tee "$RUNNER_TEMP/v201-browser-good.log"
+          grep -Fq 'MARICA_V201_CHROME_PROXY_PASS images=6' "$RUNNER_TEMP/v201-browser-good.log"
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root = Path(os.environ["RUNNER_TEMP"]) / "v201-browser"
+          data = json.loads((root / "manifest.json").read_text())
+          assert data["head_sha"] == os.environ["EXACT_HEAD"]
+          assert data["real_desktop_chromium_executed"] is True
+          assert data["mobile_viewport_touch_emulation_executed"] is True
+          assert data["physical_android_or_ios_executed"] is False
+          assert data["godot_web_export_executed"] is False
+          assert data["real_device_fps_certified"] is False
+          assert data["art_or_production_acceptance"] == "NOT_EVALUATED"
+          assert len(data["captures"]) == 6
+          for sample in data["captures"]:
+              image = root / sample["file"]
+              assert hashlib.sha256(image.read_bytes()).hexdigest() == sample["png_sha256"]
+              assert sample["real_mobile_hardware"] is False
+              assert sample["metrics"]["raf_samples"] == 89
+              assert sample["metrics"]["raf_p95_ms"] > 0
+          print('MARICA_V201_CHROME_MANIFEST_PASS godot_web_export=false physical_mobile=false')
+          PY
+
+      - name: Browser sampling mutation — GOOD BAD RESTORE
+        shell: bash
+        env:
+          EXACT_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          HTML=tools/arch/v201_browser_probe.html
+          cp "$HTML" "$RUNNER_TEMP/v201-original.html"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("tools/arch/v201_browser_probe.html")
+          s=p.read_text()
+          target='ctx.imageSmoothingEnabled = sampling === "linear";'
+          assert s.count(target)==1
+          p.write_text(s.replace(target,'ctx.imageSmoothingEnabled = true;'))
+          PY
+          set +e
+          python3 tools/arch/v201_browser_profile.py             --output "$RUNNER_TEMP/v201-bad" --head-sha "$EXACT_HEAD"             > "$RUNNER_TEMP/v201-browser-bad.log" 2>&1
+          bad_exit=$?
+          set -e
+          cp "$RUNNER_TEMP/v201-original.html" "$HTML"
+          test "$bad_exit" -ne 0
+          grep -Fq 'Browser sampling control was not applied' "$RUNNER_TEMP/v201-browser-bad.log"
+          python3 tools/arch/v201_browser_profile.py             --output "$RUNNER_TEMP/v201-restored" --head-sha "$EXACT_HEAD"             2>&1 | tee "$RUNNER_TEMP/v201-browser-restored.log"
+          grep -Fq 'MARICA_V201_CHROME_PROXY_PASS images=6' "$RUNNER_TEMP/v201-browser-restored.log"
+          git diff --exit-code -- "$HTML"
+          echo 'MARICA_V201_CHROME_MUTATION_PASS good=pass bad=fail restore=pass'
+
+      - name: Upload browser screenshots, metrics and mutation logs (NOT real device)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v201-chrome-proxy-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          path: |
+            ${{ runner.temp }}/v201-browser/*.png
+            ${{ runner.temp }}/v201-browser/manifest.json
+            ${{ runner.temp }}/v201-browser-good.log
+            ${{ runner.temp }}/v201-browser-bad.log
+            ${{ runner.temp }}/v201-browser-restored.log
