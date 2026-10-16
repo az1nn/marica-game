@@ -21,11 +21,19 @@ func bind_from_store(path: String = "user://marica-save-v1.json") -> Dictionary:
 
 
 func bind_document(snapshot: Variant) -> Dictionary:
-    # Strictly validate and hydrate *before* touching the rendered scene.
+    # Validate and hydrate before changing the visual scene.
     var hydrated: Dictionary = PERSISTENCE.hydrate(snapshot)
     if not hydrated.get("ok", false):
         return {"ok": false, "error": "Founder document rejected"}
-    var pets: Dictionary = hydrated["pets"]
+    var selected: Dictionary = _select_founder(hydrated["pets"])
+    if not selected.get("ok", false):
+        return selected
+    if FileAccess.get_sha256("res://assets/arch_probes/S01_A01_v4_original.png") != SOURCE_SHA256:
+        return {"ok": false, "error": "Approved concept source drift"}
+    return _render_diagnostic(selected["founder_id"])
+
+
+func _select_founder(pets: Dictionary) -> Dictionary:
     var founder_id: String = ""
     for pet_id in pets:
         var pet: MaricaPet = pets[pet_id]
@@ -42,9 +50,10 @@ func bind_document(snapshot: Variant) -> Dictionary:
         founder_id = pet_id
     if founder_id.is_empty():
         return {"ok": false, "error": "No soulbound founder in profile"}
-    if FileAccess.get_sha256("res://assets/arch_probes/S01_A01_v4_original.png") != SOURCE_SHA256:
-        return {"ok": false, "error": "Approved concept source drift"}
+    return {"ok": true, "founder_id": founder_id}
 
+
+func _render_diagnostic(founder_id: String) -> Dictionary:
     var farm_view: Node2D = get_node_or_null("FarmIsoView") as Node2D
     if farm_view == null:
         return {"ok": false, "error": "Isometric farm view unavailable"}
@@ -70,7 +79,6 @@ func bind_document(snapshot: Variant) -> Dictionary:
     sprite.set_meta(&"visual_gate", "UNREVIEWED")
     _founder = sprite
     return {"ok": true, "founder_id": founder_id, "soulbound": true, "visual_gate": "OPEN"}
-
 
 func get_founder_diagnostic() -> Sprite2D:
     return _founder
