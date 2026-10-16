@@ -168,8 +168,9 @@ func _capture_one(config: Dictionary) -> Dictionary:
 
     var baseline: Color = image.get_pixel(4, 4)
     var informative: int = 0
-    for y in range(4, size.y, 48):
-        for x in range(4, size.x, 48):
+    # Dense enough to find content at 0.5x without mistaking a small sprite for a blank frame.
+    for y in range(4, size.y, 16):
+        for x in range(4, size.x, 16):
             if image.get_pixel(x, y) != baseline:
                 informative += 1
     if informative < 8:
