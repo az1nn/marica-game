@@ -59,7 +59,7 @@ jobs:
             "$GODOT" --rendering-driver opengl3 --rendering-method gl_compatibility \
             --path game --script res://tests/v201_capture_runner.gd \
             2>&1 | tee "$RUNNER_TEMP/v201-render.log"
-          grep -Fq "MARICA_V201_RENDER_CAPTURE_PASS images=4 status=UNREVIEWED" "$RUNNER_TEMP/v201-render.log"
+          grep -Fq "MARICA_V201_RENDER_CAPTURE_PASS images=8 status=UNREVIEWED" "$RUNNER_TEMP/v201-render.log"
           python3 - <<'PY'
           import json
           import os
@@ -69,11 +69,41 @@ jobs:
           assert data["status"] == "TECHNICAL_PROBE_ONLY"
           assert data["no_art_approval"] is True
           assert data["head_sha"] == os.environ["V201_HEAD_SHA"]
-          assert len(data["captures"]) == 4
+          assert len(data["captures"]) == 8
+          assert data["no_art_approval"] is True
+          assert "not mobile FPS" in data["measurement_scope"]
+          expected = {
+              "mobile-dark-nearest": (432, 768, 1.0, "nearest"),
+              "mobile-light-nearest": (432, 768, 1.0, "nearest"),
+              "desktop-dark-nearest": (1280, 960, 2.0, "nearest"),
+              "desktop-dark-linear-control": (1280, 960, 2.0, "linear"),
+              "mobile-terrain-half-nearest": (432, 768, 0.5, "nearest"),
+              "mobile-dark-fractional-nearest": (432, 768, 1.25, "nearest"),
+              "mobile-dark-fractional-linear-control": (432, 768, 1.25, "linear"),
+              "desktop-light-integer-nearest": (1280, 960, 2.0, "nearest"),
+          }
+          import hashlib
+          assert {c["name"] for c in data["captures"]} == set(expected)
+          png_hashes = set()
           for c in data["captures"]:
-              assert (root / c["file"]).stat().st_size > 2048
+              path = root / c["file"]
+              assert path.stat().st_size > 2048
               assert c["art_acceptance"] == "NOT_EVALUATED"
-          print("MARICA_V201_MANIFEST_PASS")
+              assert c["mobile_device_verified"] is False
+              assert c["render_wall_ms_is_fps"] is False
+              assert c["render_wall_ms"] >= 0
+              w, h, scale, sampling = expected[c["name"]]
+              assert c["viewport"] == [w, h]
+              assert c["scale"] == scale and c["sampling"] == sampling
+              assert c["projected_sprite_width_px"] == 344 * scale
+              digest = hashlib.sha256(path.read_bytes()).hexdigest()
+              assert digest == c["png_sha256"], c["name"]
+              png_hashes.add(digest)
+          assert len(png_hashes) >= 6, "Raster variants unexpectedly identical"
+          pairs = data["filter_comparisons"]
+          assert len(pairs) == 2
+          assert all(p["ok"] and p["different_grid_samples"] > 10 for p in pairs)
+          print("MARICA_V201_MANIFEST_PASS captures=8 filter_pairs=2 original=preserved")
           PY
 
       - name: Upload exact-head PNG evidence
