@@ -20,6 +20,14 @@ Scenarios: 390×844 DPR2 at 0.5× nearest and 1.25× nearest/linear on dark back
 
 **Scope boundary:** Actual Chrome/browser Canvas2D API is exercised; mobile *viewport and touch are emulated on desktop*, not a physical phone. This is **not Godot's WebAssembly/web export**, not the in-game farm renderer, not a real Android/iOS GPU, not a Safari test and not a frame-budget pass. RAF intervals measure this proxy in a variable hosted CI environment. Neither GPU occupancy nor memory peak nor game-loop update time is measured. No screenshots are ARTIST-approved without independent LENTE/ARTIST review.
 
+## 2b. Actual Godot WebAssembly export evidence (separate from the Canvas proxy)
+
+A second, independently checkable lane is provided by `.github/workflows/v201-godot-web-proof.yml`. It downloads the **official Godot 4.7.2 binary and export templates with fixed SHA-256**, and temporarily switches only the CI checkout's `game/project.godot` to the opt-in `game/scenes/arch_v201_web_probe.tscn`. It then restores the unchanged committed project file; no production default scene or committed export preset changes.
+
+The scene instantiates the existing G450/G451 farm/camera and a source-preserving, small founder V4 Sprite2D. The Godot Web build itself raises a JavaScript ready marker through `JavaScriptBridge` when that scene loads. `tools/arch/v201_godot_web_profile.py` launches the resulting **actual Godot WebAssembly/WebGL canvas** in Linux-hosted Chrome for desktop and mobile-emulated viewports, requires the *engine runtime marker* (not merely a downloaded HTML shell), records two screenshots and 89 RAF intervals per browser case, and hashes the immutable exported build files plus captures. It explicitly records physical mobile=false and does not call browser RAF a Godot engine frame-time budget.
+
+**Evidence status:** source/CI authored, NOT measured until the exact candidate HEAD's `V201 Godot Web Export Proof` workflow completes green. A red workflow must be analyzed; this file must not be interpreted as a successful Godot Web export by itself. Even green on hosted Chrome does not certify physical Android/iOS, Safari or the full G452 gameplay scene.
+
 ## 3. Candidate import/filter contract (source-preserving; production decisions partially open)
 
 | Area | Bounded ARCH policy / verification | Production gate |
@@ -43,7 +51,7 @@ The current uncompressed RGBA8 footprint of a **single** 344 × 378 texture is 5
 | Godot editor/headless import | VERIFIED via PR #88 | Preserve original source |
 | Godot software OpenGL desktop simulated viewports | VERIFIED technical-only via PR #97 and #124 | LENTE screen comparison and exported scene |
 | Real Chromium Canvas2D proxy | CI-instrumented, require matching exact-head successful run | Archive manifest, per-frame timing and screenshot hashes |
-| **Godot web export in Chromium** | **MISSING** | Pin official export templates, export exact candidate scene/build, run Chromium scene headlessly, store frame timings/errors/captures |
+| **Godot web export in Chromium** | **CI implementation awaiting exact-head result** | Verify official-template hash, actual Godot WebAssembly ready marker, exported build SHA, screenshots and browser RAF (not engine FPS) |
 | **Physical Android Chrome** | **CAPABILITY_BLOCKED** | Real handset/version/GPU, exported Godot web build, portrait/touch FPS p50/p95, long-session memory/frame stability and screenshots |
 | **Physical iOS Safari** | **CAPABILITY_BLOCKED** | Real iPhone/iOS/Safari test on same source/export SHA with compositor/texture behavior and screenshots |
 | **Actual final pixel-grid/atlas and rights** | **UNAPPROVED** | ARCH policy with ARTIST visual review, publisher rights confirmation and texture/atlas profile |
