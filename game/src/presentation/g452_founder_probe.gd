@@ -42,9 +42,7 @@ func bind_document(snapshot: Variant) -> Dictionary:
         founder_id = pet_id
     if founder_id.is_empty():
         return {"ok": false, "error": "No soulbound founder in profile"}
-    if FileAccess.get_sha256(
-        "res://assets/arch_probes/S01_A01_v4_original.png"
-    ) != SOURCE_SHA256:
+    if FileAccess.get_sha256("res://assets/arch_probes/S01_A01_v4_original.png") != SOURCE_SHA256:
         return {"ok": false, "error": "Approved concept source drift"}
 
     var farm_view: Node2D = get_node_or_null("FarmIsoView") as Node2D
@@ -63,9 +61,7 @@ func bind_document(snapshot: Variant) -> Dictionary:
     sprite.offset = Vector2(0, -182)
     sprite.scale = Vector2.ONE * SPRITE_SCALE
     var center: Vector2 = (
-        Vector2(float(LAYOUT.GRID_WIDTH), float(LAYOUT.GRID_HEIGHT))
-        * float(LAYOUT.TILE_SIZE)
-        * 0.5
+        Vector2(float(LAYOUT.GRID_WIDTH), float(LAYOUT.GRID_HEIGHT)) * float(LAYOUT.TILE_SIZE) * 0.5
     )
     sprite.position = world.transform * center
     farm_view.add_child(sprite)
