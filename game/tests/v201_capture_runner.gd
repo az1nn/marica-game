@@ -20,7 +20,10 @@ func _capture() -> void:
         quit(1)
         return
 
-    if FileAccess.get_sha256("res://assets/arch_probes/S01_A01_v4_original.png") != "b8089122d323de7dc7c235604f752ce2643990a867aceaead60409d700e2aa7e":
+    if (
+        FileAccess.get_sha256("res://assets/arch_probes/S01_A01_v4_original.png")
+        != "b8089122d323de7dc7c235604f752ce2643990a867aceaead60409d700e2aa7e"
+    ):
         push_error("V201 original approved source SHA-256 changed")
         quit(1)
         return
@@ -115,7 +118,8 @@ func _capture() -> void:
         "godot_version": Engine.get_version_info().get("string", "unknown"),
         "renderer": "gl_compatibility under Xvfb/Mesa",
         "no_art_approval": true,
-        "measurement_scope": "Xvfb/Mesa wall-clock observation only; not mobile FPS, browser performance or a budget pass",
+        "measurement_scope":
+        "Xvfb/Mesa wall-clock observation only; not mobile FPS, browser performance or a budget pass",
         "filter_comparisons": comparisons,
         "captures": evidence
     }
