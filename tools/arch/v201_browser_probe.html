@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ARCH V201 browser raster evidence — non-production</title>
+<style>
+  html,body{margin:0;padding:0;overflow:hidden;background:#14242b}
+  canvas{display:block;image-rendering:pixelated}
+</style>
+</head>
+<body>
+<canvas id="evidence" aria-label="Non-production founder V4 browser raster probe"></canvas>
+<script>
+"use strict";
+const canvas = document.getElementById("evidence");
+const ctx = canvas.getContext("2d", {alpha: false, willReadFrequently: true});
+const original = new Image();
+original.src = "/game/assets/arch_probes/S01_A01_v4_original.png";
+const ready = original.decode();
+
+function paint(options, shift = 0) {
+  const {width, height, scale, sampling, background} = options;
+  canvas.width = width;
+  canvas.height = height;
+  ctx.imageSmoothingEnabled = sampling === "linear";
+  ctx.imageSmoothingQuality = "high";
+  ctx.fillStyle = background;
+  ctx.fillRect(0, 0, width, height);
+  const projectedWidth = original.naturalWidth * scale;
+  const projectedHeight = original.naturalHeight * scale;
+  const x = (width - projectedWidth) / 2 + shift;
+  const y = (height - projectedHeight) / 2;
+  ctx.drawImage(original, x, y, projectedWidth, projectedHeight);
+}
+
+function informativeSamples(options) {
+  const {width, height} = options;
+  const d = ctx.getImageData(0, 0, width, height).data;
+  let different = 0;
+  const reference = [d[0], d[1], d[2]];
+  for (let y = 8; y < height; y += 16) {
+    for (let x = 8; x < width; x += 16) {
+      const offset = (y * width + x) * 4;
+      if (Math.abs(d[offset] - reference[0]) > 8 ||
+          Math.abs(d[offset + 1] - reference[1]) > 8 ||
+          Math.abs(d[offset + 2] - reference[2]) > 8) {
+        different += 1;
+      }
+    }
+  }
+  return different;
+}
+
+async function run(options) {
+  await ready;
+  if (original.naturalWidth !== 344 || original.naturalHeight !== 378) {
+    throw new Error("V201 source image dimensions changed");
+  }
+  paint(options);
+  const informative = informativeSamples(options);
+  if (informative < 8) {
+    throw new Error("V201 browser rendered image is empty/flat");
+  }
+  const durations = [];
+  let previous = null;
+  for (let i = 0; i < 90; i += 1) {
+    await new Promise(resolve => requestAnimationFrame(now => {
+      if (previous !== null) durations.push(now - previous);
+      previous = now;
+      paint(options, i % 2 === 0 ? 0 : 0.5);
+      resolve();
+    }));
+  }
+  paint(options);
+  const sorted = durations.slice().sort((a,b) => a-b);
+  const quantile = p => sorted[Math.floor((sorted.length - 1) * p)] || 0;
+  return {
+    runtime: "Chrome Canvas2D proxy — NOT a Godot web build",
+    source_pixels: [original.naturalWidth, original.naturalHeight],
+    projected_sprite_css_pixels: [344 * options.scale, 378 * options.scale],
+    informative_grid_samples: informative,
+    raf_samples: sorted.length,
+    raf_p50_ms: quantile(0.50),
+    raf_p95_ms: quantile(0.95),
+    raf_gaps_above_34_ms: durations.filter(n => n > 34).length,
+    canvas_image_smoothing: ctx.imageSmoothingEnabled,
+    browser_user_agent: navigator.userAgent,
+    touch_emulation: navigator.maxTouchPoints > 0
+  };
+}
+window.v201 = {ready, paint, run};
+</script>
+</body>
+</html>
