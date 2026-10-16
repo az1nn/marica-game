@@ -88,9 +88,7 @@ func _verify() -> bool:
     # Persisted profile is loaded read-only; never auto-creates a founder.
     var stored: Dictionary = fixture.duplicate(true)
     stored["revision"] = 0
-    var save: Dictionary = STORE.new(PATH).save(
-        stored, -1, func() -> float: return 1791980000.0
-    )
+    var save: Dictionary = STORE.new(PATH).save(stored, -1, func() -> float: return 1791980000.0)
     if not save.get("ok", false):
         ok = false
     if not view.bind_from_store(PATH).get("ok", false):
