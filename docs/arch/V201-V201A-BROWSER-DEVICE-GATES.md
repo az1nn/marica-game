@@ -1,6 +1,6 @@
 # ARCH V201/V201a — browser/device evidence and conditional import contract
 
-**Status:** TECHNICAL_WORK_IN_PROGRESS / CAPABILITY_BLOCKED for physical-device profiling and Godot web export. This is not final V201/V201a sign-off, not shipping art, not a release build and not ARTIST approval.
+**Status:** GODOT_WEB_PROBE_VERIFIED / CAPABILITY_BLOCKED for physical Android/iOS profiling / V201/V201a NOT FINAL. This is not final V201/V201a sign-off, not shipping art, not a release build and not ARTIST approval.
 **Task:** SPEC-005 V201 and V201a; related downstream SPEC-005 V202–V205 and SPEC-004 G452/G458 remain OPEN.
 **Owner:** SIGA dispatches ARCH, then CENA → LENTE → ARTIST under separate gate authority.
 
@@ -26,7 +26,13 @@ A second, independently checkable lane is provided by `.github/workflows/v201-go
 
 The scene instantiates the existing G450/G451 farm/camera and a source-preserving, small founder V4 Sprite2D. The Godot Web build itself raises a JavaScript ready marker through `JavaScriptBridge` when that scene loads. `tools/arch/v201_godot_web_profile.py` launches the resulting **actual Godot WebAssembly/WebGL canvas** in Linux-hosted Chrome for desktop and mobile-emulated viewports, requires the *engine runtime marker* (not merely a downloaded HTML shell), records two screenshots and 89 RAF intervals per browser case, and hashes the immutable exported build files plus captures. It explicitly records physical mobile=false and does not call browser RAF a Godot engine frame-time budget.
 
-**Evidence status:** source/CI authored, NOT measured until the exact candidate HEAD's `V201 Godot Web Export Proof` workflow completes green. A red workflow must be analyzed; this file must not be interpreted as a successful Godot Web export by itself. Even green on hosted Chrome does not certify physical Android/iOS, Safari or the full G452 gameplay scene.
+**Verified bounded result (2026-10-15):** [Godot Web Export Proof run 38836236086](https://github.com/az1nn/marica-game/actions/runs/38836236086) **PASS** on code HEAD `d6c9158f0cb459706a889f93a05257942274515f`; [exact-head exported Web build, two real-engine browser PNGs and JSON hashes](https://github.com/az1nn/marica-game/actions/runs/38836236086/artifacts/12019387500). Pinning Godot binary SHA and official export templates SHA `f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011` was verified. The temporary export uses Godot Compatibility renderer (WebGL 2) and disables mobile ETC2/ASTC VRAM compression only in the **transient export preset**, because the project's importer does not advertise that compression support. The actual Godot script emitted its JavaScript ready marker in Chrome 154.
+
+Browser/engine evidence manifest records **desktop 1280×960 DPR1 p50 33.3 ms / p95 50.0 ms** (13/89 RAF gaps >34 ms) and **mobile-emulated 390×844 DPR2 p50 33.4 ms / p95 50.1 ms** (28/89 RAF gaps >34 ms). There were zero JavaScript page exceptions in these two tests. These are hosted Linux Chrome/SwiftShader RAF observations, **not** instrumented Godot engine update timings, physical mobile throughput, a 60-FPS pass or final frame budget.
+
+The exported `index.wasm` is **39,514,754 bytes** and `index.pck` is **472,480 bytes** (uncompressed file sizes; not a measured network payload); the artifact provides each output file's SHA-256. The desktop image clearly shows the tricolor puppy against the G450/G451 diamond farm debug geometry. The emulated portrait image leaves substantial unused vertical space around a relatively small scene/pet. This is an **ARCH preliminary inspection / mobile composition risk**, **not** an independent LENTE quality verdict and not ARTIST runtime acceptance. A different SHA after this documentation update must rerun applicable exact-head gates; old CI is historical only.
+
+Despite this successful real-engine Web export, **physical Android/iOS, native GPU/frame-budget, iOS Safari and production G452 pet/HUD remain OPEN**.
 
 ## 3. Candidate import/filter contract (source-preserving; production decisions partially open)
 
@@ -51,7 +57,7 @@ The current uncompressed RGBA8 footprint of a **single** 344 × 378 texture is 5
 | Godot editor/headless import | VERIFIED via PR #88 | Preserve original source |
 | Godot software OpenGL desktop simulated viewports | VERIFIED technical-only via PR #97 and #124 | LENTE screen comparison and exported scene |
 | Real Chromium Canvas2D proxy | CI-instrumented, require matching exact-head successful run | Archive manifest, per-frame timing and screenshot hashes |
-| **Godot web export in Chromium** | **CI implementation awaiting exact-head result** | Verify official-template hash, actual Godot WebAssembly ready marker, exported build SHA, screenshots and browser RAF (not engine FPS) |
+| **Godot web export in Chromium** | **VERIFIED technical on d6c9158f; not production** | Persist export SHA/captures; fix portrait whitespace and investigate hosted software 50-ms RAF before any performance budget |
 | **Physical Android Chrome** | **CAPABILITY_BLOCKED** | Real handset/version/GPU, exported Godot web build, portrait/touch FPS p50/p95, long-session memory/frame stability and screenshots |
 | **Physical iOS Safari** | **CAPABILITY_BLOCKED** | Real iPhone/iOS/Safari test on same source/export SHA with compositor/texture behavior and screenshots |
 | **Actual final pixel-grid/atlas and rights** | **UNAPPROVED** | ARCH policy with ARTIST visual review, publisher rights confirmation and texture/atlas profile |
