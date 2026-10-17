@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/presentation/v203_portrait_preview.gd" id="1_preview"]
+[ext_resource type="PackedScene" path="res://scenes/farm_iso_view.tscn" id="2_farm"]
+[ext_resource type="Texture2D" path="res://assets/arch_probes/S01_A01_v4_original.png" id="3_founder"]
+
+[node name="V203PortraitPreview" type="Node2D"]
+script = ExtResource("1_preview")
+
+[node name="FarmIsoView" parent="." instance=ExtResource("2_farm")]
+
+[node name="FounderV4TestCopy" type="Sprite2D" parent="FarmIsoView"]
+position = Vector2(22.6274, 124.4507)
+scale = Vector2(0.25, 0.25)
+texture_filter = 1
+texture = ExtResource("3_founder")
+offset = Vector2(0, -182)
