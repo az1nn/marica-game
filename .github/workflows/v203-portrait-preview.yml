@@ -1,0 +1,125 @@
+name: V203 CENA Portrait Preview
+
+on:
+  pull_request:
+    paths:
+      - 'game/scenes/v203_portrait_preview.tscn'
+      - 'game/src/presentation/v203_portrait_preview.gd'
+      - 'game/tests/v203_portrait_preview_runner.gd'
+      - '.github/workflows/v203-portrait-preview.yml'
+      - 'docs/cena/V203-PORTRAIT-PREVIEW.md'
+      - '.siga/session-claim-v203-portrait-preview-20261017-gpt6.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  portrait-preview:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - name: Exact-head checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Pinned source and engine
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          test "$(git hash-object game/assets/arch_probes/S01_A01_v4_original.png)" = "da7806ebfcb051c8fd32ccdbad4760b7136f97dd"
+          echo "b8089122d323de7dc7c235604f752ce2643990a867aceaead60409d700e2aa7e  game/assets/arch_probes/S01_A01_v4_original.png" | sha256sum --check
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri libgl1
+          curl --fail --location --retry 3 --retry-all-errors \
+            -o "$RUNNER_TEMP/godot.zip" \
+            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+      - name: Import
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          timeout 90s "$GODOT" --headless --editor --path game --import --quit 2>&1 | tee "$RUNNER_TEMP/v203-import.log"
+      - name: GOOD in-engine portrait and desktop screenshots
+        shell: bash
+        env:
+          V203_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          export V203_CAPTURE_DIR="$RUNNER_TEMP/v203-captures"
+          mkdir -p "$V203_CAPTURE_DIR"
+          timeout 120s xvfb-run -a -s "-screen 0 1600x1100x24" \
+            "$GODOT" --rendering-driver opengl3 --rendering-method gl_compatibility \
+            --path game --script res://tests/v203_portrait_preview_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/v203-good.log"
+          grep -Fq "MARICA_V203_PREVIEW_PASS captures=2 status=UNREVIEWED" "$RUNNER_TEMP/v203-good.log"
+          python3 - <<'PY'
+          import json, os, hashlib
+          from pathlib import Path
+          root=Path(os.environ["V203_CAPTURE_DIR"])
+          evidence=json.loads((root/"manifest.json").read_text())
+          assert evidence["head_sha"]==os.environ["V203_HEAD_SHA"]
+          assert evidence["status"]=="CENA_TECHNICAL_PREVIEW_ONLY"
+          assert evidence["physical_mobile_verified"] is False
+          assert evidence["art_acceptance"]=="NOT_EVALUATED"
+          assert len(evidence["captures"])==2
+          for item in evidence["captures"]:
+              binary=(root/item["file"]).read_bytes()
+              assert binary[:4] == bytes.fromhex("89504e47") and len(binary)>2048
+              assert item["visual_gate"]=="UNREVIEWED"
+              print(item["file"],hashlib.sha256(binary).hexdigest())
+          assert evidence["captures"][0]["zoom"] > evidence["captures"][0]["g451_fit_zoom"]*1.5
+          print("MARICA_V203_EXACT_HEAD_MANIFEST_PASS")
+          PY
+      - name: GOOD-BAD-RESTORE portrait camera mutation
+        shell: bash
+        env:
+          V203_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          export V203_CAPTURE_DIR="$RUNNER_TEMP/v203-captures"
+          SOURCE=game/src/presentation/v203_portrait_preview.gd
+          cp "$SOURCE" "$RUNNER_TEMP/v203-good-source.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("game/src/presentation/v203_portrait_preview.gd")
+          source=p.read_text()
+          target="const PORTRAIT_FOCUS_WIDTH: float = 220.0"
+          assert source.count(target)==1
+          p.write_text(source.replace(target,"const PORTRAIT_FOCUS_WIDTH: float = 900.0"))
+          PY
+          set +e
+          timeout 90s xvfb-run -a -s "-screen 0 1600x1100x24" \
+            "$GODOT" --rendering-driver opengl3 --rendering-method gl_compatibility \
+            --path game --script res://tests/v203_portrait_preview_runner.gd \
+            > "$RUNNER_TEMP/v203-bad.log" 2>&1
+          BAD_CODE="$?"
+          set -e
+          cp "$RUNNER_TEMP/v203-good-source.gd" "$SOURCE"
+          test "$BAD_CODE" -ne 0
+          grep -Eq 'MARICA_V203_FAIL|SCRIPT ERROR' "$RUNNER_TEMP/v203-bad.log"
+          timeout 90s xvfb-run -a -s "-screen 0 1600x1100x24" \
+            "$GODOT" --rendering-driver opengl3 --rendering-method gl_compatibility \
+            --path game --script res://tests/v203_portrait_preview_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/v203-restore.log"
+          grep -Fq MARICA_V203_PREVIEW_PASS "$RUNNER_TEMP/v203-restore.log"
+          git diff --exit-code -- "$SOURCE"
+          echo MARICA_V203_MUTATION_PASS
+      - name: Upload exact-head CENA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v203-cena-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          path: |
+            ${{ runner.temp }}/v203-captures/*.png
+            ${{ runner.temp }}/v203-captures/manifest.json
+            ${{ runner.temp }}/v203-*.log
