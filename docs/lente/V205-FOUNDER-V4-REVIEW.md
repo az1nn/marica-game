@@ -40,3 +40,13 @@ Broken: portrait lateral crop and vertical void; desktop margin; no player-facin
 Good: preserved original dog, no evidence of binary modification; honest technical scene.
 Route: LENTE-V205-001/002/003 → CENA; LENTE-V205-004 → SIGA/ARCH/GODOT.
 Next: CENA revise responsive scene/camera contract, then LENTE independent exact-head A/B + ARCH gates; keep all PRs draft.
+
+## Verified independent exact-HEAD run (2026-10-17, Brasília)
+
+**Technically verified implementation commit:** `625c6b70fa13956de4dc762cf2963deabb17644d`. [LENTE workflow #39077259739](https://github.com/az1nn/marica-game/actions/runs/39077259739) **SUCCESS**; [versioned screenshot/run artifact #12117761281](https://github.com/az1nn/marica-game/actions/runs/39077259739/artifacts/12117761281), with seven original Godot 4.7.2 Xvfb/Mesa PNGs, per-file hashes, machine-readable `analysis.json`, LENTE run `artifacts/lente/runs/` and four findings. Exact-HEAD **16 SUCCESS / 1 optional SKIPPED / zero failed/pending** including Godot CI/G415 style, Validate skills, G440–G447, G450/G451, Web Preview and LENTE V205 A/B.
+
+**Independent verified measurements at that exact commit:** dark portrait CENA 390×844: non-background pixel fraction 0.39692; bounds x=0..389, y=204..639 (inclusive); 204 blank pixels top and bottom. Baseline G451 portrait: 0.09333 coverage; bounds x=20..369, y=334..509 (inclusive); 334 blank pixels top/bottom. Dark desktop 1280×960: 0.20099 coverage, bounds x=141..1138, y=231..728. RGB output background is `#4d4d4d`, and light control `#eadfcb` was corrected to use a fixed CanvasLayer independent of the moving camera. Nearest-vs-linear A/B differs by **3,865 pixels portrait / 7,638 pixels desktop** under analyzer threshold >2 grayscale intensity; the control validates filter sensitivity only, not intended art quality.
+
+**LENTE composition verdict: REVISE.** Zoom fixes founder size relative to G451 but crops farm edges and leaves extensive unused vertical canvas. No actual HUD, physical-device performance, foreground Y-sort, contact shadow, full G452 hydration or Godot WebGL export of this **new CENA sample** were shown. The accepted original S01-A01 V4 isolated concept is unaffected. All final runtime/production gates remain OPEN.
+
+This report update is a **new documentation commit after the validated implementation HEAD**. All required exact-head workflows must re-run on the final documentation/claim-closeout SHA before marking technical review CI complete. No merge or Spec Kit checkbox closure is authorized by green technical checks.
