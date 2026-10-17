@@ -124,11 +124,15 @@ func _capture(config: Dictionary, output_dir: String) -> Dictionary:
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(viewport)
 
+	# Background must remain fixed to the viewport, not transformed by Camera2D.
+	var background_layer: CanvasLayer = CanvasLayer.new()
+	background_layer.layer = -10
+	viewport.add_child(background_layer)
 	var backdrop: ColorRect = ColorRect.new()
 	backdrop.color = Color(str(config["background"]))
 	backdrop.size = Vector2(size)
 	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	viewport.add_child(backdrop)
+	background_layer.add_child(backdrop)
 
 	var scene: Node2D = PREVIEW.instantiate()
 	viewport.add_child(scene)
