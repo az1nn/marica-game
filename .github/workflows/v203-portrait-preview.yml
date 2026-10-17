@@ -85,6 +85,7 @@ jobs:
         run: |
           set -euo pipefail
           GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          export V203_CAPTURE_DIR="$RUNNER_TEMP/v203-captures"
           SOURCE=game/src/presentation/v203_portrait_preview.gd
           cp "$SOURCE" "$RUNNER_TEMP/v203-good-source.gd"
           python3 - <<'PY'
