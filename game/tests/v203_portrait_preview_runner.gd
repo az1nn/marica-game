@@ -72,60 +72,58 @@ func _capture(config: Dictionary, output_dir: String) -> Dictionary:
     var preview: Node2D = PREVIEW.instantiate()
     viewport.add_child(preview)
     await process_frame
+
+    var problem: String = ""
     if not preview.apply_preview_size(Vector2(size)):
-        viewport.queue_free()
-        return {"ok": false, "error": "composition unavailable"}
+        problem = "composition unavailable"
     var camera: Camera2D = preview.get_node("FarmIsoView/Camera2D")
     var founder: Sprite2D = preview.get_node("FarmIsoView/FounderV4TestCopy")
     var zoom: float = camera.zoom.x
     var fitted: float = G451_CAMERA.fit_zoom_for_size(Vector2(size))
-    if not camera.is_current() or absf(camera.zoom.x - camera.zoom.y) > 0.0001:
+    if not problem.is_empty():
+        pass
+    elif not camera.is_current() or absf(camera.zoom.x - camera.zoom.y) > 0.0001:
+        problem = "invalid camera"
+    elif camera.position.distance_to(founder.position) > 0.001:
+        problem = "founder is off pivot"
+    elif founder.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
+        problem = "source not nearest"
+    elif founder.texture.get_size() != Vector2(344, 378):
+        problem = "unexpected source dimensions"
+    elif founder.offset != Vector2(0, -182) or founder.scale != Vector2(0.25, 0.25):
+        problem = "feet/source transform changed"
+    elif not founder.get_meta(&"diagnostic_only", false):
+        problem = "missing visual nonproduction gate"
+    elif config["portrait"] and (zoom < 1.6 or zoom < fitted * 1.5):
+        problem = "portrait remains undersized"
+    elif not config["portrait"] and absf(zoom - fitted) > 0.001:
+        problem = "desktop G451 fit drift"
+    if not problem.is_empty():
         viewport.queue_free()
-        return {"ok": false, "error": "invalid camera"}
-    if camera.position.distance_to(founder.position) > 0.001:
-        viewport.queue_free()
-        return {"ok": false, "error": "founder is off pivot"}
-    if founder.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
-        viewport.queue_free()
-        return {"ok": false, "error": "source not nearest"}
-    if founder.texture.get_size() != Vector2(344, 378):
-        viewport.queue_free()
-        return {"ok": false, "error": "unexpected source dimensions"}
-    if founder.offset != Vector2(0, -182) or founder.scale != Vector2(0.25, 0.25):
-        viewport.queue_free()
-        return {"ok": false, "error": "feet/source transform changed"}
-    if not founder.get_meta(&"diagnostic_only", false):
-        viewport.queue_free()
-        return {"ok": false, "error": "missing visual nonproduction gate"}
-    if config["portrait"]:
-        if zoom < 1.6 or zoom < fitted * 1.5:
-            viewport.queue_free()
-            return {"ok": false, "error": "portrait remains undersized"}
-    elif absf(zoom - fitted) > 0.001:
-        viewport.queue_free()
-        return {"ok": false, "error": "desktop G451 fit drift"}
+        return {"ok": false, "error": problem}
 
     await RenderingServer.frame_post_draw
     await RenderingServer.frame_post_draw
     var image: Image = viewport.get_texture().get_image()
-    if image.is_empty() or image.get_width() != size.x or image.get_height() != size.y:
-        viewport.queue_free()
-        return {"ok": false, "error": "missing in-engine frame"}
-    var background: Color = image.get_pixel(2, 2)
     var informative: int = 0
-    for y in range(4, size.y, 24):
-        for x in range(4, size.x, 24):
-            if image.get_pixel(x, y) != background:
-                informative += 1
-    if informative < 20:
+    if image.is_empty() or image.get_width() != size.x or image.get_height() != size.y:
+        problem = "missing in-engine frame"
+    else:
+        var background: Color = image.get_pixel(2, 2)
+        for y in range(4, size.y, 24):
+            for x in range(4, size.x, 24):
+                if image.get_pixel(x, y) != background:
+                    informative += 1
+        if informative < 20:
+            problem = "flat/blank Godot frame"
+        elif image.save_png(output_dir.path_join(str(config["name"]) + ".png")) != OK:
+            problem = "PNG write failed"
+    if not problem.is_empty():
         viewport.queue_free()
-        return {"ok": false, "error": "flat/blank Godot frame"}
-    var filename: String = str(config["name"]) + ".png"
-    if image.save_png(output_dir.path_join(filename)) != OK:
-        viewport.queue_free()
-        return {"ok": false, "error": "PNG write failed"}
+        return {"ok": false, "error": problem}
+
     var capture: Dictionary = {
-        "file": filename,
+        "file": str(config["name"]) + ".png",
         "viewport": [size.x, size.y],
         "nearest_sampling": true,
         "zoom": zoom,
