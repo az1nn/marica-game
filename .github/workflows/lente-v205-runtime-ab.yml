@@ -1,0 +1,115 @@
+name: LENTE V205 Founder Runtime AB
+on:
+  pull_request:
+    paths:
+      - 'game/tests/lente_v205_capture_runner.gd'
+      - 'tools/lente/v205_analyze.py'
+      - '.github/workflows/lente-v205-runtime-ab.yml'
+      - '.siga/session-claim-lente-v205-20261017-gpt6.md'
+      - 'docs/lente/V205-FOUNDER-V4-REVIEW.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  founder-visual:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 17
+    steps:
+      - name: Checkout exact LENTE head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Source/head and pinned toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          test "$(git hash-object game/assets/arch_probes/S01_A01_v4_original.png)" = da7806ebfcb051c8fd32ccdbad4760b7136f97dd
+          echo "b8089122d323de7dc7c235604f752ce2643990a867aceaead60409d700e2aa7e  game/assets/arch_probes/S01_A01_v4_original.png" | sha256sum --check
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri libgl1
+          python3 -m pip install --disable-pip-version-check --user "Pillow==11.3.0"
+          curl --fail --location --retry 3 --retry-all-errors -o "$RUNNER_TEMP/godot.zip" \
+            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+      - name: Import project
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 90s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --editor --path game --import --quit \
+            2>&1 | tee "$RUNNER_TEMP/lente-import.log"
+      - name: Fresh independent real Godot capture
+        shell: bash
+        env:
+          LENTE_V205_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          export LENTE_V205_CAPTURE_DIR="$RUNNER_TEMP/lente-v205-captures"
+          mkdir -p "$LENTE_V205_CAPTURE_DIR"
+          timeout 120s xvfb-run -a -s "-screen 0 1600x1100x24" \
+            "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --rendering-driver opengl3 --rendering-method gl_compatibility \
+            --path game --script res://tests/lente_v205_capture_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/lente-capture.log"
+          grep -Fq "MARICA_LENTE_V205_CAPTURE_PASS frames=7 status=REVISE" "$RUNNER_TEMP/lente-capture.log"
+      - name: Visual metrics, A/B negative controls and versioned LENTE run
+        shell: bash
+        env:
+          LENTE_V205_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          CAP="$RUNNER_TEMP/lente-v205-captures"
+          OUT="$RUNNER_TEMP/lente-v205-analysis"
+          python3 tools/lente/v205_analyze.py \
+            --manifest "$CAP/manifest.json" --out "$OUT" --head "$LENTE_V205_HEAD_SHA" \
+            | tee "$RUNNER_TEMP/lente-analysis.log"
+          grep -Fq MARICA_LENTE_V205_ANALYSIS_PASS "$RUNNER_TEMP/lente-analysis.log"
+          RUN_DIR="$(python3 tools/lente/lente.py --root . start \
+            --head "$LENTE_V205_HEAD_SHA" --scope "SPEC-005 V205 CENA 128")"
+          python3 - "$RUN_DIR" "$CAP" "$OUT/analysis.json" <<'PY'
+          import json
+          import subprocess
+          import sys
+          from pathlib import Path
+          run, captures, analysis_path = sys.argv[1:]
+          evidence = json.loads(Path(analysis_path).read_text())
+          for frame in sorted(Path(captures).glob("*.png")):
+              subprocess.run([
+                  "python3", "tools/lente/lente.py", "record", "--run", run,
+                  "--kind", "scenes", "--file", str(frame), "--target",
+                  frame.stem, "--metadata", json.dumps({
+                      "head": evidence["lente_exact_head"], "renderer": evidence["renderer"],
+                      "physical_mobile": False, "art_runtime": "NOT_EVALUATED"
+                  })
+              ], check=True)
+          for finding in evidence["findings"]:
+              subprocess.run([
+                  "python3", "tools/lente/lente.py", "finding", "--run", run,
+                  "--id", finding["id"], "--severity", finding["severity"],
+                  "--owner", finding["owner"], "--observation", finding["observation"],
+                  "--next", finding["acceptance"]
+              ], check=True)
+          Path(run, "CAVEMAN.md").write_text(
+              Path(analysis_path).with_name("CAVEMAN.md").read_text()
+          )
+          Path(run, "analysis.json").write_text(Path(analysis_path).read_text())
+          print("MARICA_LENTE_V205_VERSIONED_RUN_PASS", run)
+          PY
+      - name: Upload exact HEAD screenshots and CAVEMAN findings
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lente-v205-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          path: |
+            ${{ runner.temp }}/lente-v205-captures/*.png
+            ${{ runner.temp }}/lente-v205-captures/manifest.json
+            ${{ runner.temp }}/lente-v205-analysis/*.json
+            ${{ runner.temp }}/lente-v205-analysis/*.md
+            artifacts/lente/runs/**
+            ${{ runner.temp }}/lente-*.log
