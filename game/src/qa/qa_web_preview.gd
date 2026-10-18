@@ -1,5 +1,6 @@
 extends Node2D
 
+
 # QA-only wrapper: proving WebAssembly runtime boot does not approve art or gameplay.
 func _ready() -> void:
     if not OS.has_feature("web"):
