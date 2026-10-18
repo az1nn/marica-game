@@ -89,37 +89,40 @@ func _capture(config: Dictionary, folder: String) -> Dictionary:
     await process_frame
     var camera: Camera2D = preview.get_node("FarmIsoView/Camera2D")
     var founder: Sprite2D = preview.get_node("FarmIsoView/FounderV4TestCopy")
+
+    var problem: String = ""
     if not preview.apply_preview_size(Vector2(size)) or not camera.is_current():
-        viewport.queue_free()
-        return {"ok": false, "error": "camera not usable"}
+        problem = "camera not usable"
     var fitted: float = CAMERA_POLICY.fit_zoom_for_size(Vector2(size))
     var limits: Rect2 = preview.pan_limits_for_size(Vector2(size), camera.zoom.x)
     var portrait: bool = size.y > size.x * 1.35
-    if founder.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
-        viewport.queue_free()
-        return {"ok": false, "error": "original filtering drift"}
-    if founder.offset != Vector2(0, -182) or founder.texture.get_size() != Vector2(344, 378):
-        viewport.queue_free()
-        return {"ok": false, "error": "source/feet drift"}
-    if portrait and (camera.zoom.x < 1.6 or limits.size.x <= 20.0):
-        viewport.queue_free()
-        return {"ok": false, "error": "portrait pan range absent"}
-    if not portrait and absf(camera.zoom.x - fitted) > 0.001:
-        viewport.queue_free()
-        return {"ok": false, "error": "landscape/desktop fit regression"}
+    if problem.is_empty() and founder.texture_filter != CanvasItem.TEXTURE_FILTER_NEAREST:
+        problem = "original filtering drift"
+    elif problem.is_empty() and (
+        founder.offset != Vector2(0, -182) or founder.texture.get_size() != Vector2(344, 378)
+    ):
+        problem = "source/feet drift"
+    elif problem.is_empty() and portrait and (camera.zoom.x < 1.6 or limits.size.x <= 20.0):
+        problem = "portrait pan range absent"
+    elif problem.is_empty() and not portrait and absf(camera.zoom.x - fitted) > 0.001:
+        problem = "landscape/desktop fit regression"
+
     var pan: float = float(config["pan"])
-    if pan != 0.0 and not preview.pan_by_screen_delta(Vector2(pan, 0.0), Vector2(size)):
+    if problem.is_empty() and pan != 0.0:
+        if not preview.pan_by_screen_delta(Vector2(pan, 0.0), Vector2(size)):
+            problem = "drag ignored"
+    if problem.is_empty() and pan > 0.0 and absf(camera.position.x - limits.position.x) > 0.01:
+        problem = "left boundary or pan direction wrong"
+    elif problem.is_empty() and pan < 0.0 and absf(camera.position.x - limits.end.x) > 0.01:
+        problem = "right boundary or pan direction wrong"
+    if problem.is_empty() and (
+        camera.position.x < limits.position.x - 0.01
+        or camera.position.x > limits.end.x + 0.01
+    ):
+        problem = "camera escaped farm"
+    if not problem.is_empty():
         viewport.queue_free()
-        return {"ok": false, "error": "drag ignored"}
-    if pan > 0.0 and absf(camera.position.x - limits.position.x) > 0.01:
-        viewport.queue_free()
-        return {"ok": false, "error": "left boundary or pan direction wrong"}
-    if pan < 0.0 and absf(camera.position.x - limits.end.x) > 0.01:
-        viewport.queue_free()
-        return {"ok": false, "error": "right boundary or pan direction wrong"}
-    if camera.position.x < limits.position.x - 0.01 or camera.position.x > limits.end.x + 0.01:
-        viewport.queue_free()
-        return {"ok": false, "error": "camera escaped farm"}
+        return {"ok": false, "error": problem}
     await RenderingServer.frame_post_draw
     await RenderingServer.frame_post_draw
     var image: Image = viewport.get_texture().get_image()
