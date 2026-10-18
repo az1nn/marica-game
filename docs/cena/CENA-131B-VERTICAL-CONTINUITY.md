@@ -24,3 +24,14 @@ Exact PR-head Godot 4.7.2 Compatibility/Xvfb/Mesa native snapshots, six cases: b
 - **SIGA:** draft only; no merge, V201/V201a/V203/V204/V205/V206/V207 closure, source promotion or overlapping claim writes.
 
 **Next specific decision:** Inspect CENA #131B six-frame before/after proposal. Either accept this *environment-only* blockout direction for CENA iteration or request a separate ARTIST/UX-approved vertical HUD/focus layout. Do not treat decorative grass as resolved usable vertical space.
+
+## Independent CENA first technical capture / visual triage (2026-10-18)
+
+Implementation code HEAD `58c2d025aef25c6490d108ed5d7d7a2e714b6e31` has 16 GitHub checks SUCCESS, 1 optional SKIPPED, 0 failed/pending, including Godot G415 and custom six-frame CENA 131B CI. [CENA B run #39154767426](https://github.com/az1nn/marica-game/actions/runs/39154767426) produces six real Godot 4.7.2 Xvfb/Mesa screenshot PNGs plus immutable source SHA, artifact manifest and verification JSON. The artifact ID is available on the run page. Physical mobile/browser runtime remains untested in this branch.
+
+- Portrait BEFORE 390×844: gray background and G450/G451 farm visible only in central diamond. Proposed AFTER: dark-green subtle blockout tiles cover outer view without disguising farm navigable boundaries or increasing playable cells. **This is decorative scene continuity, not useful gameplay vertical occupancy.**
+- First exact-head code run's pixel invariance checker measured **36,752 strongly visible original farm/pet pixels, zero changed** in the same-position A/B screenshots (sampling/threshold documented in CI). Both 844×390 landscape and 1280×960 desktop PNGs were compared bitwise in RGB against V206 parent artifact and have **zero RGB pixel differences**.
+- Portrait pan left/right is inherited from V206; new background does NOT extend camera bounds. Underlay visibility false in landscape/desktop. Original V4 binary SHA and git blob unchanged.
+- ARTIST aesthetic review **PENDING**. The new green palette/pattern is a CENA proposal and has no acceptance; style/UX choices about portrait negative space remain open. **LENTE independent AFTER review pending**; do not close LENTE-V205-002 or issue #131.
+
+This documentation update changes the PR head; a separate **final exact-head** workflow pass is mandatory before a technical handoff is marked CI-complete. No merge or SPEC checkbox closure.
