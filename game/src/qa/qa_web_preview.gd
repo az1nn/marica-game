@@ -103,7 +103,10 @@ func _input(event: InputEvent) -> void:
             _mouse_dragged = false
         elif _mouse_pressed:
             _mouse_pressed = false
-            if not _mouse_dragged and _mouse_down.distance_squared_to(mouse.position) <= TAP_DRIFT_SQUARED:
+            if (
+                not _mouse_dragged
+                and _mouse_down.distance_squared_to(mouse.position) <= TAP_DRIFT_SQUARED
+            ):
                 _select_at(mouse.position)
     elif event is InputEventMouseMotion and _mouse_pressed:
         var motion: InputEventMouseMotion = event as InputEventMouseMotion
