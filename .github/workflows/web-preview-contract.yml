@@ -25,7 +25,7 @@ jobs:
           config = json.loads(Path("vercel.json").read_text(encoding="utf-8"))
           assert config["framework"] is None, "Expected Vercel Other framework"
           branch = os.environ.get("GITHUB_HEAD_REF") or os.environ.get("GITHUB_REF_NAME")
-          if branch == "qa/133-vercel-godot-hosting-20261018":
+          if branch in ("qa/133-vercel-godot-hosting-20261018", "qa/138-founder-tap-diagnostic-20261018"):
               assert config["outputDirectory"] == "build/qa-preview", "QA output directory mismatch"
               assert config.get("buildCommand") == "bash tools/qa/build_vercel_godot.sh", "QA must build native Godot"
               script = Path("tools/qa/build_vercel_godot.sh")
