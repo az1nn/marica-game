@@ -9,6 +9,9 @@ const QA_TAPS_ENABLED: bool = true
 var qa_tap_count: int = 0
 var qa_selection: String = "none"
 var qa_touch_drag_events: int = 0
+var qa_touch_drag_matched: int = 0
+var qa_pan_effective_events: int = 0
+var qa_last_drag_relative: Vector2 = Vector2.ZERO
 var qa_mouse_motion_events: int = 0
 
 var _touch_down: Dictionary = {}
@@ -90,6 +93,8 @@ func _input(event: InputEvent) -> void:
         qa_touch_drag_events += 1
         _last_touch_event_ms = Time.get_ticks_msec()
         if _touch_down.has(drag.index):
+            qa_touch_drag_matched += 1
+            qa_last_drag_relative = drag.relative
             var start: Vector2 = _touch_down[drag.index]
             if start.distance_squared_to(drag.position) > TAP_DRIFT_SQUARED:
                 _touch_dragged[drag.index] = true
@@ -98,6 +103,7 @@ func _input(event: InputEvent) -> void:
                 and $FounderScene.pan_by_screen_delta(drag.relative, get_viewport_rect().size)
             ):
                 # Route exactly once, before CENA's _unhandled_input fallback.
+                qa_pan_effective_events += 1
                 get_viewport().set_input_as_handled()
         _publish_web_state()
     elif event is InputEventMouseButton:
@@ -174,6 +180,9 @@ func _publish_web_state() -> void:
     var data: Dictionary = {
         "camera_x": _camera.position.x,
         "touch_drag_events": qa_touch_drag_events,
+        "touch_drag_matched": qa_touch_drag_matched,
+        "pan_effective_events": qa_pan_effective_events,
+        "last_drag_relative": [qa_last_drag_relative.x, qa_last_drag_relative.y],
         "mouse_motion_events": qa_mouse_motion_events,
         "count": qa_tap_count,
         "selection": qa_selection,
