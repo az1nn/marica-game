@@ -9,7 +9,8 @@ Immutable parent: PR #135 HEAD `1191dcc626dabec9f47dc1146508c15702b9e023`; stack
 ## Exclusive ownership and limits
 - `game/src/qa/qa_web_preview.gd`: QA-only native Godot tap/click feedback on founding pet.
 - `tools/qa/qa002_input_profile.py`, `.github/workflows/qa002-input.yml`, `docs/qa/QA-002-INPUT.md`, and this claim: standalone exact-HEAD browser evidence.
-- No changes to ARTIST original asset, CENA camera and pan, ARCH import, G452/gameplay/save, default project scene, Vercel configuration, other claims or branches.
+- Downstream branch-only adjustment to `.github/workflows/web-preview-contract.yml` admits this named QA-002 descendant to the inherited QA build contract. Q804 parent branch/workflow remains untouched; no unguarded wildcard.
+- No changes to ARTIST original asset, CENA camera and pan, ARCH import, G452/gameplay/save, default project scene, `vercel.json`, other claims or branches.
 - Do not claim production interaction, accessible final HUD, ARTIST runtime acceptance, public authenticated Godot boot or human physical-device QA.
 
 ## Guards
