@@ -76,7 +76,19 @@ def exercise(web_dir: Path, output: Path, head: str) -> None:
                         )
                         center = page.evaluate("window.__MARICA_QA_FOUNDER_CENTER")
                         assert isinstance(center, list) and len(center) == 2, center
-                        x, y = map(float, center)
+                        gx, gy = map(float, center)
+                        canvas = page.evaluate("""() => {
+                            const c = document.querySelector('canvas');
+                            const r = c.getBoundingClientRect();
+                            return {x:r.x, y:r.y, w:r.width, h:r.height,
+                                    pixels_w:c.width, pixels_h:c.height};
+                        }""")
+                        assert canvas["pixels_w"] > 0 and canvas["pixels_h"] > 0
+                        # Godot coordinates are canvas/render pixels; Playwright
+                        # mouse and touchscreen expect browser CSS coordinates.
+                        x = canvas["x"] + gx * canvas["w"] / canvas["pixels_w"]
+                        y = canvas["y"] + gy * canvas["h"] / canvas["pixels_h"]
+                        print(f"QA002_POINTER case={case} godot={center} css={[x, y]} canvas={canvas}", flush=True)
                         assert 0 <= x < w and 0 <= y < h, f"{case}: pet outside viewport"
                         assert page.evaluate("window.__MARICA_QA_SELECTIONS") == 0
                         page.wait_for_timeout(500)
