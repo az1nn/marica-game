@@ -1,0 +1,106 @@
+name: V206 CENA Portrait Navigation
+
+on:
+  pull_request:
+    paths:
+      - 'game/src/presentation/v203_portrait_preview.gd'
+      - 'game/tests/v206_portrait_navigation_runner.gd'
+      - '.github/workflows/v206-cena-navigation.yml'
+      - 'docs/cena/V206-PORTRAIT-NAVIGATION.md'
+      - '.siga/session-claim-v206-cena-navigation-20261018-gpt6.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  navigation:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Exact source and pinned Godot
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          test "$(git hash-object game/assets/arch_probes/S01_A01_v4_original.png)" = da7806ebfcb051c8fd32ccdbad4760b7136f97dd
+          echo "b8089122d323de7dc7c235604f752ce2643990a867aceaead60409d700e2aa7e  game/assets/arch_probes/S01_A01_v4_original.png" | sha256sum --check
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri libgl1
+          curl -fL --retry 3 --retry-all-errors -o "$RUNNER_TEMP/godot.zip" "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+      - name: Import
+        run: timeout 90s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --headless --editor --path game --import --quit
+      - name: Native five-view GOOD evidence
+        shell: bash
+        env:
+          V206_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          export V206_CAPTURE_DIR="$RUNNER_TEMP/v206-good"
+          mkdir -p "$V206_CAPTURE_DIR"
+          timeout 120s xvfb-run -a -s "-screen 0 1600x1100x24" "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --rendering-driver opengl3 --rendering-method gl_compatibility --path game --script res://tests/v206_portrait_navigation_runner.gd 2>&1 | tee "$RUNNER_TEMP/v206-good.log"
+          grep -Fq 'MARICA_V206_NAVIGATION_PASS captures=5' "$RUNNER_TEMP/v206-good.log"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path(os.environ["V206_CAPTURE_DIR"])
+          m=json.loads((p/"manifest.json").read_text())
+          assert m["head_sha"] == os.environ["V206_HEAD_SHA"]
+          assert m["status"] == "NAVIGATION_TECHNICAL_ONLY_VERTICAL_VOID_OPEN"
+          assert m["portrait_vertical_void_resolved"] is False and m["art_runtime"] == "NOT_EVALUATED"
+          assert len(m["frames"]) == 5
+          assert m["frames"][1]["camera_x"] < m["frames"][0]["camera_x"] < m["frames"][2]["camera_x"]
+          for f in m["frames"]:
+              png=(p/f["file"]).read_bytes()
+              assert png[:8] == bytes.fromhex("89504e470d0a1a0a") and len(png) > 2048
+          print("MARICA_V206_EXACT_HEAD_MANIFEST_PASS")
+          PY
+      - name: Inverted pan GOOD-BAD-RESTORE
+        shell: bash
+        env:
+          V206_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          SOURCE=game/src/presentation/v203_portrait_preview.gd
+          cp "$SOURCE" "$RUNNER_TEMP/v206-original.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("game/src/presentation/v203_portrait_preview.gd")
+          s=p.read_text()
+          good="var target: Vector2 = _camera.position - screen_delta / _camera.zoom.x"
+          assert s.count(good)==1
+          p.write_text(s.replace(good, "var target: Vector2 = _camera.position + screen_delta / _camera.zoom.x"))
+          PY
+          export V206_CAPTURE_DIR="$RUNNER_TEMP/v206-bad"
+          mkdir -p "$V206_CAPTURE_DIR"
+          set +e
+          timeout 90s xvfb-run -a -s "-screen 0 1600x1100x24" "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --rendering-driver opengl3 --rendering-method gl_compatibility --path game --script res://tests/v206_portrait_navigation_runner.gd > "$RUNNER_TEMP/v206-bad.log" 2>&1
+          BAD="$?"
+          set -e
+          cp "$RUNNER_TEMP/v206-original.gd" "$SOURCE"
+          test "$BAD" -ne 0
+          grep -Eq 'MARICA_V206_FAIL|SCRIPT ERROR' "$RUNNER_TEMP/v206-bad.log"
+          export V206_CAPTURE_DIR="$RUNNER_TEMP/v206-restore"
+          mkdir -p "$V206_CAPTURE_DIR"
+          timeout 90s xvfb-run -a -s "-screen 0 1600x1100x24" "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --rendering-driver opengl3 --rendering-method gl_compatibility --path game --script res://tests/v206_portrait_navigation_runner.gd 2>&1 | tee "$RUNNER_TEMP/v206-restore.log"
+          grep -Fq MARICA_V206_NAVIGATION_PASS "$RUNNER_TEMP/v206-restore.log"
+          git diff --exit-code -- "$SOURCE"
+          echo MARICA_V206_MUTATION_PASS
+      - name: Upload CENA diagnostic frames and manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v206-cena-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          path: |
+            ${{ runner.temp }}/v206-good/*.png
+            ${{ runner.temp }}/v206-good/manifest.json
+            ${{ runner.temp }}/v206-*.log
