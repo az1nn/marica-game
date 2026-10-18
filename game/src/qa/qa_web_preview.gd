@@ -177,8 +177,14 @@ func _publish_web_state() -> void:
         _founder.get_global_transform_with_canvas() * _founder.get_rect().get_center()
     )
     _last_published_camera = _camera.position
+    var viewport_size: Vector2 = get_viewport_rect().size
+    var limits: Rect2 = $FounderScene.pan_limits_for_size(viewport_size, _camera.zoom.x)
     var data: Dictionary = {
         "camera_x": _camera.position.x,
+        "viewport_size": [viewport_size.x, viewport_size.y],
+        "portrait_policy_active": _is_portrait(),
+        "camera_zoom": _camera.zoom.x,
+        "horizontal_pan_range": limits.size.x,
         "touch_drag_events": qa_touch_drag_events,
         "touch_drag_matched": qa_touch_drag_matched,
         "pan_effective_events": qa_pan_effective_events,
