@@ -90,6 +90,11 @@ func _input(event: InputEvent) -> void:
             var start: Vector2 = _touch_down[drag.index]
             if start.distance_squared_to(drag.position) > TAP_DRIFT_SQUARED:
                 _touch_dragged[drag.index] = true
+            if _is_portrait() and $FounderScene.pan_by_screen_delta(
+                drag.relative, get_viewport_rect().size
+            ):
+                # Route exactly once, before CENA's _unhandled_input fallback.
+                get_viewport().set_input_as_handled()
     elif event is InputEventMouseButton:
         var mouse: InputEventMouseButton = event as InputEventMouseButton
         if mouse.button_index != MOUSE_BUTTON_LEFT:
@@ -112,6 +117,15 @@ func _input(event: InputEvent) -> void:
         var motion: InputEventMouseMotion = event as InputEventMouseMotion
         if _mouse_down.distance_squared_to(motion.position) > TAP_DRIFT_SQUARED:
             _mouse_dragged = true
+            if _is_portrait() and $FounderScene.pan_by_screen_delta(
+                motion.relative, get_viewport_rect().size
+            ):
+                get_viewport().set_input_as_handled()
+
+
+func _is_portrait() -> bool:
+    var size: Vector2 = get_viewport_rect().size
+    return size.y > size.x * 1.35
 
 
 func _select_at(screen_position: Vector2) -> void:
