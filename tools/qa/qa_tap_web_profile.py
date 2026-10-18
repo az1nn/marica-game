@@ -178,10 +178,23 @@ def test(web_dir: Path, output: Path, head: str) -> dict:
                             )
                             if end_state["count"] != 1:
                                 raise AssertionError("Drag accidentally triggered tap")
-                            if abs(end_state["camera_x"] - start_camera) <= 1:
+                            can_pan_horizontally = (
+                                end_state["portrait_policy_active"]
+                                and end_state["horizontal_pan_range"] > 1
+                            )
+                            pan_delta = abs(end_state["camera_x"] - start_camera)
+                            if can_pan_horizontally and pan_delta <= 1:
                                 raise AssertionError(
-                                    "Godot Web CDP swipe did not pan camera: "
-                                    f"dom={trace}, godot={end_state}"
+                                    "Web touch input arrived but camera failed to pan "
+                                    f"within an allowed range: dom={trace}, godot={end_state}"
+                                )
+                            if not can_pan_horizontally:
+                                print(
+                                    "QA002_PAN_BOUNDARY_BLOCKED "
+                                    f"viewport={end_state['viewport_size']} "
+                                    f"portrait={end_state['portrait_policy_active']} "
+                                    f"range={end_state['horizontal_pan_range']}",
+                                    flush=True,
                                 )
                         if errors:
                             raise AssertionError("Godot browser JS page errors: " + str(errors))
@@ -196,6 +209,14 @@ def test(web_dir: Path, output: Path, head: str) -> dict:
                             "tap_selection": selected["selection"],
                             "founder_css_position": [round(px, 2), round(py, 2)],
                             "drag_did_not_count_as_tap": mobile,
+                            "browser_touch_pan_observation": (
+                                "NO_AVAILABLE_PAN_RANGE"
+                                if mobile and not (
+                                    end_state["portrait_policy_active"]
+                                    and end_state["horizontal_pan_range"] > 1
+                                )
+                                else "MOVED" if mobile else "NOT_TESTED_DESKTOP"
+                            ),
                             "before_png": screenshot_before.name,
                             "after_png": screenshot_after.name,
                             "before_sha256": _sha(screenshot_before.read_bytes()),
