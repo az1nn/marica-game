@@ -1,0 +1,108 @@
+name: QA-001 HTTPS Host Qualification (staging only)
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/qa-web-host-qualification.yml'
+      - 'tools/qa/qa_https_gate.py'
+      - 'tools/qa/test_qa_https_gate.py'
+      - 'docs/qa/QA-001-HOST-STAGING.md'
+      - '.siga/session-claim-qa001-host-staging-20261018-gpt6.md'
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'Optional ALREADY authorized and deployed public HTTPS QA root (no publish action here)'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    env:
+      SOURCE_SHA: 8edfec42f8499b8818fc03c9415ef59abd23518b
+      SOURCE_RUN_ID: '39148569671'
+      SOURCE_ARTIFACT: qa001-godot-web-8edfec42f8499b8818fc03c9415ef59abd23518b
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout candidate exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Assert expected repo and immutable source run
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = "az1nn/marica-game"
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          test "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID" --jq '.head_sha')" = "$SOURCE_SHA"
+          test "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID" --jq '.conclusion')" = "success"
+          test "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID" --jq '.head_branch')" = "qa/133-godot-web-preview-20261018"
+          echo QA001_SOURCE_PROVENANCE_PASS
+
+      - name: Unit and GOOD-BAD-RESTORE mutation tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/qa/qa_https_gate.py tools/qa/test_qa_https_gate.py
+          (cd tools/qa && python3 -m unittest -v test_qa_https_gate.py)
+          echo QA001_HOST_GATE_TESTS_PASS
+
+      - name: Download exact immutable source artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/qa001-source"
+          gh run download "$SOURCE_RUN_ID" --repo "$GITHUB_REPOSITORY" \
+            --name "$SOURCE_ARTIFACT" --dir "$RUNNER_TEMP/qa001-source"
+          test -n "$(find "$RUNNER_TEMP/qa001-source" -name index.wasm -print -quit)"
+
+      - name: Package byte-identical static site without publication
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/qa/qa_https_gate.py stage \
+            --artifact "$RUNNER_TEMP/qa001-source" \
+            --site "$RUNNER_TEMP/qa001-site" \
+            --source-sha "$SOURCE_SHA" \
+            --source-run-id "$SOURCE_RUN_ID"
+          python3 tools/qa/qa_https_gate.py verify \
+            --site "$RUNNER_TEMP/qa001-site" --source-sha "$SOURCE_SHA"
+          test -s "$RUNNER_TEMP/qa001-site/index.html"
+          test -s "$RUNNER_TEMP/qa001-site/index.wasm"
+          test -s "$RUNNER_TEMP/qa001-site/index.pck"
+          echo QA001_BYTE_IDENTICAL_STAGE_PASS
+
+      - name: Prepare optional HTTPS smoke dependencies
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.target_url != '' }}
+        run: python3 -m pip install --disable-pip-version-check 'playwright==1.55.0'
+
+      - name: Verify authorized already-hosted URL (no deploy)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.target_url != '' }}
+        env:
+          PUBLIC_QA_URL: ${{ inputs.target_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/qa/qa_https_gate.py smoke \
+            --site "$RUNNER_TEMP/qa001-site" \
+            --source-sha "$SOURCE_SHA" \
+            --url "$PUBLIC_QA_URL" \
+            --output "$RUNNER_TEMP/qa001-host-smoke"
+          echo QA001_EXTERNAL_HTTPS_GATE_PASS
+
+      - name: Publish only GitHub Actions staging artifact (not external deployment)
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa001-host-candidate-${{ github.event.pull_request.head.sha || github.sha }}
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/qa001-site/*
+            ${{ runner.temp }}/qa001-host-smoke/*
