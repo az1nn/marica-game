@@ -31,7 +31,4 @@ func _draw() -> void:
             draw_rect(tile_rect, color)
             if posmod(x * 3 - y * 5, 23) == 0:
                 # Deterministic micro-patch: a blockout texture cue, not vegetation canon.
-                draw_rect(
-                    Rect2(tile_rect.position + Vector2(8, 12), Vector2(8, 5)),
-                    SPARSE_PATCH
-                )
+                draw_rect(Rect2(tile_rect.position + Vector2(8, 12), Vector2(8, 5)), SPARSE_PATCH)
