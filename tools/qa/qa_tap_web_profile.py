@@ -40,7 +40,7 @@ def _wait_state(page, expected_count: int, expected_selection: str) -> dict:
             const d = window.__MARICA_QA_TAP_STATE;
             return d && d.count === count && d.selection === selection;
         }""",
-        [expected_count, expected_selection],
+        arg=[expected_count, expected_selection],
         timeout=12000,
     )
     return _get_state(page)
@@ -159,7 +159,7 @@ def test(web_dir: Path, output: Path, head: str) -> dict:
                             page.wait_for_function(
                                 "prev => { const d = window.__MARICA_QA_TAP_STATE; "
                                 "return d && Math.abs(d.camera_x - prev) > 1; }",
-                                start_camera, timeout=10000,
+                                arg=start_camera, timeout=10000,
                             )
                             if _get_state(page)["count"] != 1:
                                 raise AssertionError("Drag accidentally triggered tap")
