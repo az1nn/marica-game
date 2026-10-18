@@ -1,0 +1,57 @@
+name: QA-001 public HTTPS Godot boot
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/qa-hosted-preview.yml'
+      - 'tools/qa/qa_hosted_smoke.py'
+      - 'tools/qa/build_vercel_godot.sh'
+      - 'vercel.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-hosted-godot:
+    name: QA-001 Vercel exact-HEAD HTTPS Godot runtime
+    if: github.head_ref == 'qa/133-vercel-godot-hosting-20261018'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 17
+    steps:
+      - name: Checkout exact PR SHA
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Install browser QA dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          google-chrome --version
+          python3 -m pip install --disable-pip-version-check 'playwright==1.55.0'
+          python3 -m py_compile tools/qa/qa_hosted_smoke.py
+      - name: Verify deployed Vercel Godot (not static HTML)
+        shell: bash
+        env:
+          QA_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/qa001-hosted-proof"
+          python3 tools/qa/qa_hosted_smoke.py \
+            --url 'https://marica-game-git-qa-133-vercel-godot-host-354df9-az1nns-projects.vercel.app' \
+            --head "$QA_HEAD" \
+            --output "$RUNNER_TEMP/qa001-hosted-proof" \
+            2>&1 | tee "$RUNNER_TEMP/qa001-hosted.log"
+          grep -Fq MARICA_QA001_HTTPS_GODOT_BOOT_PASS "$RUNNER_TEMP/qa001-hosted.log"
+      - name: Preserve remote proof / blocked logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa001-hosted-vercel-${{ github.event.pull_request.head.sha }}
+          retention-days: 14
+          if-no-files-found: ignore
+          path: |
+            ${{ runner.temp }}/qa001-hosted-proof/*
+            ${{ runner.temp }}/qa001-hosted.log

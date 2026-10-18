@@ -1,7 +1,17 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "buildCommand": null,
-  "outputDirectory": "public",
-  "cleanUrls": true
+  "buildCommand": "bash tools/qa/build_vercel_godot.sh",
+  "outputDirectory": "build/qa-preview",
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/(.*)\\.wasm",
+      "headers": [{"key": "Content-Type", "value": "application/wasm"}]
+    },
+    {
+      "source": "/(.*)\\.pck",
+      "headers": [{"key": "Content-Type", "value": "application/octet-stream"}]
+    }
+  ]
 }
