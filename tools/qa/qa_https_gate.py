@@ -30,11 +30,22 @@ def read_json(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
+def export_file(source, name):
+    """Upload-artifact may preserve the qa001-export subdirectory."""
+    root = Path(source)
+    direct = root / name
+    nested = root / "qa001-export" / name
+    return direct if direct.is_file() else nested
+
+
 def validate(source, source_sha):
     source = Path(source)
     if not SHA_PATTERN.fullmatch(source_sha):
         raise GateError("source SHA must be a complete Git commit SHA")
-    manifest = read_json(source / "manifest.json")
+    manifest_path = source / "manifest.json"
+    if not manifest_path.is_file():
+        manifest_path = source / "qa001-browser" / "manifest.json"
+    manifest = read_json(manifest_path)
     if manifest.get("task") != "QA-001" or manifest.get("head_sha") != source_sha:
         raise GateError("wrong task or artifact source SHA")
     if manifest.get("godot") != "4.7.2-stable":
@@ -60,7 +71,7 @@ def validate(source, source_sha):
             raise GateError("invalid export SHA-256")
         if type(wanted_bytes) is not int or wanted_bytes <= 0:
             raise GateError("invalid export byte count")
-        path = source / name
+        path = export_file(source, name)
         if not path.is_file() or path.is_symlink():
             raise GateError("export missing or symbolic link")
         raw = path.read_bytes()
@@ -80,7 +91,7 @@ def stage(source, output, source_sha, run_id):
     if any(output.iterdir()):
         raise GateError("refusing to overwrite nonempty staging directory")
     for name in manifest["export"]:
-        shutil.copyfile(source / name, output / name)
+        shutil.copyfile(export_file(source, name), output / name)
     provenance = {
         "schema_version": 1,
         "task": "QA-001",
