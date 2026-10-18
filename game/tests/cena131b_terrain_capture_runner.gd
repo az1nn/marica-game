@@ -97,7 +97,11 @@ func _capture(config: Dictionary, folder: String) -> Dictionary:
     var founder: Sprite2D = inner.get_node("FarmIsoView/FounderV4TestCopy")
 
     var problem: String = ""
-    var applied: bool = preview.apply_scene_size(Vector2(size)) if candidate else preview.apply_preview_size(Vector2(size))
+    var applied: bool = (
+        preview.apply_scene_size(Vector2(size))
+        if candidate
+        else preview.apply_preview_size(Vector2(size))
+    )
     if not applied or not camera.is_current():
         problem = "camera not usable"
     var fitted: float = CAMERA_POLICY.fit_zoom_for_size(Vector2(size))
