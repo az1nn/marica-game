@@ -90,8 +90,9 @@ func _input(event: InputEvent) -> void:
             var start: Vector2 = _touch_down[drag.index]
             if start.distance_squared_to(drag.position) > TAP_DRIFT_SQUARED:
                 _touch_dragged[drag.index] = true
-            if _is_portrait() and $FounderScene.pan_by_screen_delta(
-                drag.relative, get_viewport_rect().size
+            if (
+                _is_portrait()
+                and $FounderScene.pan_by_screen_delta(drag.relative, get_viewport_rect().size)
             ):
                 # Route exactly once, before CENA's _unhandled_input fallback.
                 get_viewport().set_input_as_handled()
@@ -117,8 +118,9 @@ func _input(event: InputEvent) -> void:
         var motion: InputEventMouseMotion = event as InputEventMouseMotion
         if _mouse_down.distance_squared_to(motion.position) > TAP_DRIFT_SQUARED:
             _mouse_dragged = true
-            if _is_portrait() and $FounderScene.pan_by_screen_delta(
-                motion.relative, get_viewport_rect().size
+            if (
+                _is_portrait()
+                and $FounderScene.pan_by_screen_delta(motion.relative, get_viewport_rect().size)
             ):
                 get_viewport().set_input_as_handled()
 
