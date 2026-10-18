@@ -53,7 +53,9 @@ func _install_feedback() -> void:
 func _founder_hit(screen_point: Vector2) -> bool:
     if _founder == null or _founder.texture == null:
         return false
-    var local_point: Vector2 = _founder.get_global_transform_with_canvas().affine_inverse() * screen_point
+    var local_point: Vector2 = (
+        _founder.get_global_transform_with_canvas().affine_inverse() * screen_point
+    )
     return _founder.get_rect().has_point(local_point)
 
 
@@ -68,9 +70,13 @@ func _select_founder() -> void:
 func _publish_input_state() -> void:
     if not OS.has_feature("web") or _founder == null:
         return
-    var center: Vector2 = _founder.get_global_transform_with_canvas() * _founder.get_rect().get_center()
+    var center: Vector2 = (
+        _founder.get_global_transform_with_canvas() * _founder.get_rect().get_center()
+    )
     # Read-only diagnostics originate in Godot; JS must not fake selection or draw UI.
-    JavaScriptBridge.eval("window.__MARICA_QA_FOUNDER_CENTER = " + JSON.stringify([center.x, center.y]))
+    JavaScriptBridge.eval(
+        "window.__MARICA_QA_FOUNDER_CENTER = " + JSON.stringify([center.x, center.y])
+    )
     JavaScriptBridge.eval("window.__MARICA_QA_SELECTIONS = " + str(_select_count))
     JavaScriptBridge.eval("window.__MARICA_QA_SELECTION_TEXT = " + JSON.stringify(_feedback.text))
 
@@ -106,7 +112,10 @@ func _input(event: InputEvent) -> void:
             _mouse_down_position = mouse.position
             _mouse_moved = false
         elif _mouse_down:
-            if not _mouse_moved and mouse.position.distance_to(_mouse_down_position) <= MOUSE_DRAG_PX:
+            if (
+                not _mouse_moved
+                and mouse.position.distance_to(_mouse_down_position) <= MOUSE_DRAG_PX
+            ):
                 if _founder_hit(mouse.position):
                     _select_founder()
             _mouse_down = false
