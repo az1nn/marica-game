@@ -16,9 +16,11 @@ var _mouse_pressed: bool = false
 var _mouse_down: Vector2 = Vector2.ZERO
 var _mouse_dragged: bool = false
 var _feedback: Label
+var _last_published_camera: Vector2 = Vector2.INF
 
 @onready var _founder: Sprite2D = $FounderScene/FarmIsoView/FounderV4TestCopy
 @onready var _world: Node2D = $FounderScene/FarmIsoView/IsometricWorld
+@onready var _camera: Camera2D = $FounderScene/FarmIsoView/Camera2D
 
 
 func _ready() -> void:
@@ -32,6 +34,11 @@ func _ready() -> void:
     JavaScriptBridge.eval("window.__MARICA_QA_GODOT_READY = true")
     _publish_web_state()
     get_viewport().size_changed.connect(_publish_web_state)
+
+
+func _process(_delta: float) -> void:
+    if OS.has_feature("web") and _camera != null and _camera.position != _last_published_camera:
+        _publish_web_state()
 
 
 func _create_qa_overlay() -> void:
@@ -138,7 +145,9 @@ func _publish_web_state() -> void:
     var center: Vector2 = (
         _founder.get_global_transform_with_canvas() * _founder.get_rect().get_center()
     )
+    _last_published_camera = _camera.position
     var data: Dictionary = {
+        "camera_x": _camera.position.x,
         "count": qa_tap_count,
         "selection": qa_selection,
         "founder_center": [center.x, center.y],
