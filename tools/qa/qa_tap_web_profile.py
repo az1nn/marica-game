@@ -153,16 +153,36 @@ def test(web_dir: Path, output: Path, head: str) -> dict:
                         ):
                             raise AssertionError("QA selection did not visibly change the screen")
                         if mobile:
-                            # A real CDP touch stream, not direct Godot method invocation.
+                            # A real CDP touch stream; DOM and Godot event counts diagnose routing.
                             start_camera = selected["camera_x"]
-                            _touch_swipe(context, page, (px, py + 110))
-                            page.wait_for_function(
-                                "prev => { const d = window.__MARICA_QA_TAP_STATE; "
-                                "return d && Math.abs(d.camera_x - prev) > 1; }",
-                                arg=start_camera, timeout=10000,
+                            page.evaluate(
+                                """() => {
+                                    window.__QA002_DOM_TOUCH = {start:0,move:0,end:0};
+                                    for (const [name,key] of [
+                                        ['touchstart','start'],['touchmove','move'],
+                                        ['touchend','end']]) {
+                                        document.addEventListener(name, () => {
+                                            window.__QA002_DOM_TOUCH[key] += 1;
+                                        }, {capture:true,passive:true});
+                                    }
+                                }"""
                             )
-                            if _get_state(page)["count"] != 1:
+                            _touch_swipe(context, page, (px, py + 110))
+                            page.wait_for_timeout(450)
+                            trace = page.evaluate("window.__QA002_DOM_TOUCH")
+                            end_state = _get_state(page)
+                            print(
+                                "QA002_WEB_GESTURE_DIAG "
+                                f"dom={trace} before_x={start_camera} "
+                                f"after={end_state}", flush=True
+                            )
+                            if end_state["count"] != 1:
                                 raise AssertionError("Drag accidentally triggered tap")
+                            if abs(end_state["camera_x"] - start_camera) <= 1:
+                                raise AssertionError(
+                                    "Godot Web CDP swipe did not pan camera: "
+                                    f"dom={trace}, godot={end_state}"
+                                )
                         if errors:
                             raise AssertionError("Godot browser JS page errors: " + str(errors))
                         cases.append({
