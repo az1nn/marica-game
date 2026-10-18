@@ -54,3 +54,14 @@ python3 tools/qa/qa_https_gate.py verify \
 ```
 
 **Next authoritative action:** qualify exact staging PR HEAD, then obtain host/rights decision and deploy only after approval. Keep #133 open and all PRs draft.
+
+## Verified Q804 predeploy slice (2026-10-18)
+
+**First staging feature HEAD** `ee6535bf272e7c59b8da75b2875e605b8510bc1d` verified by 17 GitHub Actions runs: **16 SUCCESS, 1 optional Roblox Behavioral SKIPPED, 0 failure/pending**.
+
+- [Actual host-qualification run #39154693438](https://github.com/az1nn/marica-game/actions/runs/39154693438): PASS. It downloaded source run #39148569671, checked all source export hashes, passed Python mutation/regression tests and produced identical static staging bytes.
+- [Immutable, non-hosted candidate #12147040005](https://github.com/az1nn/marica-game/actions/runs/39154693438/artifacts/12147040005): `qa001-host-candidate-ee6535bf272e7c59b8da75b2875e605b8510bc1d`, retained for 14 days.
+- This documentation change and subsequent claim closeout **move the branch HEAD**; green source feature CI cannot be represented as final PR exact-head until the new checks finish.
+- **No published HTTPS URL**, remote smoke has NOT run, Q804/Q805 remain unchecked, #133 remains P1 OPEN.
+
+**Authoritative next gate:** a permitted host and asset distribution decision; then external deploy of these **exact** files, external boot/hash smoke, and human mobile/desktop retest.
