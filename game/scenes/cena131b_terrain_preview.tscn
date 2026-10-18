@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/presentation/cena131b_terrain_scene.gd" id="1_continuity"]
+[ext_resource type="PackedScene" path="res://scenes/v203_portrait_preview.tscn" id="2_unchanged"]
+
+[node name="CENA131BVerticalContinuity" type="Node2D"]
+script = ExtResource("1_continuity")
+
+[node name="V203PortraitPreview" parent="." instance=ExtResource("2_unchanged")]
