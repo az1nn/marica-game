@@ -1,0 +1,143 @@
+name: QA-002 Godot Tap and Touch E2E
+
+on:
+  pull_request:
+    paths:
+      - 'game/src/qa/qa_web_preview.gd'
+      - 'game/tests/qa_tap_input_runner.gd'
+      - 'tools/qa/qa_tap_web_profile.py'
+      - '.github/workflows/qa002-touch-input.yml'
+      - 'specs/008-qa-web-preview/**'
+      - 'docs/qa/QA-002-TOUCH-TEST.md'
+      - '.siga/session-claim-qa002-touch-input-20261018-gpt6.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-and-browser-input:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Exact Git/source and QA isolated scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          test "$(cat game/.godot-version)" = "4.7.2-stable"
+          test "$(git hash-object game/assets/arch_probes/S01_A01_v4_original.png)" = da7806ebfcb051c8fd32ccdbad4760b7136f97dd
+          echo 'b8089122d323de7dc7c235604f752ce2643990a867aceaead60409d700e2aa7e  game/assets/arch_probes/S01_A01_v4_original.png' | sha256sum --check
+          test -f game/scenes/qa_web_preview.tscn
+          grep -Fq 'func pan_by_screen_delta(' game/src/presentation/v203_portrait_preview.gd
+
+      - name: Browser QA dependencies and pinned Godot binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check 'playwright==1.55.0'
+          python3 -m py_compile tools/qa/qa_tap_web_profile.py
+          google-chrome --version
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri libgl1
+          curl --fail --location --retry 3 --retry-all-errors             -o "$RUNNER_TEMP/godot.zip"             'https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip'
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+
+      - name: Import QA scene
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 90s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"             --headless --editor --path game --import --quit
+
+      - name: Native mouse/touch GOOD
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 120s xvfb-run -a -s '-screen 0 1600x1100x24'             "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"             --rendering-driver opengl3 --rendering-method gl_compatibility             --path game --script res://tests/qa_tap_input_runner.gd             2>&1 | tee "$RUNNER_TEMP/qa002-native-good.log"
+          grep -Fq 'MARICA_QA002_TAP_PASS' "$RUNNER_TEMP/qa002-native-good.log"
+
+      - name: Adversarial disabled-taps mutation GOOD BAD RESTORE
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILE=game/src/qa/qa_web_preview.gd
+          cp "$FILE" "$RUNNER_TEMP/qa002-source.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('game/src/qa/qa_web_preview.gd')
+          s = p.read_text()
+          target = 'const QA_TAPS_ENABLED: bool = true'
+          assert s.count(target) == 1
+          p.write_text(s.replace(target,'const QA_TAPS_ENABLED: bool = false'))
+          PY
+          set +e
+          timeout 90s xvfb-run -a -s '-screen 0 1600x1100x24'             "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"             --rendering-driver opengl3 --rendering-method gl_compatibility             --path game --script res://tests/qa_tap_input_runner.gd             > "$RUNNER_TEMP/qa002-native-bad.log" 2>&1
+          bad=$?
+          set -e
+          cp "$RUNNER_TEMP/qa002-source.gd" "$FILE"
+          test "$bad" -ne 0
+          grep -Eq 'MARICA_QA002_TAP_FAIL|SCRIPT ERROR' "$RUNNER_TEMP/qa002-native-bad.log"
+          timeout 90s xvfb-run -a -s '-screen 0 1600x1100x24'             "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"             --rendering-driver opengl3 --rendering-method gl_compatibility             --path game --script res://tests/qa_tap_input_runner.gd             2>&1 | tee "$RUNNER_TEMP/qa002-native-restore.log"
+          grep -Fq MARICA_QA002_TAP_PASS "$RUNNER_TEMP/qa002-native-restore.log"
+          git diff --exit-code -- "$FILE"
+          echo 'MARICA_QA002_MUTATION_PASS good=pass bad=fail restore=pass'
+
+      - name: Build isolated Godot QA WebAssembly with pinned official templates
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash tools/qa/build_vercel_godot.sh 2>&1 | tee "$RUNNER_TEMP/qa002-web-build.log"
+          grep -Fq MARICA_QA001_VERCEL_EXPORT_PASS "$RUNNER_TEMP/qa002-web-build.log"
+          test -s build/qa-preview/index.html
+          test -s build/qa-preview/index.wasm
+          test -s build/qa-preview/index.pck
+          git diff --exit-code -- game/project.godot
+
+      - name: Browser mouse click + mobile-touch tap/drag on real engine
+        shell: bash
+        env:
+          QA_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/qa002-web-gesture"
+          python3 tools/qa/qa_tap_web_profile.py             --web-dir build/qa-preview             --output "$RUNNER_TEMP/qa002-web-gesture"             --head "$QA_HEAD"             2>&1 | tee "$RUNNER_TEMP/qa002-web-gesture.log"
+          grep -Fq 'MARICA_QA002_WEB_INPUT_PASS' "$RUNNER_TEMP/qa002-web-gesture.log"
+          python3 - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'qa002-web-gesture'
+          data=json.loads((root/'manifest.json').read_text())
+          assert data['head_sha']==os.environ['QA_HEAD']
+          assert data['real_device_verified'] is False
+          assert data['qa_tap_input_verified'] is True
+          assert len(data['cases'])==2
+          for case in data['cases']:
+              assert case['tap_count']==1 and case['tap_selection']=='founder'
+              for side in ('before','after'):
+                  file=root/case[side+'_png']
+                  assert hashlib.sha256(file.read_bytes()).hexdigest()==case[side+'_sha256']
+          print('MARICA_QA002_EXACT_HEAD_PNG_HASH_PASS')
+          PY
+
+      - name: Upload original-QA-evidence screenshots and fail-closed logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa002-godot-touch-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/qa002-native-*.log
+            ${{ runner.temp }}/qa002-web-build.log
+            ${{ runner.temp }}/qa002-web-gesture/*.png
+            ${{ runner.temp }}/qa002-web-gesture/manifest.json
+            ${{ runner.temp }}/qa002-web-gesture.log
