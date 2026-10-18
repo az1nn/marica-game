@@ -12,6 +12,7 @@ Scope: SPEC-008 Q804 only (public HTTPS deployment of isolated Godot Web export)
 - `vercel.json` — QA-branch-only Vercel output override (never touch master)
 - `.github/workflows/web-preview-contract.yml` — preserve master static contract, add exact opt-in QA export-branch contract
 - `docs/qa/QA-001-VERCEL-HOSTING.md` — deployment/runbook and limitations
+- `tools/qa/qa_hosted_smoke.py` and `.github/workflows/qa-hosted-preview.yml` — exact-HEAD remote HTTPS Chrome proof, needed because remote direct inspection was unavailable
 - this claim only
 
 No writes to parent QA PR #134, CENA #128/#132, ARTIST #77, ARCH #126, LENTE #130, source PNG, `public/`, gameplay/domain/save, default `game/project.godot`, or historical claims. Do not mark Q804 PASS until HTTPS preview, actual Godot canvas and exact deployed SHA verified. Q805 requires independent human Android/desktop test. Source-art redistribution rights and production gates remain separate.
