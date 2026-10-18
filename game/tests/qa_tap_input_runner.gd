@@ -23,7 +23,9 @@ func _run() -> void:
     viewport.add_child(qa)
     await process_frame
     var founder: Sprite2D = qa.get_node("FounderScene/FarmIsoView/FounderV4TestCopy")
-    var center: Vector2 = founder.get_global_transform_with_canvas() * founder.get_rect().get_center()
+    var center: Vector2 = (
+        founder.get_global_transform_with_canvas() * founder.get_rect().get_center()
+    )
     if center.x <= 0.0 or center.x >= 390.0 or center.y <= 0.0 or center.y >= 844.0:
         _fail("founder selection center outside portrait")
         return
