@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import re
 import time
 import urllib.error
 import urllib.request
@@ -14,13 +15,25 @@ from playwright.sync_api import sync_playwright
 def wait_for_exact_deployment(base: str, head: str):
     uri = base + "/qa-build.json"
     last = "no HTTP response yet"
-    for attempt in range(36):
+    for attempt in range(4):
         try:
             request = urllib.request.Request(uri, headers={"User-Agent": "marica-game-qa001-smoke/1"})
             with urllib.request.urlopen(request, timeout=20) as response:
                 if response.status != 200:
                     raise RuntimeError(f"HTTP {response.status}")
-                data = json.loads(response.read().decode("utf-8"))
+                content_type = response.headers.get("content-type", "")
+                final_url = response.geturl()
+                body = response.read()
+            try:
+                data = json.loads(body.decode("utf-8"))
+            except (UnicodeError, json.JSONDecodeError) as ex:
+                title = re.search(rb"<title[^>]*>(.*?)</title>", body, flags=re.I | re.S)
+                html_title = title.group(1).decode("utf-8", errors="replace")[:100] if title else None
+                digest = hashlib.sha256(body).hexdigest()
+                raise RuntimeError(
+                    f"Expected JSON, served content_type={content_type!r} "
+                    f"html_title={html_title!r} body_sha256={digest} final_url={final_url}"
+                ) from ex
             if data.get("head_sha") != head:
                 last = f"stale or unproven export SHA={data.get('head_sha')!r}, expected {head}"
             else:
