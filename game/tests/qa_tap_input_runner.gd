@@ -30,31 +30,42 @@ func _run() -> void:
         _fail("founder selection center outside portrait")
         return
     var label: Label = qa.get_node("QAOnlyFeedbackLayer/TapFeedback/SelectionStatus")
-    if not label.text.contains("QA: toque no cachorro"):
-        _fail("missing initial QA tap instructions")
+    var taps: String = _check_mouse_and_touch(qa, center, label)
+    if not taps.is_empty():
+        _fail(taps)
         return
+    var drag: String = _check_drag_and_pan(qa, center)
+    if not drag.is_empty():
+        _fail(drag)
+        return
+    print("MARICA_QA002_TAP_PASS mouse=true touch=true dedup=true pan=true")
+    quit(0)
 
+
+func _check_mouse_and_touch(qa: Node2D, center: Vector2, label: Label) -> String:
+    if not label.text.contains("QA: toque no cachorro"):
+        return "missing initial QA tap instructions"
     qa._input(_mouse(center, true))
     qa._input(_mouse(center, false))
     if qa.qa_tap_count != 1 or qa.qa_selection != "founder":
-        _fail("mouse founder tap not selected")
-        return
+        return "mouse founder tap not selected"
     if not label.text.contains("Cachorro fundador selecionado"):
-        _fail("founder visual feedback missing")
-        return
-
+        return "founder visual feedback missing"
     qa._input(_touch(center, true))
     qa._input(_touch(center, false))
     if qa.qa_tap_count != 2 or qa.qa_selection != "founder":
-        _fail("real InputEventScreenTouch not selected")
-        return
-    # Browsers/Godot can synthesize left mouse events for the same physical touch.
+        return "real InputEventScreenTouch not selected"
     qa._input(_mouse(center, true))
     qa._input(_mouse(center, false))
     if qa.qa_tap_count != 2:
-        _fail("synthetic touch/mouse counted twice")
-        return
+        return "synthetic touch/mouse counted twice"
+    return ""
 
+
+func _check_drag_and_pan(qa: Node2D, center: Vector2) -> String:
+    var composition: Node2D = qa.get_node("FounderScene")
+    var camera: Camera2D = qa.get_node("FounderScene/FarmIsoView/Camera2D")
+    var start_x: float = camera.position.x
     qa._input(_touch(center, true))
     var drag: InputEventScreenDrag = InputEventScreenDrag.new()
     drag.index = 0
@@ -63,17 +74,14 @@ func _run() -> void:
     qa._input(drag)
     qa._input(_touch(center + Vector2(60, 0), false))
     if qa.qa_tap_count != 2:
-        _fail("drag was misinterpreted as selection tap")
-        return
-    var composition: Node2D = qa.get_node("FounderScene")
+        return "drag was misinterpreted as selection tap"
+    if absf(start_x - camera.position.x) < 0.01:
+        return "QA drag input did not reach bounded CENA pan"
     if not composition.pan_by_screen_delta(Vector2(75, 0), Vector2(390, 844)):
-        _fail("CENA existing drag/pan no longer usable")
-        return
+        return "CENA existing drag/pan no longer usable"
     if qa.qa_tap_count != 2:
-        _fail("pan unexpectedly triggered tap feedback")
-        return
-    print("MARICA_QA002_TAP_PASS mouse=true touch=true dedup=true pan=true")
-    quit(0)
+        return "pan unexpectedly triggered tap feedback"
+    return ""
 
 
 func _mouse(location: Vector2, pressed: bool) -> InputEventMouseButton:
