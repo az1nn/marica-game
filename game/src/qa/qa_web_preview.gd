@@ -8,6 +8,8 @@ const QA_TAPS_ENABLED: bool = true
 
 var qa_tap_count: int = 0
 var qa_selection: String = "none"
+var qa_touch_drag_events: int = 0
+var qa_mouse_motion_events: int = 0
 
 var _touch_down: Dictionary = {}
 var _touch_dragged: Dictionary = {}
@@ -85,6 +87,7 @@ func _input(event: InputEvent) -> void:
                 _select_at(touch.position)
     elif event is InputEventScreenDrag:
         var drag: InputEventScreenDrag = event as InputEventScreenDrag
+        qa_touch_drag_events += 1
         _last_touch_event_ms = Time.get_ticks_msec()
         if _touch_down.has(drag.index):
             var start: Vector2 = _touch_down[drag.index]
@@ -96,6 +99,7 @@ func _input(event: InputEvent) -> void:
             ):
                 # Route exactly once, before CENA's _unhandled_input fallback.
                 get_viewport().set_input_as_handled()
+        _publish_web_state()
     elif event is InputEventMouseButton:
         var mouse: InputEventMouseButton = event as InputEventMouseButton
         if mouse.button_index != MOUSE_BUTTON_LEFT:
@@ -116,6 +120,7 @@ func _input(event: InputEvent) -> void:
                 _select_at(mouse.position)
     elif event is InputEventMouseMotion and _mouse_pressed:
         var motion: InputEventMouseMotion = event as InputEventMouseMotion
+        qa_mouse_motion_events += 1
         if _mouse_down.distance_squared_to(motion.position) > TAP_DRIFT_SQUARED:
             _mouse_dragged = true
             if (
@@ -123,6 +128,7 @@ func _input(event: InputEvent) -> void:
                 and $FounderScene.pan_by_screen_delta(motion.relative, get_viewport_rect().size)
             ):
                 get_viewport().set_input_as_handled()
+        _publish_web_state()
 
 
 func _is_portrait() -> bool:
@@ -167,6 +173,8 @@ func _publish_web_state() -> void:
     _last_published_camera = _camera.position
     var data: Dictionary = {
         "camera_x": _camera.position.x,
+        "touch_drag_events": qa_touch_drag_events,
+        "mouse_motion_events": qa_mouse_motion_events,
         "count": qa_tap_count,
         "selection": qa_selection,
         "founder_center": [center.x, center.y],
