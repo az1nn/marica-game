@@ -15,8 +15,8 @@ var _mouse_down_position: Vector2 = Vector2.ZERO
 var _mouse_moved: bool = false
 var _select_count: int = 0
 
-@onready var _founder: Sprite2D = $FounderScene/FarmIsoView/FounderV4TestCopy
 var _feedback: Label
+@onready var _founder: Sprite2D = $FounderScene/FarmIsoView/FounderV4TestCopy
 
 
 func _ready() -> void:
