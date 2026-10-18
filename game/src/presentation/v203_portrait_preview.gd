@@ -52,6 +52,7 @@ func apply_preview_size(viewport_size: Vector2) -> bool:
 func _on_viewport_resized() -> void:
     apply_preview_size(get_viewport_rect().size)
 
+
 # V206: diagnostic navigation for LENTE's lateral-crop REVISE; not HUD acceptance.
 static func farm_projection_bounds() -> Rect2:
     var width: float = float(LAYOUT.GRID_WIDTH * LAYOUT.TILE_SIZE)
