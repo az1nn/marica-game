@@ -1,0 +1,161 @@
+name: CENA 131B Portrait Terrain Continuity Blockout
+on:
+  pull_request:
+    paths:
+      - 'game/scenes/cena131b_terrain_preview.tscn'
+      - 'game/src/presentation/cena131b_terrain_scene.gd'
+      - 'game/src/presentation/cena131b_terrain_underlay.gd'
+      - 'game/tests/cena131b_terrain_capture_runner.gd'
+      - '.github/workflows/cena131b-terrain-viewport.yml'
+      - 'docs/cena/CENA-131B-VERTICAL-CONTINUITY.md'
+      - '.siga/session-claim-cena131b-vertical-continuity-20261018.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  continuity-evidence:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 18
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Verify original founder and install pinned Godot
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          test "$(git hash-object game/assets/arch_probes/S01_A01_v4_original.png)" = da7806ebfcb051c8fd32ccdbad4760b7136f97dd
+          echo "b8089122d323de7dc7c235604f752ce2643990a867aceaead60409d700e2aa7e  game/assets/arch_probes/S01_A01_v4_original.png" | sha256sum --check
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri libgl1
+          python3 -m pip install --disable-pip-version-check --user "Pillow==11.3.0"
+          curl --fail --location --retry 3 --retry-all-errors \
+            -o "$RUNNER_TEMP/godot.zip" \
+            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+      - name: Import source
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 90s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --headless --editor --path game --import --quit \
+            2>&1 | tee "$RUNNER_TEMP/cena131b-import.log"
+      - name: Capture six actual Godot frames
+        shell: bash
+        env:
+          CENA131B_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          export CENA131B_CAPTURE_DIR="$RUNNER_TEMP/cena131b-good"
+          mkdir -p "$CENA131B_CAPTURE_DIR"
+          timeout 120s xvfb-run -a -s "-screen 0 1600x1100x24" \
+            "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --rendering-driver opengl3 --rendering-method gl_compatibility \
+            --path game --script res://tests/cena131b_terrain_capture_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/cena131b-good.log"
+          grep -Fq "MARICA_CENA131B_CAPTURE_PASS captures=6" "$RUNNER_TEMP/cena131b-good.log"
+      - name: Compare farm original pixels, fill, panning, and source provenance
+        shell: bash
+        env:
+          CENA131B_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import hashlib, json, os
+          root=Path(os.environ["RUNNER_TEMP"])/"cena131b-good"
+          m=json.loads((root/"manifest.json").read_text())
+          assert m["head_sha"] == os.environ["CENA131B_HEAD_SHA"], "wrong exact head"
+          assert m["source_sha256"] == "b8089122d323de7dc7c235604f752ce2643990a867aceaead60409d700e2aa7e"
+          assert m["status"] == "PORTRAIT_BACKGROUND_BLOCKOUT_ONLY_NO_RUNTIME_ACCEPT"
+          assert m["portrait_background_filled_by_nonplayable_placeholder"] is True
+          assert m["vertical_gameplay_void_resolved"] is False
+          assert m["art_runtime"] == "NOT_EVALUATED" and len(m["frames"]) == 6
+          frames={f["file"]:f for f in m["frames"]}
+          assert frames["portrait-left.png"]["camera_x"] < frames["portrait-after.png"]["camera_x"]
+          assert frames["portrait-after.png"]["camera_x"] < frames["portrait-right.png"]["camera_x"]
+          orig=Image.open(root/"portrait-before.png").convert("RGB")
+          new=Image.open(root/"portrait-after.png").convert("RGB")
+          assert orig.size == new.size == (390,844)
+          gray=(77,77,77)
+          assert orig.getpixel((2,2))==gray, "original reference unexpectedly changed"
+          assert new.getpixel((2,2)) != gray, "new terrain left portrait blank"
+          kept=bad=0
+          for before,after in zip(orig.getdata(),new.getdata()):
+              # Restrict to strongly visible original farm and dog pixels, not halo edges.
+              if sum(abs(a-b) for a,b in zip(before,gray)) > 75:
+                  kept+=1
+                  if max(abs(a-b) for a,b in zip(before,after)) > 12:
+                      bad+=1
+          assert kept>35000, f"not enough original source pixels: {kept}"
+          assert bad/kept < 0.015, f"original farm pixels unexpectedly changed: {bad}/{kept}"
+          for file in frames:
+              pixels=(root/file).read_bytes()
+              assert len(pixels)>2048 and pixels[:8] == bytes.fromhex("89504e470d0a1a0a")
+              frames[file]["sha256"] = hashlib.sha256(pixels).hexdigest()
+          result={"head":m["head_sha"],"source_sha256":m["source_sha256"],
+                  "kept_original_pixels":kept,"changed_original_pixels":bad,
+                  "changed_ratio":round(bad/kept,6),
+                  "evaluation":"BLOCKOUT_ONLY_HUMAN_REVIEW_REQUIRED",
+                  "frames":frames}
+          (root/"verification.json").write_text(json.dumps(result,indent=2)+"\n")
+          print("MARICA_CENA131B_ORIGINAL_FARM_PASS",kept,bad)
+          PY
+      - name: Disable underlay GOOD-BAD-RESTORE
+        shell: bash
+        env:
+          CENA131B_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          SOURCE=game/src/presentation/cena131b_terrain_scene.gd
+          cp "$SOURCE" "$RUNNER_TEMP/cena131b-source.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("game/src/presentation/cena131b_terrain_scene.gd")
+          s=p.read_text()
+          old="_terrain.visible = is_portrait_size(size)"
+          assert s.count(old)==1
+          p.write_text(s.replace(old,"_terrain.visible = false"))
+          PY
+          export CENA131B_CAPTURE_DIR="$RUNNER_TEMP/cena131b-bad"
+          mkdir -p "$CENA131B_CAPTURE_DIR"
+          set +e
+          timeout 90s xvfb-run -a -s "-screen 0 1600x1100x24" \
+            "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --rendering-driver opengl3 --rendering-method gl_compatibility \
+            --path game --script res://tests/cena131b_terrain_capture_runner.gd \
+            > "$RUNNER_TEMP/cena131b-bad.log" 2>&1
+          BAD="$?"
+          set -e
+          cp "$RUNNER_TEMP/cena131b-source.gd" "$SOURCE"
+          test "$BAD" -ne 0
+          grep -Eq "MARICA_CENA131B_FAIL|SCRIPT ERROR" "$RUNNER_TEMP/cena131b-bad.log"
+          export CENA131B_CAPTURE_DIR="$RUNNER_TEMP/cena131b-restore"
+          mkdir -p "$CENA131B_CAPTURE_DIR"
+          timeout 90s xvfb-run -a -s "-screen 0 1600x1100x24" \
+            "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" \
+            --rendering-driver opengl3 --rendering-method gl_compatibility \
+            --path game --script res://tests/cena131b_terrain_capture_runner.gd \
+            2>&1 | tee "$RUNNER_TEMP/cena131b-restore.log"
+          grep -Fq "MARICA_CENA131B_CAPTURE_PASS" "$RUNNER_TEMP/cena131b-restore.log"
+          git diff --exit-code -- "$SOURCE"
+          echo "MARICA_CENA131B_MUTATION_PASS"
+      - name: Upload exact-head scenes, hashes, and negative-control logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cena131b-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          path: |
+            ${{ runner.temp }}/cena131b-good/*.png
+            ${{ runner.temp }}/cena131b-good/*.json
+            ${{ runner.temp }}/cena131b-*.log
