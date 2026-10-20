@@ -1,8 +1,8 @@
 # Maricá Game Constitution
 
-**Version:** 2.0.0  
+**Version:** 2.1.0  
 **Ratified:** 2026-09-30  
-**Amended:** 2026-10-07  
+**Amended:** 2026-10-18  
 **Status:** ACTIVE
 
 Esta constituição registra as regras de produto já aprovadas. Specs, implementação, UX e balanceamento não podem contrariá-la silenciosamente.
@@ -165,6 +165,23 @@ A prioridade de entrega é:
 
 Uma fase posterior não pode forçar arquitetura que prejudique uma fase anterior.
 
+## XIV. Matriz de Homologação Web — Quatro Testes Obrigatórios
+
+Toda entrega interativa do jogo **via navegador web** deve utilizar quatro células de aceitação distintas, obrigatórias e identificáveis, conforme a SPEC-009:
+
+1. **WD-CH — Web Desktop / Google Chrome**;
+2. **WD-FF — Web Desktop / Mozilla Firefox**;
+3. **WA-CH — Web Android / Google Chrome**, em aparelho Android físico;
+4. **WA-FF — Web Android / Mozilla Firefox**, em aparelho Android físico.
+
+- **Gate 4/4:** a homologação web só é concluída se as quatro células obtiverem **PASS** para o artefato/HEAD identificável. Chrome não substitui Firefox, e emulação de tela/touch não substitui dispositivo Android físico.
+- Cada célula valida pelo menos boot/canvas real, zoom in/out, clique/toque no personagem, clique/toque na fazenda, arraste/pan sem seleção acidental e comportamento responsivo pertinente.
+- Guardar browser e versão, SO/dispositivo, viewport quando pertinente, autor e data, URL/ambiente, SHA da build e evidência de resultado. **Relato sem navegador identificado não satisfaz uma célula nominada.**
+- CI automatizado, Chrome headless, viewport mobile emulado e Vercel Ready são evidências complementares; não provam por si só a matriz manual/real ou o SHA implantado.
+- GATE-WEB-MATRIX é independente dos gates ARCH, LENTE, ARTIST, direitos de uso de assets, QA autenticado, performance e autorização de merge. Não contornar proteção de preview para realizar a homologação.
+
+Esta regra entra no Spec Kit em **SPEC-009** e se aplica prospectivamente às demais specs e relatórios de QA web, respeitando claims exclusivos e sem reescrever resultados passados.
+
 ---
 
 ## Amendment Log
@@ -173,3 +190,4 @@ Uma fase posterior não pode forçar arquitetura que prejudique uma fase anterio
 |---|---|---|
 | 1.0.0 | 2026-09-30 | Constituição inicial baseada nas decisões de produto já aprovadas. |
 | 2.0.0 | 2026-10-07 | Godot torna-se runtime canônico; V1 passa a single-player/offline-first; marketplace player-to-player vai para pós-V1; leaderboard online vira camada complementar; ordem Animals → Plants → Farm Structure é formalizada. |
+| 2.1.0 | 2026-10-18 | Homologação web passa a exigir quatro testes independentes: desktop Chrome, desktop Firefox, Android físico Chrome e Android físico Firefox; evidenciação por SHA e não inferência de PASS; SPEC-009. |
