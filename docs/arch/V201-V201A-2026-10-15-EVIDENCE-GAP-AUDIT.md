@@ -11,6 +11,6 @@ Base: master@bbfc4a24e5da5ab0015fbda83bffc6f2109461f6 (2026-10-15). Owner: SIGA 
 - V201: measure representative mobile/web frame-time, pixel edge fidelity under integer and fractional zoom, alpha fringes over light/dark/terrain, layer ordering, camera and UI occlusion; document actual logical resolution, zoom policy and measured device/browser conditions.
 - V201a: ratify import/filter/compression/atlas/pivot/resource sizing, source provenance and licensing; inspect production-equivalent sample without changing source PNG.
 - CENA V203: independent playable sample after ARCH; LENTE V204/V205: exact-head baseline/A-B; ARTIST: separate runtime decision.
-- CI on this branch: NOT YET VERIFIED. No runtime or production approval, no task checkbox closure, no PR #77 merge.
+- Exact PR #123 HEAD `8662c20bc1bd5078d9569830b235c06f2e9b302e`: 16 checks SUCCESS and 1 optional `open-cloud-tests` SKIPPED. This verifies branch integrity only; it does not close runtime/production or human gates, task checkboxes, or PR #77.
 
 Next: ARCH execute measured Godot prototype, retain source hash and settings plus reproducible captures, then independent LENTE/ARTIST review. This document is evidence reconciliation, not new executable proof.
