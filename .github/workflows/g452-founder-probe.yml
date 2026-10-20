@@ -1,0 +1,80 @@
+name: G452 Founder Diagnostic
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  founder-probe:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Pin exact source and Godot
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          test "$(git hash-object game/assets/arch_probes/S01_A01_v4_original.png)" = "da7806ebfcb051c8fd32ccdbad4760b7136f97dd"
+          curl --fail --location --retry 3 --retry-all-errors -o "$RUNNER_TEMP/godot.zip" "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/godot"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+
+      - name: Import exact-head Godot project
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 45s "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --headless --editor --path game --import --quit 2>&1 | tee "$RUNNER_TEMP/g452-import.log"
+
+      - name: G452 GOOD valid soulbound founder
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          timeout 45s "$GODOT" --headless --path game --script res://tests/g452_founder_probe_runner.gd 2>&1 | tee "$RUNNER_TEMP/g452-good.log"
+          grep -Fq 'MARICA_G452_FOUNDER_PROBE_PASS scenarios=8 visual_gate=OPEN' "$RUNNER_TEMP/g452-good.log"
+
+      - name: G452 QA GOOD BAD RESTORE soulbound mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          SOURCE=game/src/presentation/g452_founder_probe.gd
+          cp "$SOURCE" "$RUNNER_TEMP/g452-good-source.gd"
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("game/src/presentation/g452_founder_probe.gd")
+          s = p.read_text()
+          target = 'if not pet.is_soulbound():'
+          assert s.count(target) == 1
+          p.write_text(s.replace(target, 'if pet.is_soulbound():'))
+          PY
+          set +e
+          timeout 45s "$GODOT" --headless --path game --script res://tests/g452_founder_probe_runner.gd > "$RUNNER_TEMP/g452-bad.log" 2>&1
+          BAD_CODE="$?"
+          set -e
+          cp "$RUNNER_TEMP/g452-good-source.gd" "$SOURCE"
+          test "$BAD_CODE" -ne 0
+          grep -Eq 'MARICA_G452_FOUNDER_PROBE_FAIL|SCRIPT ERROR' "$RUNNER_TEMP/g452-bad.log"
+          timeout 45s "$GODOT" --headless --path game --script res://tests/g452_founder_probe_runner.gd 2>&1 | tee "$RUNNER_TEMP/g452-restored.log"
+          grep -Fq 'MARICA_G452_FOUNDER_PROBE_PASS scenarios=8 visual_gate=OPEN' "$RUNNER_TEMP/g452-restored.log"
+          git diff --exit-code -- "$SOURCE"
+          echo 'MARICA_G452_MUTATION_PASS good=pass bad=fail restore=pass'
+
+      - name: Upload G452 exact-head logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g452-${{ github.event.pull_request.head.sha || github.sha }}
+          if-no-files-found: ignore
+          path: ${{ runner.temp }}/g452-*.log

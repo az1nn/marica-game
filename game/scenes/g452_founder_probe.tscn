@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/farm_iso_view.tscn" id="1_farm"]
+[ext_resource type="Script" path="res://src/presentation/g452_founder_probe.gd" id="2_founder"]
+
+[node name="G452FounderProbe" type="Node2D"]
+script = ExtResource("2_founder")
+
+[node name="FarmIsoView" parent="." instance=ExtResource("1_farm")]
