@@ -1,0 +1,54 @@
+name: SPEC-010 Chain Certification
+
+on:
+  push:
+    branches:
+      - codex/spec-010-pr-chain-20261020
+    paths:
+      - ".siga/session-claim-spec010-pr-chain-20261020.md"
+      - "specs/010-pr-chain-certification/**"
+      - "docs/SIGA-HANDOFF.md"
+      - "docs/siga/SPEC-010-*.md"
+      - "tools/skills/**"
+  pull_request:
+    paths:
+      - ".siga/session-claim-spec010-pr-chain-20261020.md"
+      - "specs/010-pr-chain-certification/**"
+      - "docs/SIGA-HANDOFF.md"
+      - "docs/siga/SPEC-010-*.md"
+      - "tools/skills/**"
+
+permissions:
+  contents: read
+
+jobs:
+  spec-010-validation:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact event SHA
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate repository skills and orchestration contracts
+        run: python tools/skills/validate.py
+
+      - name: Validate SPEC-010 admission files
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f specs/010-pr-chain-certification/spec.md
+          test -f specs/010-pr-chain-certification/plan.md
+          test -f specs/010-pr-chain-certification/tasks.md
+          test -f docs/siga/SPEC-010-PR-CHAIN-2026-10-20.md
+          test -f docs/SIGA-HANDOFF.md
+          grep -Fq "R920" specs/010-pr-chain-certification/tasks.md
+          grep -Fq "42a9e26df571b0d6dc19d3ad36110709955167e4" docs/SIGA-HANDOFF.md
+          echo "SPEC_010_ADMISSION_PASS exact_head=${{ github.event.pull_request.head.sha || github.sha }}"
