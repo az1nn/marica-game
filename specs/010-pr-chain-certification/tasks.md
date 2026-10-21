@@ -3,7 +3,7 @@
 ## Bootstrap
 
 - [x] **R900** Create this Spec Kit with repository identity, scope, invariants and dependency graph.
-- [ ] **R901** Reconcile every current open PR into the evidence ledger with exact head/base, owner, spec/task mapping and claim state.
+- [x] **R901** Reconcile every current open PR into the evidence ledger with exact head/base, owner, spec/task mapping and claim state. Evidence: docs/siga/SPEC-010-PR-CHAIN-2026-10-20.md at the current SPEC-010 branch head.
 - [ ] **R902** Classify every missing gate as executable, HUMAN_REQUIRED, CAPABILITY_BLOCKED, EXTERNAL_PROVIDER or STALE.
 - [ ] **R903** Persist one authoritative next action per active chain root and update the smallest relevant handoff.
 
