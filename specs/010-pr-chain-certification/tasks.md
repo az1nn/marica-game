@@ -19,7 +19,7 @@
 
 ## Certification
 
-- [ ] **R920** Re-run applicable exact-head checks after each corrective commit; mark stale evidence explicitly.
+- [x] **R920** Re-run applicable exact-head checks after each corrective commit; mark stale evidence explicitly. Evidence: exact-head workflow `SPEC-010 Chain Certification` passed for PR #143 head `3a03bad27ac7857e666fd63e08966427f59bb18d` in run 39521147382; stale local validation remains explicitly recorded in docs/siga/SPEC-010-VALIDATION-2026-10-20.md.
 - [ ] **R921** Execute safe technical corrections through the owning specialist and preserve independent review boundaries.
 - [ ] **R922** Update SPEC-004/SPEC-005/SPEC-008/SPEC-009 task links only when their own acceptance evidence exists.
 - [ ] **R923** Merge only non-draft, dependency-ready PRs with expected-head guards; otherwise keep WATCH/BLOCKED.
