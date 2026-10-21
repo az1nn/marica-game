@@ -8,5 +8,5 @@
 - Files reserved: specs/010-pr-chain-certification/spec.md, plan.md, tasks.md; docs/SIGA-HANDOFF.md; docs/siga/SPEC-010-*.md
 - Semantic overlap: none with existing PR implementation branches; this lane does not modify runtime, tests, scenes, assets or feature CI workflows.
 - Human/capability gates remain fail-closed: this claim cannot approve visual/product acceptance, physical-device execution, source rights or external Vercel access.
-- Completed: R900–R903 and stale validation record.
-- Next: R920 exact-head revalidation for PR #143.
+- Completed: R900–R903 and R920. Exact-head workflow passed for PR #143 head `3a03bad27ac7857e666fd63e08966427f59bb18d` in run 39521147382.
+- Next: R921 — execute one safe owner correction with a separate claim, or route the next human/capability block.
